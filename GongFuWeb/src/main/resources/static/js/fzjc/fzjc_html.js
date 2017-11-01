@@ -1,0 +1,381 @@
+/**
+ * 初始化告警列表
+ */
+function initAlertDiv(){
+        var alertBean = {
+            "types":["alert"],
+            "size":5
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '../fzjc/findalert',
+            data: JSON.stringify(alertBean),
+            dataType: "json",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            success: function (json) {
+                if(json.result != "success"){
+                    console.log(json.message)
+                    return ;
+                }
+                var data = json.resultData;
+                $.each(data,function(){
+                    var obj = this;
+                    var strDiv = "<div id='"+obj._id+"' name='alertDiv'>";
+
+                    strDiv += "<h4>"+obj.ip+":"+obj.time+"</h4>";
+                    strDiv += "<h5>环节:"+obj.module+"&nbsp;&nbsp;"+obj.data_name+"</h5>";
+                    strDiv += "<p>时次:"+obj.data_time+"</p>";
+                    var title = obj.title.split("，");
+                    if(title.length == 2){
+                        strDiv += "<p>"+title[1]+"</p>";
+                    }else{
+                        strDiv += "<p>"+obj.title+"</p>";
+                    }
+
+
+                    strDiv += "</div>";
+
+                    $("#alertDiv").append(strDiv);
+                });
+
+            },
+            error:function (e) {
+                console.error(e);
+            }
+        })
+}
+
+/**
+ * 新增告警信息
+ */
+function alert_div_update(id,obj_json){
+    var obj = jQuery.parseJSON(obj_json);
+    console.log("下面是kafka推送的消息")
+    console.log(obj)
+    var isExist = false;
+
+    $("div[name='alertDiv']").each(function (i,element) {
+        if(obj.documentId == $(element).attr('id')){
+            isExist = true;
+        }
+    })
+    if(isExist){
+        var divHtml = "";
+        divHtml += "<h4>"+obj.ip+":"+obj.time+"</h4>";
+        divHtml += "<h5>环节:"+obj.module+"&nbsp;&nbsp;"+obj.data_name+"</h5>";
+        divHtml += "<p>时次:"+obj.data_time+"</p>";
+        var title = obj.title.split("，");
+        if(title.length == 2){
+            divHtml += "<p>"+title[1]+"</p>";
+        }else{
+            divHtml += "<p>"+obj.title+"</p>";
+        }
+
+        $("#"+obj.documentId).html(divHtml);
+    }else{
+        var strDiv = "<div id='"+obj.documentId+"' name='alertDiv'>";
+
+        strDiv += "<h4>"+obj.ip+":"+obj.time+"</h4>";
+        strDiv += "<h5>环节:"+obj.module+"&nbsp;&nbsp;"+obj.data_name+"</h5>";
+        strDiv += "<p>时次:"+obj.data_time+"</p>";
+        var title = obj.title.split("，");
+        if(title.length == 2){
+            strDiv += "<p>"+title[1]+"</p>";
+        }else{
+            strDiv += "<p>"+obj.title+"</p>";
+        }
+
+        strDiv += "</div>";
+
+        $(id).prepend(strDiv);
+
+        $(id).children().each(function (i,element) {
+            if(i > 5){
+                element.remove();
+            }
+        })
+    }
+
+}
+
+
+/**
+ * 流程图各环节状态
+ */
+function lct_statusNew(moduleName,ip,subType) {
+    var esQeuryBean_web = {
+        // "indices":["log_20170920"],
+        "types":["FZJC"],
+        "subType":subType,
+        "module":moduleName,
+        "strIp":ip
+    }
+
+    var moduleE = "";
+    if(moduleName == "采集"){
+        moduleE = "collect";
+    }else if(moduleName == "加工"){
+        moduleE = "machining";
+    }else if(moduleName == "分发"){
+        moduleE = "distribute";
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '../fzjc/findData_DI',
+        data: JSON.stringify(esQeuryBean_web),
+        dataType: "json",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (json) {
+
+            if(subType == "FY-2E/G云图数据" || subType == "云图"){
+                subType = "satellite";
+            }else if(subType == "雷达数据" || subType == "雷达"){
+                subType = "radarlatlon";
+            }
+
+            if(json.result != "success"){
+                console.log(json.message);
+                var upId = moduleE+"_"+subType;
+                $("#"+upId).attr({
+                    "class":"list-red-f"
+                });
+                return;
+            }
+            var data = json.resultData;
+
+            if(data.length < 1){
+                var upId = moduleE+"_"+subType;
+                $("#"+upId).attr({
+                    "class":"list-red-f"
+                });
+            }
+            $.each(data,function(i,values){
+                var liStatus = "list-red";
+                var liI = "sn-r";
+
+                $(values).each(function(){
+                    if(this.fields.hasOwnProperty("event_status") && (this.fields.event_status == "0" ||
+                            this.fields.event_status == "OK" || this.fields.event_status == "Ok")){
+                        liStatus = "list-green";
+                        liI = "sn-g";
+                    }
+                    var upId = moduleE+"_"+subType;
+                    if(moduleName == "分发"){
+                        $("#"+upId).attr({
+                            "class":liStatus+"-f",
+                            "title":this.fields.data_time
+                        });
+                        $("#"+upId +" i").each(function (i) {
+                            if( i == 1){
+                                $(this).attr("class",liI + " bd");
+                            }else{
+                                $(this).attr("class",liI);
+                            }
+                        })
+                    }else{
+                        $("#"+upId).attr({
+                            "class":liStatus,
+                            "title":this.fields.data_time
+                        });
+                    }
+
+                });
+            });
+            data = null;
+        },
+        error:function (e) {
+            console.error(e);
+        }
+    });
+}
+
+/**
+ * 历史数据弹出框
+ */
+$('#pubModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var subType = button.data('subtype');
+    var module = button.data('module');
+    var modal = $(this);
+    modal.find('#modalHeader').text(module+' 环节历史数据');
+    var size = $("#sizeHidden").val();
+    $("#moduleHidden").val(module);
+    $("#subTypeHidden").val(subType);
+
+    initHistory(subType,module,size);
+
+})
+
+/**
+ * 修改显示条数
+ * @param size
+ */
+function changeSize(size){
+    $("#sizeHidden").val(size);
+    var module = $("#moduleHidden").val();
+    var subType = $("#subTypeHidden").val();
+    initHistory(subType,module,size);
+
+    $("#sizeNumber").html("展示数量："+size+" <span class='caret'></span>");
+}
+
+/**
+ * 加载历史数据
+ * @param subType
+ * @param module
+ * @param size
+ */
+function initHistory(subType,module,size) {
+    var esQeuryBean_web = {
+        // "indices":["log_20170920"],
+        "types":["FZJC"],
+        "subType":subType,
+        "module":module,
+        "size":size
+    }
+
+    $("#history_tbody").html("");
+    $.ajax({
+        type: 'POST',
+        url: '../fzjc/findData_DI_history',
+        data: JSON.stringify(esQeuryBean_web),
+        dataType: "json",
+        async: false,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (resultJson) {
+            console.log(resultJson);
+            if(resultJson.result != "success"){
+                return "null";
+            }
+            var json = resultJson.resultData;
+            var trs = "";
+            $.each(json,function(i,values){
+                var trStatus = "danger";
+                // var subType = values.type;
+                if(values.hasOwnProperty("$ref")){      //错误数据----原因未知
+                    return true;
+                }
+
+                var tds = "<td>"+(i+1)+"</td>";
+                var agingStatus_isOK , eventStatus_isOK ;
+                $(values).each(function(){
+
+                    agingStatus_isOK = false ;
+                    eventStatus_isOK = false ;
+
+                    //文件名
+                    if(this.fields.hasOwnProperty("file_name") && this.fields.file_name != "-1"){
+                        tds += "<td>"+this.fields.file_name+"</td>";
+                    }else{
+                        tds += "<td> -</td>";
+                    }
+                    //资料时次
+                    tds += "<td>"+this.fields.data_time+"</td>";
+                    //耗时
+                    if(this.fields.hasOwnProperty("total_time")){
+                        var totalTime = this.fields.total_time;
+
+                        tds += "<td>"+ (Math.round(totalTime*100)/100) +" 秒</td>";
+                    }else{
+                        tds += "<td> -</td>";
+                    }
+
+                    if(this.hasOwnProperty("aging_status")){
+                        if(this.aging_status == "未处理" || this.aging_status == "正常"){
+                            agingStatus_isOK = true;
+                        }else{
+                            agingStatus_isOK = false;
+                        }
+                    }else{
+                        agingStatus_isOK = true;
+                    }
+                    if(this.fields.hasOwnProperty("event_status") ){
+                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                            eventStatus_isOK = true;
+                        }else{
+                            eventStatus_isOK = false;
+                        }
+                    }else{
+                        eventStatus_isOK = true;
+                    }
+
+                    if(agingStatus_isOK && eventStatus_isOK){
+                        trStatus = "info";
+                        tds += "<td>正常</td>";
+                        tds += "<td>-</td>";
+                    }else if(!agingStatus_isOK  && eventStatus_isOK){
+                        if(this.aging_status == "迟到"){
+                            trStatus = "danger";
+                            tds += "<td>异常</td>";
+                            tds += "<td>"+this.fields.event_info+"</td>";
+                        }else if(this.aging_status == "超时"){
+                            trStatus = "danger";
+                            tds += "<td>异常</td>";
+                            tds += "<td>数据未到达</td>";
+                        }
+                    }else if(agingStatus_isOK  && !eventStatus_isOK){
+                        trStatus = "danger";
+                        tds += "<td>异常</td>";
+                        tds += "<td>"+this.fields.event_info+"</td>";
+                    }else{
+                        trStatus = "danger";
+                        tds += "<td>异常</td>";
+                        tds += "<td>"+this.fields.event_info+"</td>";
+                    }
+                });
+                trs += "<tr class='"+trStatus+"'>"+tds+"</tr>";
+            });
+            $("#history_tbody").html(trs);
+        },
+        error:function (e) {
+            console.error(e);
+            $("#history_tbody").html("");
+        }
+        // complete:function () {
+        //     console.log("调用了complete函数")
+        //     var tbodyHeight = $("#history_tbody").height();
+        //     console.log(tbodyHeight)
+        //     if(tbodyHeight > 500){
+        //         $("#modalBody").attr("class","modal-body modal-body-h500");
+        //     }else{
+        //         $("#modalBody").attr("class","modal-body");
+        //     }
+        // }
+    });
+
+}
+
+//时效图，环节切换
+function changeModule(moduleType,size) {
+    $("#moduleType").html("环节名称："+moduleType+" <span class='caret'></span>");
+    gantt_linkAging = null;
+    initSvg(moduleType,size);
+    //    clearInterval(linkAging_interval);
+    //    linkAging_interval = setInterval(initSvg(moduleType), 10000);
+}
+
+function openWindow(name){
+
+   if(name == "lct"){
+       window.location.href='../fzjc/lct';
+   }else{
+       window.location.href='../fzjc/';
+   }
+}
+
+function sleep(numberMillis) {
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) {
+        now = new Date();
+        if (now.getTime() > exitTime)    return;
+    }
+}

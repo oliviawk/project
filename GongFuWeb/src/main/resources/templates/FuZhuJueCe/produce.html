@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"></meta>
+	<title>Document</title>
+    <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css"></link>
+    <link href="../css/fzjc/style_fzjc.css" rel="stylesheet"></link>
+    <style>
+        .modal-header,.modal-body,.modal-footer{
+            background-color: #1d2122;
+        }
+
+        .table>tbody>tr.danger>td{
+            background-color: #1d2122;
+            color: #913132;
+            /*color: red;*/
+        }
+        .table>tbody>tr>td.danger{
+            background-color: #913132;
+        }
+        .table>tbody>tr.info>td{
+            background-color: #1d2122;
+            color: #107610;
+            /*color: #41DB00;*/
+        }
+        .table>tbody>tr>td.info{
+            background-color: #107610;
+        }
+    </style>
+</head>
+<body>
+<!--header-->
+<div class="top">
+	<div class="logo">
+		公服中心业务全流程监控系统
+	</div>
+	<div class="nav">
+        <!--openWindow-->
+        <div class="dropdown">
+            <a id="fzjc" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                辅助决策
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="fzjc">
+                <li><a onclick="openWindow('sxt')">时效图</a></li>
+                <li class="disabled"><a onclick="openWindow('lct')">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <a id="laps" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                LAPS
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="laps">
+                <li><a href="#">时效图</a></li>
+                <li class="disabled"><a href="#">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <a id="mqpf" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                MQPF
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="mqpf">
+                <li><a href="#">时效图</a></li>
+                <li class="disabled"><a href="#">流程图</a></li>
+            </ul>
+        </div>
+	</div>
+</div>
+<!--header end-->
+<div class="process">
+	<table class="process-table" width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="100"><div class="bg-grey">数据源</div></td>
+        <td width="30">&nbsp;</td>
+        <td width="300"><div class="bg-grey">采集</div></td>
+        <td width="30">&nbsp;</td>
+        <td width="300"><div class="bg-grey">加工</div></td>
+        <td width="30">&nbsp;</td>
+        <td width="430"><div class="bg-grey">分发/存储</div></td>
+        <td width="30">&nbsp;</td>
+        <td width="300"><div class="bg-grey">服务</div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div  class="title-grey">10.30.16.220（内网采集）</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div  class="title-grey">10.30.16.223（内网加工）</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div  class="title-grey"><span class="fl">&nbsp;</span><span class="fr pd10">10.0.74.226（中转）</span><span class="bd fr pd10">10.30.16.236（内网）</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">大探</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-green" id="collect_radarlatlon"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="雷达"
+                 data-module="采集"><span>雷达</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-green" id="machining_LatLonQREFEnd"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="LatLonQREFEnd"
+                 data-module="加工"><span>雷达</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-green-f" id="distribute_radarlatlon"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="雷达"
+                 data-module="分发">雷达 <i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">卫星</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-green" id="collect_satellite"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="云图"
+                 data-module="采集"><span>云图</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-green" id="machining_ReadFY2NC"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="ReadFY2NC"
+                 data-module="加工"><span>云图</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-green-f" id="distribute_satellite"
+                 data-toggle="modal"
+                 data-target="#pubModal"
+                 data-subtype="云图"
+                 data-module="分发">云图 <i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom"></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">T639风场</div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">T639 <i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="title-grey"></div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>天气公报（0/3）</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">天气公报 <i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">气象</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey">风场T639</div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom"></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">炎热指数 <i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">专业台</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey">森林火险</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">森林火险<i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">产品室</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey">高温炎热</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">地质灾害<i class="sn-g"></i><i class="sn-g bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-top"></div></div></td>
+        <td><div class="list-grey">地质灾害</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey">山洪<i class="sn-r"></i><i class="sn-r bd"></i></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group"><div class="group-line arrow-right"></div></div></td>
+        <td><div class="list-grey">气温</div></td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td><div class="title-grey"><span class="fl">&nbsp;</span></div></td>
+          <td><div class="arrow-line"></div></td>
+          <td><div class="arrow-v-break-t"><span></span></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group"><div class="group-line arrow-right"></div></div></td>
+        <td><div class="list-grey">中小河流</div></td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">气象中心</div></td>
+        <td><div class="arrow-group arrow-right"><div class="group-line"></div></div></td>
+        <td><div class="list-grey">暴雨</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group"><div class="group-line arrow-right"></div></div></td>
+        <td><div class="list-grey">大雪</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group"><div class="group-line arrow-right"></div></div></td>
+        <td><div class="list-grey">渍涝</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group"><div class="group-line arrow-right"></div></div></td>
+        <td><div class="list-grey">沙尘</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+        <td><div class="list-grey">空气污染</div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom"></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-down"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class=" title-grey">120.26.9.109（外网采集）</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class=" title-grey">120.26.9.109（外网加工）</div></td>
+        <td><div class="arrow-line"></div></td>
+            <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class=" title-grey">120.55.36.131（存储+文件化）</div></td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">国省共享</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>LPS3KM</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey"><span>LPS3KM</span></div></td>
+        <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey" style="text-align:center;"><span style="margin:0">&nbsp;</span></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-top"></div></div></td>
+        <td><div class="list-grey"><span>城市预报</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey"><span>城市预报</span></div></td>
+        <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom arrow-up"></div></td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">天气网</div></td>
+        <td><div class="arrow-group arrow-right"><div class="group-line"></div></div></td>
+        <td><div class="list-grey"><span>城市实况</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-grey"><span>城市实况</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+            <td><div class="arrow-group arrow-right"><div class="group-line"></div></div></td>
+            <td><div class="list-grey"><span>区域自动站</span></div></td>
+            <td>&nbsp;</td>
+            <td><div class="list-grey"><span>区域自动站</span></div></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+        <td><div class="list-grey"><span>台风路径</span></div></td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom"></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="title-grey"></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td rowspan="2"><div class="bg-blue">预警室</div></td>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-center"></div><div class="group-break-top"></div></div></td>
+        <td><div class="title-grey"><span>预警事件</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+        <td><div class="title-grey"><span>突发事件</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="arrow-v-line"></div></td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">博懋信</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>船舶</span></div></td>
+        <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-line"></div></td>
+        <td><div class="arrow-v-break-b"><span></span></div></td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">四维</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>交通拥堵</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">贵州祥云</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>小流域洪水</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><div class="bg-blue">水雨情况</div></td>
+        <td><div class="arrow-right"></div></td>
+        <td><div class="list-grey"><span>河流水库水位</span></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><div class="list-bottom"></div></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+</div>
+<div class="focus" id="alertDiv">
+    <!--<div>
+        <h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+        <h5>采集环节</h5>
+        <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+        <p>数据状态异常</p>
+        <p>数据接口返回传播数据失败</p>
+      </div>-->
+</div>
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg"  id="pubModal"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-bg" role="document">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class='glyphicon glyphicon-remove' aria-hidden='true' style="color: #d9534f;"></span>
+                </button>
+                <h4 class="modal-title"  id="modalHeader">Modal title</h4>
+            </div>
+            <div id="modalBody" class="modal-body modal-body-h500" style="color: #fff">
+                <table class="table table-bordered navbar-fixed-to" >
+                    <thead style="color: #17c4df;">
+                    <tr>
+                        <th style="width: 60px;">编号</th>
+                        <th >文件名</th>
+                        <th style="width: 245px;">资料时次</th>
+                        <th style="width: 70px;">耗时</th>
+                        <th style="width: 60px;">状态</th>
+                        <th>错误信息</th>
+                    </tr>
+                    </thead>
+                    <tbody id="history_tbody">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+
+                <div class="btn-group" style="float: left;">
+                    <a id="sizeNumber" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        展示数量：10
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="sizeNumber">
+                        <li><a onclick="changeSize('10')">10</a></li>
+                        <li><a onclick="changeSize('15')" >15</a></li>
+                        <li><a onclick="changeSize('20')" >20</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+
+                <input id="moduleHidden" type="hidden" value=""></input>
+                <input id="subTypeHidden" type="hidden" value=""></input>
+                <input id="sizeHidden" type="hidden" value="10"></input>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- core js start -->
+    <script src="../js/core/jquery-1.8.3.min.js"></script>
+    <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+    <!-- core js end -->
+    <script src="../frame/d3/d3.v3.min.js"></script>
+    <script src="../js/fzjc/fzjc_html.js"></script>
+
+    <!--websocket 连接-->
+    <script type="text/javascript">
+        var socket;
+        if (typeof (WebSocket) == "undefined"){
+            alert("This explorer don't support WebSocket")
+        }
+
+        function connect() {
+            //Connect WebSocket server
+            socket =new WebSocket("ws://10.30.16.120:8090/wbSocket");
+            //open
+            socket.onopen = function () {
+                console.log("WebSocket is open");
+            }
+            //Get message
+            socket.onmessage = function (msg) {
+                alert_div_update("#alertDiv",msg.data);
+
+            }
+            //close
+            socket.onclose = function () {
+                alert("WebSocket is closed");
+            }
+            //error
+            socket.onerror = function (e) {
+                alert("Error is " + e);
+            }
+        }
+
+        $(function () {
+            connect();
+
+            initAlertDiv();
+        })
+
+        function run_linkTest() {
+            sleep(100);
+            lct_statusNew("采集","10.30.16.220","云图");
+            lct_statusNew("采集","10.30.16.220","雷达");
+            sleep(100);
+            lct_statusNew("加工","10.30.16.223","ReadFY2NC");
+            lct_statusNew("加工","10.30.16.223","LatLonQREFEnd");
+            sleep(100);
+            lct_statusNew("分发","10.0.74.226","云图");
+            lct_statusNew("分发","10.0.74.226","雷达");
+        }
+        run_linkTest();
+        var linkAging_interval ;
+        clearInterval(linkAging_interval);
+        linkAging_interval = setInterval(run_linkTest, 180000);
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+package com.cn.hitec.feign.client;
+
+
+import com.cn.hitec.bean.EsQueryBean;
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Map;
+
+/** 
+ * 
+ * 
+ * @description: TODO(这里用一句话描述这个类的作用) 
+ * @author james
+ * @since 2017年7月20日 下午2:41:56 
+ * @version 
+ *
+ */
+@FeignClient("mists-es-query-service")
+public interface EsQueryService {
+
+	/**
+	 * 检测es健康状态， 测试
+	 * @return
+	 */
+	@RequestMapping(value="/esapi/getHealth",method=RequestMethod.GET,consumes="application/json")
+	public String getESHealth();
+
+    /**
+     * 时效图 数据查询
+     * @param esBean
+     * @return
+     * @throws Exception
+     */
+	@RequestMapping(value="/query/getdatatemp",method= RequestMethod.POST , consumes = "application/json")
+	public Map<String,Object> getData_temp(@RequestBody EsQueryBean esBean) throws Exception;
+
+    @RequestMapping(value="/query/getdata",method= RequestMethod.POST , consumes = "application/json")
+    public Map<String,Object> getData(@RequestBody EsQueryBean esQueryBean) throws  Exception;
+
+    /**
+     * 流程图 最新查询方法，添加must、mustNot、range等
+     * @param esQueryBean
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/query/getdata_new",method= RequestMethod.POST , consumes = "application/json")
+    public Map<String,Object> getData_new(@RequestBody EsQueryBean esQueryBean) throws Exception;
+    /**
+     * 流程图 数据查询
+     * @param esQueryBean
+     * @return
+     */
+    @RequestMapping(value="/query/agg_term",method= RequestMethod.POST, consumes = "application/json")
+    public Map<String,Object> find_agg_term(@RequestBody EsQueryBean esQueryBean);
+
+    /**
+     * @return
+     */
+    @RequestMapping(value="/query/getalert",method=RequestMethod.POST,consumes="application/json")
+    public Map<String,Object> getAlertData(@RequestBody EsQueryBean esQueryBean);
+
+
+}

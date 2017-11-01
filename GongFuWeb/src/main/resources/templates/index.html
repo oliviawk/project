@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta name="description" content=""></meta>
+<meta name="author" content=""></meta>
+
+<title>mists</title>
+
+<!-- Bootstrap core CSS -->
+<link href="../frame/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
+<!--external css-->
+<link href="../frame/font-awesome/css/font-awesome.css" rel="stylesheet"></link>
+
+<!-- Custom styles for this template -->
+<link href="../css/style.css" rel="stylesheet"></link>
+<link href="../css/style-responsive.css" rel="stylesheet"></link>
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<input id="main_type" type="hidden" value="1" th:value="${type}"></input>
+	<section id="container">
+		<!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT  NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+		<!--header start-->
+		<header class="header black-bg">
+			<div class="sidebar-toggle-box">
+				<div class="fa fa-bars tooltips" data-placement="right"
+					data-original-title="打开或关闭 导航"></div>
+			</div>
+			<!--logo start-->
+			<a href="index.html" class="logo"> <a href="javascript:void(0);">
+					<img src="img/ui-sam.jpg" class="img-circle"
+					style="width: 60px; height: 60px;"></img>
+			</a> <b>气象业务综合监控系统</b></a>
+			<!--logo end-->
+		</header>
+		<!--header end-->
+
+		<!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+		<!--sidebar start-->
+		<aside>
+			<div id="sidebar" class="nav-collapse ">
+				<!-- sidebar menu start-->
+				<ul class="sidebar-menu" id="nav-accordion">
+					<li class="sigle-menu" th:each="me,menuStat : ${menu}"><a
+						class="clinkMenu" th:href="${me.link}"> <i
+							th:class="${me.icon}"></i> <span th:text="${me.name}"></span>
+					</a></li>
+				</ul>
+				<!-- sidebar menu end-->
+			</div>
+		</aside>
+		<!--sidebar end-->
+
+		<!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+		<!--main content start-->
+		<section id="main-content">
+		    <iframe id="external-frame" style="width: 100%; border: 0;margin-top: 60px;"></iframe>
+		</section>
+		<!-- 	<section id="main-content">
+			<section class="wrapper" id="page-wrapper" >
+			</section>
+		</section> -->
+
+		<!--main content end-->
+		<!--footer start-->
+		<!-- <footer class="site-footer">
+          <div class="text-center">
+              2014 - Alvarez.is
+              <a href="index.html#" class="go-top">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer> -->
+		<!--footer end-->
+	</section>
+
+	<!--被包含文件与父文件存在于相同目录中。 -->
+	<!-- js placed at the end of the document so the pages load faster -->
+	<script src="../js/core/jquery.js"></script>
+	<script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+	<script class="include" type="text/javascript" src="../js/core/jquery.dcjqaccordion.2.7.js"></script>
+	<script src="../js/tool/publicTool.js"></script>
+
+	<!-- sidebar hide tool -->
+	<script src="../js/core/jquery.scrollTo.min.js"></script>
+	<script src="../js/core/jquery.nicescroll.js" type="text/javascript"></script>
+	<!-- common script for all pages -->
+	<script src="../js/tool/common-scripts.js"></script>
+	<!-- iframe core JavaScript -->
+	<script src="../js/core/frameTool.js"></script>
+
+	<script type="text/javascript">
+		//加载主页面
+		var ifWin;
+		window.onload = function() {
+			var ifm = $('#external-frame');
+			var top = ifm.offset().top;
+			var hi = document.documentElement.clientHeight;
+			hi = hi - top - 5;
+			ifm.height(hi);
+
+			ifWin = $('#external-frame')[0].contentWindow;
+			frameTool.initClick();
+			frameTool.selectOneMenu();
+		};
+	</script>
+</body>
+</html>

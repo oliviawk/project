@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>辅助决策 测试页面</title>
+    <!--  core CSS start -->
+    <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css"></link>
+
+    <style>
+        .axis path, .axis line {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+        .panel{
+            margin-bottom: 5px;
+            margin-top: 0px;
+        }
+        .panel-body{
+            padding: 5px;
+        }
+        .panel-title > p{
+            font-size: 12px;
+            margin: 3px 5px;
+        }
+
+        .tooltip_f{
+            position: absolute;
+            width: auto;
+            height: auto;
+            font-family: simsun;
+            font-size: 14px;
+            text-align: left;
+            border-style: solid;
+            border-width: 1px;
+            background-color: white;
+            color: #2B2E30;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+    <link href="../css/fzjc/style_fzjc.css" rel="stylesheet"></link>
+</head>
+<body>
+
+
+
+<div class="top">
+    <div class="logo">
+        公服中心业务全流程监控系统
+    </div>
+    <div class="nav">
+        <div class="dropdown">
+            <a id="fzjc" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                辅助决策
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="fzjc">
+                <li class="disabled"><a onclick="openWindow('sxt')">时效图</a></li>
+                <li><a onclick="openWindow('lct')">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <a id="laps" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                LAPS
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="laps">
+                <li class="disabled"><a href="#">时效图</a></li>
+                <li><a href="#">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <a id="mqpf" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                LAPS
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="mqpf">
+                <li class="disabled"><a href="#">时效图</a></li>
+                <li><a href="#">流程图</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class='col-md-12'>
+        <div class="panel panel-card">
+            <div class="panel-title">
+                <div class="btn-group" style="float: right;">
+                    <a id="moduleType" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        环节名称：采集
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="moduleType">
+                        <li ><a onclick="changeModule('采集',1000)">采集</a></li>
+                        <li ><a onclick="changeModule('加工',1000)">加工</a></li>
+                        <li ><a onclick="changeModule('分发',1000)">分发</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="link_aging"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- core js start -->
+<script src="../js/core/jquery-1.8.3.min.js"></script>
+<script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+<!-- core js end -->
+<script src="../frame/d3/d3.v3.min.js"></script>
+<script src="../js/ganttChart2.js"></script>
+<script src="../js/fzjc/fzjc_html.js"></script>
+<script>
+
+
+    var gantt_linkAging = null;
+    function initSvg(module,size) {
+        var esBean = {
+//        "indices":["log_20171010"],
+            "types":["FZJC"],
+            "module":module,
+            "size":size,
+            "minute_before":"150"
+        }
+
+        //时效环节
+        d3.json("../fzjc/findtemp")
+            .header("Content-Type","application/json;charset=UTF-8")
+            .post(JSON.stringify(esBean),function(error,json){
+                if(error ){
+                    throw error;
+                }
+                if( json.result != "success"){
+                   console.log(json.message);
+                }
+                var data = json.resultData;
+
+                if(gantt_linkAging != null){
+                    gantt_linkAging.update(data);
+                }else{
+                    var config = new ganttChart_config();
+                    if(module == "加工"){
+                        config.taskNames = ["LatLonQREFEnd","ReadFY2NC"];
+                        config.height = 200;
+                    }else if(module == "分发"){
+                        config.taskNames = ["雷达","云图"];
+                        config.height = 200;
+                    }else if(module == "采集"){
+                        config.taskNames = ["雷达","云图","风流场","炎热程度"," ","船舶","突发事件","预警信号","台风","重点天气提示","LAPS3KM","空气质量","江河水库水位","台风专题","OCF3H","天气公报"];
+                        config.height = 700;
+                    }
+
+                    gantt_linkAging = new ganttChart("#link_aging",data,config);
+                }
+            });
+    }
+
+    var linkAging_interval ;
+    initSvg("采集",1000);
+//    clearInterval(linkAging_interval);
+//    linkAging_interval = setInterval(initSvg("采集"), 10000);
+
+
+</script>
+</body>
+</html>
