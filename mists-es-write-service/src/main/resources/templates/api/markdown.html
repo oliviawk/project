@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta charset="utf-8"></meta>
+	<title>API Document</title>
+	<link href="frame/markdown-it/skeleton.css" rel="stylesheet"></link>
+	<!-- Bootstrap core CSS -->
+	<link href="frame/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="frame/jquery/jquery-1.8.3.min.js" ></script>
+	<script src="frame/markdown-it/markdown-it.min.js"></script>
+	<!-- js placed at the end of the document so the pages load faster -->
+	<script src="frame/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body >
+	<!--main content start-->
+	<section class="container">
+ 		<p id="markdown" style="display:none;" th:text="${markdown}"></p>
+	  <div class="markdown-html" >
+	    <script>
+	    	 var markdown = $("#markdown").text();
+	    	 $.ajaxSetup({async: false});
+	    	 $.get((markdown||'/index.md'), function(text) { document.write(markdownit().render(text)); });
+	    </script>
+	  </div>
+  </section>
+</body>
+</html>
