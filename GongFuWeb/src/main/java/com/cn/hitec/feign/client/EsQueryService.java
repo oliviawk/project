@@ -30,13 +30,10 @@ public interface EsQueryService {
 
     /**
      * 时效图 数据查询
-     * @param esBean
+     * @param esQueryBean
      * @return
      * @throws Exception
      */
-	@RequestMapping(value="/query/getdatatemp",method= RequestMethod.POST , consumes = "application/json")
-	public Map<String,Object> getData_temp(@RequestBody EsQueryBean esBean) throws Exception;
-
     @RequestMapping(value="/query/getdata",method= RequestMethod.POST , consumes = "application/json")
     public Map<String,Object> getData(@RequestBody EsQueryBean esQueryBean) throws  Exception;
 
@@ -48,13 +45,6 @@ public interface EsQueryService {
      */
     @RequestMapping(value="/query/getdata_new",method= RequestMethod.POST , consumes = "application/json")
     public Map<String,Object> getData_new(@RequestBody EsQueryBean esQueryBean) throws Exception;
-    /**
-     * 流程图 数据查询
-     * @param esQueryBean
-     * @return
-     */
-    @RequestMapping(value="/query/agg_term",method= RequestMethod.POST, consumes = "application/json")
-    public Map<String,Object> find_agg_term(@RequestBody EsQueryBean esQueryBean);
 
     /**
      * @return

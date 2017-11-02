@@ -12,6 +12,7 @@ function initAlertDiv(){
             url: '../fzjc/findalert',
             data: JSON.stringify(alertBean),
             dataType: "json",
+            async: false,
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
             },
@@ -128,6 +129,7 @@ function lct_statusNew(moduleName,ip,subType) {
         url: '../fzjc/findData_DI',
         data: JSON.stringify(esQeuryBean_web),
         dataType: "json",
+        async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },

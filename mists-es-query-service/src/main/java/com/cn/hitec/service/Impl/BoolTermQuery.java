@@ -121,7 +121,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-        log.info(queryBuilder.toString());
+//        log.info(queryBuilder.toString());
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)

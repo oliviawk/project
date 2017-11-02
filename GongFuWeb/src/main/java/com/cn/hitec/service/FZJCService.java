@@ -8,6 +8,7 @@ import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.tools.CronPub;
 import com.cn.hitec.tools.Pub;
 import kafka.tools.ConsoleConsumer;
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -139,6 +140,10 @@ public class FZJCService extends BaseController{
                 esQuery.setParameters(params);
 
                 mapObject = esQueryService.getData_new(esQuery);
+
+//                logger.info(com.alibaba.fastjson.JSON.toJSONString(esQuery));
+//                logger.info(com.alibaba.fastjson.JSON.toJSONString(mapObject));
+//                logger.info("--");
                 //这里做一些数据字段 转换、过滤
                 outMap.put(KEY_RESULT,mapObject.get(KEY_RESULT));
                 outMap.put(KEY_MESSAGE,mapObject.get(KEY_MESSAGE));
@@ -233,14 +238,11 @@ public class FZJCService extends BaseController{
                 esQuery.setParameters(params);
 
                 //查询 获取数据
-                JSONObject j = JSONObject.fromObject(mapObject);
-                String before = j.toString();
-
                 mapObject = esQueryService.getData(esQuery);
 
-                JSONObject jb = JSONObject.fromObject(esQueryBean);
-                j = JSONObject.fromObject(mapObject);
-                System.out.println(jb.toString()+"\r\n-" + before + "\r\n-" +j.toString() + "\r\n");
+//                logger.info(com.alibaba.fastjson.JSON.toJSONString(esQuery));
+//                logger.info(com.alibaba.fastjson.JSON.toJSONString(mapObject));
+//                logger.info("--");
 
                 if(mapObject.get("result").equals("success") && mapObject.get("resultData") != null){
                     List<Object>  returnList = new ArrayList<>();
@@ -260,6 +262,8 @@ public class FZJCService extends BaseController{
 
                     }
                     mapObject.put("resultData",returnList);
+                }else{
+                    mapObject.put("resultData","[]");
                 }
 
                 //拼接返回的map
@@ -354,84 +358,6 @@ public class FZJCService extends BaseController{
             outMap.put(KEY_SPEND,spend+"mm");
             return outMap;
         }
-    }
-
-    public Map<String,Object> find_agg_terms(EsQueryBean esQueryBean){
-        long start = System.currentTimeMillis();
-        Map<String,Object> mapObject = null;
-        try {
-            //判断参数是否正确
-            if(esQueryBean == null){
-                outMap.put(KEY_RESULT,VAL_ERROR);
-                outMap.put(KEY_RESULTDATA,null);
-                outMap.put(KEY_MESSAGE,"参数错误！");
-            }else{
-                mapObject = esQueryService.find_agg_term(esQueryBean);
-                //这里做一些数据字段 转换、过滤
-                Map<String,Object> mp  = (Map) mapObject.get("resultData");
-                Map<String,Object> resMap = new HashMap<>();
-                for (String strKey : mp.keySet()){
-                    if(Pub.machingMap.containsKey(strKey)){
-                        String name = Pub.machingMap.get(strKey);
-                        Map<String , Object> childMap = (Map<String, Object>) mp.get(strKey);
-
-                        if(!resMap.containsKey(name)){
-                            Map<String , Integer> countMap = new HashMap<>();
-                            countMap.put("count",0);
-                            countMap.put("OK",0);
-                            resMap.put(name,countMap);
-                        }
-
-                        Map<String,Integer> tempMap = (Map<String, Integer>) resMap.get(name);
-                        tempMap.put("count",tempMap.get("count") + Integer.valueOf(childMap.get("count").toString()));
-                        if(childMap.containsKey("OK")){
-                            tempMap.put("OK",tempMap.get("OK") + Integer.valueOf(childMap.get("OK").toString()));
-                        }
-                    }
-                }
-
-                outMap.put(KEY_RESULT,mapObject.get(KEY_RESULT));
-                outMap.put(KEY_MESSAGE,mapObject.get(KEY_MESSAGE));
-                outMap.put(KEY_RESULTDATA,resMap);
-                outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
-            }
-        } catch (Exception e) {
-            outMap.put(KEY_RESULT,VAL_ERROR);
-            outMap.put(KEY_RESULTDATA,null);
-            outMap.put(KEY_MESSAGE,e.getMessage());
-        } finally {
-            long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
-            return outMap;
-        }
-
-    }
-
-    public List<Map> agg_realTime(String index ,String type, String module , Map<String,Object> alertMap){
-        if(alertMap == null || alertMap.size() < 1  || StringUtils.isEmpty(module) || StringUtils.isEmpty(index) || StringUtils.isEmpty(type)){
-            return null;
-        }
-        String cron = null ,  data_time = null , subType = null ;
-        Map<String,Object> params = null;
-        EsQueryBean esQueryBean = null;
-        for (String strKey : alertMap.keySet()){
-            params = new HashMap<>();
-
-            subType = alertMap.get("DI_name").toString();
-            cron = alertMap.get("time_interval").toString();
-            data_time = CronPub.getLastTimeBycron_String(cron,"yyyy-MM-dd HH:mm:ss.SSSZ",new Date());
-
-            params.put("type.keyword",subType);
-            params.put("fields.module.keyword",module);
-            params.put("fields.data_time.keyword",data_time);
-            esQueryBean = new EsQueryBean();
-            esQueryBean.setTypes(new String[]{type});
-            esQueryBean.setIndices(new String[]{index});
-            esQueryBean.setParameters(params);
-
-        }
-
-        return null;
     }
 
 }

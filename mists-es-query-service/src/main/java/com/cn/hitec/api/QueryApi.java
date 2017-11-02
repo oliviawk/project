@@ -1,5 +1,6 @@
 package com.cn.hitec.api;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.controller.BaseController;
@@ -118,6 +119,9 @@ public class QueryApi extends BaseController {
                 outMap.put(KEY_RESULT,VAL_SUCCESS);
                 outMap.put(KEY_RESULTDATA,list);
                 outMap.put(KEY_MESSAGE,"获取数据成功");
+//                System.out.println(JSON.toJSONString(esQueryBean));
+//                System.out.println(JSON.toJSONString(list));
+//                System.out.println("------------");
             }
         } catch (Exception e) {
             list = new ArrayList<>();
@@ -139,6 +143,7 @@ public class QueryApi extends BaseController {
     @RequestMapping(value="/getdata",method= RequestMethod.POST)
     public Map<String,Object> getData(@RequestBody EsQueryBean esQueryBean){
         long start = System.currentTimeMillis();
+
         List<Map> list = null;
         try {
             if(esQueryBean == null){
@@ -151,6 +156,9 @@ public class QueryApi extends BaseController {
                 outMap.put(KEY_RESULT,VAL_SUCCESS);
                 outMap.put(KEY_RESULTDATA,list);
                 outMap.put(KEY_MESSAGE,"获取数据成功");
+//                System.out.println(JSON.toJSONString(esQueryBean));
+//                System.out.println(JSON.toJSONString(list));
+//                System.out.println("------------");
             }
         } catch (Exception e) {
             list = new ArrayList<>();
@@ -266,6 +274,7 @@ public class QueryApi extends BaseController {
 	@RequestMapping(value="/getalert",method= RequestMethod.POST , consumes = "application/json")
 	public Map<String,Object> getAlertData(@RequestBody EsQueryBean esQueryBean){
 		long start = System.currentTimeMillis();
+
 		List<Map> list = new ArrayList<>();
 		try {
 			if(esQueryBean == null){
@@ -277,6 +286,9 @@ public class QueryApi extends BaseController {
 				outMap.put(KEY_RESULT,VAL_SUCCESS);
 				outMap.put(KEY_RESULTDATA,list);
 				outMap.put(KEY_MESSAGE,"获取数据成功");
+//                System.out.println(JSON.toJSONString(esQueryBean));
+//                System.out.println(JSON.toJSONString(list));
+//                System.out.println("----");
 			}
 		} catch (Exception e) {
             list = new ArrayList<>();
@@ -290,28 +302,4 @@ public class QueryApi extends BaseController {
 		}
 	}
 
-    @RequestMapping(value="/agg_term",method= RequestMethod.POST , consumes = "application/json")
-    public Map<String,Object> find_agg_term(@RequestBody EsQueryBean esQueryBean){
-        long start = System.currentTimeMillis();
-        try {
-            if(esQueryBean == null ){
-                outMap.put(KEY_RESULT,VAL_ERROR);
-                outMap.put(KEY_RESULTDATA,null);
-                outMap.put(KEY_MESSAGE,"参数错误！");
-            }else{
-                Map<String,Object> map = esWebService.find_AggTerms(esQueryBean.getIndices(), esQueryBean.getTypes(), esQueryBean.getParameters());
-                outMap.put(KEY_RESULT,VAL_SUCCESS);
-                outMap.put(KEY_RESULTDATA,map);
-                outMap.put(KEY_MESSAGE,"获取数据成功");
-            }
-        } catch (Exception e) {
-            outMap.put(KEY_RESULT,VAL_ERROR);
-            outMap.put(KEY_RESULTDATA,null);
-            outMap.put(KEY_MESSAGE,e.getMessage());
-        } finally {
-            long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
-            return outMap;
-        }
-    }
 }

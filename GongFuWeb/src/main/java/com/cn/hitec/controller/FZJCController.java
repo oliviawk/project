@@ -55,14 +55,6 @@ public class FZJCController{
     }
 
 
-    @RequestMapping(value="/agg_terms",method= RequestMethod.POST , consumes = "application/json")
-    @ResponseBody
-    public String find_agg_terms(@RequestBody EsQueryBean esQueryBean){
-        Map<String,Object> map = fzjcService.find_agg_terms(esQueryBean);
-        return JSON.toJSONString(map);
-    }
-
-
     /**
      *  云图、雷达 ， 各环节查询方法
      * @param esQueryBean

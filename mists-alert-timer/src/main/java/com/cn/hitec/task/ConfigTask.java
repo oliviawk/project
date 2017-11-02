@@ -45,6 +45,7 @@ public class ConfigTask {
         configService.createAlertDI("FZJC","加工",Pub.DIMap_machining);
         configService.createAlertDI("FZJC","分发",Pub.DIMap_distribute);
 
+        logger.info("DIMap_t639.size:"+Pub.DIMap_t639.size()+"");
         configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
         //这里要加个判断， 查询是否生成了第二天的数据，如果没有， 告警并尝试重新生成
@@ -55,19 +56,7 @@ public class ConfigTask {
     public void updAgingStatus() {
         try {
             Date nowDate = new Date();
-            agingService.collect_task(nowDate);
-//            String index = "log_" + Pub.transform_DateToString(nowDate,"yyyyMMdd");
-//
-//            EsWriteBean esWriteBean = new EsWriteBean();
-//            esWriteBean.setIndex(index);
-//            esWriteBean.setType("FZJC");
-//            Map<String,Object> params = new HashMap<>();
-//            for (String strKey : map.keySet()){
-//                esWriteBean.setId(strKey);
-//                params.put("aging_status",map.get(strKey));
-//                esWriteBean.setParams(params);
-//                esWriteService.update_field(esWriteBean);
-//            }
+            agingService.collect_task(nowDate);     //目前不适应 T639 数据
 
         } catch (Exception e) {
             e.printStackTrace();

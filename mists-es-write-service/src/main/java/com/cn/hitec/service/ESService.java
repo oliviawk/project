@@ -57,11 +57,45 @@ public class ESService {
                     error_num++;
                     continue;
                 }
+                System.out.println(json);
                 es.bulkProcessor.add(new IndexRequest(index, type)
                         .source(json, XContentType.JSON));
             }
 //            System.out.println("清理缓存！");
 //            es.bulkProcessor.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            return listSize - error_num ;
+        }
+
+    }
+
+
+    /**
+     * 添加数据
+     * @param index
+     * @param type
+     * @param listJson
+     * @return
+     */
+    public int insert(String index,String type,List<String> listJson) {
+        int error_num = 0;
+        int listSize = 0;
+        try {
+            if (listJson == null || listJson.size() < 1) {
+                return 0;
+            }
+            listSize = listJson.size();
+            for (String json : listJson) {
+                if (StringUtils.isEmpty(json)) {
+                    error_num++;
+                    continue;
+                }
+                System.out.println(json);
+
+                es.client.prepareIndex(index,type).setSource(json,XContentType.JSON).get();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -191,9 +225,9 @@ public class ESService {
                     }
                     if(resultMap.containsKey("_id")){       //如果查询到id
                         logger.info("这是预生成数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
-                        if("雷达".equals(subType)){
-                            logger.info(json);
-                        }
+//                        if("雷达".equals(subType)){
+//                            logger.info(json);
+//                        }
                         AlertBean alertBean = null;
                         String alertType = "alert";
                         index = resultMap.get("_index").toString();
@@ -270,8 +304,8 @@ public class ESService {
                             }
                             //添加路径
                             if(DIMap != null){
-                                String fileName = fields.get("file_name").toString();
-                                if(fileName.indexOf("/") == -1){
+                                String fileName = fields.containsKey("file_name") ? fields.get("file_name").toString():"";
+                                if(StringUtils.isEmpty(fileName) || fileName.indexOf("/") == -1){
                                     fields.put("file_name",DIMap.get("path")+fileName);
                                 }
                             }
@@ -331,7 +365,7 @@ public class ESService {
 
             SearchHit[] searchHits = response.getHits().getHits();
             logger.info("searchHits.dataLength :"+response.getHits().getTotalHits());
-            if(response.getHits().getTotalHits() == 0 || response.getHits().getTotalHits() > 1){
+            if(response.getHits().getTotalHits() != 1){
                 logger.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, fields:{}",indexs,type,sbuType,fields);
             }
             for (SearchHit hits:searchHits) {
