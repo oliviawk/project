@@ -1,6 +1,5 @@
 package com.cn.hitec.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.controller.BaseController;
@@ -9,6 +8,8 @@ import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.tools.CronPub;
 import com.cn.hitec.tools.Pub;
 import kafka.tools.ConsoleConsumer;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -217,7 +218,7 @@ public class FZJCService extends BaseController{
 //                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
                     params.put("sort","last_time.keyword");
                     params.put("size","5");
-                }else if("LatLonQREFEnd".equals(esQueryBean.getSubType())){
+                }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
                     params.put("type.keyword",esQueryBean.getSubType());
                     params.put("fields.module.keyword",esQueryBean.getModule());
 //                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
@@ -232,7 +233,15 @@ public class FZJCService extends BaseController{
                 esQuery.setParameters(params);
 
                 //查询 获取数据
+                JSONObject j = JSONObject.fromObject(mapObject);
+                String before = j.toString();
+
                 mapObject = esQueryService.getData(esQuery);
+
+                JSONObject jb = JSONObject.fromObject(esQueryBean);
+                j = JSONObject.fromObject(mapObject);
+                System.out.println(jb.toString()+"\r\n-" + before + "\r\n-" +j.toString() + "\r\n");
+
                 if(mapObject.get("result").equals("success") && mapObject.get("resultData") != null){
                     List<Object>  returnList = new ArrayList<>();
                     List<Object> listMap = (List<Object>)mapObject.get("resultData");
@@ -258,11 +267,13 @@ public class FZJCService extends BaseController{
                 outMap.put(KEY_MESSAGE,mapObject.get(KEY_MESSAGE));
                 outMap.put(KEY_RESULTDATA,mapObject.get("resultData"));
                 outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
+
             }
         } catch (Exception e) {
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,null);
             outMap.put(KEY_MESSAGE,e.getMessage());
+            e.printStackTrace();
         } finally {
             long spend = System.currentTimeMillis()-start;
             outMap.put(KEY_SPEND,spend+"mm");
@@ -308,7 +319,7 @@ public class FZJCService extends BaseController{
                     params.put("sort","last_time.keyword");
                     params.put("size",esQueryBean.getSize());
 
-                }else if("LatLonQREFEnd".equals(esQueryBean.getSubType())){
+                }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
                     Map<String,Object> mustMap = new HashMap<>();
                     mustMap.put("type.keyword",esQueryBean.getSubType());
                     mustMap.put("fields.module.keyword",esQueryBean.getModule());

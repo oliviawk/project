@@ -132,11 +132,26 @@ function lct_statusNew(moduleName,ip,subType) {
             "Content-Type": "application/json; charset=utf-8"
         },
         success: function (json) {
-
+            console.log("---");
+            console.log(esQeuryBean_web);
+            console.log(json);
+            console.log("---");
             if(subType == "FY-2E/G云图数据" || subType == "云图"){
                 subType = "satellite";
             }else if(subType == "雷达数据" || subType == "雷达"){
                 subType = "radarlatlon";
+            }else if(subType == "城市预报"){
+                subType = "cityforcast";
+            }else if(subType == "台风"){
+                subType = "typhoon";
+            }else if(subType == "预警信号"){
+                subType = "warning";
+            }else if(subType == "突发事件"){
+                subType = "emergency";
+            }else if(subType == "船舶"){
+                subType = "boats";
+            }else if(subType == "交通拥堵"){
+                subType = "trafficjam";
             }
 
             if(json.result != "success"){

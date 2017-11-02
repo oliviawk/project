@@ -321,9 +321,13 @@
       <tr>
         <td><div class="bg-blue">国省共享</div></td>
         <td><div class="arrow-right"></div></td>
-        <td><div class="list-grey"><span>LPS3KM</span></div></td>
+        <td><div class="list-green" id="collect_LAPS3KM"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="LAPS3KM"
+                   data-module="采集"><span>LAPS3KM</span></div></td>
         <td>&nbsp;</td>
-        <td><div class="list-grey"><span>LPS3KM</span></div></td>
+        <td><div class="list-grey"><span>LAPS3KM</span></div></td>
         <td>&nbsp;</td>
             <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -332,7 +336,11 @@
       <tr>
         <td>&nbsp;</td>
         <td><div class="arrow-group2 arrow-right"><div class="group-break-top"></div></div></td>
-        <td><div class="list-grey"><span>城市预报</span></div></td>
+        <td><div class="list-green" id="collect_cityforcast"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="城市预报"
+                   data-module="采集"><span>城市预报</span></div></td>
         <td>&nbsp;</td>
         <td><div class="list-grey"><span>城市预报</span></div></td>
         <td>&nbsp;</td>
@@ -351,7 +359,7 @@
         <td>&nbsp;</td>
         <td><div class="arrow-v-line"></div></td>
       </tr>
-      <tr>
+      <!--<tr>
             <td><div class="arrow-group arrow-right"><div class="group-line"></div></div></td>
             <td><div class="list-grey"><span>区域自动站</span></div></td>
             <td>&nbsp;</td>
@@ -360,11 +368,15 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td><div class="arrow-v-line"></div></td>
-      </tr>
+      </tr>-->
       <tr>
         <td>&nbsp;</td>
         <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
-        <td><div class="list-grey"><span>台风路径</span></div></td>
+        <td><div class="list-green" id="collect_typhoon"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="台风"
+                   data-module="采集"><span>台风</span></div></td>
         <td>&nbsp;</td>
         <td><div class="list-bottom"></div></td>
         <td>&nbsp;</td>
@@ -386,7 +398,11 @@
       <tr>
         <td rowspan="2"><div class="bg-blue">预警室</div></td>
         <td><div class="arrow-group2 arrow-right"><div class="group-break-center"></div><div class="group-break-top"></div></div></td>
-        <td><div class="title-grey"><span>预警事件</span></div></td>
+        <td><div class="list-green" id="collect_warning"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="预警信号"
+                   data-module="采集"><span>预警信号</span></div></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -396,7 +412,11 @@
       </tr>
       <tr>
         <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
-        <td><div class="title-grey"><span>突发事件</span></div></td>
+        <td><div class="list-green" id="collect_emergency"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="突发事件"
+                   data-module="采集"><span>突发事件</span></div></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -407,7 +427,11 @@
       <tr>
         <td><div class="bg-blue">博懋信</div></td>
         <td><div class="arrow-right"></div></td>
-        <td><div class="list-grey"><span>船舶</span></div></td>
+        <td><div class="list-green" id="collect_boats"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="船舶"
+                   data-module="采集"><span>船舶</span></div></td>
         <td><div class="arrow-line"></div></td>
         <td><div class="arrow-line"></div></td>
         <td><div class="arrow-line"></div></td>
@@ -418,7 +442,11 @@
       <tr>
         <td><div class="bg-blue">四维</div></td>
         <td><div class="arrow-right"></div></td>
-        <td><div class="list-grey"><span>交通拥堵</span></div></td>
+        <td><div class="list-green" id="collect_trafficjam"
+                   data-toggle="modal"
+                   data-target="#pubModal"
+                   data-subtype="交通拥堵"
+                   data-module="采集"><span>交通拥堵</span></div></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -569,6 +597,13 @@
             sleep(100);
             lct_statusNew("采集","10.30.16.220","云图");
             lct_statusNew("采集","10.30.16.220","雷达");
+            lct_statusNew("采集","120.26.9.109","LAPS3KM");
+            lct_statusNew("采集","120.26.9.109","城市预报");
+            lct_statusNew("采集","120.26.9.109","台风");
+            lct_statusNew("采集","120.26.9.109","预警信号");
+            lct_statusNew("采集","120.26.9.109","突发事件");
+            lct_statusNew("采集","120.26.9.109","船舶");
+            lct_statusNew("采集","120.26.9.109","交通拥堵");
             sleep(100);
             lct_statusNew("加工","10.30.16.223","ReadFY2NC");
             lct_statusNew("加工","10.30.16.223","LatLonQREFEnd");
@@ -579,7 +614,7 @@
         run_linkTest();
         var linkAging_interval ;
         clearInterval(linkAging_interval);
-        linkAging_interval = setInterval(run_linkTest, 180000);
+       // linkAging_interval = setInterval(run_linkTest, 180000);
 
 
 
