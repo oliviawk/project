@@ -55,6 +55,9 @@ public class SendAlertMessage {
             //推送到前端
             kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
 //            发送告警消息 到微信
+            if ("炎热指数".equals(map.get("type").toString())){
+                return ;
+            }
             HttpPub.httpPost("@all",alertTitle);
         } catch (Exception e) {
             e.printStackTrace();

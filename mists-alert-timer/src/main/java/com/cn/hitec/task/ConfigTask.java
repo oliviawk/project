@@ -57,7 +57,7 @@ public class ConfigTask {
         try {
             Date nowDate = new Date();
             agingService.collect_task(nowDate);     //目前不适应 T639 数据
-
+            agingService.task_T639();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,9 @@
 package com.cn.hitec.util;
 
+import com.cn.hitec.bean.EsQueryBean_Exsit;
+import com.cn.hitec.feign.client.EsQueryService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Pub {
+
     public static Map<String,Object> alertMap = new HashMap<>();
 
     public static Map<String,Object> DIMap_collect = new HashMap<>();
@@ -78,11 +82,13 @@ public class Pub {
     }
 
 
-    public static Map<String,Integer> alert_time_map = new HashMap<>();
-    static {
-        alert_time_map.put("雷达",30);
-        alert_time_map.put("云图",60);
-        alert_time_map.put("ReadFY2NC",60);
-    }
+//    public static Map<String,Integer> alert_time_map = new HashMap<>();
+//    static {
+//        alert_time_map.put("雷达",30);
+//        alert_time_map.put("云图",60);
+//        alert_time_map.put("ReadFY2NC",60);
+//        alert_time_map.put("炎热是猪",5);
+//    }
+
 
 }
