@@ -1,5 +1,6 @@
 package com.cn.hitec.service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.RangeEs;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.service.BoolTermQuery_I;
@@ -220,7 +221,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-//        log.info(queryBuilder.toString());
+        log.info(queryBuilder.toString());
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -300,7 +301,14 @@ public class BoolTermQuery implements BoolTermQuery_I{
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 
         for (String strKey : params.keySet()){
-            queryBuilder.must(QueryBuilders.termQuery(strKey,params.get(strKey)));
+            String strValue = params.get(strKey).toString();
+            if(strValue.indexOf(",") > -1){
+                String[] strValues = strValue.split(",");
+                queryBuilder.must(QueryBuilders.termsQuery(strKey,strValues));
+            }else{
+                queryBuilder.must(QueryBuilders.termQuery(strKey,params.get(strKey)));
+            }
+
         }
         if(isRange){
             for (QueryBuilder qb:rangeQueryBuilderList){
@@ -308,6 +316,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
+        log.info(queryBuilder.toString());
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)

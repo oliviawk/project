@@ -63,7 +63,7 @@ public class QueryApi extends BaseController {
     public Map<String,Object> indexIsExist(@RequestBody EsQueryBean_Exsit esQueryBean){
         try {
             if(StringUtils.isEmpty(esQueryBean) || StringUtils.isEmpty(esQueryBean.getIndex())
-                    || StringUtils.isEmpty(esQueryBean.getType()) || StringUtils.isEmpty(esQueryBean.getSubType())){
+                    || StringUtils.isEmpty(esQueryBean.getType())){
                 outMap.put(KEY_RESULT,VAL_ERROR);
                 outMap.put(KEY_RESULTDATA,null);
                 outMap.put(KEY_MESSAGE,"参数不能为空！");
@@ -71,7 +71,7 @@ public class QueryApi extends BaseController {
                 //判断index 是否存在
                 boolean flag  = esClientAdminService.indexIsExist(esQueryBean.getIndex());
 
-                if(flag){
+                if( !StringUtils.isEmpty(esQueryBean.getSubType()) && flag){
                     Map<String,Object> params = new HashMap<>();
                     Map<String,Object> mustMap = new HashMap<>();
                     mustMap.put("type.keyword",esQueryBean.getSubType());
@@ -84,7 +84,7 @@ public class QueryApi extends BaseController {
                         outMap.put(KEY_RESULTDATA,false);
                     }
                 }else {
-                    outMap.put(KEY_RESULTDATA,false);
+                    outMap.put(KEY_RESULTDATA,flag);
                 }
                 outMap.put(KEY_RESULT,VAL_SUCCESS);
                 outMap.put(KEY_MESSAGE,"");
@@ -193,6 +193,7 @@ public class QueryApi extends BaseController {
                 outMap.put(KEY_MESSAGE,"获取数据成功");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             resultMap = new HashMap();
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,resultMap);
