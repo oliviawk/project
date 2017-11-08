@@ -92,8 +92,6 @@ public class ESService {
                     error_num++;
                     continue;
                 }
-                System.out.println(json);
-
                 es.client.prepareIndex(index,type).setSource(json,XContentType.JSON).get();
             }
         } catch (Exception e) {
@@ -318,6 +316,10 @@ public class ESService {
                         //数据入库
                         es.bulkProcessor.add(new IndexRequest(index,type ,strId).source(map));
                         DIMap = null;
+                    }else{
+                        logger.info("这是一条未查询到的数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
+                        es.bulkProcessor.add(new IndexRequest(index, type)
+                                .source(json, XContentType.JSON));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

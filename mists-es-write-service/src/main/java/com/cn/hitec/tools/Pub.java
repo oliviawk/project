@@ -59,8 +59,10 @@ public class Pub {
         alert_time_map.put("雷达",30);
         alert_time_map.put("云图",60);
         alert_time_map.put("ReadFY2NC",60);
+        alert_time_map.put("炎热指数",5);
         alert_time_map.put("T639",-1);
         alert_time_map.put("风流场",-1);
+
     }
 
 
