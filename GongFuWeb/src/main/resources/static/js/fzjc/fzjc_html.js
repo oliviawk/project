@@ -142,6 +142,10 @@ function lct_statusNew(moduleName,ip,subType) {
                 subType = "satellite";
             }else if(subType == "雷达数据" || subType == "雷达"){
                 subType = "radarlatlon";
+            }else if(subType == "风流场"){
+                subType = "T639";
+            }else if(subType == "炎热指数"){
+                subType = "hot";
             }else if(subType == "城市预报"){
                 subType = "cityforcast";
             }else if(subType == "台风"){
@@ -157,11 +161,12 @@ function lct_statusNew(moduleName,ip,subType) {
             }
 
             if(json.result != "success"){
-                console.log(json.message);
+                console.error(json.message);
                 var upId = moduleE+"_"+subType;
                 $("#"+upId).attr({
                     "class":"list-red-f"
                 });
+
                 return;
             }
             var data = json.resultData;
@@ -171,14 +176,36 @@ function lct_statusNew(moduleName,ip,subType) {
                 $("#"+upId).attr({
                     "class":"list-red-f"
                 });
+                console.error("查询到的数据错误")
+                return;
             }
             $.each(data,function(i,values){
                 var liStatus = "list-red";
                 var liI = "sn-r";
 
+                var agingStatus_isOK = false ;
+                var eventStatus_isOK = false ;
                 $(values).each(function(){
-                    if(this.fields.hasOwnProperty("event_status") && (this.fields.event_status == "0" ||
-                            this.fields.event_status == "OK" || this.fields.event_status == "Ok")){
+                    if(this.hasOwnProperty("aging_status")){
+                        if(this.aging_status == "未处理" || this.aging_status == "正常"){
+                            agingStatus_isOK = true;
+                        }else{
+                            agingStatus_isOK = false;
+                        }
+                    }else {
+                        agingStatus_isOK = true;
+                    }
+                    if(this.fields.hasOwnProperty("event_status") ){
+                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                            eventStatus_isOK = true;
+                        }else{
+                            eventStatus_isOK = false;
+                        }
+                    }else{
+                        eventStatus_isOK = true;
+                    }
+
+                    if(agingStatus_isOK && eventStatus_isOK){
                         liStatus = "list-green";
                         liI = "sn-g";
                     }
@@ -225,6 +252,25 @@ $('#pubModal').on('show.bs.modal', function (event) {
     $("#moduleHidden").val(module);
     $("#subTypeHidden").val(subType);
 
+    //先确认头信息
+    var historyHead  = "<tr>";
+        historyHead += "<th style='width: 60px;'>编号</th>";
+        historyHead += "<th >文件名</th>";
+        historyHead += "<th style='width: 245px;'>资料时次</th>";
+
+        if(subType == "风流场" || subType == "T639"){
+            historyHead += "<th style='width: 245px;'>更新时间</th>";
+            $("#sizeNumberButton").attr("disabled","true");
+        }else{
+            $("#sizeNumberButton").removeAttr("disabled");
+        }
+        historyHead += "<th style='width: 75px;'>耗时</th>";
+        historyHead += "<th style='width: 60px;'>状态</th>";
+        historyHead += "<th>错误信息</th>";
+        historyHead += "</tr>";
+
+    $("#history_thead").html(historyHead);
+    //拼接数据
     initHistory(subType,module,size);
 
 })
@@ -268,7 +314,7 @@ function initHistory(subType,module,size) {
             "Content-Type": "application/json; charset=utf-8"
         },
         success: function (resultJson) {
-            console.log(resultJson);
+            // console.log(resultJson);
             if(resultJson.result != "success"){
                 return "null";
             }
@@ -278,6 +324,7 @@ function initHistory(subType,module,size) {
                 var trStatus = "danger";
                 // var subType = values.type;
                 if(values.hasOwnProperty("$ref")){      //错误数据----原因未知
+                    console.error("未知错误")
                     return true;
                 }
 
@@ -296,6 +343,9 @@ function initHistory(subType,module,size) {
                     }
                     //资料时次
                     tds += "<td>"+this.fields.data_time+"</td>";
+                    if(subType == "风流场" || subType == "T639"){
+                        tds += "<td>"+this.fields.end_time+"</td>";
+                    }
                     //耗时
                     if(this.fields.hasOwnProperty("total_time")){
                         var totalTime = this.fields.total_time;
@@ -351,21 +401,14 @@ function initHistory(subType,module,size) {
                 trs += "<tr class='"+trStatus+"'>"+tds+"</tr>";
             });
             $("#history_tbody").html(trs);
+
+
         },
         error:function (e) {
             console.error(e);
             $("#history_tbody").html("");
         }
-        // complete:function () {
-        //     console.log("调用了complete函数")
-        //     var tbodyHeight = $("#history_tbody").height();
-        //     console.log(tbodyHeight)
-        //     if(tbodyHeight > 500){
-        //         $("#modalBody").attr("class","modal-body modal-body-h500");
-        //     }else{
-        //         $("#modalBody").attr("class","modal-body");
-        //     }
-        // }
+
     });
 
 }
