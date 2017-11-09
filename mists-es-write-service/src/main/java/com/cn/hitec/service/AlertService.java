@@ -80,11 +80,11 @@ public class AlertService {
 
         String documentId = getDocumentId(index,type,alertBean);
         if(documentId != null){
-            //保存、推送、发送告警信息
+            //保存告警信息
             es.bulkProcessor.add(new IndexRequest(index,type,documentId)
                     .source(JSON.toJSONString(alertBean), XContentType.JSON));
         }else{
-            //保存、推送、发送告警信息
+            //保存告警信息
             IndexResponse response = es.client.prepareIndex(index,type)
                     .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
 
@@ -95,7 +95,7 @@ public class AlertService {
             throw new Exception("documentId 为空");
         }
         alertBean.setDocumentId(documentId);
-        //要发送消息并推送
+        //发送消息并推送
         kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
         HttpPub.httpPost("@all",alertBean.getTitle());
     }

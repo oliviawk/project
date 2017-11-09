@@ -1,5 +1,6 @@
 package com.cn.hitec.api;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.service.ESClientAdminService;
@@ -52,6 +53,7 @@ public class EsWriteApi extends BaseController {
 			outMap.put(KEY_MESSAGE,"ES写入数据失败！数据为 null");
 			return outMap;
 		}
+		System.out.println(JSON.toJSONString(esBean));
 		String index = esBean.getIndex();
 		if(StringUtils.isEmpty(index)){
             SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
@@ -62,7 +64,7 @@ public class EsWriteApi extends BaseController {
 
 //		System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
 
-		int num = esService.insert(index,esBean.getType(),esBean.getData());
+		int num = esService.add(index,esBean.getType(),esBean.getData());
 
 		map.put("insert_number",num);
 		long spend = System.currentTimeMillis()-start;
@@ -72,6 +74,35 @@ public class EsWriteApi extends BaseController {
 		outMap.put(KEY_SPEND,spend+"mm");
 		return outMap;
 	}
+
+    @RequestMapping(value="/insert",method=RequestMethod.POST,consumes="application/json")
+    public Map<String,Object> insert(@RequestBody EsBean esBean){
+        if(esBean == null || esBean.getData() == null){
+            outMap.put(KEY_RESULT,VAL_ERROR);
+            outMap.put(KEY_RESULTDATA,null);
+            outMap.put(KEY_MESSAGE,"ES写入数据失败！数据为 null");
+            return outMap;
+        }
+        String index = esBean.getIndex();
+        if(StringUtils.isEmpty(index)){
+            SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
+            index = Pub.Index_Head+(sdf.format(new Date()));
+        }
+        long start = System.currentTimeMillis();
+        Map<String,Object> map = new HashMap<>();
+
+//		System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
+
+        int num = esService.insert(index,esBean.getType(),esBean.getData());
+
+        map.put("insert_number",num);
+        long spend = System.currentTimeMillis()-start;
+        outMap.put(KEY_RESULT,VAL_SUCCESS);
+        outMap.put(KEY_RESULTDATA,map);
+        outMap.put(KEY_MESSAGE,"数据添加成功");
+        outMap.put(KEY_SPEND,spend+"mm");
+        return outMap;
+    }
 
 
     @RequestMapping(value="/update",method=RequestMethod.POST,consumes="application/json")
