@@ -196,7 +196,7 @@ function lct_statusNew(moduleName,ip,subType) {
                         agingStatus_isOK = true;
                     }
                     if(this.fields.hasOwnProperty("event_status") ){
-                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                        if(this.fields.event_status == "0" || this.fields.event_status.toUpperCase() == "OK") {
                             eventStatus_isOK = true;
                         }else{
                             eventStatus_isOK = false;
@@ -327,7 +327,7 @@ function initHistory(subType,module,size) {
                     console.error("未知错误")
                     return true;
                 }
-
+                console.log(values)
                 var tds = "<td>"+(i+1)+"</td>";
                 var agingStatus_isOK , eventStatus_isOK ;
                 $(values).each(function(){
@@ -365,7 +365,7 @@ function initHistory(subType,module,size) {
                         agingStatus_isOK = true;
                     }
                     if(this.fields.hasOwnProperty("event_status") ){
-                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                        if(this.fields.event_status == "0" || this.fields.event_status.toUpperCase() == "OK") {
                             eventStatus_isOK = true;
                         }else{
                             eventStatus_isOK = false;
