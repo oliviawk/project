@@ -43,7 +43,8 @@ public class ESRepository {
 
     @Value("${es.strTransportHostNames}")
     private String strTransportHostNames;
-
+    @Value("${es.strPort}")
+    private int strPort;
     @Value("${es.index.strTemplateNamePrefixs}")
     private String strTemplateNamePrefixs;
 
@@ -64,7 +65,7 @@ public class ESRepository {
         for (String strTransportHostName : itTransportHostName) {
 
             client.addTransportAddress(
-                    new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), 9300));
+                    new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), strPort));
         }
         logger.info("init client: OK");
     }
