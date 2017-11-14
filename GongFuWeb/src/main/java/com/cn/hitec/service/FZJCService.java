@@ -271,7 +271,7 @@ public class FZJCService extends BaseController{
                 }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
                     params.put("type.keyword",esQueryBean.getSubType());
                     params.put("fields.module.keyword",esQueryBean.getModule());
-//                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
+                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
                     params.put("sort","fields.data_time.keyword");  //注意这里，加工雷达没有时次
                     params.put("size","1");
                 }

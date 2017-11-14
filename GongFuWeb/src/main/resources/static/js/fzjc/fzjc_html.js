@@ -161,22 +161,46 @@ function lct_statusNew(moduleName,ip,subType) {
             }
 
             if(json.result != "success"){
-                console.error(json.message);
                 var upId = moduleE+"_"+subType;
-                $("#"+upId).attr({
-                    "class":"list-red-f"
-                });
-
+                if(moduleName == "分发"){
+                    $("#"+upId).attr({
+                        "class":"list-red-f"
+                    });
+                    $("#"+upId +" i").each(function (i) {
+                        if( i == 1){
+                            $(this).attr("class","sn-r bd");
+                        }else{
+                            $(this).attr("class","sn-r");
+                        }
+                    })
+                }else{
+                    $("#"+upId).attr({
+                        "class":"list-red"
+                    });
+                }
                 return;
             }
             var data = json.resultData;
 
             if(data.length < 1){
                 var upId = moduleE+"_"+subType;
-                $("#"+upId).attr({
-                    "class":"list-red-f"
-                });
-                console.error("查询到的数据错误")
+                if(moduleName == "分发"){
+                    $("#"+upId).attr({
+                        "class":"list-red-f"
+                    });
+                    $("#"+upId +" i").each(function (i) {
+                        if( i == 1){
+                            $(this).attr("class","sn-r bd");
+                        }else{
+                            $(this).attr("class","sn-r");
+                        }
+                    })
+                }else{
+                    $("#"+upId).attr({
+                        "class":"list-red"
+                    });
+                }
+                console.error("查询到的数据为空")
                 return;
             }
             $.each(data,function(i,values){
