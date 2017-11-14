@@ -5,6 +5,7 @@
 	<title>Document</title>
     <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css"></link>
     <link href="../css/fzjc/style_fzjc.css" rel="stylesheet"></link>
+    <link href="../css/common.css" rel="stylesheet"></link>
     <style>
         .modal-header,.modal-body,.modal-footer{
             background-color: #1d2122;
@@ -99,13 +100,16 @@
       <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><div  class="title-grey">10.30.16.220（内网采集）</div></td>
-        <td><div class="arrow-right"></div></td>
-        <td><div  class="title-grey">10.30.16.223（内网加工）</div></td>
-        <td><div class="arrow-right"></div></td>
-        <td><div  class="title-grey"><span class="fl">&nbsp;</span><span class="fr pd10">10.0.74.226（中转）</span><span class="bd fr pd10">10.30.16.236（内网）</span></div></td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+          <td><div class="title-grey ipButton-green" data-toggle="modal" data-target="#baseSourceModal"  id="collect"><span>10.30.16.220（内网采集）</span></div></td>
+          <td><div class="arrow-right"></div></td>
+          <td><div class="title-grey ipButton-green" data-toggle="modal" data-target="#baseSourceModal"><span>10.30.16.223（内网加工）</span></div></td>
+          <td><div class="arrow-right"></div></td>
+          <td><div class="title-grey">
+              <span class="fl">&nbsp;</span><span class="fr pd10">10.0.74.226（中转）</span><span
+                  class="bd fr pd10">10.30.16.236（内网）</span>
+          </div></td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
       </tr>
       <tr>
         <td><div class="bg-blue">大探</div></td>
@@ -567,11 +571,91 @@
     </div>
 </div>
 
+<!-- Modal2 -->
+<div class="modal fade bs-example-modal-lg" id="baseSourceModal" tabindex="-1"
+     role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-bg" role="document" style="margin: 125px">
+        <div class="modal-content">
+
+            <div class="modal-header" style="border-bottom:0px">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+						<span class='glyphicon glyphicon-remove' aria-hidden='true'
+                              style="color: #d9534f;"></span>
+                </button>
+                <h2 class="modal-title" style="font-weight:bold;text-align:center" id="baseSourceModalHeader">基础资源实时运行情况(10.20.40.132)</h2>
+            </div>
+
+            <div id="modalBody" class="modal-body modal-body-h370"
+                 style="color: #fff">
+                <div text-align="center">
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="cpu">CPU使用率</label>
+                            <div class="panel-body">
+                                <div id="cpuUsed" style="height: 200px;"></div>
+                                <div id="tooltip-cpu" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br />
+                                    <div></div>
+                                </div>
+                                <div id="cpuUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px"
+                                   id="memory">内存使用率</label>
+                            <div class="panel-body">
+                                <div id="memoryUsed" style="height: 200px;"></div>
+                                <div id="tooltip-p" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br />
+                                    <div></div>
+                                </div>
+                                <div id="memoryUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="net">网络流量</label>
+                            <div class="panel-body">
+                                <div id="netUsed" style="height: 200px;"></div>
+                                <div id="netUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="disk">磁盘使用情况</label>
+                            <div class="panel-body">
+                                <div id="directoryUsed" style="height: 270px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- core js start -->
     <script src="../js/core/jquery-1.8.3.min.js"></script>
     <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
     <!-- core js end -->
     <script src="../frame/d3/d3.v3.min.js"></script>
+    <script src="../js/fzjc/memoryUsed.js"></script>
+    <script src="../js/fzjc/cpuUsed.js"></script>
+    <script src="../js/fzjc/diskUsage_new.js"></script>
+    <script src="../js/fzjc/netUsed.js"></script>
+    <script src="../js/fzjc/fzjc.js"></script>
     <script src="../js/fzjc/fzjc_html.js"></script>
 
     <!--websocket 连接-->

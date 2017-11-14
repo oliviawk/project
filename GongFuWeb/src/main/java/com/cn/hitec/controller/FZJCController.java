@@ -79,4 +79,40 @@ public class FZJCController{
         Map<String,Object> map = fzjcService.findData_DI_history(esQueryBean);
         return map;
     }
+
+    @RequestMapping(value = "/getDirectoryUsedData")
+    @ResponseBody
+    public Object getDirectoryUsedData(String host) {
+        return fzjcService.getDirectoryUsedDataSham();
+    }
+
+    @RequestMapping(value = "/getNetData")
+    @ResponseBody
+    public Object getNetData(String host) {
+        return fzjcService.getNetDataSham();
+    }
+
+    @RequestMapping(value = "/getCpuData")
+    @ResponseBody
+    public Object getCpuData(String host) {
+        return fzjcService.getCpuDataSham();
+    }
+
+    @RequestMapping(value = "/getMemoryData")
+    @ResponseBody
+    public Object getMemoryData(String host) {
+        return fzjcService.getMemoryDataSham();
+    }
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public Object test() {
+        return fzjcService.getCpuData("10.30.16.220");
+    }
+
+    @RequestMapping(value = "/test2")
+    @ResponseBody
+    public Object test2() {
+        return fzjcService.getMemoryDataSham();
+    }
 }

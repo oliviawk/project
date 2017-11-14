@@ -1,0 +1,311 @@
+/* 内存图表样式 */
+.areaU {
+    fill: rgba(19, 159, 222, 0.3);
+    stroke: rgba(19, 159, 222, 1);
+    stroke-width: 2px;
+}
+
+.areaD {
+    fill: rgba(32, 193, 57, 0.3);
+    stroke: rgba(32, 193, 57, 1);
+    stroke-width: 2px;
+}
+
+.areaM {
+    fill: rgba(231, 126, 0, 0.3);
+    stroke: rgba(231, 126, 0, 1);
+    stroke-width: 2px;
+}
+
+.tipDot {
+    stroke: black;
+    stroke-width: 0.5px;
+}
+
+/* D3坐标轴 */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: rgba(100,149,237,0.5);
+    shape-rendering: crispEdges;
+}
+
+.y.axis path {
+  display: none;
+}
+
+/* CPU样式 */
+.tipCountPoints {
+    stroke-width: 2px;
+    opacity: 1;
+    fill: #41DB00;
+    stroke: white;
+}
+
+.countRemainPath {
+    fill: none;
+}
+
+.popover{
+    color:black;
+}
+
+/*表格*/
+/*下面为条纹表格样式*/
+.table1 tbody{
+    background: #363636;
+}
+.table1 tbody tr:nth-child(odd) {
+     background:#212121;
+}
+.table1 tbody td{
+    color: #D9FFFF;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: #CCCCCC;
+    /* background-color: #194676; */
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    height: 5px;
+    background-color: #999999;
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    width: 5px;
+    background-color: #CCCCCC;
+    -webkit-border-radius: 6px;
+}
+
+/* 历史详情按钮样式 */
+.detail-btn{
+  float: right;
+  padding: 5px;
+  background:#18385f;
+}
+/* 切换服务器控件样式new */
+.csUL-p{
+  position: relative;
+  /* margin-top: 30px; */
+}
+.changeServerUL1{
+    overflow: hidden;
+    margin: 4px auto;
+    position: absolute;
+    top: -40px;
+    right: 25px;
+}
+.changeServerUL{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+    margin: 4px auto;
+}
+.changeServerUL2{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+    margin: 4px auto;
+}
+.changeServerUL ul li,.changeServerUL1 ul li{
+    text-align: center;
+    display: inline-block;
+    float: left;
+    margin: 2px 5px;
+}
+.changeServerUL2 ul li,.changeServerUL1 ul li{
+    text-align: center;
+    display: inline-block;
+    float: left;
+    margin: 2px 5px;
+}
+.changeServerUL ul li a,.changeServerUL1 ul  li a{
+    color: rgb(0, 160, 233);
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-decoration: none;
+    display: block;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.changeServerUL2 ul li a,.changeServerUL1 ul  li a{
+    color: rgb(0, 160, 233);
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-decoration: none;
+    display: block;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.changeServerUL .active,.changeServerUL1 .active{
+    background: #18385f !important;
+}
+.changeServerUL2 .active,.changeServerUL1 .active{
+    background: #19314e !important;
+}
+.changeServerUL ul li i,.changeServerUL1 ul li i{
+    display: block;
+    width: 5px;
+    height: 5px;
+    margin-left: 10px;
+}
+.changeServerUL2 ul li i,.changeServerUL1 ul li i{
+    display: block;
+    width: 5px;
+    height: 5px;
+    margin-left: 10px;
+}
+.changeServerUL .s1,.changeServerUL1 .s1{
+    background:#33cd99;
+}
+.changeServerUL2 .s1,.changeServerUL1 .s1{
+    background:#33cd99;
+}
+.changeServerUL .s2,.changeServerUL1 .s2{
+    background:#fc5d61;
+}
+.changeServerUL2 .s2,.changeServerUL1 .s2{
+    background:#fc5d61;
+}
+
+/* 页面用于分类的头的样式 如：基础资源使用情况 */
+.pageHeader {
+    margin: 0px;
+    padding: 0px;
+    background: url(../img/header-bg-cipas2.png) no-repeat center bottom;
+}
+.pageHeader>h1, h2, h3, h4, h5 {
+    margin-top: 5px;
+    margin-bottom: -10px;
+}
+
+.title {
+    padding-top: 20px;
+}
+
+.bt-line {
+    height: 4px;
+    position: relative;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0),
+        rgba(0, 127, 190, 1), rgba(0, 0, 0, 0));
+    margin-bottom: -41px;
+}
+
+.bt {
+    text-align: center;
+}
+
+.bt-wrap {
+    margin: 0 auto;
+    display: table;
+    position: relative;
+    z-index: 2;
+}
+
+.first_bt-line {
+    height: 4px;
+    position: relative;
+    background: linear-gradient(to right, rgba(0, 127, 190, 1), rgba(0, 0, 0, 0));
+    margin-bottom: -41px;
+}
+.first_bt-wrap {
+    display: table;
+    position: relative;
+    z-index: 99;
+}
+
+.triangle-right, .triangle-left {
+    margin: 20px auto 5px;
+    width: 0;
+    height: 0;
+    border: 19px solid transparent;
+    float: left;
+    display: inline-block;
+}
+
+.triangle-right {
+    border-right-color: #007fbe;
+}
+
+.triangle-left {
+    border-left-color: #007fbe;
+}
+
+.triangle-title {
+    float: left;
+    height: 38px;
+    width:150px;
+    line-height: 38px;
+    background: #007fbe;
+    margin-top: 20px;
+    color: #fff;
+    padding: 0 5px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family:Microsoft yahei !important;
+}
+
+/* cpu对比图 */
+.outlineAsterArc {
+    fill: none;
+    stroke: #f3f3f3;
+}
+
+.solidAsterArc {
+    stroke: none;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.asterCenterText {
+    font-size: .6em;
+    text-anchor: middle;
+}
+/* 小标题样式 */
+.panel-title-lable{
+    font-weight: bold;
+}
+
+/*表格中小图例*/
+.table_legend{
+    width:15px;
+    height:5px;
+    display:inline-block;
+    margin-top:8px
+}
+
+/** 表格——新样式 **/
+.panel-card_t{
+    background: none;
+}
+.table1_t{
+    border-collapse:separate;
+    border-spacing:0.1rem 0.2rem;
+}
+.table1_t tbody{
+    background: rgba(24,56,94,0.62);
+}
+.table1_t thead{
+    color: rgb(0, 160, 233);
+}
+.table1_t tbody tr:nth-child(odd) {
+     background: #18385e;
+}
+.table1_t tbody td{
+    color: #8accee;
+}
