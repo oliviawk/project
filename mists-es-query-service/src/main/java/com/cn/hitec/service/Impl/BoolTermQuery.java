@@ -48,6 +48,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
         boolean is_ID = false;
         boolean is_Type = false;
         boolean is_Index = false;
+        boolean resultAll = false;
         //值查询
         List<QueryBuilder> rangeBuilderList = null;
         //创建查询类
@@ -83,7 +84,10 @@ public class BoolTermQuery implements BoolTermQuery_I{
                 strSortType = params.get("sortType").toString();
                 params.remove("sortType");
             }
-
+            if(params.containsKey("resultAll") && !StringUtils.isEmpty(params.get("resultAll"))){
+                strSortType = params.get("resultAll").toString();
+                params.remove("resultAll");
+            }
             if(params.containsKey("range")){
                 isRange = true;
                 rangeBuilderList = new ArrayList<>();
@@ -131,31 +135,59 @@ public class BoolTermQuery implements BoolTermQuery_I{
         if(!StringUtils.isEmpty(strSort)){
             requestBuilder.addSort(strSort, strSortType.equals("desc")? SortOrder.DESC : SortOrder.ASC);
         }
-        requestBuilder.setFrom(fromInt).setSize(sizeInt);
-        //创建查询
-        SearchResponse response = requestBuilder
-                .setExplain(false).get();
+
+        if(resultAll){
+            //创建查询
+            SearchResponse response = requestBuilder.setScroll(new TimeValue(3000)).get();
+            do {
+                for (SearchHit hits : response.getHits().getHits()) {
+                    try {
+                        if(is_ID){
+                            hits.getSource().put("_id",hits.getId());
+                        }
+                        if(is_Type){
+                            hits.getSource().put("_type",hits.getType());
+                        }
+                        if(is_Index){
+                            hits.getSource().put("_index",hits.getIndex());
+                        }
+                        resultList.add(hits.getSource());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                response = es.client.prepareSearchScroll(response.getScrollId())
+                        .setScroll(new TimeValue(3000))
+                        .execute().actionGet();
+            } while(response.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
+
+        }else{
+            requestBuilder.setFrom(fromInt).setSize(sizeInt);
+            //创建查询
+            SearchResponse response = requestBuilder
+                    .setExplain(false).get();
 
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-        SearchHit[] searchHits = response.getHits().getHits();
-        for (SearchHit hits:searchHits) {
-            try {
-                if(is_ID){
-                    hits.getSource().put("_id",hits.getId());
-                }
-                if(is_Type){
-                    hits.getSource().put("_type",hits.getType());
-                }
-                if(is_Index){
-                    hits.getSource().put("_index",hits.getIndex());
-                }
+            SearchHit[] searchHits = response.getHits().getHits();
+            for (SearchHit hits:searchHits) {
+                try {
+                    if(is_ID){
+                        hits.getSource().put("_id",hits.getId());
+                    }
+                    if(is_Type){
+                        hits.getSource().put("_type",hits.getType());
+                    }
+                    if(is_Index){
+                        hits.getSource().put("_index",hits.getIndex());
+                    }
 //                sourceMap = hits.getSource();
-                resultList.add(hits.getSource());
-            } catch (Exception e) {
-                e.printStackTrace();
+                    resultList.add(hits.getSource());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-
         return resultList;
     }
 

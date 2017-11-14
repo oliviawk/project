@@ -20,7 +20,12 @@ import static org.junit.Assert.*;
 public class ESServiceTest {
     @Autowired
     ESService esService;
+    @Autowired ESClientAdminService esClientAdminService;
 
+    @Test
+    public void getHealth() throws Exception{
+        esClientAdminService.getClusterHealth();
+    }
     @Test
     public void testServer() throws Exception {
         esService.testServer();
