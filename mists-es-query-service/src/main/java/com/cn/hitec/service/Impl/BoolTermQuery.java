@@ -85,7 +85,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                 params.remove("sortType");
             }
             if(params.containsKey("resultAll") && !StringUtils.isEmpty(params.get("resultAll"))){
-                strSortType = params.get("resultAll").toString();
+                resultAll = (Boolean) params.get("resultAll");
                 params.remove("resultAll");
             }
             if(params.containsKey("range")){

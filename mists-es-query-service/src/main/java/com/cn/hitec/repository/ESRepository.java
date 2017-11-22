@@ -60,6 +60,7 @@ public class ESRepository {
     public void buildClient() throws Exception {
         Settings settings = Settings.builder()
                 .put("cluster.name", strClusterName)
+//                .put("client.transport.sniff",false)
                 .build();
         Iterable<String> itTransportHostName = splitter.split(strTransportHostNames);
         client = new PreBuiltTransportClient(settings);
