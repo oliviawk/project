@@ -99,66 +99,66 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
 						"mousemove",
 						function(d) {
 							d3.selectAll(".tagShape").remove(); // 删除前一次移动生成的点
-							var xy = d3.mouse(this); // 获取鼠标移动相对当前元素的xy轴坐标
-							var interval = width / data.length; // 24小时以间隔10分钟分为144份
-							var xNumber = Math.round(xy[0] / interval); // 获取有多少个10分钟，组成当前时间
-
-							var startTime = new Date(data[0].time);
-							var times = startTime.getTime();
-
-							var hTime = parseInt(xNumber / 6);
-							var mTime = xNumber % 6;
-							startTime.setTime(times + 1000 * 60 * 60 * hTime
-									+ 1000 * 60 * 10 * mTime);
-
-							var used, free;
-							for (var ii = 0; ii < newData[0].values.length; ii++) {
-								if (startTime + "" == newData[0].values[ii].time
-										+ "") { // 对比数据获取当前时间对应的y轴值，以便确定生成标记的位置
-									used = newData[0].values[ii].num;
-									free = newData[1].values[ii].num;
-									
-									break;
-								}
-							}
-							
-							if ((xy[0] - 50) <= 50) {
-								xy[0] = 100;
-							}
-							if ((xy[0] - 50) > (width - 150)) {
-								xy[0] = width - 100;
-							}
-							if (xy[1] >= height / 2) {
-								xy[1] = xy[1] - 50;
-							} else {
-								xy[1] = xy[1] + 70;
-							}
-							// var display = $("#tooltip-p").css("display");
-							// if( display == 'none' ){
-							$("#tooltip-p").css({
-								"display" : "",
-								"left" : "" + (xy[0] - 50) + "px",
-								"top" : "" + xy[1] + "px"
-							});
-							$("#tooltip-p").find("span")
-									.html(format(startTime));
-							d3.selectAll(".tagI").remove(); // 删除前一次移动生成的点
-							$("#tooltip-p").find("div").empty();
-							if (used == undefined)
-								used = 0;
-							if (free == undefined)
-								free = 0;
-							$("#tooltip-p")
-									.find("div")
-									.append(
-											"</br><i class='table_legend' style='background-color:rgba(19, 159, 222, 1);'></i><span> used："
-													+ used
-													+ "%</span>"
-													+ "</br><i class='table_legend' style='background-color:rgba(231, 126, 0, 1);'></i><span> free："
-													+ free + "%</span>");
+							// var xy = d3.mouse(this); // 获取鼠标移动相对当前元素的xy轴坐标
+							// var interval = width / data.length; // 24小时以间隔10分钟分为144份
+							// var xNumber = Math.round(xy[0] / interval); // 获取有多少个10分钟，组成当前时间
+                            //
+							// var startTime = new Date(data[0].time);
+							// var times = startTime.getTime();
+                            //
+							// var hTime = parseInt(xNumber / 6);
+							// var mTime = xNumber % 6;
+							// startTime.setTime(times + 1000 * 60 * 60 * hTime
+							// 		+ 1000 * 60 * 10 * mTime);
+                            //
+							// var used, free;
+							// for (var ii = 0; ii < newData[0].values.length; ii++) {
+							// 	if (startTime + "" == newData[0].values[ii].time
+							// 			+ "") { // 对比数据获取当前时间对应的y轴值，以便确定生成标记的位置
+							// 		used = newData[0].values[ii].num;
+							// 		free = newData[1].values[ii].num;
+                            //
+							// 		break;
+							// 	}
+							// }
+                            //
+							// if ((xy[0] - 50) <= 50) {
+							// 	xy[0] = 100;
+							// }
+							// if ((xy[0] - 50) > (width - 150)) {
+							// 	xy[0] = width - 100;
+							// }
+							// if (xy[1] >= height / 2) {
+							// 	xy[1] = xy[1] - 50;
+							// } else {
+							// 	xy[1] = xy[1] + 70;
+							// }
+							// // var display = $("#tooltip-p").css("display");
+							// // if( display == 'none' ){
+							// $("#tooltip-p").css({
+							// 	"display" : "",
+							// 	"left" : "" + (xy[0] - 50) + "px",
+							// 	"top" : "" + xy[1] + "px"
+							// });
+							// $("#tooltip-p").find("span")
+							// 		.html(format(startTime));
+							// d3.selectAll(".tagI").remove(); // 删除前一次移动生成的点
+							// $("#tooltip-p").find("div").empty();
+							// if (used == undefined)
+							// 	used = 0;
+							// if (free == undefined)
+							// 	free = 0;
+							// $("#tooltip-p")
+							// 		.find("div")
+							// 		.append(
+							// 				"</br><i class='table_legend' style='background-color:rgba(19, 159, 222, 1);'></i><span> used："
+							// 						+ used
+							// 						+ "%</span>"
+							// 						+ "</br><i class='table_legend' style='background-color:rgba(231, 126, 0, 1);'></i><span> free："
+							// 						+ free + "%</span>");
 						}).on("mouseout", function(d) {
 					d3.selectAll(".tagShape").remove(); // 删除前一次移动生成的点
-					$("#tooltip-p").css("display", "none");
+					// $("#tooltip-p").css("display", "none");
 				});
 
 		var path = onG.selectAll(".gPath").data(newData).enter().append("g")
@@ -308,7 +308,6 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
         url: url,
         data: params,
         dataType: "json",
-        async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },

@@ -276,7 +276,6 @@ function directorUsage(url, id,params) {
 		type : "POST",
         data: params,
         dataType: "json",
-        async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },

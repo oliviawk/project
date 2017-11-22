@@ -291,7 +291,6 @@ function displayNetUsed(url, id, reloadFrequency,params) {
         url: url,
         data: params,
         dataType: "json",
-        async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },

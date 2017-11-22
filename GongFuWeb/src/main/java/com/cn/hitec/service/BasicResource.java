@@ -45,65 +45,27 @@ public class BasicResource {
         com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
         com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
-            com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
-            String m = obj.getJSONObject("fields").getString("metric");
-            if(m.contains("cpu")){
+            try {
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+
                 com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
                 String str = obj.getJSONObject("fields").getString("value");
                 String string = str.split("%")[0];
                 String time = obj.getJSONObject("fields").getString("data_time");
                 jsonData.put("used", Double.parseDouble(string));
                 jsonData.put("free", 100-Double.parseDouble(string));
-                try {
-                    Date parse = sdf2.parse(time);
-                    jsonData.put("time", sdf2.format(parse));
-                    titleTime=time;
-                    list.add(string);
-                    controlsData.add(jsonData);
-                } catch (ParseException e) {
-                    logger.info("时间格式解析错误!");
-                    e.printStackTrace();
-                }
+                Date parse = sdf2.parse(time);
+                jsonData.put("time", sdf2.format(parse));
+                list.add(string);
+                controlsData.add(jsonData);
 
+            } catch (ParseException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return returnDataTransFormat(list,controlsData);
 
-//        double max = 0;
-//        double min = 100;
-//        double total = 0;
-//        double current = 0;
-//        for (Object object : list) {
-//            double d = Double.parseDouble(object.toString()) ;
-//            total += d;
-//            current = d;
-//        }
-//        Collections.sort(list);
-////        logger.info("list:"+list);
-//        max = Double.parseDouble(list.get(list.size()-1).toString());
-//        min = Double.parseDouble(list.get(0).toString());
-//        double n = total / list.size();
-//        double avg = Double.parseDouble(String.format("%.1f", n));
-//        Map<String, Object> t = new LinkedHashMap<String, Object>();
-//        Map<String, Object> t2 = new LinkedHashMap<String, Object>();
-//        t.put("max",max);
-//        t.put("min",min);
-//        t.put("avg",avg);
-//        t.put("current",current);
-//        t2.put("max",100-min);
-//        t2.put("min",100-max);
-//        t2.put("avg",100-avg);
-//        t2.put("current",100-current);
-//        tableData.add(t);
-//        tableData.add(t2);
-//        resultData.put("tableData", tableData);
-//        resultData.put("controlsData", controlsData);
-//        Map<String, Object> outMap = new HashMap<String, Object>();
-//        outMap.put("result", "success");
-//        outMap.put("resultData", resultData);
-//        outMap.put("titleTime", titleTime);
-//        outMap.put("message", "数据加载成功！");
-//        return outMap;
     }
 
 
@@ -573,8 +535,6 @@ public class BasicResource {
             if(metric.indexOf("disk") > -1){
                 params.put("size", 10);
             }else{
-                params.put("resultAll", true);  //返回范围内的所有数据
-                // 获取 24 分钟后的时间 （4个时次后的时间）
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
@@ -588,6 +548,7 @@ public class BasicResource {
                 rangeMap.put("lte", Pub.transform_DateToString(date,"yyyy-MM-dd HH:mm"));
                 rangeList.add(rangeMap);
                 params.put("range", rangeList);
+                params.put("resultAll", true);  //返回范围内的所有数据
             }
 
 
