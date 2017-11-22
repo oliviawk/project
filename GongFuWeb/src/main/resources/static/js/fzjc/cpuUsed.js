@@ -1,5 +1,5 @@
 var intervalCpu;
-function displayCpuUsed(url, id, reloadFrequency) {
+function displayCpuUsed(url, id, reloadFrequency,params) {
 
 	var category = [ 'used', 'free' ];
 
@@ -303,43 +303,60 @@ function displayCpuUsed(url, id, reloadFrequency) {
 
 	}
 
-	$.post(url,function(data) {
-						if (data["titleTime"] != undefined
-								&& data["titleTime"] != null) {
-							document.getElementById('cpu').innerHTML = "cpu使用率 ("
-									+ data["titleTime"] + ")";
-						} else {
-							document.getElementById('cpu').innerHTML = "cpu使用率 ";
-						}
-						if ("fail" == data["result"]) {
-							console.log("获取内存使用率数据失败,失败原因：" + data["message"]);
-						} else {
-							var sca = new generate(data["resultData"], id);
-							clearInterval(intervalMem);
-							intervalMem = setInterval(
-									function() {
-										if (data["titleTime"] != undefined
-												&& data["titleTime"] != null) {
-											document.getElementById('cpu').innerHTML = "cpu使用率 ("
-													+ data["titleTime"] + ")";
-										} else {
-											document.getElementById('cpu').innerHTML = "cpu使用率 ";
-										}
-										$.post(url, function(data2) {
-											if ("fail" == data2["result"]) {
-												console.log("获取内存使用率数据失败,失败原因："
-														+ data2["message"]);
-											} else {
-												redraw(data2["resultData"], sca
-														.getOpt()['x'], sca
-														.getOpt()['y'], sca
-														.getOpt()['xAxis'], sca
-														.getSvg()['svg'], sca
-														.getSvg()['area'], sca
-														.getSvg()['onG']);
-											}
-										});
-									}, reloadFrequency);
-						}
-					});
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: params,
+        dataType: "json",
+        async: false,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (data) {
+            if (data["titleTime"] != undefined
+                && data["titleTime"] != null) {
+                document.getElementById('cpu').innerHTML = "cpu使用率 ("
+                    + data["titleTime"] + ")";
+            } else {
+                document.getElementById('cpu').innerHTML = "cpu使用率 ";
+            }
+            if ("fail" == data["result"]) {
+                console.log("获取内存使用率数据失败,失败原因：" + data["message"]);
+            } else {
+                var sca = new generate(data["resultData"], id);
+                clearInterval(intervalMem);
+                intervalMem = setInterval(
+                    function() {
+                        if (data["titleTime"] != undefined
+                            && data["titleTime"] != null) {
+                            document.getElementById('cpu').innerHTML = "cpu使用率 ("
+                                + data["titleTime"] + ")";
+                        } else {
+                            document.getElementById('cpu').innerHTML = "cpu使用率 ";
+                        }
+                        $.post(url, function(data2) {
+                            if ("fail" == data2["result"]) {
+                                console.log("获取内存使用率数据失败,失败原因："
+                                    + data2["message"]);
+                            } else {
+                                redraw(data2["resultData"], sca
+                                    .getOpt()['x'], sca
+                                    .getOpt()['y'], sca
+                                    .getOpt()['xAxis'], sca
+                                    .getSvg()['svg'], sca
+                                    .getSvg()['area'], sca
+                                    .getSvg()['onG']);
+                            }
+                        });
+                    }, reloadFrequency);
+            }
+        },
+        error: function (e) {
+            console.error(e);
+        }
+
+    });
+    // $.post(url,params,function(data) {
+    //
+    // });
 }

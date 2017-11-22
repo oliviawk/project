@@ -1,7 +1,7 @@
 var tau = 2 * Math.PI; // http://tauday.com/tau-manifesto
 
 var intervalID_directorUsage;
-function directorUsage(url, id) {
+function directorUsage(url, id,params) {
 	
 	function generate(data, id) {
 		var popoverObj;
@@ -273,7 +273,13 @@ function directorUsage(url, id) {
 	
 	$.ajax({
 		url : url,
-		type : "post",
+		type : "POST",
+        data: params,
+        dataType: "json",
+        async: false,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
 		success : function(result) {
 			if(result["titleTime"]!=undefined){
 				document.getElementById('disk').innerHTML="磁盘使用情况("+result["titleTime"]+")";

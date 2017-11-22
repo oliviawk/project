@@ -1,8 +1,8 @@
 package com.cn.hitec.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_web;
+import com.cn.hitec.service.BasicResource;
 import com.cn.hitec.service.FZJCService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,8 @@ public class FZJCController{
 
     @Autowired
     private FZJCService fzjcService;
-
+    @Autowired
+    private BasicResource basicResource;
     
     @RequestMapping("/")
     public String index() {
@@ -80,39 +81,43 @@ public class FZJCController{
         return map;
     }
 
-    @RequestMapping(value = "/getDirectoryUsedData")
+    @RequestMapping(value = "/getDirectoryUsedData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
-    public Object getDirectoryUsedData(String host) {
-        return fzjcService.getDirectoryUsedDataSham();
+    public Object getDirectoryUsedData(@RequestBody String json) {
+        System.out.println(json);
+        Map<String,Object> params = JSON.parseObject(json);
+        return basicResource.getDirectoryUsedData(params.get("host").toString());
     }
 
-    @RequestMapping(value = "/getNetData")
+    @RequestMapping(value = "/getNetData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
     public Object getNetData(String host) {
-        return fzjcService.getNetDataSham();
+        return basicResource.getNetDataSham();
     }
 
-    @RequestMapping(value = "/getCpuData")
+    @RequestMapping(value = "/getCpuData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
-    public Object getCpuData(String host) {
-        return fzjcService.getCpuDataSham();
+    public Object getCpuData(@RequestBody String json) {
+        Map<String,Object> params = JSON.parseObject(json);
+        return basicResource.getCpuData(params.get("host").toString(),Integer.valueOf(params.get("minute").toString()));
     }
 
-    @RequestMapping(value = "/getMemoryData")
+    @RequestMapping(value = "/getMemoryData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
-    public Object getMemoryData(String host) {
-        return fzjcService.getMemoryDataSham();
+    public Object getMemoryData(@RequestBody String json) {
+        Map<String,Object> params = JSON.parseObject(json);
+        return basicResource.getMemoryData(params.get("host").toString(),Integer.valueOf(params.get("minute").toString()));
     }
 
     @RequestMapping(value = "/test")
     @ResponseBody
     public Object test() {
-        return fzjcService.getCpuData("10.30.16.220");
+        return basicResource.getCpuData("10.30.16.220",120);
     }
 
     @RequestMapping(value = "/test2")
     @ResponseBody
     public Object test2() {
-        return fzjcService.getMemoryDataSham();
+        return basicResource.getMemoryDataSham();
     }
 }

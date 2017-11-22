@@ -3,10 +3,7 @@ package com.cn.hitec.tools;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Pub {
     public static Map<String,String> machingMap = new HashMap<>();
@@ -25,6 +22,34 @@ public class Pub {
 
         machingMap.put("satellite","FY-2G/E");
     }
+
+
+    /**
+     * 内网IP
+     * @return
+     */
+    public static List<String> getIpList_in(){
+        List<String> list = new ArrayList<String>();
+        list.add("10.30.16.220");
+        list.add("10.30.16.223");
+        list.add("10.30.16.236");
+        list.add("10.0.74.226");
+        list.add("120.26.9.109");
+        return list;
+    }
+    /**
+     * 外网
+     * @return
+     */
+    public static List<String> getIpList_out(){
+        List<String> list = new ArrayList<String>();
+        list.add("120.55.36.131");
+        list.add("120.26.9.109");
+        list.add("121.40.192.103");
+        list.add("101.37.16.238");
+        return list;
+    }
+
 
     public static Map<String,Object> alertMap_collect = new HashMap<>();
     public static Map<String,Object> alertMap_machining = new HashMap<>();

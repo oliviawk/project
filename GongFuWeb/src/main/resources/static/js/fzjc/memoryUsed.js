@@ -1,5 +1,5 @@
 var intervalMem;
-function displayMemoryUsed(url, id, reloadFrequency) {
+function displayMemoryUsed(url, id, reloadFrequency,params) {
 
 	var category = [ 'used', 'free' ];
 
@@ -122,8 +122,6 @@ function displayMemoryUsed(url, id, reloadFrequency) {
 					var hTime = parseInt(xNumber / 6);
 					var mTime = xNumber % 6;
 					startTime.setTime( times + 1000*60*60*hTime + 1000 * 60 * 10 * mTime );
-					debugger;
-
 
 					var used , free;
 					for (var ii = 0; ii < newData[0].values.length; ii++) {
@@ -310,44 +308,55 @@ function displayMemoryUsed(url, id, reloadFrequency) {
 
 	}
 
-	$
-			.post(
-					url,
-					function(data) {
-						if (data["titleTime"] != undefined && data["titleTime"] != null) {
-							document.getElementById('memory').innerHTML = "内存使用率 ("
-									+ data["titleTime"] + ")";
-						} else {
-							document.getElementById('memory').innerHTML = "内存使用率 ";
-						}
-						if ("fail" == data["result"]) {
-							console.log("获取内存使用率数据失败,失败原因：" + data["message"]);
-						} else {
-							var sca = new generate(data["resultData"], id);
-							clearInterval(intervalMem);
-							intervalMem = setInterval(
-									function() {
-										if (data["titleTime"] != undefined && data["titleTime"] != null) {
-											document.getElementById('memory').innerHTML = "内存使用率 ("
-													+ data["titleTime"] + ")";
-										} else {
-											document.getElementById('memory').innerHTML = "内存使用率 ";
-										}
-										$.post(url, function(data2) {
-											if ("fail" == data2["result"]) {
-												console.log("获取内存使用率数据失败,失败原因："
-														+ data2["message"]);
-											} else {
-												redraw(data2["resultData"], sca
-														.getOpt()['x'], sca
-														.getOpt()['y'], sca
-														.getOpt()['xAxis'], sca
-														.getSvg()['svg'], sca
-														.getSvg()['area'], sca
-														.getSvg()['onG']);
-											}
-										});
-									}, reloadFrequency);
-						}
-					});
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: params,
+        dataType: "json",
+        async: false,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (data) {
+            if (data["titleTime"] != undefined && data["titleTime"] != null) {
+                document.getElementById('memory').innerHTML = "内存使用率 ("
+                    + data["titleTime"] + ")";
+            } else {
+                document.getElementById('memory').innerHTML = "内存使用率 ";
+            }
+            if ("fail" == data["result"]) {
+                console.log("获取内存使用率数据失败,失败原因：" + data["message"]);
+            } else {
+                var sca = new generate(data["resultData"], id);
+                clearInterval(intervalMem);
+                intervalMem = setInterval(
+                    function() {
+                        if (data["titleTime"] != undefined && data["titleTime"] != null) {
+                            document.getElementById('memory').innerHTML = "内存使用率 ("
+                                + data["titleTime"] + ")";
+                        } else {
+                            document.getElementById('memory').innerHTML = "内存使用率 ";
+                        }
+                        $.post(url, function(data2) {
+                            if ("fail" == data2["result"]) {
+                                console.log("获取内存使用率数据失败,失败原因："
+                                    + data2["message"]);
+                            } else {
+                                redraw(data2["resultData"], sca
+                                    .getOpt()['x'], sca
+                                    .getOpt()['y'], sca
+                                    .getOpt()['xAxis'], sca
+                                    .getSvg()['svg'], sca
+                                    .getSvg()['area'], sca
+                                    .getSvg()['onG']);
+                            }
+                        });
+                    }, reloadFrequency);
+            }
+        },
+        error: function (e) {
+            console.error(e);
+        }
+
+    });
 }
