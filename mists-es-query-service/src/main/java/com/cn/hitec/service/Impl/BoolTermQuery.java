@@ -136,9 +136,11 @@ public class BoolTermQuery implements BoolTermQuery_I{
             requestBuilder.addSort(strSort, strSortType.equals("desc")? SortOrder.DESC : SortOrder.ASC);
         }
 
+//        long start = System.currentTimeMillis();
         if(resultAll){
+            requestBuilder.setSize(1000);
             //创建查询
-            SearchResponse response = requestBuilder.setScroll(new TimeValue(3000)).get();
+            SearchResponse response = requestBuilder.setScroll(new TimeValue(2000)).get();
             do {
                 for (SearchHit hits : response.getHits().getHits()) {
                     try {
@@ -158,7 +160,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                 }
 
                 response = es.client.prepareSearchScroll(response.getScrollId())
-                        .setScroll(new TimeValue(3000))
+                        .setScroll(new TimeValue(2000))
                         .execute().actionGet();
             } while(response.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
 
@@ -188,6 +190,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                 }
             }
         }
+//        log.info("查询ES耗时："+(System.currentTimeMillis() - start));
         return resultList;
     }
 

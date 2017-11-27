@@ -15,16 +15,17 @@ import org.springframework.stereotype.Component;
  * @data: 2017年05月10日 下午1:14
  */
 @Component
+@Slf4j
 //@Order(value = 1)
 public class RunnerEsComponent  implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
+//    private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
     @Autowired
     ESRepository esRepository;
 
     @Override
     public void run(String... strings) throws Exception {
         //初始化ES连接信息
-        logger.info("start init es");
+        log.info("start init es");
         esRepository.buildClient();
         esRepository.bulidBulkProcessor();
 
