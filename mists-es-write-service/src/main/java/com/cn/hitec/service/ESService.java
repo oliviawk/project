@@ -57,7 +57,7 @@ public class ESService {
                     error_num++;
                     continue;
                 }
-                System.out.println(json);
+//                System.out.println(json);
                 es.bulkProcessor.add(new IndexRequest(index, type)
                         .source(json, XContentType.JSON));
             }
@@ -267,7 +267,8 @@ public class ESService {
                         }else{
                             //确定是否进行 数据状态 告警
                             if(fields.get("event_status").toString().toUpperCase().equals("OK") || fields.get("event_status").toString().equals("0")){
-                                Date nowDate = Pub.transform_StringToDate(fields.get("end_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+//                                Date nowDate = Pub.transform_StringToDate(fields.get("end_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+                                Date nowDate = new Date();
                                 Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
                                 //确定是否 时效告警 ,修改时效状态
                                 if (nowDate.getTime() - lastDate.getTime() >= 1000) {
@@ -406,15 +407,5 @@ public class ESService {
         int secend = time % 60;
 
         return min+"分"+secend+"秒";
-    }
-
-    public static void main(String[] args){
-        try {
-            Date date = new Date(1509505500304L);
-            String str = Pub.transform_DateToString(date,"yyyy-MM-dd HH:mm:ss.SSSZ") ;
-            System.out.println(str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
