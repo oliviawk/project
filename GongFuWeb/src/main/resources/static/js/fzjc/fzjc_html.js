@@ -4,7 +4,7 @@
 function initAlertDiv(){
         var alertBean = {
             "types":["alert"],
-            "size":5
+            "size":6
         }
 
         $.ajax({
