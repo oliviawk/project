@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.cn.hitec.bean.D3NetBean;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.bean.EsQueryBean_web;
@@ -7,6 +8,7 @@ import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.controller.FZJCController;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.tools.CronPub;
+import com.cn.hitec.tools.DateTool;
 import com.cn.hitec.tools.Pub;
 import kafka.tools.ConsoleConsumer;
 import net.sf.json.JSON;
@@ -21,6 +23,8 @@ import org.springframework.util.StringUtils;
 import sun.misc.resources.Messages_pt_BR;
 
 import java.security.Key;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -272,7 +276,7 @@ public class FZJCService extends BaseController{
                 }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
                     params.put("type.keyword",esQueryBean.getSubType());
                     params.put("fields.module.keyword",esQueryBean.getModule());
-//                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
+                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
                     params.put("sort","fields.data_time.keyword");  //注意这里，加工雷达没有时次
                     params.put("size","1");
                 }

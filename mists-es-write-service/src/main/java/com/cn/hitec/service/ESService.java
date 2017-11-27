@@ -57,7 +57,7 @@ public class ESService {
                     error_num++;
                     continue;
                 }
-                System.out.println(json);
+//                System.out.println(json);
                 es.bulkProcessor.add(new IndexRequest(index, type)
                         .source(json, XContentType.JSON));
             }
@@ -213,7 +213,13 @@ public class ESService {
                         }else{
                             indices = Pub.getIndices(endTime,1);   //获取今天和昨天的 index
                         }
-                        resultMap = getDocumentId(indices,type,subType,fields);
+                        if("炎热指数".equals(subType)){
+                            String name = map.get("name").toString();
+                            resultMap = getDocumentId(indices,type,subType,name,fields);
+                        }else{
+                            resultMap = getDocumentId(indices,type,subType,null,fields);
+                        }
+
                     }else{
                         map.put("aging_status","正常");
                         logger.info("这是一条非定时数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
@@ -261,7 +267,8 @@ public class ESService {
                         }else{
                             //确定是否进行 数据状态 告警
                             if(fields.get("event_status").toString().toUpperCase().equals("OK") || fields.get("event_status").toString().equals("0")){
-                                Date nowDate = Pub.transform_StringToDate(fields.get("end_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+//                                Date nowDate = Pub.transform_StringToDate(fields.get("end_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+                                Date nowDate = new Date();
                                 Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
                                 //确定是否 时效告警 ,修改时效状态
                                 if (nowDate.getTime() - lastDate.getTime() >= 1000) {
@@ -340,11 +347,11 @@ public class ESService {
      * 查询单条数据ID
      * @param indexs
      * @param type
-     * @param sbuType
+     * @param subType
      * @param fields
      * @return
      */
-    public Map<String,Object> getDocumentId(String[] indexs,String type,String sbuType , Map<String,Object> fields){
+    public Map<String,Object> getDocumentId(String[] indexs,String type,String subType , String name ,Map<String,Object> fields){
         Map<String,Object> resultMap = new HashMap<>();
         try {
 
@@ -354,10 +361,14 @@ public class ESService {
             }
             //创建查询类
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-            queryBuilder.must(QueryBuilders.termQuery("type.keyword",sbuType));
+            queryBuilder.must(QueryBuilders.termQuery("type.keyword",subType));
+            if("炎热指数".equals(subType)){
+                queryBuilder.must(QueryBuilders.termQuery("name.keyword",name));
+            }
+            queryBuilder.must(QueryBuilders.termQuery("fields.data_time.keyword",fields.get("data_time").toString()));
             queryBuilder.must(QueryBuilders.termQuery("fields.module.keyword",fields.get("module").toString()));
             queryBuilder.must(QueryBuilders.termQuery("fields.ip_addr.keyword",fields.get("ip_addr").toString()));
-            queryBuilder.must(QueryBuilders.termQuery("fields.data_time.keyword",fields.get("data_time").toString()));
+
             //返回查询结果
             SearchResponse response = es.client.prepareSearch(indices)
                     .setTypes(type)
@@ -368,7 +379,7 @@ public class ESService {
             SearchHit[] searchHits = response.getHits().getHits();
             logger.info("searchHits.dataLength :"+response.getHits().getTotalHits());
             if(response.getHits().getTotalHits() != 1){
-                logger.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, fields:{}",indexs,type,sbuType,fields);
+                logger.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, name:{}, fields:{}",indexs,type,subType,name,fields);
             }
             for (SearchHit hits:searchHits) {
                 resultMap = hits.getSource();
@@ -396,15 +407,5 @@ public class ESService {
         int secend = time % 60;
 
         return min+"分"+secend+"秒";
-    }
-
-    public static void main(String[] args){
-        try {
-            Date date = new Date(1509505500304L);
-            String str = Pub.transform_DateToString(date,"yyyy-MM-dd HH:mm:ss.SSSZ") ;
-            System.out.println(str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

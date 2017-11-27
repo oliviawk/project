@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.repository.ESRepository;
@@ -51,6 +52,7 @@ public class ESClientAdminService {
         map.put("clusterName",healths.getClusterName());
         map.put("numberOfDataNodes",healths.getNumberOfDataNodes());
         map.put("numberOfNodes",healths.getNumberOfNodes());
+        System.out.println(JSON.toJSONString(map));
         return map;
     }
 

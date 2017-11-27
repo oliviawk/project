@@ -161,22 +161,46 @@ function lct_statusNew(moduleName,ip,subType) {
             }
 
             if(json.result != "success"){
-                console.error(json.message);
                 var upId = moduleE+"_"+subType;
-                $("#"+upId).attr({
-                    "class":"list-red-f"
-                });
-
+                if(moduleName == "分发"){
+                    $("#"+upId).attr({
+                        "class":"list-red-f"
+                    });
+                    $("#"+upId +" i").each(function (i) {
+                        if( i == 1){
+                            $(this).attr("class","sn-r bd");
+                        }else{
+                            $(this).attr("class","sn-r");
+                        }
+                    })
+                }else{
+                    $("#"+upId).attr({
+                        "class":"list-red"
+                    });
+                }
                 return;
             }
             var data = json.resultData;
 
             if(data.length < 1){
                 var upId = moduleE+"_"+subType;
-                $("#"+upId).attr({
-                    "class":"list-red-f"
-                });
-                console.error("查询到的数据错误")
+                if(moduleName == "分发"){
+                    $("#"+upId).attr({
+                        "class":"list-red-f"
+                    });
+                    $("#"+upId +" i").each(function (i) {
+                        if( i == 1){
+                            $(this).attr("class","sn-r bd");
+                        }else{
+                            $(this).attr("class","sn-r");
+                        }
+                    })
+                }else{
+                    $("#"+upId).attr({
+                        "class":"list-red"
+                    });
+                }
+                console.error("查询到的数据为空")
                 return;
             }
             $.each(data,function(i,values){
@@ -196,7 +220,7 @@ function lct_statusNew(moduleName,ip,subType) {
                         agingStatus_isOK = true;
                     }
                     if(this.fields.hasOwnProperty("event_status") ){
-                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                        if(this.fields.event_status == "0" || this.fields.event_status.toUpperCase() == "OK") {
                             eventStatus_isOK = true;
                         }else{
                             eventStatus_isOK = false;
@@ -342,7 +366,7 @@ function initHistory(subType,module,size) {
                     console.error("未知错误")
                     return true;
                 }
-
+                console.log(values)
                 var tds = "<td>"+(i+1)+"</td>";
                 var agingStatus_isOK , eventStatus_isOK ;
                 $(values).each(function(){
@@ -397,7 +421,7 @@ function initHistory(subType,module,size) {
                         agingStatus_isOK = true;
                     }
                     if(this.fields.hasOwnProperty("event_status") ){
-                        if((this.fields.event_status == "0" || this.fields.event_status == "OK" || this.fields.event_status == "Ok")) {
+                        if(this.fields.event_status == "0" || this.fields.event_status.toUpperCase() == "OK") {
                             eventStatus_isOK = true;
                         }else{
                             eventStatus_isOK = false;

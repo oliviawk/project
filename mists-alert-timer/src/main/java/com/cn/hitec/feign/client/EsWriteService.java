@@ -24,14 +24,16 @@ public interface EsWriteService {
 	 * @return
 	 */
 	@RequestMapping(value="/write/getHealth",method=RequestMethod.GET,consumes="application/json")
-	public String getESHealth();
+	String getESHealth();
 
 	/**
 	 * 添加数据
 	 * @return
 	 */
 	@RequestMapping(value="/write/add",method=RequestMethod.POST,consumes="application/json")
-	public Map<String,Object> add(EsWriteBean esBean);
+	Map<String,Object> add(EsWriteBean esBean);
+    @RequestMapping(value="/write/insert",method=RequestMethod.POST,consumes="application/json")
+    Map<String,Object> insert(EsWriteBean esBean);
 
     /**
      * 修改数据
@@ -39,9 +41,9 @@ public interface EsWriteService {
      * @return
      */
     @RequestMapping(value="/write/update",method=RequestMethod.POST,consumes="application/json")
-    public Map<String,Object> update(@RequestBody EsWriteBean esBean);
+    Map<String,Object> update(@RequestBody EsWriteBean esBean);
 
     @RequestMapping(value="/write/update2",method=RequestMethod.POST,consumes="application/json")
-    public Map<String,Object> update_field(@RequestBody EsWriteBean esBean);
+    Map<String,Object> update_field(@RequestBody EsWriteBean esBean);
 
 }

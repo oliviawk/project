@@ -111,4 +111,12 @@ public class ESServiceTest {
 
     }
 
+    @Test
+    public void insertTest_hot(){
+        List<String> list = new ArrayList<>();
+        list.add("{\"occur_time\":1510190402148,\"last_time\":\"2017-11-09 09:26:00.000+0800\",\"should_time\":\"2017-11-09 09:21:00.000+0800\",\"name\":\"20\",\"receive_time\":1510190808694,\"type\":\"炎热指数\",\"fields\":{\"start_time\":\"2017-11-09 09:20:01.192+0800\",\"event_info\":\"正常\",\"data_time\":\"2017-11-09 09:00:00.000+0800\",\"file_name\":\"Z://NoGeography//live//hotIndex//hot2017110909.txt\",\"module\":\"加工\",\"end_time\":\"2017-11-09 09:20:02.148+0800\",\"step\":\"1\",\"ip_addr\":\"10.30.16.223\",\"file_size\":\"139510\",\"event_status\":\"ok\"}}");
+        esService.update("","FZJC",list);
+        System.out.println("");
+    }
+
 }

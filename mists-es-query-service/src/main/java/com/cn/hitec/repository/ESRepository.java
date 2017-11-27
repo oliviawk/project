@@ -45,6 +45,9 @@ public class ESRepository {
     @Value("${es.strTransportHostNames}")
     private String strTransportHostNames;
 
+    @Value("${es.strPort}")
+    private int strPort;
+
     @Value("${es.index.strTemplateNamePrefixs}")
     private String strTemplateNamePrefixs;
 
@@ -57,13 +60,14 @@ public class ESRepository {
     public void buildClient() throws Exception {
         Settings settings = Settings.builder()
                 .put("cluster.name", strClusterName)
+//                .put("client.transport.sniff",false)
                 .build();
         Iterable<String> itTransportHostName = splitter.split(strTransportHostNames);
         client = new PreBuiltTransportClient(settings);
         for (String strTransportHostName : itTransportHostName) {
 
             client.addTransportAddress(
-                    new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), 9300));
+                    new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), strPort));
         }
         log.info("init client: OK");
     }

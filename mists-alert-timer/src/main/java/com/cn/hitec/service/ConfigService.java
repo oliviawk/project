@@ -43,7 +43,7 @@ public class ConfigService {
         esWriteBean.setIndex("config");
         esWriteBean.setType("collect");
         esWriteBean.setData(jsonList);
-        Map<String,Object> map = esWriteService.add(esWriteBean);
+        Map<String,Object> map = esWriteService.insert(esWriteBean);
         Map<String,Object> resultMap = (Map<String,Object>)map.get("resultData");
         int n = Integer.valueOf(resultMap.get("insert_number").toString());
         return n;
@@ -61,15 +61,15 @@ public class ConfigService {
         jsonList.add("{\"DI_name\":\"ReadFY2NC\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4200,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\"}");
         jsonList.add("{\"DI_name\":\"风流场\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z:\\\\NoGeography\\\\forecast\\\\t639\\\\\",\"file_name\":\"T639_GMFS_WIND_2017102508.json\",\"transfer_type\":\"\"}");
 
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":300,\"last_time\":360,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":3660,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1260,\"last_time\":1560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3360,\"last_time\":3660,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
 
 
         EsWriteBean esWriteBean = new EsWriteBean();
         esWriteBean.setIndex("config");
         esWriteBean.setType("machining");
         esWriteBean.setData(jsonList);
-        Map<String,Object> map = esWriteService.add(esWriteBean);
+        Map<String,Object> map = esWriteService.insert(esWriteBean);
         Map<String,Object> resultMap = (Map<String,Object>)map.get("resultData");
         int n = Integer.valueOf(resultMap.get("insert_number").toString());
         return n;
@@ -87,14 +87,14 @@ public class ConfigService {
         jsonList.add("{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4500,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/cloudmap/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\"}");
         jsonList.add("{\"DI_name\":\"雷达\",\"time_interval\":\"0 0/6 * * * ? *\",\"should_time\":\"1500\",\"last_time\":\"2100\",\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/Radar/\",\"file_name\":\"MSP3_PMSC_RADAR_BREF_L88_CHN_*.png\",\"transfer_type\":\"ftp推送\"}");
         jsonList.add("{\"DI_name\":\"T639\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/T639/\",\"file_name\":\"T639_GMFS_WIND_*.json\",\"transfer_type\":\"\"}");
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":900,\"last_time\":960,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":4200,\"last_time\":4260,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1860,\"last_time\":2460,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3960,\"last_time\":4560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
 
         EsWriteBean esWriteBean = new EsWriteBean();
         esWriteBean.setIndex("config");
         esWriteBean.setType("distribute");
         esWriteBean.setData(jsonList);
-        Map<String,Object> map = esWriteService.add(esWriteBean);
+        Map<String,Object> map = esWriteService.insert(esWriteBean);
         Map<String,Object> resultMap = (Map<String,Object>)map.get("resultData");
         int n = Integer.valueOf(resultMap.get("insert_number").toString());
         return n;
@@ -145,6 +145,9 @@ public class ConfigService {
             String DI_name = map.get("DI_name").toString();
             if("T639".equals(DI_name) || "风流场".equals(DI_name)){
                 Pub.DIMap_t639.put(DI_name,map);
+            }else if("炎热指数".equals(DI_name)){
+                String name = map.get("name").toString();
+                Pub.DIMap_collect.put(DI_name+"_"+name,map);
             }else{
                 Pub.DIMap_collect.put(DI_name,map);
             }
@@ -155,6 +158,9 @@ public class ConfigService {
             String DI_name = map.get("DI_name").toString();
             if("T639".equals(DI_name) || "风流场".equals(DI_name)){
                 Pub.DIMap_t639.put(DI_name,map);
+            }else if("炎热指数".equals(DI_name)){
+                String name = map.get("name").toString();
+                Pub.DIMap_machining.put(DI_name+"_"+name,map);
             }else{
                 Pub.DIMap_machining.put(DI_name,map);
             }
@@ -165,6 +171,9 @@ public class ConfigService {
             String DI_name = map.get("DI_name").toString();
             if("T639".equals(DI_name) || "风流场".equals(DI_name)){
                 Pub.DIMap_t639.put(DI_name,map);
+            }else if("炎热指数".equals(DI_name)){
+                String name = map.get("name").toString();
+                Pub.DIMap_distribute.put(DI_name+"_"+name,map);
             }else{
                 Pub.DIMap_distribute.put(DI_name,map);
             }
@@ -206,55 +215,58 @@ public class ConfigService {
             for (String key: DIMap.keySet()){
                 map = (Map<String,Object>)DIMap.get(key);    //获取单条配置信息
 
-                String cron = map.get("time_interval").toString();
-                List<Date> timeList = CronPub.getTimeBycron_Date(cron,startDate,endDate);
-                List<String> listDataBean = new ArrayList<>();
-                String subType = map.get("DI_name").toString();
-                String name = "";
-                String IP = map.get("IP").toString();
-                String path = map.get("path").toString();
-                for (Date dt : timeList){
-//                    String indexKey = Pub.Index_Head+Pub.transform_DateToString(dt,Pub.Index_Food_Simpledataformat);
-//                    //判断是否预生成过，没有的话生成
-//                    if(isExist_DI_Data(indexKey,type,key)){
+                try {
+                    String cron = map.get("time_interval").toString();
+                    List<Date> timeList = CronPub.getTimeBycron_Date(cron,startDate,endDate);
+                    List<String> listDataBean = new ArrayList<>();
+                    String subType = map.get("DI_name").toString();
+//                    if(!"炎热指数".equals(subType)){
 //                        continue;
 //                    }
-                    DataBean dataBean = new DataBean();
-                    dataBean.setName(name);
-                    dataBean.setType(subType);
-                    //这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
-                    int cron_shouldTime = Integer.valueOf(map.get("should_time").toString()) ;
-                    int cron_lastTime = Integer.valueOf(map.get("last_time").toString()) ;
-                    dataBean.setShould_time(Pub.transform_longDataToString(dt.getTime()/1000+cron_shouldTime,"yyyy-MM-dd HH:mm:ss.SSSZ"));
-                    dataBean.setLast_time(Pub.transform_longDataToString(dt.getTime()/1000+cron_lastTime,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    String name = "";
+                    String IP = map.get("IP").toString();
+                    String path = map.get("path").toString();
+                    for (Date dt : timeList){
+                        DataBean dataBean = new DataBean();
+                        dataBean.setName(name);
+                        dataBean.setType(subType);
+                        //这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
+                        int cron_shouldTime = Integer.valueOf(map.get("should_time").toString()) ;
+                        int cron_lastTime = Integer.valueOf(map.get("last_time").toString()) ;
+                        dataBean.setShould_time(Pub.transform_longDataToString(dt.getTime()/1000+cron_shouldTime,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                        dataBean.setLast_time(Pub.transform_longDataToString(dt.getTime()/1000+cron_lastTime,"yyyy-MM-dd HH:mm:ss.SSSZ"));
 
-                    dataBean.setAging_status("未处理");
-                    Map<String,Object> fields = new HashMap<>();
-                    fields.put("module",module);
-                    if("炎热指数".equals(subType)){
-                        dataBean.setName(map.get("name").toString());
-                    }else{
+                        dataBean.setAging_status("未处理");
+                        if("炎热指数".equals(subType)){
+                            dataBean.setName(map.get("name").toString());
+                        }
+                        Map<String,Object> fields = new HashMap<>();
+                        fields.put("module",module);
+
                         fields.put("data_time",Pub.transform_DateToString(dt,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+
+                        fields.put("ip_addr", IP);
+                        fields.put("file_name",path);
+                        dataBean.setFields(fields);
+
+                        listDataBean.add(JSON.toJSONString(dataBean));
                     }
-
-                    fields.put("ip_addr", IP);
-                    fields.put("file_name",path);
-                    dataBean.setFields(fields);
-
-                    listDataBean.add(JSON.toJSONString(dataBean));
-                }
-                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                //分批次录入数据
-                EsWriteBean esWriteBean = new EsWriteBean();
-                esWriteBean.setIndex(strIndex);
-                esWriteBean.setType(type);
-                esWriteBean.setData(listDataBean);
-                Map<String,Object> response= esWriteService.add(esWriteBean);
-                Map<String,Object> responseData = (Map<String,Object>)response.get("resultData");
-                if(response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)){
-                    logger.info(module+"->"+map.get("DI_name")+"->录入数据条数："+responseData.get("insert_number"));
-                }else{
-                   logger.error(module+"->"+map.get("DI_name")+"->"+response.get(Pub.KEY_MESSAGE));
+                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    //分批次录入数据
+                    EsWriteBean esWriteBean = new EsWriteBean();
+                    esWriteBean.setIndex(strIndex);
+                    esWriteBean.setType(type);
+                    esWriteBean.setData(listDataBean);
+                    Map<String,Object> response= esWriteService.insert(esWriteBean);
+                    Map<String,Object> responseData = (Map<String,Object>)response.get("resultData");
+                    if(response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)){
+                        logger.info(module+"->"+map.get("DI_name")+"->录入数据条数："+responseData.get("insert_number"));
+                    }else{
+                       logger.error(module+"->"+map.get("DI_name")+"->"+response.get(Pub.KEY_MESSAGE));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
@@ -339,7 +351,7 @@ public class ConfigService {
                     esWriteBean.setIndex(strIndex);
                     esWriteBean.setType(type);
                     esWriteBean.setData((List<String>) indexMap.get(strIndex));
-                    Map<String,Object> response= esWriteService.add(esWriteBean);
+                    Map<String,Object> response= esWriteService.insert(esWriteBean);
                     Map<String,Object> responseData = (Map<String,Object>)response.get("resultData");
                     if(response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)){
                         addNum += (int)responseData.get("insert_number");
