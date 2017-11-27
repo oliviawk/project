@@ -336,20 +336,33 @@ function displayMemoryUsed(url, id, reloadFrequency,params) {
                         } else {
                             document.getElementById('memory').innerHTML = "内存使用率 ";
                         }
-                        $.post(url, function(data2) {
-                            if ("fail" == data2["result"]) {
-                                console.log("获取内存使用率数据失败,失败原因："
-                                    + data2["message"]);
-                            } else {
-                                redraw(data2["resultData"], sca
-                                    .getOpt()['x'], sca
-                                    .getOpt()['y'], sca
-                                    .getOpt()['xAxis'], sca
-                                    .getSvg()['svg'], sca
-                                    .getSvg()['area'], sca
-                                    .getSvg()['onG']);
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: params,
+                            dataType: "json",
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+                            success: function (data2) {
+                                if ("fail" == data2["result"]) {
+                                    console.log("获取内存使用率数据失败,失败原因："
+                                        + data2["message"]);
+                                } else {
+                                    redraw(data2["resultData"], sca
+                                        .getOpt()['x'], sca
+                                        .getOpt()['y'], sca
+                                        .getOpt()['xAxis'], sca
+                                        .getSvg()['svg'], sca
+                                        .getSvg()['area'], sca
+                                        .getSvg()['onG']);
+                                }
+                            },
+                            error: function (e2) {
+                                console.error(e2)
                             }
                         });
+
                     }, reloadFrequency);
             }
         },

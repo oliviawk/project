@@ -31,10 +31,12 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
         "host":ip,
         "minute":120
     }
-    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",JSON.stringify(params));
-    displayNetUsed("../fzjc/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
 
     displayCpuUsed("../fzjc/getCpuData", "#cpuUsed", 1000*60*10,JSON.stringify(params));
     displayMemoryUsed("../fzjc/getMemoryData" , "#memoryUsed",1000*60*10,JSON.stringify(params));
+
+    displayNetUsed("../fzjc/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
+    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",JSON.stringify(params));
+
 
 })

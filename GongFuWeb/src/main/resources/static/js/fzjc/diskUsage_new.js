@@ -295,6 +295,11 @@ function directorUsage(url, id,params) {
 				$.ajax({
 					url : url,
 					type : 'post',
+                    data: params,
+                    dataType: "json",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
 					success : function(reloadResultObj) {
 						if(result["titleTime"]!=undefined){
 							document.getElementById('disk').innerHTML="磁盘使用情况("+result["titleTime"]+")";
