@@ -296,12 +296,18 @@ ul,li{list-style: none;}
 	font-weight:normal;
 }
 .focus p{
-	height: 30px;
+	height: auto;
 	line-height: 30px;
 	font-size:16px;
     margin: 0px;
 }
 
+/*按钮禁用样式*/
+.disabled {
+	pointer-events: none;
+	cursor: default;
+	opacity: 0.6;
+}
 
 
 @media (min-width: 1366px) {

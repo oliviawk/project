@@ -252,19 +252,34 @@ $('#pubModal').on('show.bs.modal', function (event) {
     $("#moduleHidden").val(module);
     $("#subTypeHidden").val(subType);
 
+    /* Mod by Edward 2017/11/15
+     * 雷达的加工过程隐藏文件名和耗时列
+     * 隐藏外网采集文件名和耗时列
+     */
+    var regex = /LatLonQREFEnd|ReadFY2NC|LAPS3KM|城市预报|台风|预警信号|突发事件|船舶|交通拥堵/;
+
     //先确认头信息
     var historyHead  = "<tr>";
         historyHead += "<th style='width: 60px;'>编号</th>";
-        historyHead += "<th >文件名</th>";
+        if(!regex.test(subType)){
+            historyHead += "<th >文件名</th>";
+        }
+
         historyHead += "<th style='width: 245px;'>资料时次</th>";
+        historyHead += "<th style='width: 245px;'>更新时间</th>";
 
         if(subType == "风流场" || subType == "T639"){
-            historyHead += "<th style='width: 245px;'>更新时间</th>";
-            $("#sizeNumberButton").attr("disabled","true");
+            //$("#sizeNumberButton").attr("disabled","true");
+            $("#sizeNumberButton").addClass('disabled');
         }else{
-            $("#sizeNumberButton").removeAttr("disabled");
+            //$("#sizeNumberButton").removeAttr("disabled");
+            $("#sizeNumberButton").removeClass('disabled');
         }
-        historyHead += "<th style='width: 75px;'>耗时</th>";
+
+        if(!regex.test(subType)){
+            historyHead += "<th style='width: 75px;'>耗时</th>";
+        }
+
         historyHead += "<th style='width: 60px;'>状态</th>";
         historyHead += "<th>错误信息</th>";
         historyHead += "</tr>";
@@ -335,24 +350,41 @@ function initHistory(subType,module,size) {
                     agingStatus_isOK = false ;
                     eventStatus_isOK = false ;
 
+                    /* Mod by Edward 2017/11/15
+                     * 雷达的加工过程隐藏文件名和耗时列
+                     * 隐藏外网采集文件名和耗时列
+                     */
+                    var regex = /LAPS3KM|城市预报|台风|预警信号|突发事件|船舶|交通拥堵/;
+
+                    if (this.fields.module == "加工" && (this.type == "LatLonQREFEnd" || this.type == "ReadFY2NC")
+                        || this.fields.module == "采集" && regex.test(this.type)) { }
+                    else {
                     //文件名
                     if(this.fields.hasOwnProperty("file_name") && this.fields.file_name != "-1"){
                         tds += "<td>"+this.fields.file_name+"</td>";
                     }else{
                         tds += "<td> -</td>";
                     }
+                    }
+
                     //资料时次
                     tds += "<td>"+this.fields.data_time+"</td>";
-                    if(subType == "风流场" || subType == "T639"){
+                    /*if(subType == "风流场" || subType == "T639"){
                         tds += "<td>"+this.fields.end_time+"</td>";
-                    }
+                    }*/
+                    tds += "<td>"+this.fields.end_time+"</td>";
+
                     //耗时
+                    if (this.fields.module == "加工" && (this.type == "LatLonQREFEnd" || this.type == "ReadFY2NC")
+                        || this.fields.module == "采集" && regex.test(this.type)) { }
+                    else {
                     if(this.fields.hasOwnProperty("total_time")){
                         var totalTime = this.fields.total_time;
 
                         tds += "<td>"+ (Math.round(totalTime*100)/100) +" 秒</td>";
                     }else{
                         tds += "<td> -</td>";
+                    }
                     }
 
                     if(this.hasOwnProperty("aging_status")){
@@ -386,7 +418,8 @@ function initHistory(subType,module,size) {
                         }else if(this.aging_status == "超时"){
                             trStatus = "danger";
                             tds += "<td>异常</td>";
-                            tds += "<td>数据未到达</td>";
+                            //tds += "<td>数据未到达</td>";
+                            tds += "<td>日志未采集到</td>";
                         }
                     }else if(agingStatus_isOK  && !eventStatus_isOK){
                         trStatus = "danger";

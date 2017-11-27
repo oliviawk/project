@@ -12,6 +12,8 @@ import kafka.tools.ConsoleConsumer;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,7 +126,10 @@ public class FZJCService extends BaseController{
             }else{
                 if(StringUtils.isEmpty(esQueryBean.getIndices())){
                     String index = "log_"+Pub.transform_DateToString(new Date() , "yyyyMMdd");
-                    esQueryBean.setIndices(new String[]{index});
+                     /* Mod by Edward
+                     * 加入查询前一天的索引 */
+                    String index_yest = "log_" + DateFormatUtils.format(DateUtils.addDays(new Date(), -1), "yyyyMMdd");
+                    esQueryBean.setIndices(new String[]{index, index_yest});
                 }
 
                 Map<String,Object> params = new HashMap<>();    //查询参数
