@@ -119,6 +119,7 @@ public class QueryApi extends BaseController {
                 outMap.put(KEY_RESULT,VAL_SUCCESS);
                 outMap.put(KEY_RESULTDATA,list);
                 outMap.put(KEY_MESSAGE,"获取数据成功");
+//                System.out.println("接口返回耗时："+(System.currentTimeMillis() - start));
 //                System.out.println(JSON.toJSONString(esQueryBean));
 //                System.out.println(JSON.toJSONString(list));
 //                System.out.println("------------");

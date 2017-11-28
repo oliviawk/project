@@ -21,7 +21,7 @@
 /**
  * 资源详情
  */
-$('#baseSourceModal').on('show.bs.modal', function (event) {
+$('#baseSourceModal').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var ip = button.data('ip');
     var modal = $(this);
@@ -31,11 +31,12 @@ $('#baseSourceModal').on('show.bs.modal', function (event) {
         "host":ip,
         "minute":120
     }
-    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",JSON.stringify(params));
-    displayNetUsed("../fzjc/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
-
 
     displayCpuUsed("../fzjc/getCpuData", "#cpuUsed", 1000*60*10,JSON.stringify(params));
     displayMemoryUsed("../fzjc/getMemoryData" , "#memoryUsed",1000*60*10,JSON.stringify(params));
+
+    displayNetUsed("../fzjc/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
+    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",JSON.stringify(params));
+
 
 })

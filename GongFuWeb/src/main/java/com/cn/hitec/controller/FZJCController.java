@@ -84,15 +84,15 @@ public class FZJCController{
     @RequestMapping(value = "/getDirectoryUsedData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
     public Object getDirectoryUsedData(@RequestBody String json) {
-        System.out.println(json);
         Map<String,Object> params = JSON.parseObject(json);
         return basicResource.getDirectoryUsedData(params.get("host").toString());
     }
 
     @RequestMapping(value = "/getNetData",method= RequestMethod.POST , consumes = "application/json")
     @ResponseBody
-    public Object getNetData(String host) {
-        return basicResource.getNetDataSham();
+    public Object getNetData(@RequestBody String json) {
+        Map<String,Object> params = JSON.parseObject(json);
+        return basicResource.getNetData(params.get("host").toString(),Integer.valueOf(params.get("minute").toString()));
     }
 
     @RequestMapping(value = "/getCpuData",method= RequestMethod.POST , consumes = "application/json")

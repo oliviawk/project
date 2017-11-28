@@ -35,75 +35,34 @@ public class BasicResource {
      */
     public Object getCpuData(String ip,int minute){
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        com.alibaba.fastjson.JSONObject resultData = new com.alibaba.fastjson.JSONObject();
         List<Object> controlsData = new ArrayList<Object>();
-        List<Object> tableData = new ArrayList<Object>();
-        String titleTime = null;
         List list = new ArrayList();
         String data = getBaseSourceData(ip,"system.cpu.pct_usage",minute);
 //        logger.info("data:"+data);
         com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
         com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
-            com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
-            String m = obj.getJSONObject("fields").getString("metric");
-            if(m.contains("cpu")){
+            try {
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+
                 com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
                 String str = obj.getJSONObject("fields").getString("value");
                 String string = str.split("%")[0];
                 String time = obj.getJSONObject("fields").getString("data_time");
                 jsonData.put("used", Double.parseDouble(string));
                 jsonData.put("free", 100-Double.parseDouble(string));
-                try {
-                    Date parse = sdf2.parse(time);
-                    jsonData.put("time", sdf2.format(parse));
-                    titleTime=time;
-                    list.add(string);
-                    controlsData.add(jsonData);
-                } catch (ParseException e) {
-                    logger.info("时间格式解析错误!");
-                    e.printStackTrace();
-                }
+                Date parse = sdf2.parse(time);
+                jsonData.put("time", sdf2.format(parse));
+                list.add(string);
+                controlsData.add(jsonData);
 
+            } catch (ParseException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return returnDataTransFormat(list,controlsData);
 
-//        double max = 0;
-//        double min = 100;
-//        double total = 0;
-//        double current = 0;
-//        for (Object object : list) {
-//            double d = Double.parseDouble(object.toString()) ;
-//            total += d;
-//            current = d;
-//        }
-//        Collections.sort(list);
-////        logger.info("list:"+list);
-//        max = Double.parseDouble(list.get(list.size()-1).toString());
-//        min = Double.parseDouble(list.get(0).toString());
-//        double n = total / list.size();
-//        double avg = Double.parseDouble(String.format("%.1f", n));
-//        Map<String, Object> t = new LinkedHashMap<String, Object>();
-//        Map<String, Object> t2 = new LinkedHashMap<String, Object>();
-//        t.put("max",max);
-//        t.put("min",min);
-//        t.put("avg",avg);
-//        t.put("current",current);
-//        t2.put("max",100-min);
-//        t2.put("min",100-max);
-//        t2.put("avg",100-avg);
-//        t2.put("current",100-current);
-//        tableData.add(t);
-//        tableData.add(t2);
-//        resultData.put("tableData", tableData);
-//        resultData.put("controlsData", controlsData);
-//        Map<String, Object> outMap = new HashMap<String, Object>();
-//        outMap.put("result", "success");
-//        outMap.put("resultData", resultData);
-//        outMap.put("titleTime", titleTime);
-//        outMap.put("message", "数据加载成功！");
-//        return outMap;
     }
 
 
@@ -239,6 +198,95 @@ public class BasicResource {
         outMap.put("titleTime", dateStr);
         outMap.put("message", "数据加载成功！");
         return outMap;
+    }
+
+
+    /**
+     * 网络net
+     */
+    public Object getNetData(String host,int minute) {
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        List<Object> controlsData = new ArrayList<Object>();
+
+        List<Double> listUpload = new ArrayList<Double>();
+        List<Double> listDown = new ArrayList<Double>();
+        double totalUpload = 0;
+        double currentUpload = 0;
+        double totalDown = 0;
+        double currentDown = 0;
+        String data = getBaseSourceData(host,"system.net_state",minute);
+        com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
+        com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+        for (Object object : jsonArr) {
+
+            try {
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+                com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+
+                String device = obj.getJSONObject("fields").getString("device");
+                if(!device.equals("eth0")){
+                    continue;
+                }
+                double upload = Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("in")/(8*1024)));
+                double down =  Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("out")/(8*1024)));
+                listUpload.add(upload);
+                listDown.add(down);
+                totalUpload += upload;
+                totalDown += down;
+                currentUpload = upload;
+                currentDown = down;
+                String time = obj.getJSONObject("fields").getString("data_time");
+                jsonData.put("upload", -upload);
+                jsonData.put("down", down);
+                Date parse = sdf2.parse(time);
+                jsonData.put("time", sdf2.format(parse));
+                controlsData.add(jsonData);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(listUpload.size() < 1 || listDown.size() < 1){
+            Map<String, Object> outMap = new HashMap<String, Object>();
+            outMap.put("result", "fail");
+            outMap.put("resultData", new ArrayList<>());
+            String dateStr = DateTool.dateToString(new Date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm");
+            outMap.put("titleTime", dateStr);
+            outMap.put("message", "获取数据失败！");
+            return outMap;
+        }
+        Collections.sort(listUpload);
+        Collections.sort(listDown);
+
+        List tableData = new ArrayList();
+        com.alibaba.fastjson.JSONObject data1 = new com.alibaba.fastjson.JSONObject();
+        data1.put("min", Double.parseDouble((String.format("%.2f", listUpload.get(0)))) + "MB");
+        data1.put("max", Double.parseDouble((String.format("%.2f", listUpload.get(listUpload.size() - 1)))) + "MB");
+        data1.put("avg", decimalFormat.format(totalUpload / listUpload.size()) + "MB");
+        data1.put("current", Double.parseDouble((String.format("%.2f", currentUpload))) + "MB");
+
+        com.alibaba.fastjson.JSONObject data2 = new com.alibaba.fastjson.JSONObject();
+        data2.put("min", Double.parseDouble((String.format("%.2f", listDown.get(0)))) + "MB");
+        data2.put("max", Double.parseDouble((String.format("%.2f", listDown.get(listDown.size() - 1)))) + "MB");
+        data2.put("avg", decimalFormat.format(totalDown / listDown.size()) + "MB");
+        data2.put("current", Double.parseDouble((String.format("%.2f", currentDown))) + "MB");
+
+        tableData.add(data2);
+        tableData.add(data1);
+        resultData.put("controlsData", controlsData); // 控件数据
+        resultData.put("tableData", tableData); // 表格数据
+
+        Map<String, Object> outMap = new HashMap<String, Object>();
+        outMap.put("result", "success");
+        outMap.put("resultData", resultData);
+        String dateStr = DateTool.dateToString(new Date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm");
+        outMap.put("titleTime", dateStr);
+        outMap.put("message", "数据加载成功！");
+
+        return outMap;
+//        return returnDataTransFormat(list,controlsData);
     }
 
     /**
@@ -573,8 +621,6 @@ public class BasicResource {
             if(metric.indexOf("disk") > -1){
                 params.put("size", 10);
             }else{
-                params.put("resultAll", true);  //返回范围内的所有数据
-                // 获取 24 分钟后的时间 （4个时次后的时间）
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
@@ -588,13 +634,16 @@ public class BasicResource {
                 rangeMap.put("lte", Pub.transform_DateToString(date,"yyyy-MM-dd HH:mm"));
                 rangeList.add(rangeMap);
                 params.put("range", rangeList);
+                params.put("resultAll", true);  //返回范围内的所有数据
             }
 
 
             es.setParameters(params);
 
             logger.info("es:"+ com.alibaba.fastjson.JSON.toJSONString(es));
+//            long start = System.currentTimeMillis();
             Map<String, Object> data_new = esQueryService.getData_new(es);
+//            logger.info(metric+" 查询耗时："+(System.currentTimeMillis() - start) +" ms");
             return com.alibaba.fastjson.JSON.toJSONString(data_new);
         } catch (Exception e) {
             e.printStackTrace();

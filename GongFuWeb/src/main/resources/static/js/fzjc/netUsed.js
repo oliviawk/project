@@ -291,7 +291,6 @@ function displayNetUsed(url, id, reloadFrequency,params) {
         url: url,
         data: params,
         dataType: "json",
-        async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },
@@ -308,16 +307,28 @@ function displayNetUsed(url, id, reloadFrequency,params) {
                 var sca = new generate(data["resultData"], id);
                 clearInterval(intervalMem);
                 intervalMem = setInterval(function() {
-                    $.post(url, function(data2){
-                        if(data["titleTime"]!=undefined){
-                            document.getElementById('net').innerHTML="网络流量 ("+data["titleTime"]+")";
-                        }else{
-                            document.getElementById('net').innerHTML="网络流量 ";
-                        }
-                        if( "fail" == data2["result"] ){
-                            console.log("获取网络流量数据失败,失败原因：" + data2["message"]);
-                        }else{
-                            redraw(data2["resultData"], sca.getOpt()['x'], sca.getOpt()['y'], sca.getOpt()['xAxis'], sca.getSvg()['svg'], sca.getSvg()['line'], sca.getSvg()['points']);
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: params,
+                        dataType: "json",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        success: function (data2) {
+                            if(data["titleTime"]!=undefined){
+                                document.getElementById('net').innerHTML="网络流量 ("+data["titleTime"]+")";
+                            }else{
+                                document.getElementById('net').innerHTML="网络流量 ";
+                            }
+                            if( "fail" == data2["result"] ){
+                                console.log("获取网络流量数据失败,失败原因：" + data2["message"]);
+                            }else{
+                                redraw(data2["resultData"], sca.getOpt()['x'], sca.getOpt()['y'], sca.getOpt()['xAxis'], sca.getSvg()['svg'], sca.getSvg()['line'], sca.getSvg()['points']);
+                            }
+                        },
+                        error: function (e2) {
+                            console.error(e2)
                         }
                     });
                 }, reloadFrequency);
