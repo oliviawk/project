@@ -61,8 +61,8 @@ public class ConfigService {
         jsonList.add("{\"DI_name\":\"ReadFY2NC\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4200,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\"}");
         jsonList.add("{\"DI_name\":\"风流场\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z:\\\\NoGeography\\\\forecast\\\\t639\\\\\",\"file_name\":\"T639_GMFS_WIND_2017102508.json\",\"transfer_type\":\"\"}");
 
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1260,\"last_time\":1560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
-        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3360,\"last_time\":3660,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"20\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1260,\"last_time\":1800,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
+        jsonList.add("{\"DI_name\":\"炎热指数\",\"name\":\"55\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3360,\"last_time\":3900,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\"}");
 
 
         EsWriteBean esWriteBean = new EsWriteBean();
