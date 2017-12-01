@@ -186,6 +186,8 @@ public class ESService {
             Map<String,Object> map = null;
             Map<String,Object> fields = null;
             Map<String,Object> DIMap = null;
+
+            List<String> existAlerts = new ArrayList<>();
             for (String json : listJson) {
                 try {
                     if (StringUtils.isEmpty(json)) {
@@ -243,16 +245,12 @@ public class ESService {
                         if( "21".equals(fields.get("event_status"))){
                             continue;
                         }
-                        //当  数据库里的数据 和 当前数据   一样时（目前是按照数据状态来判断），放弃掉该条数据
-                        if(hitsSource_fields.containsKey("event_status")  && fields.get("event_status").toString().equals(hitsSource_fields.get("event_status"))){
-                            logger.warn("--舍弃掉 相同的数据："+json);
-                            continue;
-                        }
+
                         if("T639".equals(subType) || "风流场".equals(subType)){        //如果是风场数据 ， 要与其他定时数据分开分析
                             //确定是否进行 数据状态 告警
                             if(fields.get("event_status").toString().toUpperCase().equals("OK") || fields.get("event_status").toString().equals("0")){
                                 map.put("aging_status","正常");
-                                fields.put("event_info","正常");
+//                                fields.put("event_info","正常");
                             }else{
                                 //判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
                                 if(hitsSource_fields.containsKey("event_status")  && (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK") || hitsSource_fields.get("event_status").toString().equals("0"))){
@@ -261,10 +259,21 @@ public class ESService {
                                 }
                                 map.put("aging_status","异常");
                                 String alertTitle = subType+"--"+fields.get("module")+"--"+fields.get("data_time")+" 时次产品 ，发生错误："+fields.get("event_info").toString();
-                                //初始化告警实体类
-                                alertBean = alertService.getAlertBean("异常",alertTitle,subType,fields);
+
+                                if(!existAlerts.contains(subType+"--"+fields.get("module")+"--"+fields.get("data_time"))){
+                                    //初始化告警实体类
+                                    alertBean = alertService.getAlertBean("异常",alertTitle,subType,fields);
+                                    existAlerts.add(subType+"--"+fields.get("module")+"--"+fields.get("data_time"));
+                                }
                             }
-                        }else{
+                        }
+
+                        //当  数据库里的数据 和 当前数据   一样时（目前是按照数据状态来判断），放弃掉该条数据
+                        else if(hitsSource_fields.containsKey("event_status")  && fields.get("event_status").toString().equals(hitsSource_fields.get("event_status"))){
+                                logger.warn("--舍弃掉 相同的数据："+json);
+                                continue;
+                         }
+                        else{
                             //确定是否进行 数据状态 告警
                             if(fields.get("event_status").toString().toUpperCase().equals("OK") || fields.get("event_status").toString().equals("0")){
 //                                Date nowDate = Pub.transform_StringToDate(fields.get("end_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
@@ -278,12 +287,14 @@ public class ESService {
                                     String alertTitle = subType+"--"+fields.get("module")+"--"+fields.get("data_time")+" 时次产品 ，延迟"+temp+"到达";
 
                                     fields.put("event_info","延迟"+temp+"到达");
-                                    //生成告警类
-                                    alertBean = alertService.getAlertBean("迟到",alertTitle,subType,fields);
-
+                                    if(!existAlerts.contains(subType+"--"+fields.get("module")+"--"+fields.get("data_time"))){
+                                        //初始化告警实体类
+                                        alertBean = alertService.getAlertBean("异常",alertTitle,subType,fields);
+                                        existAlerts.add(subType+"--"+fields.get("module")+"--"+fields.get("data_time"));
+                                    }
                                 }else{
                                     map.put("aging_status","正常");
-                                    fields.put("event_info","正常");
+//                                    fields.put("event_info","正常");
                                 }
                             }else{
                                 //判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
@@ -293,8 +304,11 @@ public class ESService {
                                 }
                                 map.put("aging_status","异常");
                                 String alertTitle = subType+"--"+fields.get("module")+"--"+fields.get("data_time")+" 时次产品 ，发生错误："+fields.get("event_info").toString();
-                                //初始化告警实体类
-                                alertBean = alertService.getAlertBean("异常",alertTitle,subType,fields);
+                                if(!existAlerts.contains(subType+"--"+fields.get("module")+"--"+fields.get("data_time"))){
+                                    //初始化告警实体类
+                                    alertBean = alertService.getAlertBean("异常",alertTitle,subType,fields);
+                                    existAlerts.add(subType+"--"+fields.get("module")+"--"+fields.get("data_time"));
+                                }
                             }
                             //将 应到时间 和 最晚到达时间，添加的数据中
                             map.put("should_time", resultMap.containsKey("should_time") ?  resultMap.get("should_time") : "");
