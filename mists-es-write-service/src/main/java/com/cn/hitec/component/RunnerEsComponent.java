@@ -2,6 +2,7 @@ package com.cn.hitec.component;
 
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.service.ConfigService;
+import com.cn.hitec.service.ESClientAdminService;
 import com.cn.hitec.service.KafkaProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -26,13 +27,20 @@ public class RunnerEsComponent  implements CommandLineRunner {
     ESRepository esRepository;
     @Autowired
     ConfigService configService;
+    @Autowired
+    ESClientAdminService clientAdminService;
+
     @Override
     public void run(String... strings) throws Exception {
         //初始化ES连接信息
         logger.info("start init es");
         esRepository.buildClient();
         esRepository.bulidBulkProcessor();
+        esRepository.buildTemplate();
 
+        Thread.sleep(1000);
+
+        clientAdminService.getClusterHealth();
         configService.initAlertMap();
     }
 

@@ -50,11 +50,11 @@ public class AlertService {
 
             //创建查询类
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-            queryBuilder.must(QueryBuilders.termQuery("type.keyword",alertBean.getType()));
-            queryBuilder.must(QueryBuilders.termQuery("module.keyword",alertBean.getModule()));
-            queryBuilder.must(QueryBuilders.termQuery("ip.keyword",alertBean.getIp()));
-            queryBuilder.must(QueryBuilders.termQuery("data_name.keyword",alertBean.getData_name()));
-            queryBuilder.must(QueryBuilders.termQuery("data_time.keyword",alertBean.getData_time()));
+            queryBuilder.must(QueryBuilders.termQuery("type",alertBean.getType()));
+            queryBuilder.must(QueryBuilders.termQuery("module",alertBean.getModule()));
+            queryBuilder.must(QueryBuilders.termQuery("ip",alertBean.getIp()));
+            queryBuilder.must(QueryBuilders.termQuery("data_name",alertBean.getData_name()));
+            queryBuilder.must(QueryBuilders.termQuery("data_time",alertBean.getData_time()));
             //返回查询结果
             SearchResponse response = es.client.prepareSearch(index)
                     .setTypes(type)

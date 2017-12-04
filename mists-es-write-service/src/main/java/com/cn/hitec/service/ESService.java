@@ -375,13 +375,13 @@ public class ESService {
             }
             //创建查询类
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-            queryBuilder.must(QueryBuilders.termQuery("type.keyword",subType));
+            queryBuilder.must(QueryBuilders.termQuery("type",subType));
             if("炎热指数".equals(subType)){
-                queryBuilder.must(QueryBuilders.termQuery("name.keyword",name));
+                queryBuilder.must(QueryBuilders.termQuery("name",name));
             }
-            queryBuilder.must(QueryBuilders.termQuery("fields.data_time.keyword",fields.get("data_time").toString()));
-            queryBuilder.must(QueryBuilders.termQuery("fields.module.keyword",fields.get("module").toString()));
-            queryBuilder.must(QueryBuilders.termQuery("fields.ip_addr.keyword",fields.get("ip_addr").toString()));
+            queryBuilder.must(QueryBuilders.termQuery("fields.data_time",fields.get("data_time").toString()));
+            queryBuilder.must(QueryBuilders.termQuery("fields.module",fields.get("module").toString()));
+            queryBuilder.must(QueryBuilders.termQuery("fields.ip_addr",fields.get("ip_addr").toString()));
 
             //返回查询结果
             SearchResponse response = es.client.prepareSearch(indices)

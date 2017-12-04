@@ -53,7 +53,7 @@ public class EsWriteApi extends BaseController {
 			outMap.put(KEY_MESSAGE,"ES写入数据失败！数据为 null");
 			return outMap;
 		}
-		System.out.println(JSON.toJSONString(esBean));
+//		System.out.println(JSON.toJSONString(esBean));
 		String index = esBean.getIndex();
 		if(StringUtils.isEmpty(index)){
             SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);

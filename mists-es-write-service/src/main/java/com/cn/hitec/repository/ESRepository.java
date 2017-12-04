@@ -1,5 +1,6 @@
 package com.cn.hitec.repository;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
@@ -57,6 +58,7 @@ public class ESRepository {
     public void buildClient() throws Exception {
         Settings settings = Settings.builder()
                 .put("cluster.name", strClusterName)
+//                .put("client.transport.sniff",false)
 //                .put("xpack.security.user", "elastic:changeme")//for x-pack
                 .build();
         Iterable<String> itTransportHostName = splitter.split(strTransportHostNames);
@@ -130,10 +132,13 @@ public class ESRepository {
             defaultMapping.put("dynamic_templates",
                     new Object[]{
                             new MapBuilder<String, Object>().put("date_tpl",
-                                    new MapBuilder<String, Object>().put("match", "dt*")
+                                    new MapBuilder<String, Object>().put("match", "*_time")
                                             .put("mapping",
-                                                    new MapBuilder<String, Object>().put("type", "date")
-                                                            .put("index", "not_analyzed").put("doc_values", true)
+                                                    new MapBuilder<String, Object>()
+                                                            .put("type", "date")
+                                                            .put("format", "yyyy-MM-dd HH:mm:ss.SSSZ||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd HH:mm||epoch_millis")
+                                                            .put("index", "not_analyzed")
+                                                            .put("doc_values", true)
                                                             .map())
                                             .map())
                                     .map(),

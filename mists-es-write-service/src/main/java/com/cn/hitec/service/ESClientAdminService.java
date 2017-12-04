@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.repository.ESRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 @Service
 public class ESClientAdminService {
-    private static final Logger logger = LoggerFactory.getLogger(ESService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ESClientAdminService.class);
     @Autowired
     private ESRepository es;
 
@@ -48,11 +49,13 @@ public class ESClientAdminService {
      * @return  Map
      */
     public Map<String , Object> getClusterHealth(){
+        System.out.println("getClusterHealth:");
         Map<String,Object> map = new HashMap<>();
         ClusterHealthResponse healths = es.client.admin().cluster().prepareHealth().get();
         map.put("clusterName",healths.getClusterName());
         map.put("numberOfDataNodes",healths.getNumberOfDataNodes());
         map.put("numberOfNodes",healths.getNumberOfNodes());
+        System.out.println("ES health:"+JSON.toJSONString(map));
         return map;
     }
 
