@@ -30,7 +30,7 @@ public class AgingStatusService {
     @Autowired
     EsWriteService esWriteService;
 
-    public int collect_task(Date nowDate) throws Exception{
+    public int  collect_task(Date nowDate) throws Exception{
         int up_number = 0;
         EsQueryBean esQueryBean = new EsQueryBean();
         String index = Pub.Index_Head+ Pub.transform_DateToString(nowDate,Pub.Index_Food_Simpledataformat);
@@ -38,15 +38,15 @@ public class AgingStatusService {
         esQueryBean.setTypes(new String[]{"FZJC"});
 
         Map<String,Object> params = new HashMap<>();
-//            params.put("type.keyword","satellite");
-//            params.put("fields.module.keyword","采集");
-        params.put("aging_status.keyword","未处理");
+//            params.put("type","satellite");
+//            params.put("fields.module","采集");
+        params.put("aging_status","未处理");
         params.put("size","50");
-//            params.put("sort","fields.data_time.keyword");
+//            params.put("sort","fields.data_time");
         List<Map> list = new ArrayList<>();
-        Map<String,String> map = new HashMap<>();
-        map.put("name","last_time.keyword");
-        map.put("lt", Pub.transform_DateToString(nowDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+        Map<String,Object> map = new HashMap<>();
+        map.put("name","last_time");
+        map.put("lt", Pub.transform_DateToString(nowDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
         list.add(map);
         params.put("range",list);
 
@@ -135,14 +135,14 @@ public class AgingStatusService {
         Map<String,Object> params = new HashMap<>();
 
         List<Map> rangeList = new ArrayList<>();
-        Map<String,String> rangeMap_1 = new HashMap<>();
-        rangeMap_1.put("name","fields.data_time.keyword");
-        rangeMap_1.put("gte", Pub.transform_DateToString(startDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
-        rangeMap_1.put("lt", Pub.transform_DateToString(endDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+        Map<String,Object> rangeMap_1 = new HashMap<>();
+        rangeMap_1.put("name","fields.data_time");
+        rangeMap_1.put("gte", Pub.transform_DateToString(startDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+        rangeMap_1.put("lt", Pub.transform_DateToString(endDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
         rangeList.add(rangeMap_1);
 
-        params.put("aging_status.keyword","未处理");
-        params.put("type.keyword","T639,风流场");
+        params.put("aging_status","未处理");
+        params.put("type","T639,风流场");
         params.put("range",rangeList);
         params.put("size","50");
 

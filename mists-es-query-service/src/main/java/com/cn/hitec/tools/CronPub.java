@@ -180,10 +180,4 @@ public class CronPub {
         }
     }
 
-
-    public static void main(String[] args){
-
-        System.out.println(getLastTimeBycron_String("0 0 * * * ? *","yyyy-MM-dd HH:mm:ss",new Date()));
-        System.out.println(11);
-    }
 }

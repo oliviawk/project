@@ -93,10 +93,10 @@ public class BoolTermQuery implements BoolTermQuery_I{
                 rangeBuilderList = new ArrayList<>();
                 List<Map> rangeList = (List<Map>)params.get("range");
                 for(Map<String,Object>  map : rangeList){
-                    RangeQueryBuilder rangeQueryBuilder = null;
+                    String name = map.get("name").toString();
+                    RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery(name);
                     for (String key:map.keySet()){
                         if(key.equals("name")){
-                            rangeQueryBuilder = QueryBuilders.rangeQuery(map.get(key).toString());
                             continue;
                         }
                         rangeQueryBuilder = RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
@@ -127,6 +127,19 @@ public class BoolTermQuery implements BoolTermQuery_I{
         }
 
 //        log.info(queryBuilder.toString());
+        //验证去除没有的index
+        List<String> listIndice = new ArrayList<>();
+        for (String str : indices){
+            if(es.exists(str)){
+               listIndice.add(str);
+            }
+        }
+        if(listIndice.size() > 0){
+            indices = listIndice.toArray(new String [listIndice.size()]);
+        }else{
+            indices = null;
+        }
+
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -136,7 +149,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             requestBuilder.addSort(strSort, strSortType.equals("desc")? SortOrder.DESC : SortOrder.ASC);
         }
 
-//        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         if(resultAll){
             requestBuilder.setSize(1000);
             //创建查询
@@ -170,7 +183,6 @@ public class BoolTermQuery implements BoolTermQuery_I{
             SearchResponse response = requestBuilder
                     .setExplain(false).get();
 
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
             SearchHit[] searchHits = response.getHits().getHits();
             for (SearchHit hits:searchHits) {
                 try {
@@ -183,16 +195,17 @@ public class BoolTermQuery implements BoolTermQuery_I{
                     if(is_Index){
                         hits.getSource().put("_index",hits.getIndex());
                     }
-//                sourceMap = hits.getSource();
                     resultList.add(hits.getSource());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-//        log.info("查询ES耗时："+(System.currentTimeMillis() - start));
+        log.info("resultList.size = " + resultList.size());
+        log.info("查询ES耗时："+(System.currentTimeMillis() - start));
         return resultList;
     }
+
 
     @Override
     public List<Map> query(String[] indices, String[] types, Map<String, Object> params) throws Exception {
@@ -256,7 +269,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-        log.info(queryBuilder.toString());
+//        log.info(queryBuilder.toString());
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -351,7 +364,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-        log.info(queryBuilder.toString());
+//        log.info(queryBuilder.toString());
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)

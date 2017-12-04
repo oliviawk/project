@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 /**
  * 
  * 
- * @description: TODO(这里用一句话描述这个类的作用) 
- * @author james
+ * @description: FZJC数据查询主类
+ * @author fukl
  * @since 2017年8月27日 下午2:59:06 
  * @version 
  *
@@ -69,22 +69,22 @@ public class FZJCService extends BaseController{
 
                 List<Map> list = new ArrayList<>();
                 Map<String,String> map = new HashMap<>();
-                map.put("name","fields.end_time.keyword");
+                map.put("name","fields.end_time");
                 map.put("lte", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 map.put("gte", Pub.transform_DateToString(calendar.getTime(), "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 list.add(map);
                 params.put("range",list);
 
                 Map<String,Object> mustMap = new HashMap<>();
-//                mustMap.put("type.keyword",esQueryBean.getSubType());
-                mustMap.put("fields.module.keyword",esQueryBean.getModule());
+//                mustMap.put("type",esQueryBean.getSubType());
+                mustMap.put("fields.module",esQueryBean.getModule());
 
 //                Map<String,Object> mustNotMap = new HashMap<>();
-//                mustNotMap.put("aging_status.keyword","未处理");
+//                mustNotMap.put("aging_status","未处理");
 
                 params.put("must",mustMap);
 //                params.put("mustNot",mustNotMap);
-                params.put("sort","fields.end_time.keyword");
+                params.put("sort","fields.end_time");
                 params.put("size",esQueryBean.getSize());
 
 
@@ -129,17 +129,15 @@ public class FZJCService extends BaseController{
                 outMap.put(KEY_MESSAGE,"参数错误！");
             }else{
                 if(StringUtils.isEmpty(esQueryBean.getIndices())){
-                    String index = "log_"+Pub.transform_DateToString(new Date() , "yyyyMMdd");
-                     /* Mod by Edward
-                     * 加入查询前一天的索引 */
-                    String index_yest = "log_" + DateFormatUtils.format(DateUtils.addDays(new Date(), -1), "yyyyMMdd");
+                    String index = Pub.Index_Head + Pub.transform_DateToString(new Date(),Pub.Index_Food_Simpledataformat);
+                    String index_yest = Pub.Index_Head + DateFormatUtils.format(DateUtils.addDays(new Date(), -1), Pub.Index_Food_Simpledataformat);
                     esQueryBean.setIndices(new String[]{index, index_yest});
                 }
 
                 Map<String,Object> params = new HashMap<>();    //查询参数
 
 //                params.put("mustNot",mustNotMap);
-                params.put("sort","time.keyword");
+                params.put("sort","time");
                 params.put("size",esQueryBean.getSize());
                 params.put("_id","true");
 
@@ -188,7 +186,7 @@ public class FZJCService extends BaseController{
                 outMap.put(KEY_MESSAGE,"参数错误！");
             }else{
                 if(StringUtils.isEmpty(esQueryBean.getIndices())){
-                    String index = "log_"+Pub.transform_DateToString(new Date() , "yyyyMMdd");
+                    String index = Pub.Index_Head + Pub.transform_DateToString(new Date(),Pub.Index_Food_Simpledataformat);
                     esQueryBean.setIndices(new String[]{index});
                 }
 
@@ -206,14 +204,14 @@ public class FZJCService extends BaseController{
                 if("ReadFY2NC".equals(esQueryBean.getSubType()) || "云图".equals(esQueryBean.getSubType()) || "炎热指数".equals(esQueryBean.getSubType())){
                     List<Map> list = new ArrayList<>();
                     Map<String,String> map = new HashMap<>();
-                    map.put("name","last_time.keyword");
+                    map.put("name","last_time");
                     map.put("lt", CronPub.getOneTimeBycron_String(DIMap.get("time_interval").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ",new Date()));
                     list.add(map);
                     params.put("range",list);
-                    params.put("type.keyword",esQueryBean.getSubType());
-                    params.put("fields.module.keyword",esQueryBean.getModule());
-//                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
-                    params.put("sort","last_time.keyword");
+                    params.put("type",esQueryBean.getSubType());
+                    params.put("fields.module",esQueryBean.getModule());
+//                    params.put("fields.ip_addr",esQueryBean.getStrIp());
+                    params.put("sort","last_time");
                     params.put("size","2");
                 }else if("radarlatlon".equals(esQueryBean.getSubType()) || "雷达".equals(esQueryBean.getSubType())){        //判断是雷达系列数据
                     // 获取 24 分钟后的时间 （4个时次后的时间）
@@ -224,14 +222,14 @@ public class FZJCService extends BaseController{
 
                     List<Map> list = new ArrayList<>();
                     Map<String,String> map = new HashMap<>();
-                    map.put("name","last_time.keyword");
+                    map.put("name","last_time");
                     map.put("lt", CronPub.getOneTimeBycron_String(DIMap.get("time_interval").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ",calendar.getTime()));
                     list.add(map);
                     params.put("range",list);
-                    params.put("type.keyword",esQueryBean.getSubType());
-                    params.put("fields.module.keyword",esQueryBean.getModule());
-//                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
-                    params.put("sort","last_time.keyword");
+                    params.put("type",esQueryBean.getSubType());
+                    params.put("fields.module",esQueryBean.getModule());
+//                    params.put("fields.ip_addr",esQueryBean.getStrIp());
+                    params.put("sort","last_time");
                     params.put("size","5");
                 }else if("风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType())){        //判断是雷达系列数据
                     Calendar calendar = Calendar.getInstance();
@@ -265,19 +263,19 @@ public class FZJCService extends BaseController{
 
                     List<Map> list = new ArrayList<>();
                     Map<String,String> map = new HashMap<>();
-                    map.put("name","fields.data_time.keyword");
+                    map.put("name","fields.data_time");
                     map.put("gte", Pub.transform_DateToString(startDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
                     map.put("lt", Pub.transform_DateToString(endDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
                     list.add(map);
                     params.put("range",list);
-                    params.put("type.keyword",esQueryBean.getSubType());
-                    params.put("fields.module.keyword",esQueryBean.getModule());
+                    params.put("type",esQueryBean.getSubType());
+                    params.put("fields.module",esQueryBean.getModule());
                     params.put("size","100");
                 }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
-                    params.put("type.keyword",esQueryBean.getSubType());
-                    params.put("fields.module.keyword",esQueryBean.getModule());
-                    params.put("fields.ip_addr.keyword",esQueryBean.getStrIp());
-                    params.put("sort","fields.data_time.keyword");  //注意这里，加工雷达没有时次
+                    params.put("type",esQueryBean.getSubType());
+                    params.put("fields.module",esQueryBean.getModule());
+                    params.put("fields.ip_addr",esQueryBean.getStrIp());
+                    params.put("sort","fields.data_time");  //注意这里，加工雷达没有时次
                     params.put("size","1");
                 }
 
@@ -385,15 +383,15 @@ public class FZJCService extends BaseController{
                 if( "ReadFY2NC".equals(esQueryBean.getSubType()) || "云图".equals(esQueryBean.getSubType()) || "雷达".equals(esQueryBean.getSubType())
                             || "炎热指数".equals(esQueryBean.getSubType())){
                     Map<String,Object> mustMap = new HashMap<>();
-                    mustMap.put("type.keyword",esQueryBean.getSubType());
-                    mustMap.put("fields.module.keyword",esQueryBean.getModule());
+                    mustMap.put("type",esQueryBean.getSubType());
+                    mustMap.put("fields.module",esQueryBean.getModule());
 
                     Map<String,Object> mustNotMap = new HashMap<>();
-                    mustNotMap.put("aging_status.keyword","未处理");
+                    mustNotMap.put("aging_status","未处理");
 
                     params.put("must",mustMap);
                     params.put("mustNot",mustNotMap);
-                    params.put("sort","last_time.keyword");
+                    params.put("sort","last_time");
                     params.put("size",esQueryBean.getSize());
 
                 }else if("风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType())){        //判断是雷达系列数据
@@ -428,26 +426,26 @@ public class FZJCService extends BaseController{
 
                     List<Map> list = new ArrayList<>();
                     Map<String,String> map = new HashMap<>();
-                    map.put("name","fields.data_time.keyword");
+                    map.put("name","fields.data_time");
                     map.put("gte", Pub.transform_DateToString(startDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
                     map.put("lt", Pub.transform_DateToString(endDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
                     list.add(map);
 
                     Map<String,Object> mustMap = new HashMap<>();
-                    mustMap.put("type.keyword",esQueryBean.getSubType());
-                    mustMap.put("fields.module.keyword",esQueryBean.getModule());
+                    mustMap.put("type",esQueryBean.getSubType());
+                    mustMap.put("fields.module",esQueryBean.getModule());
 
                     params.put("must",mustMap);
                     params.put("range",list);
-                    params.put("sort","fields.data_time.keyword");
+                    params.put("sort","fields.data_time");
                     params.put("size","100");
                 }else /*if("LatLonQREFEnd".equals(esQueryBean.getSubType()))*/{
                     Map<String,Object> mustMap = new HashMap<>();
-                    mustMap.put("type.keyword",esQueryBean.getSubType());
-                    mustMap.put("fields.module.keyword",esQueryBean.getModule());
+                    mustMap.put("type",esQueryBean.getSubType());
+                    mustMap.put("fields.module",esQueryBean.getModule());
 
                     params.put("must",mustMap);
-                    params.put("sort","fields.data_time.keyword");  //注意这里，加工雷达没有时次
+                    params.put("sort","fields.data_time");  //注意这里，加工雷达没有时次
                     params.put("size",esQueryBean.getSize());
                 }
 

@@ -14,7 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-
+/**
+ * @description: 消费Kafka—— ALERT(topic)数据类,实时向页面传递告警信息
+ * @author fukl
+ * @since 2017年8月27日 下午2:59:06
+ * @version
+ *
+ */
 @Service
 public class KfkConsumer {
     private static final Logger logger = LoggerFactory.getLogger(KfkConsumer.class);

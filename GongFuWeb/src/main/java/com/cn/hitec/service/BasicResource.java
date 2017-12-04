@@ -600,9 +600,9 @@ public class BasicResource {
         EsQueryBean es = new EsQueryBean();
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String s1 = "log_"+ sdf.format(System.currentTimeMillis());
-            String s2 = "log_"+ sdf.format(System.currentTimeMillis()-(3600*24*1000));
+            SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
+            String s1 = Pub.Index_Head+ sdf.format(System.currentTimeMillis());
+            String s2 = Pub.Index_Head+ sdf.format(System.currentTimeMillis()-(3600*24*1000));
 
             String[] indice = new String[] { s2 ,s1 };
             es.setIndices(indice);
@@ -610,12 +610,12 @@ public class BasicResource {
             es.setTypes(types);
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> mustMap = new HashMap<>();
-            mustMap.put("fields.ip.keyword", ip);
-            mustMap.put("fields.metric.keyword",metric);
+            mustMap.put("fields.ip", ip);
+            mustMap.put("fields.metric",metric);
 //		mustMap.put("fields.metric", "system.cpu.pct_usage");
 
             params.put("must", mustMap);
-            params.put("sort", "fields.data_time.keyword");
+            params.put("sort", "fields.data_time");
 
 
             if(metric.indexOf("disk") > -1){
@@ -628,10 +628,10 @@ public class BasicResource {
                 Date startTime = calendar.getTime();
 
                 List<Map> rangeList = new ArrayList<>();
-                Map<String, String> rangeMap = new HashMap<>();
-                rangeMap.put("name", "fields.data_time.keyword");
-                rangeMap.put("gt", Pub.transform_DateToString(startTime,"yyyy-MM-dd HH:mm"));
-                rangeMap.put("lte", Pub.transform_DateToString(date,"yyyy-MM-dd HH:mm"));
+                Map<String, Object> rangeMap = new HashMap<>();
+                rangeMap.put("name", "fields.data_time");
+                rangeMap.put("gt", Pub.transform_DateToString(startTime, "yyyy-MM-dd HH:mm"));
+                rangeMap.put("lte", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm"));
                 rangeList.add(rangeMap);
                 params.put("range", rangeList);
                 params.put("resultAll", true);  //返回范围内的所有数据

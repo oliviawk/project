@@ -5,6 +5,7 @@ import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.service.*;
+import com.sun.media.jfxmedia.logging.Logger;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.script.mustache.SearchTemplateRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,9 +130,11 @@ public class QueryApi extends BaseController {
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,list);
             outMap.put(KEY_MESSAGE,e.getMessage());
+            e.printStackTrace();
+
         } finally {
             long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
+            outMap.put(KEY_SPEND,spend+"ms");
             return outMap;
         }
     }
@@ -168,7 +171,7 @@ public class QueryApi extends BaseController {
             outMap.put(KEY_MESSAGE,e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
+            outMap.put(KEY_SPEND,spend+"ms");
             return outMap;
         }
     }
@@ -201,7 +204,7 @@ public class QueryApi extends BaseController {
             outMap.put(KEY_MESSAGE,e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
+            outMap.put(KEY_SPEND,spend+"ms");
             return outMap;
         }
     }
@@ -229,7 +232,7 @@ public class QueryApi extends BaseController {
             outMap.put(KEY_MESSAGE,e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
-            outMap.put(KEY_SPEND,spend+"mm");
+            outMap.put(KEY_SPEND,spend+"ms");
             return outMap;
         }
     }
@@ -263,7 +266,7 @@ public class QueryApi extends BaseController {
 			outMap.put(KEY_MESSAGE,e.getMessage());
 		} finally {
 			long spend = System.currentTimeMillis()-start;
-			outMap.put(KEY_SPEND,spend+"mm");
+			outMap.put(KEY_SPEND,spend+"ms");
 			return outMap;
 		}
 	}
@@ -299,7 +302,7 @@ public class QueryApi extends BaseController {
 			outMap.put(KEY_MESSAGE,e.getMessage());
 		} finally {
 			long spend = System.currentTimeMillis()-start;
-			outMap.put(KEY_SPEND,spend+"mm");
+			outMap.put(KEY_SPEND,spend+"ms");
 			return outMap;
 		}
 	}

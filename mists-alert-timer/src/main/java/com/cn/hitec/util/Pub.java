@@ -30,7 +30,7 @@ public class Pub {
     public static final String VAL_FAIL = "fail";
 
 
-    public static final String Index_Head = "log_";
+    public static final String Index_Head = "data_";
     public static final String Index_Food_Simpledataformat = "yyyyMMdd";
 
     public static String transform_DateToString(Date date , String simpleDataFormat) throws Exception{

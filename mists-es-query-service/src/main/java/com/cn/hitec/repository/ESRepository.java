@@ -110,53 +110,6 @@ public class ESRepository {
         }
     }
 
-    // 创建模版
-    public void buildTemplate() throws Exception {
-        Iterable<String> itTemplateNamePrefix = splitter.split(strTemplateNamePrefixs);
-        IndicesAdminClient iac = client.admin().indices();
-        for (String strTemplateNamePrefix : itTemplateNamePrefix) {
-            PutIndexTemplateRequest pitr = new PutIndexTemplateRequest(strTemplateNamePrefix)
-                    .template(strTemplateNamePrefix + "*");
-            //number_of_shards 机器数减一,number_of_replicas 备份1份就是两份
-            //如果你用单机测试，这段需要注释掉
-            //我有18个node，所以设置为18个，分配均匀的话，每个node上会有一个shard，外加一个备份，每个node上有两个shard
-            //分片数*副本数=集群数量
-//            pitr.settings(new MapBuilder<String, Object>()
-//                    .put("number_of_shards", 1)
-//                    .put("number_of_replicas", 1)
-//                    .put("refresh_interval", "1s").map());
-            Map<String, Object> defaultMapping = new HashMap<String, Object>();
-            // 关闭_all
-            defaultMapping.put("_all", new MapBuilder<String, Object>().put("enabled", false).map());
-            defaultMapping.put("numeric_detection", false);
-            defaultMapping.put("dynamic_templates",
-                    new Object[]{
-                            new MapBuilder<String, Object>().put("date_tpl",
-                                    new MapBuilder<String, Object>().put("match", "dt*")
-                                            .put("mapping",
-                                                    new MapBuilder<String, Object>().put("type", "date")
-                                                            .put("index", "not_analyzed").put("doc_values", true)
-                                                            .map())
-                                            .map())
-                                    .map(),
-                            new MapBuilder<String, Object>().put("geo_point_tpl",
-                                    new MapBuilder<String, Object>().put("match", "geop*")
-                                            .put("mapping",
-                                                    new MapBuilder<String, Object>().put("type", "geo_point")
-                                                            .put("index", "not_analyzed").put("doc_values", true)
-                                                            .map())
-                                            .map())
-                                    .map(),
-                            new MapBuilder<String, Object>().put("all_tpl",
-                                    new MapBuilder<String, Object>().put("match", "*").put("mapping",
-                                            new MapBuilder<String, Object>().put("type", "{dynamic_type}")
-                                                    .put("index", "not_analyzed").put("doc_values", true).map())
-                                            .map())
-                                    .map()});
-            pitr.mapping("_default_", defaultMapping);
-            iac.putTemplate(pitr);
-        }
-    }
 
     //判断index是否存在
     public boolean exists(String strIndex) {

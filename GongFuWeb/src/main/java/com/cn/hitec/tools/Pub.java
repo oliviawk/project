@@ -56,7 +56,7 @@ public class Pub {
     public static Map<String,Object> alertMap_distribute = new HashMap<>();
 
 
-    public static final String Index_Head = "log_";
+    public static final String Index_Head = "data_";
     public static final String Index_Food_Simpledataformat = "yyyyMMdd";
 
 

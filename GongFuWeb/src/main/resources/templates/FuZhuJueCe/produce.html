@@ -677,7 +677,8 @@
 
         function connect() {
             //Connect WebSocket server
-            socket =new WebSocket("ws://10.30.16.120:8090/wbSocket");
+//            socket =new WebSocket("ws://10.30.16.120:8090/wbSocket");
+            socket =new WebSocket("ws://127.0.0.1:8090/wbSocket");
             //open
             socket.onopen = function () {
                 console.log("WebSocket is open");
@@ -697,16 +698,12 @@
             }
         }
 
-        $(function () {
-            connect();
-
-            initAlertDiv();
-        })
 
         function run_linkTest() {
             sleep(100);
             lct_statusNew("采集","10.30.16.220","云图");
             lct_statusNew("采集","10.30.16.220","雷达");
+
             lct_statusNew("采集","120.26.9.109","LAPS3KM");
             lct_statusNew("采集","120.26.9.109","城市预报");
             lct_statusNew("采集","120.26.9.109","台风");
@@ -725,11 +722,17 @@
             lct_statusNew("分发","10.0.74.226","T639");
             lct_statusNew("分发","10.0.74.226","炎热指数");
         }
-        run_linkTest();
+
         var linkAging_interval ;
         clearInterval(linkAging_interval);
         linkAging_interval = setInterval(run_linkTest, 600*1000);
 
+
+        $(function () {
+            run_linkTest();
+            initAlertDiv();
+            connect();
+        })
 
 
     </script>
