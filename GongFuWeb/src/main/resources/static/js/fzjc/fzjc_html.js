@@ -396,7 +396,13 @@ function initHistory(subType,module,size) {
                     /*if(subType == "风流场" || subType == "T639"){
                         tds += "<td>"+this.fields.end_time+"</td>";
                     }*/
-                    tds += "<td>"+this.fields.end_time+"</td>";
+
+                    //更新时间
+                    if (this.fields.hasOwnProperty('end_time')) {
+                        tds += "<td>"+this.fields.end_time+"</td>";
+                    } else {
+                        tds += "<td> -</td>";
+                    }
 
                     //耗时
                     if (this.fields.module == "加工" && (this.type == "LatLonQREFEnd" || this.type == "ReadFY2NC")
