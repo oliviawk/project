@@ -170,6 +170,9 @@ public class FZJCService extends BaseController{
 
     }
 
+
+
+
     /**
      * 云图、雷达， 实时数据查询
      * @param esQueryBean
@@ -335,6 +338,73 @@ public class FZJCService extends BaseController{
                 }else{
                     mapObject.put("resultData","[]");
                 }
+
+                //拼接返回的map
+                outMap.put(KEY_RESULT,mapObject.get(KEY_RESULT));
+                outMap.put(KEY_MESSAGE,mapObject.get(KEY_MESSAGE));
+                outMap.put(KEY_RESULTDATA,mapObject.get("resultData"));
+                outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
+
+            }
+        } catch (Exception e) {
+            outMap.put(KEY_RESULT,VAL_ERROR);
+            outMap.put(KEY_RESULTDATA,null);
+            outMap.put(KEY_MESSAGE,e.getMessage());
+            e.printStackTrace();
+        } finally {
+            long spend = System.currentTimeMillis()-start;
+            outMap.put(KEY_SPEND,spend+"mm");
+            return outMap;
+        }
+    }
+
+
+    /**
+     * 云图、雷达， 实时数据查询
+     * @param esQueryBean
+     * @return
+     */
+    public Map<String,Object> findData_DI_new(EsQueryBean_web esQueryBean){
+        long start = System.currentTimeMillis();
+        Map<String,Object> mapObject = null;
+        try {
+            //判断参数是否正确
+            if(esQueryBean == null){
+                outMap.put(KEY_RESULT,VAL_ERROR);
+                outMap.put(KEY_RESULTDATA,null);
+                outMap.put(KEY_MESSAGE,"参数错误！");
+            }else{
+                if(StringUtils.isEmpty(esQueryBean.getIndices())){
+                    String index = Pub.Index_Head + Pub.transform_DateToString(new Date(),Pub.Index_Food_Simpledataformat);
+                    esQueryBean.setIndices(new String[]{index});
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                Date startDate = new Date();
+                calendar.setTime(startDate);
+                calendar.add(Calendar.HOUR_OF_DAY,-2);
+                Date endDate = calendar.getTime();
+
+                Map<String,Object> params = new HashMap<>();    //查询参数
+                /*------开始拼接查询参数--------*/
+//                雷达加工没有时次， type ：LatLonQREFEnd
+//                云图、雷达、炎热指数的所有type："雷达","云图", "炎热指数","ReadFY2NC"
+//                T639 单独查询 ， type：风流场、T639
+                Map<String,Object> mustMap = new HashMap<>();
+                mustMap.put("type",new String[]{"雷达","云图","炎热指数","ReadFY2NC"});
+                mustMap.put("fields.ip_addr",new String[]{"10.30.16.220","10.30.16.223","10.0.74.236"});
+                params.put("must",mustMap);
+
+                List<Map> rangeList = new ArrayList<>();
+                Map<String,String> rangeMap = new HashMap<>();
+                rangeMap.put("name","last_time");
+                rangeMap.put("gte", Pub.transform_DateToString(startDate,"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                rangeMap.put("lte", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                rangeList.add(rangeMap);
+                params.put("range",rangeList);
+
+                params.put("sort","last_time");
+                params.put("size","50");
 
                 //拼接返回的map
                 outMap.put(KEY_RESULT,mapObject.get(KEY_RESULT));

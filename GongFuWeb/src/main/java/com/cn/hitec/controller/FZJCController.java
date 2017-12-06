@@ -28,7 +28,7 @@ public class FZJCController{
     @Autowired
     private BasicResource basicResource;
     
-    @RequestMapping("/")
+    @RequestMapping("/sxt")
     public String index() {
         // System.out.println("进入MICAPS4.html");
         return "FuZhuJueCe/fuzhujuece";

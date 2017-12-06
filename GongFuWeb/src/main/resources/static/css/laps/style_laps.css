@@ -1,0 +1,317 @@
+*{padding:0;margin:0}
+body{
+	background: #101010;
+	color: #fff;
+	font-size:16px;
+	width:1880px;
+	margin:0 auto;
+}
+ul,li{list-style: none;}
+.top{
+	width: 1860px;
+	height: 70px;
+	border-bottom:5px #1f1f1f solid;
+	padding: 16px 10px 0;
+}
+.top .logo{
+	height: 50px;
+	line-height: 50px;
+	padding-left: 58px;
+	background: url(../../img/laps/logo.png) no-repeat;
+	color: #fff;
+	font-size: 24px;
+	display: inline-block;
+	float: left;
+	font-weight: bold;
+}
+.top .nav{
+	display: inline-block;
+	float:right;
+}
+.top .nav a{
+	display: inline-block;
+	width: 100px;
+	height: 48px;
+	line-height: 48px;
+	color: #fff;
+	background: url(../../img/laps/menubtn.png) repeat-x;
+	border-radius: 8px;
+	text-align: center;
+	text-decoration: none;
+	margin-left: 8px;
+}
+/*****流程图******/
+.process{
+	width: 1580px;
+	margin: 12px 0;
+	display:inline-block;
+	float:left;
+}
+.bg-grey{
+	background: #363636;
+	text-align:center;
+}
+.bg-blue{
+	height:30px;
+	background: #14315b;
+	text-align:center;
+	border-bottom: 1px #212121 solid;
+}
+.title-grey{
+	height:30px;
+	background: #212121;
+	border-left: 10px #212121 solid;
+	border-right: 10px #212121 solid;
+	border-bottom: 1px #212121 solid;
+	text-align:center;
+}
+.list-green{
+	height:30px;
+	background: #107610;
+	border-left: 10px #212121 solid;
+	border-right: 10px #212121 solid;
+	border-bottom: 1px #212121 solid;
+	text-indent:10px;
+}
+.list-green span{
+	display: inline-block;
+	padding-left: 24px;
+	margin-left: 30px;
+	background: url(../../img/laps/dot-green.png) no-repeat left center;
+}
+.list-red{
+	height:30px;
+	background: #913132;
+	border-left: 10px #212121 solid;
+	border-right: 10px #212121 solid;
+	border-bottom: 1px #212121 solid;
+	text-indent:10px;
+}
+.list-red span{
+	display: inline-block;
+	padding-left: 24px;
+	margin-left: 30px;
+	background: url(../../img/laps/dot-red.png) no-repeat left center;
+}
+.list-grey{
+	height:30px;
+	background: #5f5f5f;
+	border-left: 10px #212121 solid;
+	border-right: 10px #212121 solid;
+	border-bottom: 1px #212121 solid;
+	text-align:center;
+}
+.list-bottom{
+	border-top: 9px #212121 solid;
+	height:22px;
+}
+.process-table{
+	border-collapse: collapse;
+}
+.process-table td{
+	height: 31px;
+	line-height: 31px;
+}
+.sn-r,.sn-g{
+	display: inline-block;
+	height:30px;
+	width:80px;
+	float:right;
+}
+.sn-r{background: url(../../img/laps/dot-red.png) no-repeat center;}
+.sn-g{background: url(../../img/laps/dot-green.png) no-repeat center;}
+.title-grey span{
+	display:inline-block;
+}
+.bd{
+	border-left:1px #0c0c0c solid;
+	border-right:1px #0c0c0c solid;
+}
+.fl{
+	float:left;
+}
+.fr{
+	float:right;
+	width:80px;
+}
+/*******连线箭头样式*******/
+.arrow-right{
+	height:31px;
+	background:url(../../img/laps/arrow-right.png) no-repeat right center;
+}
+.arrow-line{
+	height:31px;
+	background:url(../../img/laps/arrow-right.png) no-repeat left center;
+}
+.arrow-group{
+	padding-left:5px;
+}
+.arrow-group .group-line{
+	width:25px;
+	height:31px;
+	border-left:5px #363636 solid;
+}
+.arrow-group2{
+	margin-left:5px;
+	background-position:5px right ;
+	position:relative;
+}
+.arrow-group2 .group-break-top{
+	width:25px;
+	height:19px;
+	border-left:5px #363636 solid;
+	top:13px;
+	left:0;
+	position:absolute;
+}
+.arrow-group2 .group-break-bottom{
+	width:25px;
+	height:19px;
+	border-left:5px #363636 solid;
+	bottom:18px;
+	left:0;
+	position:absolute;
+}
+.arrow-group2 .group-break-center{
+	position:absolute;
+	width:5px;
+	height:5px;
+	bottom: -2px;
+	left: -5px;
+	background: #363636;
+}
+.arrow-up{
+	background:url(../../img/laps/arrow-up.png) no-repeat center top;
+}
+.arrow-down{
+	height:31px;
+	background:url(../../img/laps/arrow-down.png) no-repeat center bottom;
+}
+.arrow-v-line{
+	height:31px;
+	background:url(../../img/laps/arrow-down.png) no-repeat center top;
+}
+.arrow-v-break-t{
+	position:relative;
+}
+.arrow-v-break-t span{
+	display:block;
+	position:absolute;
+	width:150px;
+	height:15px;
+	border-top:5px #363636 solid;
+	border-right:5px #363636 solid;
+	top:-3px;
+	left:0;
+}
+.arrow-v-break-b{
+	position:relative;
+}
+.arrow-v-break-b span{
+	display:block;
+	position:absolute;
+	width:150px;
+	height:15px;
+	border-bottom:5px #363636 solid;
+	border-right:5px #363636 solid;
+	bottom:-2px;
+	left:0;
+}
+ @media screen and (-webkit-min-device-pixel-ratio:0) {
+	.arrow-v-break-t span{
+	width:151px;
+	top:-2px;
+	}
+ 	.arrow-v-break-b span{
+	width:151px;
+	bottom:-3px;
+	}
+}
+/*********焦点关注**********/
+.focus{
+	width: 280px;
+	background: #571d1c;
+	text-align:center;
+	font-weight:normal;
+	display:inline-block;
+	float:left;
+	margin-left:20px;
+	margin-top:73px;
+}
+.focus h4 {
+	background: #ab2d2e;
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	font-weight:normal;
+}
+.focus h5{
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	font-size: 18px;
+	font-weight:normal;
+}
+.focus p{
+	height: 30px;
+	line-height: 30px;
+	font-size:16px;
+}
+/****************************/
+
+.block-wrap{
+	position: relative;
+}
+.block-wrap ul{
+	width: 40px;
+	height: 19px;
+	position: absolute;
+	top: 6px;
+	left: 5px;
+}
+.block-wrap li{
+	width: 10px;
+	height: 19px;
+	display: inline-block;
+	float: left;
+}
+.block-wrap .red{
+	background: url(../../img/laps/block-red.png) no-repeat;
+}
+.block-wrap .green{
+	background: url(../../img/laps/block-green.png) no-repeat;
+}
+.triangle-row{
+	height: 10px;
+}
+.triangle-row td,.triangle-row .arrow-v-line,.triangle-row .title-grey{
+	height: 9px !important;
+	line-height: 9px !important;
+}
+.triangle-row .list-bottom{
+	height: auto!important;
+}
+.triangle{
+	color: #00ff00;
+}
+.left-bd{
+	border-left: 5px #363636 solid;
+	margin-left: 5px;
+	height: 100%;
+}
+.group-line{
+	position: relative;
+}
+.group-line em,.arrow-group2 em{
+	display: block;
+	width: 5px;
+	height: 5px;
+	position: absolute;
+	top: 14px;
+	left: -10px;
+	background:#363636 ;
+}
+.nobg{
+	background:none;
+}

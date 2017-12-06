@@ -470,29 +470,4 @@ function initHistory(subType,module,size) {
 
 }
 
-//时效图，环节切换
-function changeModule(moduleType,size) {
-    $("#moduleType").html("环节名称："+moduleType+" <span class='caret'></span>");
-    gantt_linkAging = null;
-    initSvg(moduleType,size);
-    //    clearInterval(linkAging_interval);
-    //    linkAging_interval = setInterval(initSvg(moduleType), 10000);
-}
 
-function openWindow(name){
-
-   if(name == "lct"){
-       window.location.href='../fzjc/lct';
-   }else{
-       window.location.href='../fzjc/';
-   }
-}
-
-function sleep(numberMillis) {
-    var now = new Date();
-    var exitTime = now.getTime() + numberMillis;
-    while (true) {
-        now = new Date();
-        if (now.getTime() > exitTime)    return;
-    }
-}

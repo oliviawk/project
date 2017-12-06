@@ -34,3 +34,25 @@ PublicTool.prototype.CloseProgressBar=function(){
 Array.prototype.insert = function(index, item) {
 	this.splice(index, 0, item);
 };
+
+function openWindow(name){
+    window.location.href = name;
+}
+
+function sleep(numberMillis) {
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) {
+        now = new Date();
+        if (now.getTime() > exitTime)    return;
+    }
+}
+
+//时效图，环节切换
+function changeModule(moduleType,size) {
+    $("#moduleType").html("环节名称："+moduleType+" <span class='caret'></span>");
+    gantt_linkAging = null;
+    initSvg(moduleType,size);
+    //    clearInterval(linkAging_interval);
+    //    linkAging_interval = setInterval(initSvg(moduleType), 10000);
+}
