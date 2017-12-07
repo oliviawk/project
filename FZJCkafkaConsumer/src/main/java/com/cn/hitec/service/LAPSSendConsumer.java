@@ -1,26 +1,25 @@
 package com.cn.hitec.service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.cn.hitec.bean.EsBean;
+import com.cn.hitec.feign.client.EsService;
 import net.sf.json.JSONObject;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.cn.hitec.bean.EsBean;
-import com.cn.hitec.feign.client.EsService;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
-public class FZJCSendConsumer {
-	private static final Logger logger = LoggerFactory.getLogger(FZJCSendConsumer.class);
+public class LAPSSendConsumer {
+	private static final Logger logger = LoggerFactory.getLogger(LAPSSendConsumer.class);
     @Autowired
     EsService esService;
 
@@ -29,16 +28,12 @@ public class FZJCSendConsumer {
     private List<String> list  = new ArrayList<String>();
     private String TOPIC = "SEND";
 
-    @Value("${FZJC.send.target.ips}")
+    @Value("${LAPS.send.target.ips}")
     private String ips;
-    @Value("${FZJC.datatype}")
+    @Value("${LAPS.datatype}")
     private String datatypes;
-    @Value("${collect}")
-    private String collect;
-    @Value("${send}")
-    private String send;
 
-    public FZJCSendConsumer() {
+    public LAPSSendConsumer() {
 
     	//*******************bootstrap.servers方式******************//
     	Properties props = new Properties();
@@ -48,7 +43,7 @@ public class FZJCSendConsumer {
 		// 设置consumer group name
 
 		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		String group = bundle.getString("FZJC.group.id");
+		String group = bundle.getString("LAPS.group.id");
 		props.put("group.id", group);
 
 		props.put("enable.auto.commit", "false");
@@ -72,11 +67,10 @@ public class FZJCSendConsumer {
 
     	consumer.subscribe(Arrays.asList(TOPIC));
     	EsBean esBean = new EsBean();
-        esBean.setType("FZJC");
+        esBean.setType("LAPS");
 
         long startTime = System.currentTimeMillis();
         long useaTime = 0;
-        int i = 0;
 		while (true) {
 			try {
 				ConsumerRecords<String, String> records = consumer.poll(100);
@@ -192,93 +186,20 @@ public class FZJCSendConsumer {
 
 							subobj.put("ip_addr", ip);
 							subobj.put("ip_addr_target", target_ip);
-							if(collect.contains(target_ip)){
-								subobj.put("module", "采集");
-							}
-							else if(send.contains(target_ip)){
-								subobj.put("module", "分发");
-							}
 
-							if(type.equals("satellite") || type.equals("cloudmap_Guowuyuan")){
-								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20171018060000000.png
-								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20170904190000000.HDF
-								String[] arr = matcher.group(1).split("_");
-								obj.put("type", "云图");
-								obj.put("name", arr[3]);
-								String time = arr[8].substring(0,arr[8].indexOf("."));
+							subobj.put("module", "分发");
 
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-								Date d = df.parse(time);
-								if(arr[8].endsWith(".HDF")){
-									d.setHours(d.getHours()+8);
-								}
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}
-							else if(type.equals("radarlatlon")){
-								//ACHN.QREF000.20170927.160600.latlon
-								String[] arr = matcher.group(1).split("\\.");
-								obj.put("type", "雷达");
-								obj.put("name", arr[0] + "." + arr[1]);
-								String time = arr[2] + arr[3];
+							//MSP3_PMSC_LAPS3KM_ME_L88_CHN_201712060000_00000-00000.GR2
+							//MSP3_PMSC_LAPS3KMGEO_T_L88_CHN_201712041500_00000-00000.JPG
+							String[] arr = matcher.group(1).split("_");
+							obj.put("type", arr[2]);
+							obj.put("name", arr[3]);
 
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-								Date d = df.parse(time);
-								d.setHours(d.getHours()+8);
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}
-							else if(type.equals("radar_Guowuyuan")){
-								//MSP3_PMSC_RADAR_BREF_L88_CHN_201710170736_00000-00000.PNG
-								String[] arr = matcher.group(1).split("_");
-								obj.put("type", "雷达");
-								obj.put("name", "雷达");
-								String time = arr[6];
+							SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+							Date d = df.parse(arr[6]);
+							df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+							subobj.put("data_time", df.format(d));
 
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
-								Date d = df.parse(time);
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}
-							else if(type.equals("T639_Guowuyuan")){
-								//T639_GMFS_WIND_2017101613.json
-								String[] arr = matcher.group(1).split("_");
-								obj.put("type", "T639");
-								obj.put("name", "T639");
-								String time = arr[3].substring(0,arr[3].indexOf("."));
-
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
-								Date d = df.parse(time);
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}
-							else if(type.equals("hotIndex_Guowuyuan")){
-								//hot2017101707.txt
-								String fname = matcher.group(1);
-								obj.put("type", "炎热指数");
-
-								String time = fname.substring(3,fname.indexOf("."));
-
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
-								Date d = df.parse(time);
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}
-							/*else if(type.equals("kongqiwuran_Guowuyuan")){
-								//SEVP_NMC_APWF_SFER_EAIRP_ACHN_LNO_P9_20171017120007224.JPG
-								String[] arr = matcher.group(1).split("_");
-								obj.put("type", "空气污染");
-								obj.put("name", "空气污染");
-								String time = arr[8].substring(3,arr[8].indexOf("."));
-
-								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
-								Date d = df.parse(time);
-								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-								subobj.put("data_time", df.format(d));
-							}*/
-							else{
-								obj.put("type", "type");
-							}
 
 							subobj.put("file_name", matcher.group(1));
 							subobj.put("event_status", matcher.group(2));
@@ -331,6 +252,6 @@ public class FZJCSendConsumer {
 
 
     public static void main(String[] args) {
-        new FZJCSendConsumer().consume();
+        new LAPSSendConsumer().consume();
     }
 }

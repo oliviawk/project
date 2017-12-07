@@ -1,5 +1,6 @@
 package com.cn.hitec.component;
 
+import com.cn.hitec.service.LAPSSendConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,11 @@ public class RunnerEsComponent implements CommandLineRunner {
     LAPS_WSConsumer lapsConsumer;
     @Autowired
     FZJCSendConsumer fzjcSendConsumer;
+    @Autowired
+    LAPSSendConsumer lapsSendConsumer;
     @Override
     public void run(String... strings) throws Exception {
-        Thread t1 = new Thread(){
+        Thread fzjc = new Thread(){
 
 			@Override
 			public void run() {
@@ -39,29 +42,37 @@ public class RunnerEsComponent implements CommandLineRunner {
         	
         };
         
-//        Thread t2 = new Thread(){
-//
-//			@Override
-//			public void run() {
-//				lapsConsumer.consume();
-//			}
+        Thread laps = new Thread(){
+
+			@Override
+			public void run() {
+				lapsConsumer.consume();
+			}
         	
-//        };
-        
-        Thread t3 = new Thread(){
+        };
+
+        Thread fzjcSend = new Thread(){
 
 			@Override
 			public void run() {
 				fzjcSendConsumer.consume();
 			}
-        	
+
         };
-        t1.start();
-//        t2.start();
-        t3.start();
-    	
-//    	kafkaConsumer.consume();
-//        lapsConsumer.consume();
+
+        Thread lapsSend = new Thread(){
+
+            @Override
+            public void run() {
+                lapsSendConsumer.consume();
+            }
+
+        };
+
+        fzjc.start();
+        laps.start();
+        fzjcSend.start();
+        lapsSend.start();
     }
 
 }

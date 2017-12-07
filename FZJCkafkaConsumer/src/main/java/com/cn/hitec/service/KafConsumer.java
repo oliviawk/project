@@ -2,11 +2,7 @@ package com.cn.hitec.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import net.sf.json.JSONObject;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -15,6 +11,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.cn.hitec.bean.EsBean;
@@ -30,7 +27,7 @@ public class KafConsumer {
     private final KafkaConsumer<String, String> consumer;
     private List<String> list  = new ArrayList<>();
     private String TOPIC = "FZJC";
-    private String GROUP = "0";
+
     public KafConsumer() {
         /*Properties props = new Properties();
         //zookeeper 配置
@@ -65,7 +62,9 @@ public class KafConsumer {
 		props.put("bootstrap.servers",
 				"10.30.17.173:9092,10.30.17.174:9092,10.30.17.175:9092");
 		// 设置consumer group name
-		props.put("group.id", GROUP);
+		ResourceBundle bundle = ResourceBundle.getBundle("application");
+		String group = bundle.getString("FZJC.group.id");
+		props.put("group.id", group);
 
 		props.put("enable.auto.commit", "false");
 
@@ -144,7 +143,7 @@ public class KafConsumer {
 		            	logger.debug("",e);
 		                e.printStackTrace();
 		            }
-					System.out.println(msg);
+					logger.info(msg);
 					if(msg != null){
 	                	list.add(msg);
 
@@ -210,9 +209,5 @@ public class KafConsumer {
 			return null;
 		}
     	
-    }
-
-    public static void main(String[] args) {
-        new KafConsumer().consume();
     }
 }
