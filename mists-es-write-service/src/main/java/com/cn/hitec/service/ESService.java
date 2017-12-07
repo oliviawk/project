@@ -215,12 +215,8 @@ public class ESService {
                         }else{
                             indices = Pub.getIndices(endTime,1);   //获取今天和昨天的 index
                         }
-                        if("炎热指数".equals(subType)){
-                            String name = map.get("name").toString();
-                            resultMap = getDocumentId(indices,type,subType,name,fields);
-                        }else{
-                            resultMap = getDocumentId(indices,type,subType,null,fields);
-                        }
+                        resultMap = getDocumentId(indices,type,subType,null,fields);
+
 
                     }else{
                         map.put("aging_status","正常");
@@ -376,9 +372,7 @@ public class ESService {
             //创建查询类
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             queryBuilder.must(QueryBuilders.termQuery("type",subType));
-            if("炎热指数".equals(subType)){
-                queryBuilder.must(QueryBuilders.termQuery("name",name));
-            }
+
             queryBuilder.must(QueryBuilders.termQuery("fields.data_time",fields.get("data_time").toString()));
             queryBuilder.must(QueryBuilders.termQuery("fields.module",fields.get("module").toString()));
             queryBuilder.must(QueryBuilders.termQuery("fields.ip_addr",fields.get("ip_addr").toString()));
