@@ -17,6 +17,8 @@ public class EsQueryBean_web {
     private String hour_before = "2";
     private String minute_before = "120";
 
+    private String findType;
+
 
     public String getHour_before() {
         return hour_before;
@@ -88,5 +90,13 @@ public class EsQueryBean_web {
 
     public void setMinute_before(String minute_before) {
         this.minute_before = minute_before;
+    }
+
+    public String getFindType() {
+        return findType;
+    }
+
+    public void setFindType(String findType) {
+        this.findType = findType;
     }
 }

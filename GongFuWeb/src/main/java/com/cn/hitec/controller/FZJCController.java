@@ -70,6 +70,19 @@ public class FZJCController{
     }
 
     /**
+     *  云图、雷达 ， 各环节 状态 查询方法
+     * @param esQueryBean
+     * @return
+     */
+    @RequestMapping(value="/findDataNew",method= RequestMethod.POST , consumes = "application/json")
+    @ResponseBody
+    public Map findDataNew(@RequestBody EsQueryBean_web esQueryBean){
+        Map<String,Object> map = fzjcService.findDataNew(esQueryBean);
+//        JSON.toJSONStringWithDateFormat(map,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);     //fastjson 插件异常处理方法
+        return map;
+    }
+
+    /**
      *  云图、雷达 ， 历史数据查询
      * @param esQueryBean
      * @return

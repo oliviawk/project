@@ -1,5 +1,6 @@
 package com.cn.hitec.tools;
 
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -26,5 +27,20 @@ public class Pub {
         SimpleDateFormat sdf = new SimpleDateFormat(simpleDataFormat);
 
         return sdf.parse(strDate);
+    }
+
+
+    public static RangeQueryBuilder RangeChoiceTest(String rangeType, RangeQueryBuilder builder , Object param){
+        if("gt".equals(rangeType)) {
+            builder.gt(param);
+        }else if("gte".equals(rangeType)) {
+            builder.gte(param);
+        }else if("lt".equals(rangeType)) {
+            builder.lt(param);
+        }else if("lte".equals(rangeType)) {
+            builder.lte(param);
+        }
+
+        return builder;
     }
 }
