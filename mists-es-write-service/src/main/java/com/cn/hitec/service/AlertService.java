@@ -84,62 +84,68 @@ public class AlertService {
      * @param alertBean
      * @throws Exception
      */
-    public void alert(String index , String type , AlertBean alertBean) throws Exception{
-        boolean isAlert_parent = false;
-        //判断上游是否告警
-        if("分发".equals(alertBean.getModule())){
-            AlertBean alertBean_JG = alertBean;
-            AlertBean alertBean_CJ = alertBean;
-            alertBean_JG.setModule("加工");
-            alertBean_CJ.setModule("采集");
-            String documentId_JG = getDocumentId(index,type,alertBean_JG);
-            if(StringUtils.isEmpty(documentId_JG)){
-                String documentId_CJ = getDocumentId(index,type,alertBean_JG);
+    public void alert(String index , String type , AlertBean alertBean){
+
+        try {
+            boolean isAlert_parent = false;
+            //判断上游是否告警
+            if("分发".equals(alertBean.getModule())){
+                AlertBean alertBean_JG = alertBean;
+                AlertBean alertBean_CJ = alertBean;
+                alertBean_JG.setModule("加工");
+                alertBean_CJ.setModule("采集");
+                String documentId_JG = getDocumentId(index,type,alertBean_JG);
+                if(StringUtils.isEmpty(documentId_JG)){
+                    String documentId_CJ = getDocumentId(index,type,alertBean_JG);
+                    if(!StringUtils.isEmpty(documentId_CJ)){
+                        isAlert_parent = true;
+                    }
+                }else{
+                    isAlert_parent = true;
+                }
+            }else if("加工".equals(alertBean.getModule())){
+                AlertBean alertBean_CJ = alertBean;
+                alertBean_CJ.setModule("采集");
+                String documentId_CJ = getDocumentId(index,type,alertBean_CJ);
                 if(!StringUtils.isEmpty(documentId_CJ)){
                     isAlert_parent = true;
                 }
-            }else{
-                isAlert_parent = true;
             }
-        }else if("加工".equals(alertBean.getModule())){
-            AlertBean alertBean_CJ = alertBean;
-            alertBean_CJ.setModule("采集");
-            String documentId_CJ = getDocumentId(index,type,alertBean_CJ);
-            if(!StringUtils.isEmpty(documentId_CJ)){
-                isAlert_parent = true;
-            }
-        }
 
-        //如果上游告警了，那么此条告警不生成
-        if(!isAlert_parent){
-            //判断是否重复告警
-            String documentId = getDocumentId(index,type,alertBean);
+            //如果上游告警了，那么此条告警不生成
+            if(!isAlert_parent){
+                //判断是否重复告警
+                String documentId = getDocumentId(index,type,alertBean);
 
-            if(documentId != null){ //如果有ID ，说明是
-                //不是超时和异常的告警，只能是恢复告警，那么修改掉
-                if(!"超时".equals(alertBean.getAlertType()) && !"异常".equals(alertBean.getAlertType()) ){
+                if(documentId != null){ //如果有ID ，说明是
+                    //不是超时和异常的告警，只能是恢复告警，那么修改掉
+                    if(!"超时".equals(alertBean.getAlertType()) && !"异常".equals(alertBean.getAlertType()) ){
+                        //保存告警信息
+                        es.bulkProcessor.add(new IndexRequest(index,type,documentId)
+                                .source(JSON.toJSONString(alertBean), XContentType.JSON));
+                    }
+
+                }else{
                     //保存告警信息
-                    es.bulkProcessor.add(new IndexRequest(index,type,documentId)
-                            .source(JSON.toJSONString(alertBean), XContentType.JSON));
+                    IndexResponse response = es.client.prepareIndex(index,type)
+                            .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
+
+                    documentId = response.getId();
                 }
 
-            }else{
-                //保存告警信息
-                IndexResponse response = es.client.prepareIndex(index,type)
-                        .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
+                if(StringUtils.isEmpty(documentId)){
+                    throw new Exception("documentId 为空");
+                }
 
-                documentId = response.getId();
+                alertBean.setDocumentId(documentId);
+                HttpPub.httpPost("@all",alertBean.getTitle());
+                //发送消息并推送
+                kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
+
             }
-
-            if(StringUtils.isEmpty(documentId)){
-                throw new Exception("documentId 为空");
-            }
-
-            alertBean.setDocumentId(documentId);
-            HttpPub.httpPost("@all",alertBean.getTitle());
-            //发送消息并推送
-            kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
     }
