@@ -96,7 +96,7 @@ public class AlertService {
                 alertBean_CJ.setModule("采集");
                 String documentId_JG = getDocumentId(index,type,alertBean_JG);
                 if(StringUtils.isEmpty(documentId_JG)){
-                    String documentId_CJ = getDocumentId(index,type,alertBean_JG);
+                    String documentId_CJ = getDocumentId(index,type,alertBean_CJ);
                     if(!StringUtils.isEmpty(documentId_CJ)){
                         isAlert_parent = true;
                     }
