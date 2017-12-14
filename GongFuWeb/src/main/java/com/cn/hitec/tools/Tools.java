@@ -6,8 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ClassName: Tools
@@ -16,8 +15,8 @@ import org.slf4j.LoggerFactory;
  * @date 2017年6月5日 下午2:26:32
  * 
  */
+@Slf4j
 public class Tools {
-	private static final Logger logger = LoggerFactory.getLogger(Tools.class);
 
 	public static String readTxtFile(String filePath) {
 		StringBuffer strBuff = new StringBuffer();
@@ -33,11 +32,11 @@ public class Tools {
 				}
 				read.close();
 			} else {
-				logger.error("找不到指定的文件");
+				log.error("找不到指定的文件");
 			}
 			return strBuff.toString();
 		} catch (Exception e) {
-			logger.error("读取文件内容出错 Message:"+e.getMessage());
+			log.error("读取文件内容出错 Message:"+e.getMessage());
 			e.printStackTrace();
 		}
 		return null;

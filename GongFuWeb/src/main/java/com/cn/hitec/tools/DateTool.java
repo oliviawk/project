@@ -6,8 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ClassName: DateTool 
@@ -16,8 +15,8 @@ import org.slf4j.LoggerFactory;
  * @date 2017年5月8日17:21:18
  *  
  */
+@Slf4j
 public class DateTool {
-	private static final Logger logger = LoggerFactory.getLogger(DateTool.class);
 	/**
 	 * 功能：获取系统时间
 	 * 
@@ -449,7 +448,7 @@ public class DateTool {
 			 long unixTime=Long.parseLong(unixTimeStr);
 			 return unixDateFormat(unixTime, format);
 		} catch (Exception e) {
-			logger.error("时间转换出现错误");
+			log.error("时间转换出现错误");
 			return null;
 		}
 	}
