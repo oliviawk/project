@@ -5,8 +5,7 @@ import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.HttpPub;
 import com.cn.hitec.tools.Pub;
-import javafx.scene.control.Alert;
-import org.codehaus.groovy.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -15,8 +14,6 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,9 +26,9 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年10月23日 14:25
  */
+@Slf4j
 @Service
 public class AlertService {
-    private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
 
     @Autowired
     private ESRepository es;
@@ -64,13 +61,13 @@ public class AlertService {
                     .setExplain(true).get();
 
             SearchHit[] searchHits = response.getHits().getHits();
-            logger.info("alertData.dataLength :"+response.getHits().getTotalHits());
+            log.info("alertData.dataLength :"+response.getHits().getTotalHits());
             for (SearchHit hits:searchHits) {
                 documentId = hits.getId();
                 break;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         } finally {
             return documentId;
         }
@@ -145,7 +142,7 @@ public class AlertService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
     }

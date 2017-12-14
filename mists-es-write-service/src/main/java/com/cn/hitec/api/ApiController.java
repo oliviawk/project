@@ -1,5 +1,6 @@
 package com.cn.hitec.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,14 +19,14 @@ import com.cn.hitec.tools.AppPathTool;
  * @author james
  * @date 2017年6月8日 下午1:14:41 
  */
+@Slf4j
 @Controller
 public class ApiController {
-	private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
-	
+
 	@RequestMapping("/api")
 	public String index(ModelMap map , @RequestParam(defaultValue = "index",value = "mdname") String mdname){
 		String path = AppPathTool.getDataPath();
-		logger.info("API<接口调用>:"+path+mdname+".md");
+		log.info("API<接口调用>:"+path+mdname+".md");
         map.addAttribute("markdown","/api/"+mdname+".md");
         return "api/markdown";
 	}
