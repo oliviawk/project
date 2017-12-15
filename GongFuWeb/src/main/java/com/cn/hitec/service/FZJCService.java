@@ -55,7 +55,7 @@ public class FZJCService extends BaseController{
 
                 List<Map> list = new ArrayList<>();
                 Map<String,String> map = new HashMap<>();
-                map.put("name","fields.end_time");
+                map.put("name","fields.data_time");
                 map.put("lte", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 map.put("gte", Pub.transform_DateToString(calendar.getTime(), "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 list.add(map);
@@ -70,7 +70,7 @@ public class FZJCService extends BaseController{
 
                 params.put("must",mustMap);
 //                params.put("mustNot",mustNotMap);
-                params.put("sort","fields.end_time");
+                params.put("sort","fields.data_time");
                 params.put("size",esQueryBean.getSize());
 
 
