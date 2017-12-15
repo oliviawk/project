@@ -2,6 +2,7 @@ package com.cn.hitec.service;
 
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.search.SearchHit;
@@ -20,9 +21,9 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年10月26日 14:29
  */
+@Slf4j
 @Service
 public class ConfigService {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
     @Autowired
     ESRepository esRepository;
 
@@ -97,7 +98,7 @@ public class ConfigService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             resultList = null;
         } finally {
             return resultList;

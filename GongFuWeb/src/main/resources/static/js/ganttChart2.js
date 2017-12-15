@@ -10,7 +10,7 @@ function ganttChart_config(){
         isExtend: false,             //是否启用反向延长线
         extend_num: -60,            //反向延长线长度
         taskNames:[""],
-        taskStatus:{"OK" : "#41DB00",  "Error":"#DB4907"},    //状态样式码
+        taskStatus:{"OK" : "#41DB00",  "Error":"#DB4907" , "Warn":"#f8f7ff"},    //状态样式码
         show_taking:true,           //是否显示耗时
         x_orient:"top",             //x 轴位置
         y_orient:"left",            //y 轴位置
@@ -142,6 +142,8 @@ function ganttChart(elementId , jsonData , config ) {
             .attr("fill",function (d) {
                 if(d.status == "0" ||  d.status == "OK" || d.status == "Ok"){
                    return taskStatus["OK"];
+                }else if(d.status == "99"){
+                    return taskStatus["Warn"];
                 }
                 return taskStatus["Error"];
             })
@@ -262,6 +264,7 @@ function ganttChart(elementId , jsonData , config ) {
     /*=-------------数据转换---------*/
     function data_transform(dataOld) {
         var result = [];
+        console.log(dataOld)
         dataOld.forEach(function (d) {
             //耗时
             var totalTime = "-1";
@@ -269,18 +272,60 @@ function ganttChart(elementId , jsonData , config ) {
                 totalTime = d.fields.total_time;
             }
             if(!d.fields.hasOwnProperty("start_time")){
-                return true;
+                if(d.type == "T639" || d.type == "风流场"){
+                    result.push({
+                        "startDate":format(d.fields.data_time),
+                        "endDate":format(d.fields.data_time),
+                        "taskName":d.type,
+                        "status":"99",
+                        "errorMessage":"未到达",
+                        "data_time":d.fields.data_time,
+                        "total_time":totalTime,
+                        "file_name":d.fields.file_name
+                    });
+                }else{
+                    if(!d.hasOwnProperty("should_time") ){
+                        return true;
+                    }
+                    result.push({
+                        "startDate":format(d.should_time),
+                        "endDate":format(d.last_time),
+                        "taskName":d.type,
+                        "status":"99",
+                        "errorMessage":"未到达",
+                        "data_time":d.fields.data_time,
+                        "total_time":totalTime,
+                        "file_name":d.fields.file_name
+                    });
+                }
+
+            }else{
+                if(d.type == "T639" || d.type == "风流场"){
+                    result.push({
+                        "startDate":format(d.fields.data_time),
+                        "endDate":format(d.fields.data_time),
+                        "taskName":d.type,
+                        "status":d.fields.event_status,
+                        "errorMessage":d.fields.event_info,
+                        "data_time":d.fields.data_time,
+                        "total_time":totalTime,
+                        "file_name":d.fields.file_name
+                    });
+                }else{
+                    result.push({
+                        "startDate":format(d.fields.start_time),
+                        "endDate":format(d.fields.end_time),
+                        "taskName":d.type,
+                        "status":d.fields.event_status,
+                        "errorMessage":d.fields.event_info,
+                        "data_time":d.fields.data_time,
+                        "total_time":totalTime,
+                        "file_name":d.fields.file_name
+                    });
+                }
+
             }
-            result.push({
-                "startDate":format(d.fields.start_time),
-                "endDate":format(d.fields.end_time),
-                "taskName":d.type,
-                "status":d.fields.event_status,
-                "errorMessage":d.fields.event_info,
-                "data_time":d.fields.data_time,
-                "total_time":totalTime,
-                "file_name":d.fields.file_name
-            });
+
             // d.startDate = format(d.startDate);
             // d.endDate = format(d.endDate);
 

@@ -106,6 +106,171 @@ function alert_div_update(id,obj_json){
 /**
  * 流程图各环节状态
  */
+function lct_status_regular(findType) {
+    var esQeuryBean_web = {
+        // "indices":["log_20170920"],
+        "types":["FZJC"],
+        "findType":findType
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '../fzjc/findDataNew',
+        data: JSON.stringify(esQeuryBean_web),
+        dataType: "json",
+        async: false,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (json) {
+            var list1  = new Array();
+            if(findType == "regular"){
+                list1.push("collect_radarlatlon")
+                list1.push("distribute_radarlatlon")
+                list1.push("collect_satellite")
+                list1.push("machining_ReadFY2NC")
+                list1.push("distribute_satellite")
+                list1.push("machining_hot")
+                list1.push("distribute_hot")
+            }else if(findType == "no_regular"){
+                list1.push("machining_LatLonQREFEnd")
+                list1.push("collect_LAPS3KM")
+                list1.push("collect_cityforcast")
+                list1.push("collect_typhoon")
+                list1.push("collect_warning")
+                list1.push("collect_emergency")
+                list1.push("collect_boats")
+                list1.push("collect_trafficjam")
+            }else if(findType == "T639"){
+                list1.push("machining_T639")
+                list1.push("distribute_T639")
+            }
+
+
+            if(json.result != "success" || json.resultData.length < 1){
+                for (var i = 0; i < list1.length ; i++){
+                    var strId = list1[i];
+                    if(strId.indexOf("distribute_") > -1){
+                        $("#"+strId).attr({
+                            "class":"list-red-f"
+                        });
+                        $("#"+strId +" i").each(function (i) {
+                            if( i == 1){
+                                $(this).attr("class","sn-r bd");
+                            }else{
+                                $(this).attr("class","sn-r");
+                            }
+                        })
+                    }else{
+                        $("#"+strId).attr({
+                            "class":"list-red"
+                        });
+                    }
+                }
+                return ;
+            }
+            var data = json.resultData;
+            $.each(data,function(key,values){
+                var liStatus = "list-red";
+                var liI = "sn-r";
+
+                var agingStatus_isOK = false ;
+                var eventStatus_isOK = false ;
+                console.log(key);
+                console.log(values)
+                console.log("-----")
+
+
+                var strKeys = key.split("_");
+                var strType = strKeys[0];
+                var strModule = strKeys[1];
+                if(strType == "雷达"){
+                    strType = "radarlatlon";
+                }else if(strType == "云图"){
+                    strType = "satellite";
+                }else if(strType == "炎热指数"){
+                    strType = "hot";
+                }else if(strType == "风流场"){
+                    strType = "T639";
+                }else if(strType == "城市预报"){
+                    strType = "cityforcast";
+                }else if(strType == "台风"){
+                    strType = "typhoon";
+                }else if(strType == "预警信号"){
+                    strType = "warning";
+                }else if(strType == "突发事件"){
+                    strType = "emergency";
+                }else if(strType == "船舶"){
+                    strType = "boats";
+                }else if(strType == "交通拥堵"){
+                    strType = "trafficjam";
+                }
+                if(strModule == "采集"){
+                    strModule = "collect";
+                }else if(strModule == "加工"){
+                    strModule = "machining";
+                }else if(strModule == "分发"){
+                    strModule = "distribute";
+                }
+                var strIdHtml = strModule+"_"+strType;
+                if(values.hasOwnProperty("aging_status")){
+                    if(values.aging_status == "未处理" || values.aging_status == "正常"){
+                        agingStatus_isOK = true;
+                    }else{
+                        agingStatus_isOK = false;
+                    }
+                }else {
+                    agingStatus_isOK = true;
+                }
+                if(values.fields.hasOwnProperty("event_status") ){
+                    if(values.fields.event_status == "0" || values.fields.event_status.toUpperCase() == "OK") {
+                        eventStatus_isOK = true;
+                    }else{
+                        eventStatus_isOK = false;
+                    }
+                }else{
+                    eventStatus_isOK = true;
+                }
+
+                if(agingStatus_isOK && eventStatus_isOK){
+                    liStatus = "list-green";
+                    liI = "sn-g";
+                }
+
+                for (var i = 0; i < list1.length ; i++){
+                    var strId = list1[i];
+                    if(strIdHtml != strId){
+                        continue;
+                    }
+                    console.log(strId)
+                    if(strId.indexOf("distribute_") > -1){
+                        $("#"+strId).attr({
+                            "class":liStatus+"-f"
+                        });
+                        $("#"+strId +" i").each(function (i) {
+                            if( i == 1){
+                                $(this).attr("class", liI +" bd");
+                            }else{
+                                $(this).attr("class", liI );
+                            }
+                        })
+                    }else{
+                        $("#"+strId).attr({
+                            "class":liStatus
+                        });
+                    }
+                }
+            });
+            data = null;
+        },
+        error:function (e) {
+            console.error(e);
+        }
+    });
+}
+/**
+ * 流程图各环节状态
+ */
 function lct_statusNew(moduleName,ip,subType) {
     var esQeuryBean_web = {
         // "indices":["log_20170920"],

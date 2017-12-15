@@ -5,7 +5,7 @@ import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.HttpPub;
 import com.cn.hitec.tools.Pub;
-import org.codehaus.groovy.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -14,8 +14,6 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,9 +26,9 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年10月23日 14:25
  */
+@Slf4j
 @Service
 public class AlertService {
-    private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
 
     @Autowired
     private ESRepository es;
@@ -63,41 +61,90 @@ public class AlertService {
                     .setExplain(true).get();
 
             SearchHit[] searchHits = response.getHits().getHits();
-            logger.info("alertData.dataLength :"+response.getHits().getTotalHits());
+            log.info("alertData.dataLength :"+response.getHits().getTotalHits());
             for (SearchHit hits:searchHits) {
                 documentId = hits.getId();
                 break;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         } finally {
             return documentId;
         }
     }
 
 
-    public void alert(String index , String type , AlertBean alertBean) throws Exception{
+    /**
+     * 告警信息生成 参数必填
+     * @param index
+     * @param type
+     * @param alertBean
+     * @throws Exception
+     */
+    public void alert(String index , String type , AlertBean alertBean){
 
-        String documentId = getDocumentId(index,type,alertBean);
-        if(documentId != null){
-            //保存告警信息
-            es.bulkProcessor.add(new IndexRequest(index,type,documentId)
-                    .source(JSON.toJSONString(alertBean), XContentType.JSON));
-        }else{
-            //保存告警信息
-            IndexResponse response = es.client.prepareIndex(index,type)
-                    .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
+        try {
+            boolean isAlert_parent = false;
+            //判断上游是否告警
+            if("分发".equals(alertBean.getModule())){
+                AlertBean alertBean_JG = alertBean;
+                AlertBean alertBean_CJ = alertBean;
+                alertBean_JG.setModule("加工");
+                alertBean_CJ.setModule("采集");
+                String documentId_JG = getDocumentId(index,type,alertBean_JG);
+                if(StringUtils.isEmpty(documentId_JG)){
+                    String documentId_CJ = getDocumentId(index,type,alertBean_CJ);
+                    if(!StringUtils.isEmpty(documentId_CJ)){
+                        isAlert_parent = true;
+                    }
+                }else{
+                    isAlert_parent = true;
+                }
+            }else if("加工".equals(alertBean.getModule())){
+                AlertBean alertBean_CJ = alertBean;
+                alertBean_CJ.setModule("采集");
+                String documentId_CJ = getDocumentId(index,type,alertBean_CJ);
+                if(!StringUtils.isEmpty(documentId_CJ)){
+                    isAlert_parent = true;
+                }
+            }
 
-            documentId = response.getId();
+            //如果上游告警了，那么此条告警不生成
+            if(!isAlert_parent){
+                //判断是否重复告警
+                String documentId = getDocumentId(index,type,alertBean);
+
+                if(documentId != null){ //如果有ID ，说明是
+                    //不是超时和异常的告警，只能是恢复告警，那么修改掉
+                    if(!"超时".equals(alertBean.getAlertType()) && !"异常".equals(alertBean.getAlertType()) ){
+                        //保存告警信息
+                        es.bulkProcessor.add(new IndexRequest(index,type,documentId)
+                                .source(JSON.toJSONString(alertBean), XContentType.JSON));
+                    }
+
+                }else{
+                    //保存告警信息
+                    IndexResponse response = es.client.prepareIndex(index,type)
+                            .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
+
+                    documentId = response.getId();
+                }
+
+                if(StringUtils.isEmpty(documentId)){
+                    throw new Exception("documentId 为空");
+                }
+
+                alertBean.setDocumentId(documentId);
+                HttpPub.httpPost("@all",alertBean.getTitle());
+                //发送消息并推送
+                kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
-        if(StringUtils.isEmpty(documentId)){
-            throw new Exception("documentId 为空");
-        }
-        alertBean.setDocumentId(documentId);
-        //发送消息并推送
-        kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
-        HttpPub.httpPost("@all",alertBean.getTitle());
     }
 
     /**

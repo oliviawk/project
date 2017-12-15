@@ -63,8 +63,7 @@ public class QueryApi extends BaseController {
     @RequestMapping(value="/indexIsExist",method= RequestMethod.POST)
     public Map<String,Object> indexIsExist(@RequestBody EsQueryBean_Exsit esQueryBean){
         try {
-            if(StringUtils.isEmpty(esQueryBean) || StringUtils.isEmpty(esQueryBean.getIndex())
-                    || StringUtils.isEmpty(esQueryBean.getType())){
+            if(StringUtils.isEmpty(esQueryBean) || StringUtils.isEmpty(esQueryBean.getIndex())){
                 outMap.put(KEY_RESULT,VAL_ERROR);
                 outMap.put(KEY_RESULTDATA,null);
                 outMap.put(KEY_MESSAGE,"参数不能为空！");
@@ -75,7 +74,7 @@ public class QueryApi extends BaseController {
                 if( !StringUtils.isEmpty(esQueryBean.getSubType()) && flag){
                     Map<String,Object> params = new HashMap<>();
                     Map<String,Object> mustMap = new HashMap<>();
-                    mustMap.put("type.keyword",esQueryBean.getSubType());
+                    mustMap.put("type",esQueryBean.getSubType());
                     params.put("must",mustMap);
                     List list = boolTermQueryI.query_new(new String[]{esQueryBean.getIndex()}, new String[]{esQueryBean.getType()}, params);
                     //判断数据是否存在

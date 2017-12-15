@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.6.RELEASE</version>
+		<version>1.5.4.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -38,9 +38,31 @@
 	
 	<dependencies>
 
+        <!--log4j日志-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>2.6.2</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
         </dependency>
 
 		<dependency>
@@ -49,7 +71,6 @@
 		</dependency>
 
 		<!-- spring session -->
-
 		<dependency>
         	<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-ribbon</artifactId>
@@ -75,6 +96,11 @@
 			<version>1.1.37</version>
 		</dependency>
 
+        <!--websocket-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
         <!-- webSocket所需依赖 -->
         <dependency>
             <groupId>javax</groupId>
@@ -116,19 +142,19 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
-		<defaultGoal>compile</defaultGoal>
+		<!--<defaultGoal>compile</defaultGoal>-->
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>com.cn.hitec.MistsApplication</mainClass>
 					<layout>ZIP</layout>
 					<jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
-					<fork>true</fork><!-- 如果没有该项配置，可能devtools不会起作用 -->
+					<fork>true</fork>&lt;!&ndash; 如果没有该项配置，可能devtools不会起作用 &ndash;&gt;
 				</configuration>
 				<executions>
 					<execution>
@@ -152,7 +178,21 @@
                     </execution>
                 </executions>
             </plugin>
+-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 
+            <!--打包时， 不执行test文件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
 
 		</plugins>
 	</build>

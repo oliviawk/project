@@ -1,6 +1,7 @@
 package com.cn.hitec.service;
 
 import com.cn.hitec.controller.WebSocketController;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -21,9 +22,9 @@ import java.util.Properties;
  * @version
  *
  */
+@Slf4j
 @Service
 public class KfkConsumer {
-    private static final Logger logger = LoggerFactory.getLogger(KfkConsumer.class);
 
 
     private final KafkaConsumer<String, String> consumer;
@@ -74,8 +75,8 @@ public class KfkConsumer {
                 }
                 consumer.commitSync();
             }catch (Exception e){
-                logger.error("!!!!!!error");
-                logger.debug("",e);
+                log.error("!!!!!!error");
+                log.debug("",e);
                 e.printStackTrace();
             }
         }

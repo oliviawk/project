@@ -22,9 +22,9 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年05月10日 下午1:14
  */
+@Slf4j
 @Service
 public class ESClientAdminService {
-    private static final Logger logger = LoggerFactory.getLogger(ESClientAdminService.class);
     @Autowired
     private ESRepository es;
 
@@ -49,13 +49,13 @@ public class ESClientAdminService {
      * @return  Map
      */
     public Map<String , Object> getClusterHealth(){
-        System.out.println("getClusterHealth:");
+        log.info("getClusterHealth:");
         Map<String,Object> map = new HashMap<>();
         ClusterHealthResponse healths = es.client.admin().cluster().prepareHealth().get();
         map.put("clusterName",healths.getClusterName());
         map.put("numberOfDataNodes",healths.getNumberOfDataNodes());
         map.put("numberOfNodes",healths.getNumberOfNodes());
-        System.out.println("ES health:"+JSON.toJSONString(map));
+        log.info("ES health:"+JSON.toJSONString(map));
         return map;
     }
 
@@ -70,7 +70,7 @@ public class ESClientAdminService {
             if (response.isExists()) {
                 list.add(indices[i]);
             }else{
-                logger.warn("------------未查询到index:"+indices[i]);
+                log.warn("------------未查询到index:"+indices[i]);
             }
         }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -30,9 +31,9 @@ import java.util.*;
  * @author: fukl
  * @data: 2017年08月3日 下午1:14
  */
+@Slf4j
 @Service
 public class ESService {
-    private static final Logger logger = LoggerFactory.getLogger(ESService.class);
     @Autowired
     private ESRepository es;
     @Autowired
@@ -179,7 +180,7 @@ public class ESService {
         int listSize = 0;
         try {
             if (listJson == null || listJson.size() < 1) {
-                logger.error("参数为空");
+                log.error("参数为空");
                 return 0;
             }
             listSize = listJson.size();
@@ -191,7 +192,7 @@ public class ESService {
             for (String json : listJson) {
                 try {
                     if (StringUtils.isEmpty(json)) {
-                        logger.error("数据为空");
+                        log.error("数据为空");
                         error_num++;
                         continue;
 
@@ -220,15 +221,15 @@ public class ESService {
 
                     }else{
                         map.put("aging_status","正常");
-                        logger.info("这是一条非定时数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
+                        log.info("这是一条非定时数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
                         es.bulkProcessor.add(new IndexRequest(index, type)
                                 .source(json, XContentType.JSON));
                         continue;
                     }
                     if(resultMap.containsKey("_id")){       //如果查询到id
-                        logger.info("这是预生成数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
+                        log.info("这是预生成数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
 //                        if("雷达".equals(subType)){
-//                            logger.info(json);
+//                            log.info(json);
 //                        }
                         AlertBean alertBean = null;
                         String alertType = "alert";
@@ -250,7 +251,7 @@ public class ESService {
                             }else{
                                 //判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
                                 if(hitsSource_fields.containsKey("event_status")  && (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK") || hitsSource_fields.get("event_status").toString().equals("0"))){
-                                    logger.warn("--舍弃掉 预修改错误的数据："+json);
+                                    log.warn("--舍弃掉 预修改错误的数据："+json);
                                     continue;
                                 }
                                 map.put("aging_status","异常");
@@ -266,7 +267,7 @@ public class ESService {
 
                         //当  数据库里的数据 和 当前数据   一样时（目前是按照数据状态来判断），放弃掉该条数据
                         else if(hitsSource_fields.containsKey("event_status")  && fields.get("event_status").toString().equals(hitsSource_fields.get("event_status"))){
-                                logger.warn("--舍弃掉 相同的数据："+json);
+                                log.warn("--舍弃掉 相同的数据："+json);
                                 continue;
                          }
                         else{
@@ -295,7 +296,7 @@ public class ESService {
                             }else{
                                 //判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
                                 if(hitsSource_fields.containsKey("event_status")  && (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK") || hitsSource_fields.get("event_status").toString().equals("0"))){
-                                    logger.warn("--舍弃掉 预修改错误的数据："+json);
+                                    log.warn("--舍弃掉 预修改错误的数据："+json);
                                     continue;
                                 }
                                 map.put("aging_status","异常");
@@ -334,13 +335,13 @@ public class ESService {
                         es.bulkProcessor.add(new IndexRequest(index,type ,strId).source(map));
                         DIMap = null;
                     }else{
-                        logger.info("这是一条未查询到的数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
+                        log.info("这是一条未查询到的数据,类型为：{}, 时次为：{}",subType,fields.get("data_time"));
                         es.bulkProcessor.add(new IndexRequest(index, type)
                                 .source(json, XContentType.JSON));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    logger.error(e.getMessage());
+                    log.error(e.getMessage());
                     error_num++;
                 }
             }
@@ -385,9 +386,9 @@ public class ESService {
                     .setExplain(true).get();
 
             SearchHit[] searchHits = response.getHits().getHits();
-            logger.info("searchHits.dataLength :"+response.getHits().getTotalHits());
+            log.info("searchHits.dataLength :"+response.getHits().getTotalHits());
             if(response.getHits().getTotalHits() != 1){
-                logger.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, name:{}, fields:{}",indexs,type,subType,name,fields);
+                log.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, name:{}, fields:{}",indexs,type,subType,name,fields);
             }
             for (SearchHit hits:searchHits) {
                 resultMap = hits.getSource();
@@ -397,7 +398,7 @@ public class ESService {
                 break;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
 //            resultMap = new HashMap<>();
         } finally {
             return resultMap;

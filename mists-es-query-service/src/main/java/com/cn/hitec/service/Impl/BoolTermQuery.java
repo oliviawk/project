@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.RangeEs;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.service.BoolTermQuery_I;
+import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -14,6 +15,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,7 +102,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                         if(key.equals("name")){
                             continue;
                         }
-                        rangeQueryBuilder = RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
+                        rangeQueryBuilder = Pub.RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
                     }
                     rangeBuilderList.add(rangeQueryBuilder);
 
@@ -109,13 +112,24 @@ public class BoolTermQuery implements BoolTermQuery_I{
             if(params.containsKey("must")){
                 Map<String,Object> mustMap = (Map<String,Object>)params.get("must");
                 for (String strKey : mustMap.keySet()){
-                    queryBuilder.must(QueryBuilders.termQuery(strKey,mustMap.get(strKey)));
+                    if(mustMap.get(strKey) instanceof String){
+                        queryBuilder.must(QueryBuilders.termQuery(strKey,mustMap.get(strKey)));
+                    }else if(mustMap.get(strKey) instanceof List){
+                        List<Object> list =(List<Object>)mustMap.get(strKey);
+                        queryBuilder.must(QueryBuilders.termsQuery(strKey,list));
+                    }
+
                 }
             }
             if(params.containsKey("mustNot")){
                 Map<String,Object> mustNotMap = (Map<String,Object>)params.get("mustNot");
                 for (String strKey : mustNotMap.keySet()){
-                    queryBuilder.mustNot(QueryBuilders.termQuery(strKey,mustNotMap.get(strKey)));
+                    if(mustNotMap.get(strKey) instanceof String){
+                        queryBuilder.mustNot(QueryBuilders.termQuery(strKey,mustNotMap.get(strKey)));
+                    }else if(mustNotMap.get(strKey) instanceof List){
+                        List<Object> list =(List<Object>)mustNotMap.get(strKey);
+                        queryBuilder.mustNot(QueryBuilders.termsQuery(strKey,list));
+                    }
                 }
             }
 
@@ -126,7 +140,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-//        log.info(queryBuilder.toString());
+        log.info(queryBuilder.toString());
         //验证去除没有的index
         List<String> listIndice = new ArrayList<>();
         for (String str : indices){
@@ -142,15 +156,17 @@ public class BoolTermQuery implements BoolTermQuery_I{
 
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setSearchType(SearchType.DEFAULT)
                 .setQuery(queryBuilder);
 
         if(!StringUtils.isEmpty(strSort)){
+//            SortBuilder sortBuilder = SortBuilders.fieldSort("last_time");
             requestBuilder.addSort(strSort, strSortType.equals("desc")? SortOrder.DESC : SortOrder.ASC);
         }
 
         long start = System.currentTimeMillis();
         if(resultAll){
+            log.info("进入查询所有");
             requestBuilder.setSize(1000);
             //创建查询
             SearchResponse response = requestBuilder.setScroll(new TimeValue(2000)).get();
@@ -178,7 +194,15 @@ public class BoolTermQuery implements BoolTermQuery_I{
             } while(response.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
 
         }else{
-            requestBuilder.setFrom(fromInt).setSize(sizeInt);
+            log.info("进入查询指定条数");
+            if(fromInt > 0){
+                requestBuilder.setFrom(fromInt);
+            }
+            if(sizeInt > 0){
+                requestBuilder.setSize(sizeInt);
+            }
+            log.info(JSON.toJSONString(requestBuilder));
+
             //创建查询
             SearchResponse response = requestBuilder
                     .setExplain(false).get();
@@ -246,7 +270,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                             rangeQueryBuilder = QueryBuilders.rangeQuery(map.get(key).toString());
                             continue;
                         }
-                        rangeQueryBuilder = RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
+                        rangeQueryBuilder = Pub.RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
                     }
                     rangeQueryBuilderList.add(rangeQueryBuilder);
 
@@ -336,7 +360,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
                             rangeQueryBuilder = QueryBuilders.rangeQuery(map.get(key).toString());
                             continue;
                         }
-                        rangeQueryBuilder = RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
+                        rangeQueryBuilder = Pub.RangeChoiceTest(key,rangeQueryBuilder,map.get(key));
                     }
                     rangeQueryBuilderList.add(rangeQueryBuilder);
 
@@ -401,17 +425,4 @@ public class BoolTermQuery implements BoolTermQuery_I{
     }
 
 
-    public RangeQueryBuilder RangeChoiceTest(String rangeType,RangeQueryBuilder builder , Object param){
-        if("gt".equals(rangeType)) {
-           builder.gt(param);
-       }else if("gte".equals(rangeType)) {
-           builder.gte(param);
-       }else if("lt".equals(rangeType)) {
-           builder.lt(param);
-       }else if("lte".equals(rangeType)) {
-           builder.lte(param);
-       }
-
-       return builder;
-    }
 }
