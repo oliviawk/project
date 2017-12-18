@@ -1,7 +1,5 @@
 package com.cn.hitec.bean;
 
-import org.springframework.context.annotation.Bean;
-
 import java.util.List;
 import java.util.Map;
 

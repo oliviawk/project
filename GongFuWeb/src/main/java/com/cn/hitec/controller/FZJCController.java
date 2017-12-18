@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.service.BasicResource;
 import com.cn.hitec.service.FZJCService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/fzjc")
 public class FZJCController{
-    private static final Logger logger = LoggerFactory.getLogger(FZJCController.class);
 
     @Autowired
     private FZJCService fzjcService;

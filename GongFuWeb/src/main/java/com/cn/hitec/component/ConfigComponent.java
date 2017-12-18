@@ -4,6 +4,7 @@ import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.service.FZJCService;
 import com.cn.hitec.service.KfkConsumer;
 import com.cn.hitec.tools.Pub;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,10 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年05月10日 下午1:14
  */
+@Slf4j
 @Component
 @Order(value = 1)
 public class ConfigComponent implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigComponent.class);
 
     @Autowired
     ConfigService configService;
@@ -35,6 +36,7 @@ public class ConfigComponent implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         try {
 
+            log.info("加载CI信息");
             //初始化 alertMap
             List<Map> listMap_collect = configService.getConfigAlert("collect");
             for (Map map : listMap_collect){
@@ -51,7 +53,7 @@ public class ConfigComponent implements CommandLineRunner {
                 String DI_name = map.get("DI_name").toString();
                 Pub.alertMap_distribute.put(DI_name,map);
             }
-
+            log.info("创建kafka连接，启动websocket");
             kfkConsumer.consume();
         } catch (Exception e) {
             e.printStackTrace();

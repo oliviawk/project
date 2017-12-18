@@ -1,34 +1,18 @@
 package com.cn.hitec.service;
-
-import com.cn.hitec.bean.D3NetBean;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.controller.BaseController;
-import com.cn.hitec.controller.FZJCController;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.tools.CronPub;
-import com.cn.hitec.tools.DateTool;
 import com.cn.hitec.tools.Pub;
-import kafka.tools.ConsoleConsumer;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.collections.functors.FalsePredicate;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.omg.CORBA.IRObject;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import sun.misc.resources.Messages_pt_BR;
-
-import java.security.Key;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * 
@@ -39,9 +23,9 @@ import java.util.logging.Logger;
  * @version 
  *
  */
+@Slf4j
 @Service
 public class FZJCService extends BaseController{
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FZJCService.class);
 	@Autowired
 	EsQueryService esQueryService;
 
@@ -71,7 +55,7 @@ public class FZJCService extends BaseController{
 
                 List<Map> list = new ArrayList<>();
                 Map<String,String> map = new HashMap<>();
-                map.put("name","fields.end_time");
+                map.put("name","fields.data_time");
                 map.put("lte", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 map.put("gte", Pub.transform_DateToString(calendar.getTime(), "yyyy-MM-dd HH:mm:ss.SSSZ"));
                 list.add(map);
@@ -86,7 +70,7 @@ public class FZJCService extends BaseController{
 
                 params.put("must",mustMap);
 //                params.put("mustNot",mustNotMap);
-                params.put("sort","fields.end_time");
+                params.put("sort","fields.data_time");
                 params.put("size",esQueryBean.getSize());
 
 
@@ -107,6 +91,7 @@ public class FZJCService extends BaseController{
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,null);
             outMap.put(KEY_MESSAGE,e.getMessage());
+            log.error(e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
             outMap.put(KEY_SPEND,spend+"mm");
@@ -353,6 +338,7 @@ public class FZJCService extends BaseController{
             outMap.put(KEY_RESULTDATA,null);
             outMap.put(KEY_MESSAGE,e.getMessage());
             e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
             outMap.put(KEY_SPEND,spend+"mm");
@@ -380,13 +366,13 @@ public class FZJCService extends BaseController{
                     esQueryBean.setIndices(new String[]{index});
                 }
 
+                long st = System.currentTimeMillis();
 //                雷达加工没有时次， type ：LatLonQREFEnd
 //                云图、雷达、炎热指数的所有type："雷达","云图", "炎热指数","ReadFY2NC"
 //                T639 单独查询 ， type：风流场、T639
                 Map<String,Map> typeMap = new HashMap<>();
 
                 if("regular".equals(esQueryBean.getFindType())){        //有规律的数据
-
                     Calendar calendar = Calendar.getInstance();
                     Date startDate = new Date();
                     calendar.setTime(startDate);
@@ -454,8 +440,8 @@ public class FZJCService extends BaseController{
 
                     }
 
+
                 }else if("no_regular".equals(esQueryBean.getFindType())){   //没规律的数据
-                    long st = System.currentTimeMillis();
                     String[] subTypes = new String[]{"LAPS3KM","城市预报","台风","预警信号","突发事件","船舶","交通拥堵","LatLonQREFEnd"};
                     for (int i = 0; i < subTypes.length ; i++){
                         Map<String,Object> params = new HashMap<>();    //查询参数
@@ -491,10 +477,8 @@ public class FZJCService extends BaseController{
 
                         typeMap.put(strType_key,dataMap);
                     }
-                    logger.info("耗时："+(System.currentTimeMillis()-st));
 
                 }else if("T639".equals(esQueryBean.getFindType())){         //T639单独数据
-                    long st = System.currentTimeMillis();
                     Calendar calendar = Calendar.getInstance();
                     Date date = new Date();
                     calendar.setTime(date);
@@ -589,7 +573,6 @@ public class FZJCService extends BaseController{
                         typeMap.put("T639_分发",firstFF);
                     }
 
-                    System.out.println("耗时："+(System.currentTimeMillis() - st));
                 }
 
 
@@ -598,13 +581,14 @@ public class FZJCService extends BaseController{
                 outMap.put(KEY_MESSAGE,"成功");
                 outMap.put(KEY_RESULTDATA,typeMap);
                 outMap.put("server_"+KEY_SPEND,(System.currentTimeMillis() - start)+"ms");
-
+                log.info(esQueryBean.getFindType()+"数据耗时："+(System.currentTimeMillis()-st));
             }
         } catch (Exception e) {
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,null);
             outMap.put(KEY_MESSAGE,e.getMessage());
             e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
             outMap.put(KEY_SPEND,spend+"ms");
@@ -726,6 +710,8 @@ public class FZJCService extends BaseController{
             outMap.put(KEY_RESULT,VAL_ERROR);
             outMap.put(KEY_RESULTDATA,null);
             outMap.put(KEY_MESSAGE,e.getMessage());
+            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             long spend = System.currentTimeMillis()-start;
             outMap.put(KEY_SPEND,spend+"mm");

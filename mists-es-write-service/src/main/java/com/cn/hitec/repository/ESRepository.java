@@ -1,7 +1,7 @@
 package com.cn.hitec.repository;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest;
@@ -18,8 +18,6 @@ import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +31,9 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年05月10日 下午1:14
  */
+@Slf4j
 @Service
 public class ESRepository {
-    private static final Logger logger = LoggerFactory.getLogger(ESRepository.class);
     public TransportClient client = null;               //客户端
     public BulkProcessor bulkProcessor = null;
 
@@ -56,6 +54,7 @@ public class ESRepository {
      * @throws Exception
      */
     public void buildClient() throws Exception {
+        long st = System.currentTimeMillis();
         Settings settings = Settings.builder()
                 .put("cluster.name", strClusterName)
 //                .put("client.transport.sniff",false)
@@ -69,7 +68,7 @@ public class ESRepository {
             client.addTransportAddress(
                     new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), strPort));
         }
-        logger.info("init client: OK");
+        log.info("init client: OK , 耗时："+(System.currentTimeMillis() - st));
     }
 
     /**
@@ -196,7 +195,7 @@ public class ESRepository {
                     .setSource(strMapping)//这个方法被废弃了，有空了再来收拾它
                     .get();
         } catch (Exception e) {
-            logger.info("", e);
+            log.info("", e);
         }
     }
 

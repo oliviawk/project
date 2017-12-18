@@ -37,7 +37,7 @@ public class ConfigService {
             EsQueryBean esQueryBean = new EsQueryBean();
             esQueryBean.setIndices(new String[]{"config"});
             esQueryBean.setTypes(new String[]{type});
-
+            logger.info("获取CI信息表");
             Map<String,Object> resultMap = esQueryService.getAlertData(esQueryBean);
             if(resultMap == null ){
                 logger.warn("getConfigAlert is null");
