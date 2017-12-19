@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +130,7 @@ public class ConfigService {
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -148,17 +147,13 @@ public class ConfigService {
 	 * 
 	 * @return
 	 */
-	public List<Map> getConfigAlert(String type) {
+	public List<Map> getConfigAlert() {
 		List<Map> resultList = null;
 
-		if (StringUtils.isEmpty(type)) {
-			logger.error("请输入type");
-			return null;
-		}
 		try {
 			EsQueryBean esQueryBean = new EsQueryBean();
 			esQueryBean.setIndices(new String[] { "config" });
-			esQueryBean.setTypes(new String[] { type });
+			esQueryBean.setTypes(new String[] { "*" });
 
 			Map<String, Object> resultMap = esQueryService.getAlertData(esQueryBean);
 			if (resultMap == null) {
@@ -182,13 +177,18 @@ public class ConfigService {
 	}
 
 	public void initAlertMap() {
-		List<Map> listMap_FZJC = getConfigAlert("FZJC");
-		for (Map map : listMap_FZJC) {
+		List<Map> listMap_Config = getConfigAlert();
+		for (Map map : listMap_Config) {
 			String DI_name = map.get("DI_name").toString();
+			String module = map.get("module").toString();
 			if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
 				Pub.DIMap_t639.put(DI_name, map);
-			} else {
+			} else if ("采集".equals(module)) {
 				Pub.DIMap_collect.put(DI_name, map);
+			} else if ("加工".equals(module)) {
+				Pub.DIMap_machining.put(DI_name, map);
+			} else if ("分发".equals(module)) {
+				Pub.DIMap_distribute.put(DI_name, map);
 			}
 		}
 
@@ -222,7 +222,7 @@ public class ConfigService {
 	 * @param type
 	 * @param module
 	 */
-	public void createAlertDI(String type, String module, Map<String, Object> DIMap) {
+	public void createAlertDI(String module, Map<String, Object> DIMap) {
 
 		if (DIMap == null || DIMap.size() < 1) {
 			logger.warn("createAlertItem is fail ： alertMap is null or 0 in length");
@@ -255,6 +255,7 @@ public class ConfigService {
 					String cron = map.get("time_interval").toString();
 					List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
 					List<String> listDataBean = new ArrayList<>();
+					String type = map.get("type").toString();
 					String subType = map.get("DI_name").toString();
 					// if(!"炎热指数".equals(subType)){
 					// continue;
