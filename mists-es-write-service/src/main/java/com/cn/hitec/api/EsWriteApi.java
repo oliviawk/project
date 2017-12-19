@@ -104,7 +104,35 @@ public class EsWriteApi extends BaseController {
         return outMap;
     }
 
+   @RequestMapping(value="/insert1",method=RequestMethod.POST,consumes="application/json")
+    public Map<String,Object> insert1(@RequestBody EsBean esBean){
+        if(esBean == null || esBean.getData() == null){
+            outMap.put(KEY_RESULT,VAL_ERROR);
+            outMap.put(KEY_RESULTDATA,null);
+            outMap.put(KEY_MESSAGE,"ES写入数据失败！数据为 null");
+            return outMap;
+        }
+        String index = esBean.getIndex();
+        if(StringUtils.isEmpty(index)){
+            SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
+            index = Pub.Index_Head+(sdf.format(new Date()));
+        }
+        long start = System.currentTimeMillis();
+        Map<String,Object> map = new HashMap<>();
 
+//		System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
+
+        int num = esService.insert1(index,esBean.getData());
+
+        map.put("insert_number",num);
+        long spend = System.currentTimeMillis()-start;
+        outMap.put(KEY_RESULT,VAL_SUCCESS);
+        outMap.put(KEY_RESULTDATA,map);
+        outMap.put(KEY_MESSAGE,"数据添加成功");
+        outMap.put(KEY_SPEND,spend+"mm");
+        return outMap;
+    }
+	
     @RequestMapping(value="/update",method=RequestMethod.POST,consumes="application/json")
     public Map<String,Object> update(@RequestBody EsBean esBean){
         if(esBean == null  || esBean.getData() == null || esBean.getData().size() <= 0){
