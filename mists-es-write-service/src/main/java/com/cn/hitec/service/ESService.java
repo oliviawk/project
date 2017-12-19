@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.sf.json.JSONObject;
 import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
@@ -146,6 +147,46 @@ public class ESService {
 		}
 
 	}
+	
+	
+	/**
+     * 添加数据
+     * @param index
+     * @param listJson
+     * @return
+     */
+    public int insert1(String index,List<String> listJson) {
+        int error_num = 0;
+        int listSize = 0;
+        String type ="";
+        try {
+            if (listJson == null || listJson.size() < 1 ) {
+                return 0;
+            }
+            listSize = listJson.size();
+            for (String json : listJson) {
+                if (StringUtils.isEmpty(json)) {
+                    error_num++;
+                    continue;
+                }
+                if (StringUtils.countOccurrencesOf(json,"type")>0) {//判断json是否为空
+                    JSONObject json_test = JSONObject.fromObject(json);
+
+                    type= json_test.get("type").toString();
+                 //   System.out.println(type);
+                    es.client.prepareIndex(index,type).setSource(json,XContentType.JSON).get();
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            return listSize - error_num ;
+        }
+
+    }
+	
+	
 
 	/**
 	 * 添加数据 指定id
