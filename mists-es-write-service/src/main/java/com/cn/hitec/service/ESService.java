@@ -155,6 +155,7 @@ public class ESService {
      * @param listJson
      * @return
      */
+	
     public int insert1(String index,List<String> listJson) {
         int error_num = 0;
         int listSize = 0;
