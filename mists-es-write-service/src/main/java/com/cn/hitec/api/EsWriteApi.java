@@ -123,7 +123,6 @@ public class EsWriteApi extends BaseController {
 //		System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
 
         int num = esService.insert1(index,esBean.getData());
-
         map.put("insert_number",num);
         long spend = System.currentTimeMillis()-start;
         outMap.put(KEY_RESULT,VAL_SUCCESS);
