@@ -5,7 +5,6 @@ import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.tools.Pub;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.LoggerFactory;
@@ -22,8 +21,6 @@ import java.util.*;
  */
 @Service
 public class LAPSService extends BaseController{
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LAPSService.class);
-
     @Autowired
     EsQueryService esQueryService;
 
@@ -72,6 +69,8 @@ public class LAPSService extends BaseController{
                 // 不区分过程和类型直接查
                 Date d1 = DateUtils.truncate(new Date(), Calendar.HOUR);
                 String dateStr = DateFormatUtils.format(d1, "yyyy-MM-dd HH:mm:ss.SSSZ");
+                // TODO: just for debug
+                System.out.print("rand: " + esQueryBean.getRand() + " type: " + esQueryBean.getSubType());
                 System.out.println(">>>>>>>datestr " + dateStr);
 
 
@@ -109,6 +108,9 @@ public class LAPSService extends BaseController{
                 outMap.put(KEY_RESULTDATA,mapObject.get("resultData"));
                 outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
 
+                // TODO: just for debug
+                System.out.println("rand: " + esQueryBean.getRand()
+                        + "------ type: " + ((List<Map>)mapObject.get("resultData")).get(0).get("type"));
 
             }
         } catch (Exception e) {

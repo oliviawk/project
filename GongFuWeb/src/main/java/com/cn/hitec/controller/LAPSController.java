@@ -23,7 +23,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/laps")
 public class LAPSController {
-    private static final Logger logger = LoggerFactory.getLogger(LAPSController.class);
 
     @Autowired
     private LAPSService lapsService;

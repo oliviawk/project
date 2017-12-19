@@ -19,6 +19,8 @@ public class EsQueryBean_web {
 
     private String findType;
 
+    private String rand;    // just for debug
+
 
     public String getHour_before() {
         return hour_before;
@@ -98,5 +100,13 @@ public class EsQueryBean_web {
 
     public void setFindType(String findType) {
         this.findType = findType;
+    }
+
+    public String getRand() {
+        return rand;
+    }
+
+    public void setRand(String rand) {
+        this.rand = rand;
     }
 }
