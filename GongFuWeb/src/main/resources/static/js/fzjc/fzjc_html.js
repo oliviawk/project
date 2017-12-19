@@ -118,7 +118,7 @@ function lct_status_regular(findType) {
         url: '../fzjc/findDataNew',
         data: JSON.stringify(esQeuryBean_web),
         dataType: "json",
-        async: false,
+        // async: false,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },

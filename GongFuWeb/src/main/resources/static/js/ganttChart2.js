@@ -264,7 +264,6 @@ function ganttChart(elementId , jsonData , config ) {
     /*=-------------数据转换---------*/
     function data_transform(dataOld) {
         var result = [];
-        console.log(dataOld)
         dataOld.forEach(function (d) {
             //耗时
             var totalTime = "-1";

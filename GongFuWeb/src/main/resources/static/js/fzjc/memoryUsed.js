@@ -28,7 +28,7 @@ function displayMemoryUsed(url, id, reloadFrequency,params) {
 
 		var xAxis = d3.svg.axis()
 			.scale(x)
-			.ticks(d3.time.hours, 5)
+			.ticks(d3.time.minutes, 30)
 			.tickFormat(d3.time.format("%H:%M"))
 			// .tickSize(-height)
 			// .tickPadding([6])

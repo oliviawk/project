@@ -27,7 +27,7 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
 
 		var y = d3.scale.linear().range([ height, 0 ]);
 
-		var xAxis = d3.svg.axis().scale(x).ticks(d3.time.minutes, 15).tickFormat(
+		var xAxis = d3.svg.axis().scale(x).ticks(d3.time.minutes, 30).tickFormat(
 				d3.time.format("%H:%M"))
 		// .tickSize(-height)
 		// .tickPadding([6])

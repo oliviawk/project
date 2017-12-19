@@ -36,7 +36,7 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
     displayMemoryUsed("../fzjc/getMemoryData" , "#memoryUsed",1000*60*10,JSON.stringify(params));
 
     displayNetUsed("../fzjc/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
-    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",JSON.stringify(params));
+    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed",1000*60*10,JSON.stringify(params));
 
 
 })
