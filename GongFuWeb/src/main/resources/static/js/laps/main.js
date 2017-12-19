@@ -6,12 +6,19 @@ $(function(){
     // main entry
     console.log("test!");
 
+    dataIsReady = false;
+
     // TODO: IP暂时无过滤
     // 加工状态
     getLapsData('LapsTD', '加工', '10.30.16.224');
+    sleep(100);
+
     getLapsData('LapsRain1Hour', '加工', '10.30.16.224');
     sleep(100);
+
     getLapsData('LapsWSWD', '加工', '10.30.16.224');
+    sleep(100);
+
     getLapsData('LapsTRH', '加工', '10.30.16.224');
 
     // 分发状态
@@ -73,10 +80,23 @@ function getLapsData(type, module, ip) {
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
-                if (d.resultData.length > 1) {
+                if (d.resultData.length > 1) {  // TODO: 最新时次判断条件
                     // 有数据
                     var data = d.resultData;
                     dataRecv.proc[data[0].type] = data;
+
+                    // 设置列表状态
+                    var subType = data[0].type;
+                    var module = data[0].fields.module;
+                    /*
+                    var moduleEng = "";
+                    if (module == "加工") {
+                        moduleEng = "process";
+                    } else if (module == "分发") {
+                        moduleEng = "distribute";
+                    }
+                    */
+                    $("#" + subType + "_" + module).attr("class", "list-green");
 
 
                     // 判断数据是否准备好
@@ -85,8 +105,11 @@ function getLapsData(type, module, ip) {
 
 
 
+
+
                 } else {
                     // 没有数据
+                    $("#" + req.subType + "_" + req.module).attr("class", "list-red");
 
                 }
 
