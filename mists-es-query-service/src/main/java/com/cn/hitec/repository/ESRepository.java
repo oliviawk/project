@@ -4,28 +4,21 @@ import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest;
 import org.elasticsearch.action.bulk.BackoffPolicy;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @ClassName: ESRepository
@@ -58,6 +51,7 @@ public class ESRepository {
      * @throws Exception
      */
     public void buildClient() throws Exception {
+        long st = System.currentTimeMillis();
         Settings settings = Settings.builder()
                 .put("cluster.name", strClusterName)
 //                .put("client.transport.sniff",false)
@@ -69,7 +63,7 @@ public class ESRepository {
             client.addTransportAddress(
                     new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), strPort));
         }
-        log.info("init client: OK");
+        log.info("init client: OK , 耗时:"+(System.currentTimeMillis() - st));
     }
 
     /**

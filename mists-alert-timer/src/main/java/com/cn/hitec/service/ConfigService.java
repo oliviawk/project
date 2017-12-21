@@ -60,7 +60,7 @@ public class ConfigService {
 		esWriteBean.setIndex("config");
 		// esWriteBean.setType("collect");
 		esWriteBean.setData(jsonList);
-		Map<String, Object> map = esWriteService.insert(esWriteBean);
+		Map<String, Object> map = esWriteService.insert1(esWriteBean);
 		Map<String, Object> resultMap = (Map<String, Object>) map.get("resultData");
 		int n = Integer.valueOf(resultMap.get("insert_number").toString());
 		return n;
@@ -95,7 +95,7 @@ public class ConfigService {
 		esWriteBean.setIndex("config");
 		// esWriteBean.setType("machining");
 		esWriteBean.setData(jsonList);
-		Map<String, Object> map = esWriteService.insert(esWriteBean);
+		Map<String, Object> map = esWriteService.insert1(esWriteBean);
 		Map<String, Object> resultMap = (Map<String, Object>) map.get("resultData");
 		int n = Integer.valueOf(resultMap.get("insert_number").toString());
 		return n;
@@ -136,7 +136,7 @@ public class ConfigService {
 		esWriteBean.setIndex("config");
 		// esWriteBean.setType("distribute");
 		esWriteBean.setData(jsonList);
-		Map<String, Object> map = esWriteService.insert(esWriteBean);
+		Map<String, Object> map = esWriteService.insert1(esWriteBean);
 		Map<String, Object> resultMap = (Map<String, Object>) map.get("resultData");
 		int n = Integer.valueOf(resultMap.get("insert_number").toString());
 		return n;

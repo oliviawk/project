@@ -103,7 +103,7 @@ ul,li{list-style: none;}
 }
 .list-bottom{
 	border-top: 9px #212121 solid;
-	height:22px;
+	height:30px;
 }
 .process-table{
 	border-collapse: collapse;
@@ -262,6 +262,8 @@ ul,li{list-style: none;}
 
 .block-wrap{
 	position: relative;
+    float: left;
+    width:339px;
 }
 .block-wrap ul{
 	width: 40px;
