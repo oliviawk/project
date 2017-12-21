@@ -107,12 +107,12 @@ function directorUsage(url, id,reloadFrequency,params) {
                 });
 
             cardsG.append("text")
-                .attr("font-weight", "bold")
-                .attr("font-size", "10px")
+                // .attr("font-weight", "bold")
+                .attr("font-size", "12px")
                 .text(function(d){
                     return d.path;
                 })
-                .attr("fill", "#fff")
+                .attr("fill", "#ffffff")
                 .attr("x", function(d,i){
                     return rectBgheight * 2 > 50 ? rectBgheight * 2 : 50;
                 })
@@ -184,7 +184,7 @@ function directorUsage(url, id,reloadFrequency,params) {
                 });
 
             cardsG.append("text")
-                .attr("font-size", "13px")
+                .attr("font-size", "11px")
                 .text(function(d){
                     if(isNaN(d.free)||d.unit==null){
                         return " ";
@@ -209,7 +209,7 @@ function directorUsage(url, id,reloadFrequency,params) {
                 });
 
             cardsG.append("text")
-                .attr("font-size", "13px")
+                .attr("font-size", "11px")
                 .text(function(d){
                     if(isNaN(d.total)||d.unit==null){
                         return " ";
