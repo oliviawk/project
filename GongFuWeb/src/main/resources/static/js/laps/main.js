@@ -4,9 +4,7 @@
 
 $(function(){
     // main entry
-    console.log("test!");
-
-    dataIsReady = false;
+    //console.log("test!");
 
     // TODO: IP暂时无过滤
     // 加工状态
