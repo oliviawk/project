@@ -166,7 +166,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
 
         long start = System.currentTimeMillis();
         if(resultAll){
-            log.info("进入查询所有");
+            log.info("进入查询所有方法");
             requestBuilder.setSize(1000);
             //创建查询
             SearchResponse response = requestBuilder.setScroll(new TimeValue(2000)).get();
@@ -194,7 +194,7 @@ public class BoolTermQuery implements BoolTermQuery_I{
             } while(response.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
 
         }else{
-            log.info("进入查询指定条数");
+            log.info("进入查询指定条数方法");
             if(fromInt > 0){
                 requestBuilder.setFrom(fromInt);
             }

@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"></meta>
+	<title>Document</title>
+    <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css"></link>
+	<link type="text/css" rel="stylesheet" href="../css/laps/style_laps.css"></link>
+    <link href="../css/common.css" rel="stylesheet"></link>
+</head>
+<body>
+<!--header-->
+<div class="top">
+	<div class="logo">
+		公服中心业务全流程监控系统
+	</div>
+    <div class="nav">
+        <!--openWindow-->
+        <div class="dropdown" style="float: left;">
+            <a id="fzjc" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                辅助决策
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="fzjc">
+                <li><a onclick="openWindow('../fzjc/sxt')">时效图</a></li>
+                <li class="disabled"><a onclick="openWindow('../fzjc/lct')">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown" style="float: left;">
+            <a id="laps" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                LAPS
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="laps">
+                <li><a onclick="openWindow('../laps/sxt')">时效图</a></li>
+                <li class="disabled"><a onclick="openWindow('../laps/lct')">流程图</a></li>
+            </ul>
+        </div>
+        <div class="dropdown" style="float: left;">
+            <a id="mqpf" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                MQPF
+                <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="mqpf">
+                <li><a href="#">时效图</a></li>
+                <li class="disabled"><a href="#">流程图</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--header end-->
+<div class="process">
+	<table class="process-table" width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="100"><div class="bg-grey">数据源</div></td>
+    <td width="30">&nbsp;</td>
+    <td width="300"><div class="bg-grey">采集/前处理/地面分析</div></td>
+    <td width="30">&nbsp;</td>
+    <td width="300"><div class="bg-grey">图形加工</div></td>
+    <td width="30">&nbsp;</td>
+    <td width="300"><div class="bg-grey">分发/中转</div></td>
+    <td width="30">&nbsp;</td>
+    <td width="300"><div class="bg-grey">服务/产品检验</div></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>
+				 10.30.16.242
+		 </div>
+		 </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><div class="bg-blue">CIMISS源</div></td>
+    <td><div class="arrow-right"></div></td>
+    <td><div class="list-green"><span>CIMISS实况采集</span></div></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><div class="arrow-group2 arrow-right"><div class="group-break-top"></div></div></td>
+    <td><div class="list-green"><span>背景场采集</span></div></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="list-green"><span>生成降水产品</span></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="list-green"><span>生成其他要素</span></div></td>
+    <td>&nbsp;</td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>10.30.16.224
+			</div>
+		</td>
+    <td>&nbsp;</td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>10.0.74.226
+			</div>
+		</td>
+    <td>&nbsp;</td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>
+				PMSC-CVS
+			</div>
+		</td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey"></div></td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey"></div></td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey"></div></td>
+  </tr>
+  <tr>
+    <td><div class="bg-blue">背景场源</div></td>
+    <td><div class="arrow-group"><div class="group-line"><em></em></div></div></td>
+    <td><div class="list-green"><span>生成数据产品</span></div></td>
+    <td><div class="arrow-right arrow-group2"><div class="group-break-top"><em></em></div></div></td>
+    <td><div class="list-green"><span>图形产品加工</span></div></td>
+    <td><div class="arrow-right"></div></td>
+    <td><div class="list-green"><span>产品中转</span></div></td>
+    <td><div class="arrow-right arrow-group2"><div class="group-break-top"><em></em></div></div></td>
+    <td><div class="list-red"><span>共享服务</span></div></td>
+  </tr>
+   <tr>
+    <td>&nbsp;</td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="list-bottom"></div></td>
+    <td><div class="left-bd"></div></td>
+    <td><div class="list-bottom"></div></td>
+    <td>&nbsp;</td>
+    <td><div class="list-bottom"></div></td>
+    <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+    <td><div class="list-red"><span>产品检验</span></div></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><div class="left-bd"></div></td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>10.30.16.242
+			</div>
+		</td>
+    <td><div class="left-bd"></div></td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td><div class="list-bottom"></div></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+    <td><div class="list-green"><span>背景场采集</span></div></td>
+    <td colspan="3"><div class="arrow-group2 arrow-right"><div class="group-break-bottom"></div></div></td>
+    <td>
+			<div class="title-grey block-wrap">
+				<ul>
+					<li class="green"></li>
+					<li class="green"></li>
+					<li class="red"></li>
+					<li class="green"></li>
+				</ul>
+				10.30.16.220
+			</div>
+		</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><div class="bg-blue">实时库源</div></td>
+    <td><div class="arrow-right"></div></td>
+    <td><div class="list-green"><span>实时库实况采集</span></div></td>
+    <td colspan="3"><div class="arrow-right arrow-group2"><div class="group-break-top"></div></div></td>
+    <td><div class="list-green"><span>背景场采集</span></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td><div class="left-bd"></div></td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td><div class="list-bottom"></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><div class="list-green"><span>生成降水产品</span></div></td>
+    <td><div class="left-bd"></div></td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td><div class="left-bd"></div></td>
+    <td></td>
+    <td>&nbsp;</td>
+    <td></td>
+	<td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><div class="list-green"><span>生成其他要素</span></div></td>
+    <td><div class="left-bd"></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td></td>
+  </tr>
+  <tr class="triangle-row">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><div class="title-grey triangle">▼</div></td>
+    <td><div class="left-bd"></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td></td>
+    <td><div class="list-green"><span>生成数据产品</span></div></td>
+    <td><div class="arrow-group2 arrow-right nobg"><div class="group-break-bottom"><em></em></div></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td>&nbsp;</td>
+    <td></td>
+    <td><div class="list-bottom"></div></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td></td>
+  </tr>
+</table>
+</div>
+<div class="focus">
+	<div>
+  	<h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+    <h5>采集环节</h5>
+    <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+    <p>数据状态异常</p>
+    <p>数据接口返回传播数据失败</p>
+  </div>
+	<div>
+  	<h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+    <h5>采集环节</h5>
+    <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+    <p>数据状态异常</p>
+    <p>数据接口返回传播数据失败</p>
+  </div>
+	<div>
+  	<h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+    <h5>采集环节</h5>
+    <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+    <p>数据状态异常</p>
+    <p>数据接口返回传播数据失败</p>
+  </div>
+	<div>
+  	<h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+    <h5>采集环节</h5>
+    <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+    <p>数据状态异常</p>
+    <p>数据接口返回传播数据失败</p>
+  </div>
+	<div>
+  	<h4>2017-09-21&nbsp;&nbsp;&nbsp;&nbsp;15:40:28.028+0800</h4>
+    <h5>采集环节</h5>
+    <p>时次2017-09-21&nbsp;&nbsp;20:00:00</p>
+    <p>数据状态异常</p>
+    <p>数据接口返回传播数据失败</p>
+  </div>
+</div>
+    <!-- core js start -->
+    <script src="../js/core/jquery-1.8.3.min.js"></script>
+    <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/tool/publicTool.js"></script>
+    <!-- core js end -->
+</body>
+</html>
