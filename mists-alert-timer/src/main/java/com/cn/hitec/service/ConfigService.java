@@ -46,15 +46,15 @@ public class ConfigService {
 		jsonList.add(
 				"{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":3540,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/data/satellite/HDF/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"CIMISS\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/data/rawdata/aws/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS_CIMISS\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/data/rawdata/aws/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"T639\",\"time_interval\":\"0 0 2/14 * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/mnt/laps_nfs/laps_3x3/t639/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS_T639\",\"time_interval\":\"0 0 2,14 * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/mnt/laps_nfs/laps_3x3/t639/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LSX\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lsx/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS_LSX\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lsx/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"L1S\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/l1s/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS_L1S\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/l1s/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lgr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS_GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lgr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -121,6 +121,7 @@ public class ConfigService {
 				"{\"DI_name\":\"炎热指数\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3960,\"last_time\":4560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\",\"module\":\"分发\",\"type\":\"FZJC\"}");
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		// 10.0.74.226服务器的LAP分发
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
 		jsonList.add(
@@ -131,6 +132,19 @@ public class ConfigService {
 				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		// 10.30.16.220服务器的LAP分发
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KMGEO_TD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3300,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KMGEO_T\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+		jsonList.add(
+				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -153,7 +167,6 @@ public class ConfigService {
 		try {
 			EsQueryBean esQueryBean = new EsQueryBean();
 			esQueryBean.setIndices(new String[] { "config" });
-			esQueryBean.setTypes(new String[] { "*" });
 
 			Map<String, Object> resultMap = esQueryService.getAlertData(esQueryBean);
 			if (resultMap == null) {
@@ -180,15 +193,17 @@ public class ConfigService {
 		List<Map> listMap_Config = getConfigAlert();
 		for (Map map : listMap_Config) {
 			String DI_name = map.get("DI_name").toString();
+			String IP = map.get("IP").toString();
+			String type = map.get("type").toString();
 			String module = map.get("module").toString();
 			if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
-				Pub.DIMap_t639.put(DI_name, map);
+				Pub.DIMap_t639.put(DI_name + "," + IP + "," + type + "," + module, map);
 			} else if ("采集".equals(module)) {
-				Pub.DIMap_collect.put(DI_name, map);
+				Pub.DIMap_collect.put(DI_name + "," + IP + "," + type + "," + module, map);
 			} else if ("加工".equals(module)) {
-				Pub.DIMap_machining.put(DI_name, map);
+				Pub.DIMap_machining.put(DI_name + "," + IP + "," + type + "," + module, map);
 			} else if ("分发".equals(module)) {
-				Pub.DIMap_distribute.put(DI_name, map);
+				Pub.DIMap_distribute.put(DI_name + "," + IP + "," + type + "," + module, map);
 			}
 		}
 
@@ -280,7 +295,19 @@ public class ConfigService {
 						Map<String, Object> fields = new HashMap<>();
 						fields.put("module", module);
 
-						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+						// 对资料的时区不是北京时的数据进行加减处理
+						if (("LAPS_CIMISS".equals(subType) && "采集".equals(module))
+								|| ("LAPS_LSX".equals(subType) && "采集".equals(module))
+								|| ("LAPS_L1S".equals(subType) && "采集".equals(module))
+								|| ("LAPS_GR2".equals(subType) && "采集".equals(module))) {
+							fields.put("data_time",
+									Pub.transform_DateToString(setWorldTime(dt, -8), "yyyy-MM-dd HH:mm:ss.SSSZ"));
+						} else if ("LAPS_T639".equals(subType) && "采集".equals(module)) {
+							fields.put("data_time",
+									Pub.transform_DateToString(setWorldTime(dt, -14), "yyyy-MM-dd HH:mm:ss.SSSZ"));
+						} else {
+							fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+						}
 
 						fields.put("ip_addr", IP);
 						fields.put("file_name", path);
@@ -428,6 +455,22 @@ public class ConfigService {
 		flag = (Boolean) resultMap.get("resultData");
 
 		return flag;
+	}
+
+	/**
+	 * 获取指定时区的时间
+	 * 
+	 * @param date
+	 * @param hours
+	 * @return
+	 * @throws Exception
+	 */
+	public Date setWorldTime(Date date, int hours) throws Exception {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.HOUR_OF_DAY, hours);
+		date = calendar.getTime();
+		return date;
 	}
 
 }

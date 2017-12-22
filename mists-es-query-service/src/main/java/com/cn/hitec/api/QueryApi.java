@@ -304,8 +304,7 @@ public class QueryApi extends BaseController {
 				outMap.put(KEY_RESULTDATA, list);
 				outMap.put(KEY_MESSAGE, "参数错误！");
 			} else {
-				list = esConfigService.getConfigAlert(esQueryBean.getIndices(), esQueryBean.getTypes(),
-						esQueryBean.getParameters());
+				list = esConfigService.getConfigAlert(esQueryBean.getIndices(), esQueryBean.getParameters());
 				outMap.put(KEY_RESULT, VAL_SUCCESS);
 				outMap.put(KEY_RESULTDATA, list);
 				outMap.put(KEY_MESSAGE, "获取数据成功");
