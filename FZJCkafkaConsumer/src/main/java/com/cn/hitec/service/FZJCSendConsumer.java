@@ -19,15 +19,11 @@ import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.feign.client.EsService;
 
 @Service
-public class FZJCSendConsumer {
+public class FZJCSendConsumer extends Consumer{
 	private static final Logger logger = LoggerFactory.getLogger(FZJCSendConsumer.class);
-    @Autowired
-    EsService esService;
-
-
-    private final KafkaConsumer<String, String> consumer;
-    private List<String> list  = new ArrayList<String>();
-    private String TOPIC = "SEND";
+    private static String topic = "SEND";
+    private static String group;
+    private static String type = "FZJC";
 
     @Value("${FZJC.send.target.ips}")
     private String ips;
@@ -38,79 +34,17 @@ public class FZJCSendConsumer {
     @Value("${send}")
     private String send;
 
-    public FZJCSendConsumer() {
-
-    	//*******************bootstrap.servers方式******************//
-    	Properties props = new Properties();
-		// 设置brokerServer(kafka)ip地址
-		props.put("bootstrap.servers",
-				"10.30.17.173:9092,10.30.17.174:9092,10.30.17.175:9092");
-		// 设置consumer group name
-
+    static{
 		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		String group = bundle.getString("FZJC.group.id");
-		props.put("group.id", group);
+		group = bundle.getString("FZJC.group.id");
+	}
 
-		props.put("enable.auto.commit", "false");
-
-		// 设置使用最开始的offset偏移量为该group.id的最早。如果不设置，则会是latest即该topic最新一个消息的offset
-		//earliest
-		// 如果采用latest，消费者只能得道其启动后，生产者生产的消息
-//		props.put("auto.offset.reset", "latest");
-		//
-		props.put("session.timeout.ms", "30000");
-		props.put("key.deserializer",
-				"org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer",
-				"org.apache.kafka.common.serialization.StringDeserializer");
-
-		consumer = new KafkaConsumer<String, String>(props);
-
+    public FZJCSendConsumer() {
+		super(topic,group,type);
     }
 
-    public void consume() {
-
-    	consumer.subscribe(Arrays.asList(TOPIC));
-    	EsBean esBean = new EsBean();
-        esBean.setType("FZJC");
-
-        long startTime = System.currentTimeMillis();
-        long useaTime = 0;
-        int i = 0;
-		while (true) {
-			try {
-				ConsumerRecords<String, String> records = consumer.poll(100);
-				for (ConsumerRecord<String, String> record : records) {
-
-					String msg = record.value();
-					List<String> msgs = convert(msg);
-
-					if(msgs.size() > 0){
-	                	list.addAll(msgs);
-
-		                useaTime = System.currentTimeMillis() - startTime;
-		                //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
-		                if (list.size() > 100 || (list.size() > 0 &&  useaTime > 5000)){
-		                	esBean.setData(list);
-		                    String responst = esService.add(esBean);
-		                    System.out.println(responst);
-		                    startTime = System.currentTimeMillis();
-		                    list.clear();
-		                }
-	                }
-
-				}
-				consumer.commitSync();
-			}catch (Exception e){
-            	logger.error("!!!!!!error");
-            	logger.debug("",e);
-                e.printStackTrace();
-            }
-		}
-
-    }
-
-    public List<String> convert(String msg){
+    @Override
+    public List<String> processing(String msg){
     	List<String> toEsJsons = new ArrayList<>();
 
     	Pattern ipspattern = Pattern.compile(ips);
@@ -169,7 +103,7 @@ public class FZJCSendConsumer {
 									obj.put("occur_time", end.getTime());
 
 									toEsJsons.add(obj.toString());
-									logger.info(obj.toString());
+									System.out.println(obj.toString());
 								}
 
 								list.clear();
@@ -264,20 +198,20 @@ public class FZJCSendConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							/*else if(type.equals("kongqiwuran_Guowuyuan")){
+							else if(type.equals("kongqiwuran_Guowuyuan")){
 								//SEVP_NMC_APWF_SFER_EAIRP_ACHN_LNO_P9_20171017120007224.JPG
 								String[] arr = matcher.group(1).split("_");
 								obj.put("type", "空气污染");
-								obj.put("name", "空气污染");
-								String time = arr[8].substring(3,arr[8].indexOf("."));
 
+								String time = arr[8].substring(0,arr[8].indexOf("."));
+								obj.put("name", time.substring(13,15));
 								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
-								Date d = df.parse(time);
+								Date d = df.parse(time.substring(0,10));
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
-							}*/
+							}
 							else{
-								obj.put("type", "type");
+								obj.put("type", type);
 							}
 
 							subobj.put("file_name", matcher.group(1));
@@ -308,7 +242,7 @@ public class FZJCSendConsumer {
 										obj.put("occur_time", end.getTime());
 
 										toEsJsons.add(obj.toString());
-										logger.info(obj.toString());
+										System.out.println(obj.toString());
 									}
 
 									list.clear();
@@ -329,8 +263,4 @@ public class FZJCSendConsumer {
     	return toEsJsons;
     }
 
-
-    public static void main(String[] args) {
-        new FZJCSendConsumer().consume();
-    }
 }
