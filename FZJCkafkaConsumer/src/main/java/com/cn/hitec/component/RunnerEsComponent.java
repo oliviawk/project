@@ -1,16 +1,12 @@
 package com.cn.hitec.component;
 
-import com.cn.hitec.service.LAPSSendConsumer;
+import com.cn.hitec.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import com.cn.hitec.service.FZJCSendConsumer;
-import com.cn.hitec.service.KafConsumer;
-import com.cn.hitec.service.LAPS_WSConsumer;
 
 /**
  * @ClassName:
@@ -24,13 +20,15 @@ public class RunnerEsComponent implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
 
     @Autowired
-    KafConsumer kafkaConsumer;
+    FZJCWorkingConsumer kafkaConsumer;
     @Autowired
     LAPS_WSConsumer lapsConsumer;
     @Autowired
     FZJCSendConsumer fzjcSendConsumer;
     @Autowired
     LAPSSendConsumer lapsSendConsumer;
+    @Autowired
+    LAPSCollectConsumer lapsCollectConsumer;
     @Override
     public void run(String... strings) throws Exception {
         Thread fzjc = new Thread(){
@@ -68,11 +66,20 @@ public class RunnerEsComponent implements CommandLineRunner {
             }
 
         };
+        Thread lapsColl = new Thread(){
+
+            @Override
+            public void run() {
+                lapsCollectConsumer.consume();
+            }
+
+        };
 
         fzjc.start();
         laps.start();
         fzjcSend.start();
         lapsSend.start();
+        lapsColl.start();
     }
 
 }
