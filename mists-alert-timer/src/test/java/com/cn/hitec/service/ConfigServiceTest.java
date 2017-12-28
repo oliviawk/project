@@ -56,9 +56,9 @@ public class ConfigServiceTest {
 		logger.info("alertMap_collect.size:" + Pub.DIMap_collect.size() + "");
 		logger.info("alertMap_machining.size:" + Pub.DIMap_machining.size() + "");
 		logger.info("alertMap_distribute.size:" + Pub.DIMap_distribute.size() + "");
-		// configService.createAlertDI("FZJC","采集",Pub.DIMap_collect);
-		// configService.createAlertDI("FZJC","加工",Pub.DIMap_machining);
-		// configService.createAlertDI("FZJC","分发",Pub.DIMap_distribute);
+		configService.createAlertDI("采集", Pub.DIMap_collect);
+		configService.createAlertDI("加工", Pub.DIMap_machining);
+		configService.createAlertDI("分发", Pub.DIMap_distribute);
 
 		logger.info("DIMap_t639.size:" + Pub.DIMap_t639.size() + "");
 		configService.createT639DI("FZJC", Pub.DIMap_t639, 5);

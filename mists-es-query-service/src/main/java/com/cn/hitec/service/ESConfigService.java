@@ -107,6 +107,8 @@ public class ESConfigService {
 					// Handle the hit...
 					try {
 						hit.getSource().put("id", hit.getId());
+						// 因为入库的时候去掉了serviceType字段,所以需要额外添加
+						hit.getSource().put("serviceType", hit.getType());
 						resultList.add(hit.getSource());
 					} catch (Exception e) {
 						e.printStackTrace();
