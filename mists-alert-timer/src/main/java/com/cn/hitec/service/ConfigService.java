@@ -42,19 +42,19 @@ public class ConfigService {
 		List<String> jsonList = new ArrayList<>();
 		/*-----------------采集---------------------------*/
 		jsonList.add(
-				"{\"DI_name\":\"雷达\",\"time_interval\":\"0 0/6 * * * ? *\",\"should_time\":\"1200\",\"last_time\":\"1800\",\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/mnt/nmic2017/radar/latlon/\",\"file_name\":\"ACHN.QREF000.yyyymmdd.xxxxxx.latlon\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"雷达\",\"time_interval\":\"0 0/6 * * * ? *\",\"should_time\":\"1200\",\"last_time\":\"1800\",\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/mnt/nmic2017/radar/latlon/\",\"file_name\":\"ACHN.QREF000.yyyymmdd.xxxxxx.latlon\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":3540,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/data/satellite/HDF/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":3540,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/data/satellite/HDF/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS_CIMISS\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/data/rawdata/aws/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"CIMISS\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/data/rawdata/aws/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS_T639\",\"time_interval\":\"0 0 2,14 * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/mnt/laps_nfs/laps_3x3/t639/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"T639\",\"time_interval\":\"0 0 2,14 * * ? *\",\"should_time\":600,\"last_time\":900,\"data_type\":\"自动站\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/mnt/laps_nfs/laps_3x3/t639/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS_LSX\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lsx/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LSX\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lsx/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS_L1S\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/l1s/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"L1S\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/l1s/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS_GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lgr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lgr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -77,19 +77,19 @@ public class ConfigService {
 		List<String> jsonList = new ArrayList<>();
 		/*-----------------加工---------------------------*/
 		jsonList.add(
-				"{\"DI_name\":\"ReadFY2NC\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4200,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"加工\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"ReadFY2NC\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4200,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"加工\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"风流场\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z:\\\\NoGeography\\\\forecast\\\\t639\\\\\",\"file_name\":\"T639_GMFS_WIND_2017102508.json\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"风流场\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z:\\\\NoGeography\\\\forecast\\\\t639\\\\\",\"file_name\":\"T639_GMFS_WIND_2017102508.json\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"炎热指数\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3360,\"last_time\":3900,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"炎热指数\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3360,\"last_time\":3900,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.223\",\"path\":\"Z://NoGeography//live//hotIndex//\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LapsRain1Hour\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LapsRain1Hour\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LapsWSWD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2100,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LapsWSWD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2100,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LapsTRH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LapsTRH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LapsTD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LapsTD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.224\",\"path\":\"\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"加工\",\"serviceType\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -112,39 +112,39 @@ public class ConfigService {
 		List<String> jsonList = new ArrayList<>();
 		/*-----------------分发---------------------------*/
 		jsonList.add(
-				"{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4800,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/cloudmap/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"云图\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3600,\"last_time\":4800,\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/cloudmap/\",\"file_name\":\"SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_*.HDF\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"雷达\",\"time_interval\":\"0 0/6 * * * ? *\",\"should_time\":\"1500\",\"last_time\":\"2400\",\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/Radar/\",\"file_name\":\"MSP3_PMSC_RADAR_BREF_L88_CHN_*.png\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"雷达\",\"time_interval\":\"0 0/6 * * * ? *\",\"should_time\":\"1500\",\"last_time\":\"2400\",\"data_type\":\"气象基本资料\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/Radar/\",\"file_name\":\"MSP3_PMSC_RADAR_BREF_L88_CHN_*.png\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"T639\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/T639/\",\"file_name\":\"T639_GMFS_WIND_*.json\",\"transfer_type\":\"\",\"module\":\"分发\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"T639\",\"time_interval\":\"0 0 2/3 * * ? *\",\"should_time\":0,\"last_time\":0,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/T639/\",\"file_name\":\"T639_GMFS_WIND_*.json\",\"transfer_type\":\"\",\"module\":\"分发\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"炎热指数\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3960,\"last_time\":4560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\",\"module\":\"分发\",\"type\":\"FZJC\"}");
+				"{\"DI_name\":\"炎热指数\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3960,\"last_time\":4560,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/xts_gwyyj/hotIndex/\",\"file_name\":\"hot*.txt\",\"transfer_type\":\"\",\"module\":\"分发\",\"serviceType\":\"FZJC\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		// 10.0.74.226服务器的LAP分发
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_TD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3300,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_TD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3300,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_T\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_T\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		// 10.30.16.220服务器的LAP分发
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_TD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3300,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_TD\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3300,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_T\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_T\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"type\":\"LAPS\"}");
+				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -192,18 +192,20 @@ public class ConfigService {
 	public void initAlertMap() {
 		List<Map> listMap_Config = getConfigAlert();
 		for (Map map : listMap_Config) {
-			String DI_name = map.get("DI_name").toString();
-			String IP = map.get("IP").toString();
-			String type = map.get("type").toString();
-			String module = map.get("module").toString();
-			if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
-				Pub.DIMap_t639.put(DI_name + "," + IP + "," + type + "," + module, map);
-			} else if ("采集".equals(module)) {
-				Pub.DIMap_collect.put(DI_name + "," + IP + "," + type + "," + module, map);
-			} else if ("加工".equals(module)) {
-				Pub.DIMap_machining.put(DI_name + "," + IP + "," + type + "," + module, map);
-			} else if ("分发".equals(module)) {
-				Pub.DIMap_distribute.put(DI_name + "," + IP + "," + type + "," + module, map);
+			if (map.containsKey("DI_name")) {
+				String DI_name = map.get("DI_name").toString();
+				String IP = map.get("IP").toString();
+				String serviceType = map.get("serviceType").toString();
+				String module = map.get("module").toString();
+				if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
+					Pub.DIMap_t639.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+				} else if ("采集".equals(module)) {
+					Pub.DIMap_collect.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+				} else if ("加工".equals(module)) {
+					Pub.DIMap_machining.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+				} else if ("分发".equals(module)) {
+					Pub.DIMap_distribute.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+				}
 			}
 		}
 
@@ -250,7 +252,7 @@ public class ConfigService {
 			Date date = new Date();
 			calendar.setTime(date);
 
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			calendar.add(Calendar.DAY_OF_MONTH, 0);
 			calendar.set(Calendar.HOUR_OF_DAY, 0);
 			calendar.set(Calendar.MINUTE, 0);
 			calendar.set(Calendar.SECOND, 0);
@@ -270,7 +272,7 @@ public class ConfigService {
 					String cron = map.get("time_interval").toString();
 					List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
 					List<String> listDataBean = new ArrayList<>();
-					String type = map.get("type").toString();
+					String serviceType = map.get("serviceType").toString();
 					String subType = map.get("DI_name").toString();
 					// if(!"炎热指数".equals(subType)){
 					// continue;
@@ -281,6 +283,7 @@ public class ConfigService {
 					for (Date dt : timeList) {
 						DataBean dataBean = new DataBean();
 						dataBean.setName(name);
+						dataBean.setServiceType(serviceType);
 						dataBean.setType(subType);
 						// 这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
 						int cron_shouldTime = Integer.valueOf(map.get("should_time").toString());
@@ -313,15 +316,16 @@ public class ConfigService {
 						fields.put("file_name", path);
 						dataBean.setFields(fields);
 
+						// logger.info(JSON.toJSONString(dataBean));
 						listDataBean.add(JSON.toJSONString(dataBean));
 					}
 					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					// 分批次录入数据
 					EsWriteBean esWriteBean = new EsWriteBean();
 					esWriteBean.setIndex(strIndex);
-					esWriteBean.setType(type);
+					// esWriteBean.setType(type);
 					esWriteBean.setData(listDataBean);
-					Map<String, Object> response = esWriteService.insert(esWriteBean);
+					Map<String, Object> response = esWriteService.insert1(esWriteBean);
 					Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
 					if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
 						logger.info(
@@ -378,6 +382,7 @@ public class ConfigService {
 				String cron = map.get("time_interval").toString();
 				List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
 				String subType = map.get("DI_name").toString();
+				String serviceType = map.get("serviceType").toString();
 				String name = "";
 				String IP = map.get("IP").toString();
 				String path = map.get("path").toString();
@@ -395,6 +400,7 @@ public class ConfigService {
 					DataBean dataBean = new DataBean();
 					dataBean.setName(name);
 					dataBean.setType(subType);
+					dataBean.setServiceType(serviceType);
 
 					dataBean.setAging_status("未处理");
 					Map<String, Object> fields = new HashMap<>();
@@ -413,9 +419,9 @@ public class ConfigService {
 					// 分批次录入数据
 					EsWriteBean esWriteBean = new EsWriteBean();
 					esWriteBean.setIndex(strIndex);
-					esWriteBean.setType(type);
+					// esWriteBean.setType(type);
 					esWriteBean.setData((List<String>) indexMap.get(strIndex));
-					Map<String, Object> response = esWriteService.insert(esWriteBean);
+					Map<String, Object> response = esWriteService.insert1(esWriteBean);
 					Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
 					if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
 						addNum += (int) responseData.get("insert_number");

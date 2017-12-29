@@ -25,11 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
-
-import net.sf.json.JSONObject;
 
 /**
  * @ClassName:
@@ -132,11 +131,13 @@ public class ESService {
 					error_num++;
 					continue;
 				}
-				if (StringUtils.countOccurrencesOf(json, "type") > 0) {// 判断json是否为空
-					JSONObject json_test = JSONObject.fromObject(json);
+				if (StringUtils.countOccurrencesOf(json, "serviceType") > 0) {// 判断json是否为空
+					JSONObject jsob = JSONObject.parseObject(json);
 
-					type = json_test.get("type").toString();
-					// System.out.println(type);
+					type = jsob.get("serviceType").toString();
+					// 去掉serviceType,避免表中出现内容重复
+					jsob.remove("serviceType");
+					json = jsob.toJSONString();
 					es.client.prepareIndex(index, type).setSource(json, XContentType.JSON).get();
 				}
 
