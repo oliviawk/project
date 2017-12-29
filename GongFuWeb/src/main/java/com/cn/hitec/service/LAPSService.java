@@ -91,7 +91,7 @@ public class LAPSService extends BaseController{
                 rangeList.add(map);
                 params.put("range",rangeList);
 
-                params.put("size",4);
+                params.put("size",4);   // 分发分内外网可能有2条未处理数据
                 params.put("sort","fields.data_time");
 
 
