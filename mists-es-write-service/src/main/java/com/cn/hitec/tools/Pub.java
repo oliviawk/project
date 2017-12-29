@@ -28,6 +28,7 @@ public class Pub {
     public static Map<String,Object> alertMap_collect = new HashMap<>();
     public static Map<String,Object> alertMap_machining = new HashMap<>();
     public static Map<String,Object> alertMap_distribute = new HashMap<>();
+    public static Map<String,Object> alert_time_map = new HashMap<>();
 
 
     public static String transform_DateToString(Date date , String simpleDataFormat) throws Exception{
@@ -54,17 +55,19 @@ public class Pub {
 
 
 
-    public static Map<String,Integer> alert_time_map = new HashMap<>();
+    /*public static Map<String,Integer> alert_time_map = new HashMap<>();
     static {
         alert_time_map.put("雷达",30);
         alert_time_map.put("云图",60);
         alert_time_map.put("ReadFY2NC",60);
         alert_time_map.put("炎热指数",5);
         alert_time_map.put("T639",-1);
+      //  alert_time_map.put("风流场",-1);
         alert_time_map.put("风流场",-1);
+      //  alert_time_map.put("Laps",5);
 
     }
-
+*/
 
     /**
      * 得到 今天和昨天的index

@@ -47,10 +47,66 @@ public class ConfigService {
                 String DI_name = map.get("DI_name").toString();
                 Pub.alertMap_distribute.put(DI_name,map);
             }
+
+
+            List<Map> list_alert_time_map = getConfigAlertDI("config");
+            for (Map map : list_alert_time_map){
+                 if(map.containsKey("DI_name")){
+                    String DI_name = map.get("DI_name").toString();
+                    Pub.alert_time_map.put(DI_name,1);
+                }
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 查询配置表信息
+     * @param indice
+     * @return
+     * @throws Exception
+     */
+    public List<Map>  getConfigAlertDI(String indice) throws Exception{
+        List<Map> resultList = new ArrayList<>();
+        int sizeInt = 10;
+        long timeValue = 5000;
+        try {
+
+            SearchResponse scrollResp = esRepository.client.prepareSearch(indice)
+                  //  .setTypes(type)
+                    .setScroll(new TimeValue(timeValue))
+                    .setSize(sizeInt).get(); //max of 100 hits will be returned for each scroll
+            //Scroll until no hits are returned
+            do {
+                for (SearchHit hit : scrollResp.getHits().getHits()) {
+                    //Handle the hit...
+                    try {
+                        hit.getSource().put("id",hit.getId());
+                        //System.out.println(hit.getId());
+                        resultList.add(hit.getSource());
+                       // System.out.println(hit.getSource().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                scrollResp = esRepository.client.prepareSearchScroll(scrollResp.getScrollId())
+                        .setScroll(new TimeValue(timeValue))
+                        .execute().actionGet();
+            } while(scrollResp.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            resultList = null;
+        } finally {
+       //     System.out.println(resultList.toString());
+            return resultList;
+        }
+    }
+
 
 
 
@@ -76,7 +132,7 @@ public class ConfigService {
                 }
             }
             SearchResponse scrollResp = esRepository.client.prepareSearch(indice)
-                    .setTypes(type)
+                     .setTypes(type)
                     .setScroll(new TimeValue(timeValue))
                     .setSize(sizeInt).get(); //max of 100 hits will be returned for each scroll
             //Scroll until no hits are returned
@@ -101,7 +157,12 @@ public class ConfigService {
             log.error(e.getMessage());
             resultList = null;
         } finally {
+            System.out.println(resultList.toString());
             return resultList;
         }
     }
+
+
+
+
 }
