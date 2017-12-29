@@ -39,7 +39,24 @@ $(function(){
     sleep(100);
 
     getLapsData('LAPS3KM_ME', '分发', '');
-    //sleep(300);
+    sleep(100);
+
+
+    // 采集状态
+    getLapsData('CIMISS', '采集', '');
+    sleep(200);
+
+    //getLapsData('T639', '采集', '');
+    //sleep(100);
+
+    getLapsData('LSX', '采集', '');
+    sleep(200);
+
+    getLapsData('L1S', '采集', '');
+    sleep(100);
+
+    getLapsData('GR2', '采集', '');
+    //sleep(100);
 
     //$("#Laps_分发").css("margin", "20px");
 
@@ -92,49 +109,61 @@ function getLapsData(type, module, ip) {
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
-                if (d.resultData.length > 1) {  // TODO: 最新时次未处理的判断条件
+                if (d.resultData.length > 1) {
                     // 有数据
-                    var data = d.resultData;
-                    dataRecv.proc[data[0].type] = data;
-
-                    // 设置列表状态
-                    var subType = data[0].type;
-                    var module = data[0].fields.module;
-
-                    if (module == "加工") {
-                        $("#" + subType + "_" + module).attr("class", "list-green");
-                        $("#" + subType + "_" + module).attr("title", data[0].fields.data_time);
-
-                    } else if (module == "分发") {
-                        // data[0]为外网分发data[1]为内网分发
-                        // 分发id编码type_module_ip末位
-                        var suff_1 = data[0].fields.ip_addr.split('.')[3];
-                        var suff_2 = data[1].fields.ip_addr.split('.')[3];
-                        //console.log(suff_1 + "-" + suff_2);
-                        var selecter_1 = "#" + subType + "_" + module + "_" + suff_1;
-                        var selecter_2 = "#" + subType + "_" + module + "_" + suff_2;
-                        var time_1 = data[0].fields.data_time;
-                        var time_2 = data[1].fields.data_time;
-                        $(selecter_1).attr("class", "list-green");
-                        $(selecter_2).attr("class", "list-green");
-                        $(selecter_1).attr("title", time_1);
-                        $(selecter_2).attr("title", time_2);
-
+                    var recv = d.resultData;
+                    var data = { };
+                    // 取2条数据，如果第1条是未处理判断第二条如果是正常外报警
+                    if (recv[0].aging_status == '未处理') {
+                        data = recv[1];
+                    } else {
+                        data = recv[0];
                     }
 
+                    var subType = data.type;
+                    var module = data.fields.module;
+
+                    // 判断报警状态
+                    if (/正常/.test(data.aging_status)) {
+                        // 设置状态
+                        if (/采集|加工/.test(module)) {
+                            $("#" + subType + "_" + module).attr("class", "list-green");
+                            $("#" + subType + "_" + module).attr("title", data.fields.data_time);
+
+                        } else if (/分发/.test(module)) {
+                            // data[0]为外网分发data[1]为内网分发
+                            // 分发id编码type_module_ip末位
+                            var suff_1 = data.fields.ip_addr.split('.')[3];
+                            var suff_2 = data.fields.ip_addr.split('.')[3];
+                            //console.log(suff_1 + "-" + suff_2);
+                            var selecter_1 = "#" + subType + "_" + module + "_" + suff_1;
+                            var selecter_2 = "#" + subType + "_" + module + "_" + suff_2;
+                            var time_1 = data.fields.data_time;
+                            var time_2 = data.fields.data_time;
+                            $(selecter_1).attr("class", "list-green");
+                            $(selecter_2).attr("class", "list-green");
+                            $(selecter_1).attr("title", time_1);
+                            $(selecter_2).attr("title", time_2);
+
+                        } else {
+                            // 有未知类型
+                            alert('出错啦！未知类型！@@');
+                        }
+
+                    } else {
+                        // 界面报警
+                        $("#" + subType + "_" + module).attr("class", "list-red");
+                    }
+
+                    //dataRecv.proc[data[0].type] = data;
 
                     // 判断数据是否准备好
-                    console.log(r + " response:  " + data[0].type);
-
-
-
-
+                    console.log(r + " response:  " + data.type);
 
 
                 } else {
                     // 没有数据
-                    $("#" + req.subType + "_" + req.module).attr("class", "list-red");
-
+                    alert('出错啦！服务器没有返回！@@');
                 }
 
             } else {
