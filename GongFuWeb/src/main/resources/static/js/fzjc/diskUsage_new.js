@@ -3,6 +3,7 @@ var tau = 2 * Math.PI; // http://tauday.com/tau-manifesto
 var intervalID_directorUsage;
 function directorUsage(url, id,reloadFrequency,params) {
     function dir(){
+        $("#directoryUsed").empty();
         function generate(data, id) {
             var popoverObj;
 //			for (var i = 0; i < 0; i++) {   测试用
@@ -14,6 +15,8 @@ function directorUsage(url, id,reloadFrequency,params) {
 
             if( data.values.length > 4 ){
                 height = height + (data.values.length-3) * 60;		//当磁盘超过6个时，通过增加高度的方式产生滚动条
+            }else if( data.values.length <= 0 ){
+                return;
             }
 
             var rectBgheight;
@@ -52,8 +55,6 @@ function directorUsage(url, id,reloadFrequency,params) {
 
 //			var svgWidth = width - margin.left - margin.right;
 //			var svgHeight = height - margin.top - margin.bottom;
-
-            $(id).empty();
 
             var svg = d3.select(id)
                 .append("svg")
@@ -281,6 +282,7 @@ function directorUsage(url, id,reloadFrequency,params) {
                 "Content-Type": "application/json; charset=utf-8"
             },
             success : function(result) {
+
                 if(result["titleTime"]!=undefined){
                     document.getElementById('disk').innerHTML="磁盘使用情况("+result["titleTime"]+")";
                 }else{
@@ -301,7 +303,6 @@ function directorUsage(url, id,reloadFrequency,params) {
     dir();
     clearInterval(intervalID_directorUsage);
     intervalID_directorUsage = setInterval(function() {
-        $(id).empty();
         directorUsage(url, id,reloadFrequency)
     }, reloadFrequency);
 }

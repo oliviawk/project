@@ -71,8 +71,6 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
 			return y(d['num'] / 100);
 		}).interpolate("cardinal");
 
-		d3.select('#svg-cpuUsed1').remove();
-
 		var svg = d3.select(id).append("svg").attr("id", "svg-cpuUsed1").attr(
 				"width", width + margin.right + margin.left).attr("height",
 				height + margin.top + margin.bottom).append("g").attr(
@@ -180,8 +178,6 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
 		var theadText = [ "", "", "min", "max", "avg", "current" ];
 
 		var tableData = baseData.tableData;
-
-		$("#cpuUsed-table").empty();
 
 		var table1 = d3.select("#cpuUsed-table").append("table").style({
 			"width" : "100%",
@@ -312,6 +308,8 @@ function displayCpuUsed(url, id, reloadFrequency,params) {
             "Content-Type": "application/json; charset=utf-8"
         },
         success: function (data) {
+            $("#cpuUsed").empty();
+            $("#cpuUsed-table").empty();
             if (data["titleTime"] != undefined
                 && data["titleTime"] != null) {
                 document.getElementById('cpu').innerHTML = "cpu使用率 ("

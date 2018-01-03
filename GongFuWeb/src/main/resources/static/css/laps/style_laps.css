@@ -317,3 +317,19 @@ ul,li{list-style: none;}
 .nobg{
 	background:none;
 }
+
+@media (min-width: 1366px) {
+    .modal-bg {
+        width: 90%;
+    }
+}
+
+.modal-body-h370
+{
+    height:370px;
+    overflow:auto;
+}
+
+.modal-header,.modal-body,.modal-footer{
+    background-color: #1d2122;
+}

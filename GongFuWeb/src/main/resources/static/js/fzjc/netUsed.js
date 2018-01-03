@@ -69,8 +69,6 @@ function displayNetUsed(url, id, reloadFrequency,params) {
                 .x(function(d) { return x(d['time']) + 5; })
                 .y(function(d) { return y(d['num']); });
 
-            d3.select('#svg-used2').remove();
-
             var svg = d3.select(id).append("svg")
                 .attr("id", "svg-used2")
                 .attr("width", width + margin.right + margin.left)
@@ -148,9 +146,7 @@ function displayNetUsed(url, id, reloadFrequency,params) {
           //表格
             var theadText = ["", "", "min", "max", "avg", "current"];
             
-            $("#netUsed-table").empty();
-            
-    		var table1=d3.select("#netUsed-table")
+            var table1=d3.select("#netUsed-table")
     	 		.append("table")
     	 		.style({"width":"100%", "text-align":"center"})
     	 		.attr("class","table1");
@@ -295,6 +291,9 @@ function displayNetUsed(url, id, reloadFrequency,params) {
             "Content-Type": "application/json; charset=utf-8"
         },
         success: function (data) {
+            $("#netUsed").empty();
+            $("#netUsed-table").empty();
+
             if(data["titleTime"]!=undefined){
 
                 document.getElementById('net').innerHTML="网络流量 ("+data["titleTime"]+")";
