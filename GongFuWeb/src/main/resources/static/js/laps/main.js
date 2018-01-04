@@ -6,7 +6,21 @@ $(function(){
     // main entry
     //console.log("test!");
 
-    // TODO: IP暂时无过滤
+    // 弹出框点击事件
+    $('#pubModal').on('show.bs.modal', function (e) {
+        var $button = $(e.relatedTarget);
+        //var a = $button.attr('id').split(/_(?=[\u4e00-\u9fa5])/);
+        //var a = $button.attr('id').split(/_(?![A-Za-z])/);
+        //console.log(a);
+        var arr = $button.attr('id').split(/_(?![A-Za-z])/); // [0]为type, [1]为module
+        //console.log(arr);
+        //e.preventDefault();
+        getLapsHistory(arr[0], arr[1], '');
+
+    });
+
+
+        // TODO: IP暂时无过滤
     // TODO: 合并查询，减少等待时间
     // 加工状态
     getLapsData('LapsTD', '加工', '10.30.16.224');
@@ -46,8 +60,8 @@ $(function(){
     getLapsData('CIMISS', '采集', '');
     sleep(200);
 
-    //getLapsData('T639', '采集', '');
-    //sleep(100);
+    getLapsData('T639', '采集', '');
+    sleep(100);
 
     getLapsData('LSX', '采集', '');
     sleep(200);
@@ -198,4 +212,114 @@ function getLapsData(type, module, ip) {
     });
 
 }
+
+
+/**
+ * 获取LAPS历史数据信息
+ * @param type
+ * @param module
+ * @param ip
+ */
+function getLapsHistory(type, module, ip) {
+    var r = Math.ceil(Math.random()*100);
+
+    var req = {
+        "types":["LAPS"],
+        "subType":type,
+        "module":module,
+        "strIp":ip,
+        "rand":r
+    };
+    console.log(r + " request:  " + req.subType);
+
+
+    $.ajax({
+        type: "POST",
+        url: "../laps/getHistory",
+        data: JSON.stringify(req),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () { },
+        complete: function () { },
+        success: function (d) {
+            //console.log(d);
+            if (d.result == 'success') {
+                if (d.resultData.length > 1) {
+                    // 有数据
+                    var recv = d.resultData;
+                    var subType = recv[0].type; // T639
+                    var module = recv[0].fields.module; // 采集
+                    //var data = {}, data_1 = {};
+
+
+                    var regex = /LapsTD|LapsRain1Hour|LapsWSWD|LapsTRH/;
+
+                    // 表头
+                    var historyHead = "<tr>";
+                    historyHead += "<th style='width: 60px;'>编号</th>";
+                    historyHead += !regex.test(subType) ? "<th>文件名</th>" : "";
+                    historyHead += "<th style='width: 245px;'>资料时次</th>";
+                    historyHead += "<th style='width: 245px;'>更新时间</th>";
+                    historyHead += "<th style='width: 75px;'>耗时</th>";
+                    historyHead += "<th style='width: 60px;'>状态</th>";
+                    historyHead += "<th>错误信息</th>";
+                    historyHead += "</tr>";
+                    $("#history_thead").html(historyHead);
+
+                    $("#history_tbody").html("");
+
+                    // 表内容
+                    var trs = "", tds = "", trStatus = "";
+                    $.each(recv, function (i, v) {
+                        //console.log(v);
+                        // 编号
+                        tds = "<td>"+(i+1)+"</td>";
+                        //文件名
+                        tds += !regex.test(subType) ? "<td>"+v.fields.file_name+"</td>" : "";
+                        // 资料时间
+                        tds += "<td>"+v.fields.data_time+"</td>";
+                        // 更新时间
+                        tds += "<td>"+v.fields.end_time+"</td>";
+                        // 耗时
+                        //tds += "<td>"+(Math.round((111)*100)/100)+" 秒</td>";
+                        tds += "<td>"+Math.round((v.receive_time-v.occur_time)/1000)+" 秒</td>";
+                        // 状态
+                        tds += "<td>"+ v.aging_status + "</td>";
+                        // 错误信息
+                        tds += "<td>"+ v.aging_status + "</td>";
+
+
+                        if (/异常|迟到/.test(v.fields.aging_status)) {
+                            trStatus = "danger";
+                        } else {
+                            trStatus = "info";
+                        }
+
+                        trs += "<tr class='" + trStatus + "'>" + tds + "</tr>";
+                    });
+
+                    $("#history_tbody").html(trs);
+
+                    // 判断数据是否准备好
+                    //console.log(r + " response:  " + data.type);
+
+
+                } else {
+                    // 没有数据
+                    alert('出错啦！服务器没有返回！@@');
+                }
+
+            } else {
+                // 查询失败
+                alert("失败！" + d.message);
+            }
+
+        },
+        error: function (err) {
+            alert(err);
+        }
+    });
+}
+
+
 
