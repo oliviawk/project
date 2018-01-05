@@ -14,8 +14,26 @@ $(function(){
         //console.log(a);
         var arr = $button.attr('id').split(/_(?![A-Za-z])/); // [0]为type, [1]为module
         //console.log(arr);
-        //e.preventDefault();
-        getLapsHistory(arr[0], arr[1], '');
+
+        $('#subTypeHidden').val(arr[0]);
+        $('#moduleHidden').val(arr[1]);
+        //var pageSize = $('pageSizeHidden').val();
+        var pageSize = 10;  // 默认分页数10
+        $('#pageSizeHidden').val(pageSize);
+        $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
+        getLapsHistory(arr[0], arr[1], pageSize,'');
+
+    });
+
+    // 历史分页数改变事件
+    $('#ddl_pageSize li>a').on('click', function (e) {
+        var $item = $(e.target);
+        var pageSize = parseInt($item.html());
+        //console.log(pageSize);
+        $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
+        var subType = $('#subTypeHidden').val();
+        var module = $('#moduleHidden').val();
+        getLapsHistory(subType, module, pageSize, '');
 
     });
 
@@ -221,15 +239,17 @@ function getLapsData(type, module, ip) {
  * 获取LAPS历史数据信息
  * @param type
  * @param module
+ * @param size
  * @param ip
  */
-function getLapsHistory(type, module, ip) {
+function getLapsHistory(type, module, size, ip) {
     var r = Math.ceil(Math.random()*100);
 
     var req = {
         "types":["LAPS"],
         "subType":type,
         "module":module,
+        "size":size,
         "strIp":ip,
         "rand":r
     };
