@@ -196,8 +196,11 @@ function getLapsData(type, module, ip) {
 
 
                 } else {
-                    // 没有数据
-                    alert('出错啦！服务器没有返回！@@');
+                    // 没有数据，状态无效
+                    //alert('出错啦！服务器没有返回！@@');
+                    var subType = d.resultData[0].type; // T639
+                    var module = d.resultData[0].fields.module; // 采集
+                    $("div[id^='" + subType + "_" + module + "']").attr("class", "list-red");
                 }
 
             } else {
