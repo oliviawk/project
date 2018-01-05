@@ -79,8 +79,6 @@ function displayMemoryUsed(url, id, reloadFrequency,params) {
 			})
 			.interpolate("cardinal");
 
-		d3.select('#svg-memoryUsed1').remove();
-
 		var svg = d3.select(id)
 			.append("svg")
 			.attr("id", "svg-memoryUsed1")
@@ -185,8 +183,6 @@ function displayMemoryUsed(url, id, reloadFrequency,params) {
 		var theadText = [ "", "", "min", "max", "avg", "current" ];
 
 		var tableData = baseData.tableData;
-
-		$("#memoryUsed-table").empty();
 
 		var table1 = d3.select("#memoryUsed-table").append("table").style({
 			"width" : "100%",
@@ -317,6 +313,9 @@ function displayMemoryUsed(url, id, reloadFrequency,params) {
             "Content-Type": "application/json; charset=utf-8"
         },
         success: function (data) {
+            $("#memoryUsed").empty();
+            $("#memoryUsed-table").empty();
+
             if (data["titleTime"] != undefined && data["titleTime"] != null) {
                 document.getElementById('memory').innerHTML = "内存使用率 ("
                     + data["titleTime"] + ")";

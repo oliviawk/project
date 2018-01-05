@@ -79,7 +79,8 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
-                <div class="title-grey block-wrap">
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal" data-ip="10.30.16.242"
+                     id="collect">
                     <ul>
                         <li class="green"></li>
                         <li class="green"></li>
@@ -113,7 +114,8 @@
             <td><div class="list-grey" id="T639_采集" data-toggle="modal" data-target="#pubModal"><span>背景场采集</span></div></td>
             <td>&nbsp;</td>
             <td rowspan="2">
-                <div class="title-grey block-wrap">
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal" data-ip="10.30.16.224"
+                     id="working">
                     <ul>
                         <li class="green"></li>
                         <li class="green"></li>
@@ -125,7 +127,8 @@
             </td>
             <td>&nbsp;</td>
             <td rowspan="2">
-                <div class="title-grey block-wrap" style="width: 170px;">
+                <div class="title-grey block-wrap" style="width: 170px;" data-toggle="modal" data-target="#baseSourceModal" data-ip="10.30.16.220"
+                     id="send">
                     <ul>
                         <li class="green"></li>
                         <li class="green"></li>
@@ -134,7 +137,8 @@
                     </ul>
                     <span style="margin-left: 50px;">10.30.16.220</span>
                 </div>
-                <div class="title-grey block-wrap" style="width: 170px;">
+                <div class="title-grey block-wrap" style="width: 170px;" data-toggle="modal" data-target="#baseSourceModal" data-ip="10.0.74.226"
+                     id="sendDMZ">
                     <ul>
                         <li class="green"></li>
                         <li class="green"></li>
@@ -431,13 +435,96 @@
     </div>
 </div>
 <!-- Modal end -->
+
+
+<!-- Modal2 -->
+<div class="modal fade bs-example-modal-lg" id="baseSourceModal" tabindex="-1"
+     role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-bg" role="document" style="margin: 110px">
+        <div class="modal-content">
+
+            <div class="modal-header" style="border-bottom:0px">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+						<span class='glyphicon glyphicon-remove' aria-hidden='true'
+                              style="color: #d9534f;"></span>
+                </button>
+                <h2 class="modal-title" style="font-weight:bold;text-align:center" id="baseSourceModalHeader">基础资源实时运行情况(10.20.40.132)</h2>
+            </div>
+
+            <div id="modalBody2" class="modal-body modal-body-h370"
+                 style="color: #fff">
+                <div text-align="center">
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="cpu">CPU使用率</label>
+                            <div class="panel-body">
+                                <div id="cpuUsed" style="height: 200px;"></div>
+                                <div id="tooltip-cpu" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br />
+                                    <div></div>
+                                </div>
+                                <div id="cpuUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px"
+                                   id="memory">内存使用率</label>
+                            <div class="panel-body">
+                                <div id="memoryUsed" style="height: 200px;"></div>
+                                <div id="tooltip-p" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br />
+                                    <div></div>
+                                </div>
+                                <div id="memoryUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="net">网络流量</label>
+                            <div class="panel-body">
+                                <div id="netUsed" style="height: 200px;"></div>
+                                <div id="netUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-3'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="disk">磁盘使用情况</label>
+                            <div class="panel-body">
+                                <div id="directoryUsed" style="height: 270px;overflow-x: hidden;overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- core js start -->
 <script src="../js/core/jquery-1.8.3.min.js"></script>
 <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
 <script src="../js/tool/publicTool.js"></script>
 <!-- core js end -->
 <!-- laps start -->
+<script src="../frame/d3/d3.v3.min.js"></script>
+<script src="../js/fzjc/memoryUsed.js"></script>
+<script src="../js/fzjc/cpuUsed.js"></script>
+<script src="../js/fzjc/diskUsage_new.js"></script>
+<script src="../js/fzjc/netUsed.js"></script>
+<script src="../js/fzjc/fzjc_html.js"></script>
 <script src="../js/laps/main.js"></script>
+<script src="../js/fzjc/fzjc.js"></script>
 <!-- laps end -->
 </body>
 </html>
