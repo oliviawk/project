@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.bean.EsWriteBean;
 import com.cn.hitec.feign.client.EsWriteService;
+import com.cn.hitec.util.HttpPub;
 import com.cn.hitec.util.Pub;
 
 /**
@@ -60,10 +61,9 @@ public class SendAlertMessage {
 			esWriteBean.setData(params);
 			esWriteService.add(esWriteBean); // 将告警信息写入ES
 			// 推送到前端
-			// kafkaProducer.sendMessage("ALERT", null,
-			// JSON.toJSONString(alertBean));
+			kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
 			// 发送告警消息 到微信
-			// HttpPub.httpPost("@all", alertTitle);
+			HttpPub.httpPost("@all", alertTitle);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
