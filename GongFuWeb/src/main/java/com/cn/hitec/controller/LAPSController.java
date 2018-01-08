@@ -53,5 +53,16 @@ public class LAPSController {
         return map;
     }
 
+    /**
+     *
+     * @param esQueryBean
+     * @return
+     */
+    @RequestMapping(value="/getHistory", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public Map getHistory(@RequestBody EsQueryBean_web esQueryBean){
+        Map<String,Object> map = lapsService.getHistory(esQueryBean);
+        return map;
+    }
 
 }

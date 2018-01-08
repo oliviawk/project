@@ -317,19 +317,38 @@ ul,li{list-style: none;}
 .nobg{
 	background:none;
 }
-
-@media (min-width: 1366px) {
-    .modal-bg {
-        width: 90%;
-    }
-}
-
-.modal-body-h370
-{
-    height:370px;
-    overflow:auto;
-}
-
+/*弹出框样式*/
 .modal-header,.modal-body,.modal-footer{
-    background-color: #1d2122;
+	background-color: #1d2122;
 }
+.modal-body{
+	overflow: auto;
+	height: 600px;
+}
+.table>tbody>tr.danger>td{
+	background-color: #1d2122;
+	color: #913132;
+}
+.table>tbody>tr>td.danger{
+	background-color: #913132;
+}
+.table>tbody>tr.info>td{
+	background-color: #1d2122;
+	color: #107610;
+}
+.table>tbody>tr>td.info{
+	background-color: #107610;
+}
+/*弹出框样式 end*/
+/*屏幕适配*/
+@media (max-width: 1280px) {
+	.modal-bg {
+		width: 90%;
+	}
+}
+@media (min-width: 1280px) {
+	.modal-bg {
+		width: 75%;
+	}
+}
+/*屏幕适配 end*/
