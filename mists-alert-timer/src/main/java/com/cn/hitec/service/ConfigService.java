@@ -191,20 +191,22 @@ public class ConfigService {
 
 	public void initAlertMap() {
 		List<Map> listMap_Config = getConfigAlert();
-		for (Map map : listMap_Config) {
-			if (map.containsKey("DI_name")) {
-				String DI_name = map.get("DI_name").toString();
-				String IP = map.get("IP").toString();
-				String serviceType = map.get("serviceType").toString();
-				String module = map.get("module").toString();
-				if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
-					Pub.DIMap_t639.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-				} else if ("采集".equals(module)) {
-					Pub.DIMap_collect.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-				} else if ("加工".equals(module)) {
-					Pub.DIMap_machining.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-				} else if ("分发".equals(module)) {
-					Pub.DIMap_distribute.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+		if (listMap_Config != null) {
+			for (Map map : listMap_Config) {
+				if (map.containsKey("DI_name")) {
+					String DI_name = map.get("DI_name").toString();
+					String IP = map.get("IP").toString();
+					String serviceType = map.get("serviceType").toString();
+					String module = map.get("module").toString();
+					if ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
+						Pub.DIMap_t639.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+					} else if ("采集".equals(module)) {
+						Pub.DIMap_collect.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+					} else if ("加工".equals(module)) {
+						Pub.DIMap_machining.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+					} else if ("分发".equals(module)) {
+						Pub.DIMap_distribute.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
+					}
 				}
 			}
 		}
@@ -252,7 +254,7 @@ public class ConfigService {
 			Date date = new Date();
 			calendar.setTime(date);
 
-			calendar.add(Calendar.DAY_OF_MONTH, 0);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
 			calendar.set(Calendar.HOUR_OF_DAY, 0);
 			calendar.set(Calendar.MINUTE, 0);
 			calendar.set(Calendar.SECOND, 0);
@@ -303,11 +305,12 @@ public class ConfigService {
 								|| ("LAPS_LSX".equals(subType) && "采集".equals(module))
 								|| ("LAPS_L1S".equals(subType) && "采集".equals(module))
 								|| ("LAPS_GR2".equals(subType) && "采集".equals(module))) {
-							fields.put("data_time",
-									Pub.transform_DateToString(setWorldTime(dt, -8), "yyyy-MM-dd HH:mm:ss.SSSZ"));
+							fields.put("data_time", Pub.transform_DateToString(setWorldTime(dt, -8),
+									"yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
 						} else if ("LAPS_T639".equals(subType) && "采集".equals(module)) {
 							fields.put("data_time",
-									Pub.transform_DateToString(setWorldTime(dt, -14), "yyyy-MM-dd HH:mm:ss.SSSZ"));
+									Pub.transform_DateToString(setWorldTime(dt, -14), "yyyy-MM-dd HH:mm:ss.SSS")
+											+ "+0000");
 						} else {
 							fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 						}
@@ -471,6 +474,7 @@ public class ConfigService {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("deprecation")
 	public Date setWorldTime(Date date, int hours) throws Exception {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
