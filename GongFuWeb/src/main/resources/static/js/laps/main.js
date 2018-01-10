@@ -38,8 +38,28 @@ $(function(){
     });
 
 
+    var func = function () {
+        console.log('get data...');
+        $.each(dataTypes, function (i, v) {
+            //console.log(i);
+            $.each(v, function (i2, v2) {
+                //console.log(v2);
+                setTimeout(function () {
+                    getLapsData(v2, i, '');
+                }, i2*150);
+            });
+        });
+    };
+
+    // 设置定时刷新
+    var delay = 20000;  // 10s刷新一次
+    var timerId = setInterval(func, delay);
+
+    func();
+
         // TODO: IP暂时无过滤
     // TODO: 合并查询，减少等待时间
+    /*
     // 加工状态
     getLapsData('LapsTD', '加工', '10.30.16.224');
     sleep(100);
@@ -89,7 +109,7 @@ $(function(){
 
     getLapsData('GR2', '采集', '');
     //sleep(100);
-
+*/
 
     //$("#Laps_分发").css("margin", "20px");
 
@@ -109,6 +129,12 @@ var dataRecv = {
         // TODO:
     }
 };  // identify whether the data is ready.
+
+var dataTypes = {
+    '采集':[ 'CIMISS', 'T639', 'LSX', 'L1S', 'GR2' ],
+    '加工':[ 'LapsTD', 'LapsRain1Hour', 'LapsWSWD', 'LapsTRH' ],
+    '分发':[ 'LAPS3KMGEO_PRCPV', 'LAPS3KMGEO_EU4', 'LAPS3KMGEO_TD', 'LAPS3KMGEO_T', 'LAPS3KMGEO_RH', 'LAPS3KM_ME']
+};  // define data types
 
 
 
