@@ -46,7 +46,7 @@ $(function(){
                 //console.log(v2);
                 setTimeout(function () {
                     getLapsData(v2, i, '');
-                }, i2*150);
+                }, i2*160);
             });
         });
     };
@@ -249,7 +249,9 @@ function getLapsData(type, module, ip) {
 
             } else {
                 // 查询失败
-                alert("失败！" + d.message);
+                //alert("失败！" + d.message);
+                console.log("%c失败！" + d.message, "color:#c7254e");
+                $("div[id^='" + req.subType + "_" + req.module + "']").attr("class", "list-red");
             }
 
         },
@@ -288,7 +290,11 @@ function getLapsHistory(type, module, size, ip) {
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        beforeSend: function () { },
+        beforeSend: function () {
+            $("#history_thead").html("");
+            $("#history_tbody").html("");
+            $("#modalHeader").html(req.module + "环节" + req.subType + "历史数据");
+        },
         complete: function () { },
         success: function (d) {
             //console.log(d);
@@ -315,7 +321,6 @@ function getLapsHistory(type, module, size, ip) {
                     historyHead += "</tr>";
                     $("#history_thead").html(historyHead);
 
-                    $("#history_tbody").html("");
 
                     // 表内容
                     var trs = "", tds = "", trStatus = "";
@@ -356,11 +361,16 @@ function getLapsHistory(type, module, size, ip) {
                 } else {
                     // 没有数据
                     alert('出错啦！服务器没有返回！@@');
+                    $("#history_thead").html("");
+                    $("#history_tbody").html("There's nothing I can show you. @_@");
                 }
 
             } else {
                 // 查询失败
-                alert("失败！" + d.message);
+                //alert("失败！" + d.message);
+                console.log("%c失败！" + d.message, "color:#c7254e");
+                $("div[id^='" + req.subType + "_" + req.module + "']").attr("class", "list-red");
+                $("#history_tbody").html("There's nothing I can show you. @_@");
             }
 
         },
