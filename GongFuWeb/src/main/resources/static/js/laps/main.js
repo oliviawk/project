@@ -168,7 +168,7 @@ function getLapsData(type, module, ip) {
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
-                if (d.resultData.length > 1) {
+                if (d.resultData.length > 0) {
                     // 有数据
                     var recv = d.resultData;
                     var subType = recv[0].type; // T639
