@@ -72,8 +72,9 @@ $(function(){
 
     getLapsData('LapsTRH', '加工', '10.30.16.224');
     sleep(100);
+    */
 
-
+    /*
     // 分发状态
     // 中转和分发一起取
     getLapsData('LAPS3KMGEO_PRCPV', '分发', '');
@@ -93,7 +94,9 @@ $(function(){
 
     getLapsData('LAPS3KM_ME', '分发', '');
     sleep(100);
+*/
 
+    /*
     // 采集状态
     getLapsData('CIMISS', '采集', '');
     sleep(200);
@@ -108,7 +111,7 @@ $(function(){
     sleep(100);
 
     getLapsData('GR2', '采集', '');
-    //sleep(100);
+    sleep(100);
 */
 
     //$("#Laps_分发").css("margin", "20px");

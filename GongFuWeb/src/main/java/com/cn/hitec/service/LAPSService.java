@@ -71,8 +71,8 @@ public class LAPSService extends BaseController{
                 Date d1 = DateUtils.truncate(new Date(), Calendar.HOUR);
                 String dateStr = DateFormatUtils.format(d1, "yyyy-MM-dd HH:mm:ss.SSSZ");
                 // TODO: just for debug
-                System.out.print("rand: " + esQueryBean.getRand() + " type: " + esQueryBean.getSubType());
-                System.out.println(">>>>>>>datestr " + dateStr);
+//                System.out.print("rand: " + esQueryBean.getRand() + " type: " + esQueryBean.getSubType());
+//                System.out.println(">>>>>>>datestr " + dateStr);
 
 
                 // 构造查询参数
@@ -110,8 +110,8 @@ public class LAPSService extends BaseController{
                 outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
 
                 // TODO: just for debug
-                System.out.println("rand: " + esQueryBean.getRand()
-                        + "------ type: " + ((List<Map>)mapObject.get("resultData")).get(0).get("type"));
+//                System.out.println("rand: " + esQueryBean.getRand()
+//                        + "------ type: " + ((List<Map>)mapObject.get("resultData")).get(0).get("type"));
 
             }
         } catch (Exception e) {
@@ -153,9 +153,23 @@ public class LAPSService extends BaseController{
                 // 不区分过程和类型直接查
                 Date d1 = DateUtils.truncate(new Date(), Calendar.HOUR);
                 String dateStr = DateFormatUtils.format(d1, "yyyy-MM-dd HH:mm:ss.SSSZ");
+
+//              // T639数据较少，查询范围扩大到6天
+                if ("T639".equals(esQueryBean.getSubType())) {
+                    String indexArr[] = new String[6];
+                    for (int i=0; i<6; i++) {
+                        Date d2 = DateUtils.addDays(d1, -i);
+                        String d2Str = DateFormatUtils.format(d2, "yyyy-MM-dd HH:mm:ss.SSSZ");
+                        System.out.println("date2Str: " + d2Str);
+                        String d2Idx = Pub.Index_Head + DateFormatUtils.format(d2, Pub.Index_Food_Simpledataformat);
+                        indexArr[i] = d2Idx;
+                    }
+                    esQueryBean.setIndices(indexArr);
+                }
+
                 // TODO: just for debug
-                System.out.print("rand: " + esQueryBean.getRand() + " type: " + esQueryBean.getSubType());
-                System.out.println(">>>>>>>datestr " + dateStr);
+//                System.out.print("rand: " + esQueryBean.getRand() + " type: " + esQueryBean.getSubType());
+//                System.out.println(">>>>>>>datestr " + dateStr);
 
 
                 // 构造查询参数
@@ -198,8 +212,8 @@ public class LAPSService extends BaseController{
                 outMap.put("server_"+KEY_SPEND,mapObject.get(KEY_SPEND));
 
                 // TODO: just for debug
-                System.out.println("rand: " + esQueryBean.getRand()
-                        + "------ type: " + ((List<Map>)mapObject.get("resultData")).get(0).get("type"));
+//                System.out.println("rand: " + esQueryBean.getRand()
+//                        + "------ type: " + ((List<Map>)mapObject.get("resultData")).get(0).get("type"));
 
             }
         } catch (Exception e) {
