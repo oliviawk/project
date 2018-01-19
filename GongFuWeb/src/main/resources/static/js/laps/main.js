@@ -346,7 +346,7 @@ function getLapsHistory(type, module, size, ip) {
                         tds += "<td>"+ v.aging_status + "</td>";
 
 
-                        if (/异常|迟到/.test(v.fields.aging_status)) {
+                        if (/异常|迟到/.test(v.aging_status)) {
                             trStatus = "danger";
                         } else {
                             trStatus = "info";
