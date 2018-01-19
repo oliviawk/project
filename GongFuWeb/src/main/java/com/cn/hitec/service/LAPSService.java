@@ -42,8 +42,11 @@ public class LAPSService extends BaseController{
                 outMap.put(KEY_MESSAGE,"参数错误！");
             }else{
                 if(StringUtils.isEmpty(esQueryBean.getIndices())){
+                    // 查询今天和昨天的记录
                     String index = Pub.Index_Head + DateFormatUtils.format(new Date(), Pub.Index_Food_Simpledataformat);
-                    esQueryBean.setIndices(new String[] { index });
+                    Date d2 = DateUtils.addDays(new Date(), -1);    // 昨天的日期
+                    String index2 = Pub.Index_Head + DateFormatUtils.format(d2, Pub.Index_Food_Simpledataformat);
+                    esQueryBean.setIndices(new String[] { index, index2 });
                 }
 
                 Map<String,Object> params = new HashMap<>();    //查询参数
