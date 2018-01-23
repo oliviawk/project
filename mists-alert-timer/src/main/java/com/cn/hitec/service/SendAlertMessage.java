@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -26,6 +27,9 @@ public class SendAlertMessage {
 	EsWriteService esWriteService;
 	@Autowired
 	KafkaProducer kafkaProducer;
+
+	@Value("${profile.environment}")
+	private String env;
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
 
@@ -60,10 +64,15 @@ public class SendAlertMessage {
 			params.add(JSON.toJSONString(alertBean));
 			esWriteBean.setData(params);
 			esWriteService.add(esWriteBean); // 将告警信息写入ES
-			// 推送到前端
-			kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
-			// 发送告警消息 到微信
-			HttpPub.httpPost("@all", alertTitle);
+			if ("local".equals(env) || "dev".equals(env)) {
+				// System.out.println("跳过了告警");
+			} else {
+				// System.out.println("没有跳过告警");
+				// 推送到前端
+				kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
+				// 发送告警消息 到微信
+				HttpPub.httpPost("@all", alertTitle);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

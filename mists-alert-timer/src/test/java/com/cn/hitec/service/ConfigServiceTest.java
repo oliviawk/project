@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSON;
@@ -14,6 +15,7 @@ import com.cn.hitec.util.Pub;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles({ "local" })
 public class ConfigServiceTest {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigServiceTest.class);
 
@@ -23,7 +25,7 @@ public class ConfigServiceTest {
 	@Autowired
 	ConfigService service;
 
-	@Test
+	// @Test
 	public void createAlertItem() throws Exception {
 		// 初始化配置文件 不能多次执行
 		logger.info("init config start");
@@ -57,11 +59,11 @@ public class ConfigServiceTest {
 		logger.info("alertMap_machining.size:" + Pub.DIMap_machining.size() + "");
 		logger.info("alertMap_distribute.size:" + Pub.DIMap_distribute.size() + "");
 		configService.createAlertDI("采集", Pub.DIMap_collect);
-		configService.createAlertDI("加工", Pub.DIMap_machining);
-		configService.createAlertDI("分发", Pub.DIMap_distribute);
+		// configService.createAlertDI("加工", Pub.DIMap_machining);
+		// configService.createAlertDI("分发", Pub.DIMap_distribute);
 
 		logger.info("DIMap_t639.size:" + Pub.DIMap_t639.size() + "");
-		configService.createT639DI("FZJC", Pub.DIMap_t639, 5);
+		// configService.createT639DI("FZJC", Pub.DIMap_t639, 5);
 
 		logger.info("------");
 	}
