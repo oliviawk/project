@@ -38,8 +38,28 @@ $(function(){
     });
 
 
+    var func = function () {
+        console.log('get data...');
+        $.each(dataTypes, function (i, v) {
+            //console.log(i);
+            $.each(v, function (i2, v2) {
+                //console.log(v2);
+                setTimeout(function () {
+                    getLapsData(v2, i, '');
+                }, i2*160);
+            });
+        });
+    };
+
+    // 设置定时刷新
+    var delay = 20000;  // 10s刷新一次
+    var timerId = setInterval(func, delay);
+
+    func();
+
         // TODO: IP暂时无过滤
     // TODO: 合并查询，减少等待时间
+    /*
     // 加工状态
     getLapsData('LapsTD', '加工', '10.30.16.224');
     sleep(100);
@@ -52,8 +72,9 @@ $(function(){
 
     getLapsData('LapsTRH', '加工', '10.30.16.224');
     sleep(100);
+    */
 
-
+    /*
     // 分发状态
     // 中转和分发一起取
     getLapsData('LAPS3KMGEO_PRCPV', '分发', '');
@@ -73,7 +94,9 @@ $(function(){
 
     getLapsData('LAPS3KM_ME', '分发', '');
     sleep(100);
+*/
 
+    /*
     // 采集状态
     getLapsData('CIMISS', '采集', '');
     sleep(200);
@@ -88,8 +111,8 @@ $(function(){
     sleep(100);
 
     getLapsData('GR2', '采集', '');
-    //sleep(100);
-
+    sleep(100);
+*/
 
     //$("#Laps_分发").css("margin", "20px");
 
@@ -109,6 +132,12 @@ var dataRecv = {
         // TODO:
     }
 };  // identify whether the data is ready.
+
+var dataTypes = {
+    '采集':[ 'CIMISS', 'T639', 'LSX', 'L1S', 'GR2' ],
+    '加工':[ 'LapsTD', 'LapsRain1Hour', 'LapsWSWD', 'LapsTRH' ],
+    '分发':[ 'LAPS3KMGEO_PRCPV', 'LAPS3KMGEO_EU4', 'LAPS3KMGEO_TD', 'LAPS3KMGEO_T', 'LAPS3KMGEO_RH', 'LAPS3KM_ME']
+};  // define data types
 
 
 
@@ -142,7 +171,7 @@ function getLapsData(type, module, ip) {
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
-                if (d.resultData.length > 1) {
+                if (d.resultData.length > 0) {
                     // 有数据
                     var recv = d.resultData;
                     var subType = recv[0].type; // T639
@@ -223,7 +252,9 @@ function getLapsData(type, module, ip) {
 
             } else {
                 // 查询失败
-                alert("失败！" + d.message);
+                //alert("失败！" + d.message);
+                console.log("%c失败！" + d.message, "color:#c7254e");
+                $("div[id^='" + req.subType + "_" + req.module + "']").attr("class", "list-red");
             }
 
         },
@@ -262,12 +293,16 @@ function getLapsHistory(type, module, size, ip) {
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        beforeSend: function () { },
+        beforeSend: function () {
+            $("#history_thead").html("");
+            $("#history_tbody").html("");
+            $("#modalHeader").html(req.module + "环节" + req.subType + "历史数据");
+        },
         complete: function () { },
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
-                if (d.resultData.length > 1) {
+                if (d.resultData.length > 0) {
                     // 有数据
                     var recv = d.resultData;
                     var subType = recv[0].type; // T639
@@ -289,7 +324,6 @@ function getLapsHistory(type, module, size, ip) {
                     historyHead += "</tr>";
                     $("#history_thead").html(historyHead);
 
-                    $("#history_tbody").html("");
 
                     // 表内容
                     var trs = "", tds = "", trStatus = "";
@@ -312,7 +346,7 @@ function getLapsHistory(type, module, size, ip) {
                         tds += "<td>"+ v.aging_status + "</td>";
 
 
-                        if (/异常|迟到/.test(v.fields.aging_status)) {
+                        if (/异常|迟到/.test(v.aging_status)) {
                             trStatus = "danger";
                         } else {
                             trStatus = "info";
@@ -330,11 +364,16 @@ function getLapsHistory(type, module, size, ip) {
                 } else {
                     // 没有数据
                     alert('出错啦！服务器没有返回！@@');
+                    $("#history_thead").html("");
+                    $("#history_tbody").html("There's nothing I can show you. @_@");
                 }
 
             } else {
                 // 查询失败
-                alert("失败！" + d.message);
+                //alert("失败！" + d.message);
+                console.log("%c失败！" + d.message, "color:#c7254e");
+                $("div[id^='" + req.subType + "_" + req.module + "']").attr("class", "list-red");
+                $("#history_tbody").html("There's nothing I can show you. @_@");
             }
 
         },
