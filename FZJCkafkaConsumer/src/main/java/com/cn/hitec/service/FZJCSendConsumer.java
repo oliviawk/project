@@ -6,20 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.cn.hitec.bean.EsBean;
-import com.cn.hitec.feign.client.EsService;
-
 @Service
-public class FZJCSendConsumer extends Consumer{
+public class FZJCSendConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(FZJCSendConsumer.class);
     private static String topic = "SEND";
     private static String group;
@@ -103,6 +96,7 @@ public class FZJCSendConsumer extends Consumer{
 									obj.put("occur_time", end.getTime());
 
 									toEsJsons.add(obj.toString());
+
 									System.out.println(obj.toString());
 								}
 
@@ -242,6 +236,7 @@ public class FZJCSendConsumer extends Consumer{
 										obj.put("occur_time", end.getTime());
 
 										toEsJsons.add(obj.toString());
+
 										System.out.println(obj.toString());
 									}
 

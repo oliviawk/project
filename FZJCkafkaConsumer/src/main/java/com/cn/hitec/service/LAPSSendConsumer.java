@@ -1,14 +1,8 @@
 package com.cn.hitec.service;
 
-import com.cn.hitec.bean.EsBean;
-import com.cn.hitec.feign.client.EsService;
 import net.sf.json.JSONObject;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class LAPSSendConsumer extends Consumer{
+public class LAPSSendConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPSSendConsumer.class);
     private static String topic = "SEND";
 	private static String group;

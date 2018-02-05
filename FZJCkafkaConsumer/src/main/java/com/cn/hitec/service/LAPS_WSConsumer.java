@@ -5,19 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import net.sf.json.JSONObject;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.hitec.bean.EsBean;
-import com.cn.hitec.feign.client.EsService;
-
 @Service
-public class LAPS_WSConsumer extends Consumer{
+public class LAPS_WSConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPS_WSConsumer.class);
 	private static String topic = "WS";
 	private static String group;

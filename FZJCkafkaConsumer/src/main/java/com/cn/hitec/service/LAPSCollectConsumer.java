@@ -4,7 +4,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -13,11 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
-public class LAPSCollectConsumer extends Consumer{
+public class LAPSCollectConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPSCollectConsumer.class);
     private static String topic = "LAPS";
 	private static String group;

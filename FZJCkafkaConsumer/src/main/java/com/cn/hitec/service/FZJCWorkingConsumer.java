@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FZJCWorkingConsumer extends Consumer{
+public class FZJCWorkingConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(FZJCWorkingConsumer.class);
     private static String topic = "FZJC";
 	private static String group;
