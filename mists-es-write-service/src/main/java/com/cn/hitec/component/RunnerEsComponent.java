@@ -3,8 +3,10 @@ package com.cn.hitec.component;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.service.ESClientAdminService;
+import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,9 @@ public class RunnerEsComponent  implements CommandLineRunner {
     @Autowired
     ESClientAdminService clientAdminService;
 
+    @Value("${es.indexHeader}")
+    private String indexHeader;
+
     @Override
     public void run(String... strings) throws Exception {
         //初始化ES连接信息
@@ -38,6 +43,12 @@ public class RunnerEsComponent  implements CommandLineRunner {
 
         clientAdminService.getClusterHealth();
         configService.initAlertMap();
+
+        Pub.Index_Head = indexHeader;
+
+        if(Pub.DI_ConfigMap.size() < 1){
+            log.error("初始化数据异常");
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -17,15 +18,9 @@ import java.util.ResourceBundle;
 public class LAPSCollectConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPSCollectConsumer.class);
     private static String topic = "LAPS";
-	private static String group;
 	private static String type = "LAPS";
 
-	static{
-		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		group = bundle.getString("LAPS.group.id");
-	}
-
-    public LAPSCollectConsumer() {
+    public LAPSCollectConsumer(@Value("${LAPS.group.id}")String group) {
 		super(topic,group,type);
     }
 
@@ -46,9 +41,7 @@ public class LAPSCollectConsumer extends MsgConsumer {
 		JSONObject obj = new JSONObject();
 		JSONObject sub = new JSONObject();
 
-		if("CMISS".equals(types[1])){
-			types[1] = "CIMISS";
-		}
+
 		obj.put("type",types[1]);
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 		Date endTime = null;

@@ -2,10 +2,12 @@ package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,25 +61,65 @@ public class ESClientAdminService {
         return map;
     }
 
-    public String[] indexExists(String[] indices){
+    public String[] indexExists(String[] indices) throws Exception{
         if(indices == null){
             return null;
         }
         List<String> list = new ArrayList();
         for(int i = 0 ; i < indices.length ; i++){
-            IndicesExistsRequest request = new IndicesExistsRequest(indices[i]);
-            IndicesExistsResponse response = es.client.admin().indices().exists(request).actionGet();
+            if(Pub.indexExitsList.contains(indices[i])){
+                list.add(indices[i]);
+                continue;
+            }
+            IndicesExistsResponse response = es.client.admin().indices().prepareExists(indices[i]).execute().actionGet();
             if (response.isExists()) {
                 list.add(indices[i]);
+                Pub.indexExitsList.add(indices[i]);
             }else{
-                log.warn("------------未查询到index:"+indices[i]);
+                log.warn(indices[i]+"不存在");
             }
         }
 
-        String[] resultIndices = new String[list.size()];
-        for (int i = 0; i < list.size() ; i++){
-            resultIndices[i] = list.get(i);
-        }
+        String[] resultIndices = list.toArray(new String[list.size()]);
+
         return resultIndices;
     }
+
+
+
+    /**
+     * 查询单条数据
+     *
+     * @param indexs
+     * @param type
+     * @param id
+     * @return
+     */
+    public Map<String, Object> getDocumentById(String[] indexs, String type, String id) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+
+            String[] indices = indexExists(indexs);
+            if (indices == null || indices.length < 1) {
+                return resultMap;
+            }
+            for (String s : indices){
+//			    System.out.println(s+"--"+type+"---"+id);
+                GetResponse response = es.client.prepareGet(s, type, id).get();
+                if (response != null && response.getSource() != null){
+                    resultMap = response.getSource();
+                    resultMap.put("_id", response.getId());
+                    resultMap.put("_type", response.getType());
+                    resultMap.put("_index", response.getIndex());
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return resultMap;
+        }
+
+    }
+
 }

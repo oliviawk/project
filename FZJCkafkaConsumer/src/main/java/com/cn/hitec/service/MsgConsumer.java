@@ -16,7 +16,6 @@ public class MsgConsumer {
     @Autowired
     EsService esService;
 
-
     public String getTopic() {
         return topic;
     }
@@ -84,8 +83,8 @@ public class MsgConsumer {
 
                 }
                 useaTime = System.currentTimeMillis() - startTime;
-                //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
-                if (list.size() > 100 || (list.size() > 0 && useaTime > 5000)) {
+                //当list数据量，大于2000 ， 或者存储时间超过5秒 ， 调用入ES接口一次
+                if (list.size() > 1000 || (list.size() > 0 && useaTime > 5000)) {
                     esBean.setData(list);
                     String responst = esService.add(esBean);
                     System.out.println(responst);
@@ -93,6 +92,7 @@ public class MsgConsumer {
                     list.clear();
                 }
                 consumer.commitSync();
+
             }catch (Exception e){
                 logger.error("!!!!!!error");
                 logger.debug("",e);

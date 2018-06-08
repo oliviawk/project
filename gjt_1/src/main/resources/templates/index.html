@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://java.sun.com/jsf/html">
+
+<head>
+  <meta charset="UTF-8"></meta>
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/bootstrap.css"></link>
+  <link rel="stylesheet" href="../css/bootstrap-select.css"></link>
+  <link rel="stylesheet" href="../css/style.css"></link>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="header">
+        <div class="logo">气象业务综合监控系统</div>
+      </div>
+    </div>
+    <div class="row">
+       <div class="col-md-3">
+        <div class="wrap">
+            <div class="panel panel-primary">
+                <div class="panel-heading">告警类型</div>
+                <div class="panel-body" style="height:650px;" id="alarmTypeNode">
+                    <!-- <h3>业务告警</h3>
+                    <div class="task">
+                        <h4><a role="button" class="alarmType"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span> 辅助决策</a></h4>
+	                    <ul class="warning-type">
+	                      <li>确认告警
+	                          <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+	                      </li>
+	                      <li>关闭告警
+	                          <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+	                      </li>
+	                      <li>取消告警
+	                          <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+	                      </li>
+	                    </ul>
+                    </div>
+                    <div class="task">
+                        <h4><a role="button" class="alarmType"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span> LPAS</a></h4>
+	                    <ul class="warning-type">
+	                      <li>确认告警
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+                          <li>关闭告警
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+                          <li>取消告警
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+	                    </ul>
+                    </div>
+                    <h3>基础资源告警</h3>
+                    <div class="task">
+	                    <ul class="warning-type">
+	                      <li>10.20.46.21
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+                          <li>10.20.46.22
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+                          <li>10.20.46.23
+                              <div class="right"><span class="badge type1">3</span><span class="badge type2">2</span><span class="badge type3">4</span></div>
+                          </li>
+	                    </ul>
+                    </div> -->
+                </div>
+              </div>
+            </div>
+        </div>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-10">
+            <div class="wrap" style="position:relative;">
+              <div class="tab-bar">
+                <form class="form-inline">
+                  <label>告警数</label>
+                  <button type="button" class="btn btn-default" id="all">全部</button>
+                  <button type="button" class="btn btn-success">999</button>
+                  <button type="button" class="btn btn-warning">200</button>
+                  <button type="button" class="btn btn-danger">233</button>
+                  <div class="form-group">
+                    <select id="showColumn" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="选择列">
+                      <option value="1">告警类型</option>
+                      <option value="2">等级</option>
+                      <option value="3">第一次发生时间</option>
+                      <option value="4">告警对象</option>
+                      <option value="5">告警描述</option>
+                      <option value="6">告警地址</option>
+                      <option value="7">处理状态</option>
+                      <option value="8">解决方式</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <select id="selectTime" class="selectpicker" data-hide-disabled="true" data-size="6" title="报警时间">
+                      <option value="1">1小时以内</option>
+                      <option value="10">10小时以内</option>
+                      <option value="24">24小时以内</option>
+                      <option value="48">48小时以内</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <select id="selectType" class="selectpicker" data-hide-disabled="true" data-size="6" title="分类显示">
+                      <option value="type">按类型</option>
+                      <option value="level">按等级</option>
+                      <option value="name">按来源</option>
+                      <option value="">按状态</option>
+                      <option value="">按IP</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="dealone"><a href="#waiting" aria-controls="waiting" role="tab" data-toggle="tab">待处理</a></li>
+                <li role="presentation" id="dealtwo"><a href="#waiting" aria-controls="waiting" role="tab" data-toggle="tab">已处理</a></li>
+                <li role="presentation" id="dealthree"><a href="#waiting" aria-controls="waiting" role="tab" data-toggle="tab">处理中</a></li>
+                <li role="presentation" id="dealfour"><a href="#waiting" aria-controls="waiting" role="tab" data-toggle="tab">全部</a></li>
+              </ul>
+
+              <div class="panel-group" id="accordion1">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h6 class="panel-title" style="text-align:center">
+                      <a data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">
+                        点击全局搜索
+                      </a>
+                    </h6>
+                  </div>
+                  <div id="collapseOne1" class="panel-collapse collapse on">
+                    <div class="panel-body">
+                      <select id="search_11" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="告警类型" onchange="chk2()">
+                        <option name="test1" value="连通性告警">连通性告警</option>
+                        <option name="test1" value="设备CPU告警" >设备CPU告警</option>
+                        <option name="test1" value="主机内存告警" >主机内存告警</option>
+                        <option name="test1" value="阈值警告">阈值警告</option>
+                      </select>
+                      <select id="search_22" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="告警等级" onchange="chk2()">
+                        <option name="test2" value="1">1</option>
+                        <option name="test2" value="2" >2</option>
+                        <option name="test2" value="3">3</option>
+                      </select>
+                      <select id="search_33" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="告警对象" onchange="chk2()" >
+                        <option name="test3" value="核心路由器">核心路由器</option>
+                        <option name="test3" value="云资源">云资源</option>
+                        <option name="test3" value="数据传送">数据传送</option>
+                        <option name="test3" value="数据共享">数据共享</option>
+                      </select>
+                      <select id="search_44" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="处理状态" onchange="chk2()">
+                        <option name="test3" value="待处理">待处理</option>
+                        <option name="test3" value="处理中">处理中</option>
+                        <option name="test3" value="已处理">已处理</option>
+                      </select>
+                      <select id="search_55" class="selectpicker" data-live-search="true"  multiple="multiple" data-hide-disabled="true" data-size="6" title="地址" onchange="chk2()">
+                        <option name="test3" value="10.20.65.199">10.20.65.199</option>
+                        <option name="test3" value="10.20.67.199">10.20.67.199</option>
+                        <option name="test3" value="10.20.67.177">10.20.67.177</option>
+                        <option name="test3" value="10.20.67.176">10.20.67.176</option>
+                      </select>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="waiting">
+                  <div class="wrap" style="overflow-x: auto; overflow-y: auto; height: 650px; ">
+                    <table class="table table-bordered table-striped table-lg" id="table_1" >
+                      <tr>
+                        <th>告警类型</th>
+                        <th>等级</th>
+                        <th>第一次发生时间</th>
+                        <th>告警对象</th>
+                        <th>告警地址</th>
+                        <th>处理状态</th>
+                        <th>告警描述</th>
+                        <th>解决方式</th>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="doing">...</div>
+                <div role="tabpanel" class="tab-pane" id="finish">...</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="wrap">
+              <div class="panel panel-primary">
+                <div class="panel-heading">相关任务</div>
+                <div class="panel-body" style="height:650px;">
+                  <div class="task">
+                    <h4><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                      告警处理
+                    </h4>
+                    <ul>
+                      <li>确认告警</li>
+                      <li>关闭告警</li>
+                      <li>取消告警</li>
+                      <li>派发工单</li>
+                    </ul>
+                  </div>
+                  <div class="task">
+                    <h4><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+                      工具箱
+                    </h4>
+                    <ul>
+                      <li>值班服务台</li>
+                    </ul>
+                  </div>
+                  <div class="task">
+                    <h4><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                      配置
+                    </h4>
+                    <ul>
+                      <li>告警发布配置</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="../js/bootstrap.js"></script>
+  <script type="text/javascript" src="../js/bootstrap-select.js"></script>
+  <!-- <script type="text/javascript" src="../js/cc.js"></script> -->
+  <script type="text/javascript" src="../js/alarm/alarmBrowse.js"></script>
+</body>
+
+</html>

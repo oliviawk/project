@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+.login_background {
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	background-attachment: fixed;
+}
+.a {
+	color:red
+}
+
+.position_div1{
+	position:absolute;
+	left:70%;
+	top:20%;
+	border:1px solid green;
+	width:250px;
+	height:135px;
+	background:white
+}
+.main_div2{
+	position:absolute;
+	left:1100px;
+	top:100px;
+	border:3px solid grey;
+	width:700px;
+	height:400px;
+	background:white;
+	font-size:30px;
+	color:black;
+}
+#one{width:300px;height:50px;border:10px solid green;-moz-border-bottom-colors: #555 #666 #777 #888 #999 #aaa #bbb #ccc;-moz-border-top-colors: #555 #666 #777 #888 #999 #aaa #bbb #ccc;-moz-border-left-colors: #555 #666 #777 #888 #999 #aaa #bbb #ccc;-moz-border-right-colors: #555 #666 #777 #888 #999 #aaa #bbb #ccc;}

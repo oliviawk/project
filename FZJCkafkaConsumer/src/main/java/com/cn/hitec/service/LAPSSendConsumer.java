@@ -15,20 +15,14 @@ import java.util.regex.Pattern;
 public class LAPSSendConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPSSendConsumer.class);
     private static String topic = "SEND";
-	private static String group;
 	private static String type = "LAPS";
-
-	static{
-		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		group = bundle.getString("LAPS.group.id");
-	}
 
     @Value("${LAPS.send.target.ips}")
     private String ips;
     @Value("${LAPS.datatype}")
     private String datatypes;
 
-    public LAPSSendConsumer() {
+    public LAPSSendConsumer(@Value("${LAPS.group.id}")String group) {
 		super(topic,group,type);
     }
 
@@ -43,8 +37,8 @@ public class LAPSSendConsumer extends MsgConsumer {
     	}
 
     	try{
-
-			String[] lines = msg.split("※");
+//			System.out.println("----> : "+msg);
+			String[] lines = msg.split("\\※|\\?");
 			String date = "";
 			String beginTime = "";
 			String endTime = "";

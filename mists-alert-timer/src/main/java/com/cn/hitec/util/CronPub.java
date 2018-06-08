@@ -59,6 +59,7 @@ public class CronPub {
                 startDate = exp.getNextValidTimeAfter(startDate);
             }
         } catch (Exception e) {
+            System.out.println(cron);
             e.printStackTrace();
             timeList = null;
         } finally {
@@ -183,10 +184,10 @@ public class CronPub {
         }
     }
 
-
-    public static void main(String[] args){
-
-        System.out.println(getLastTimeBycron_String("0 0 * * * ? *","yyyy-MM-dd HH:mm:ss",new Date()));
-        System.out.println(11);
-    }
+//
+//    public static void main(String[] args){
+//
+//        System.out.println(getLastTimeBycron_String("0 0 * * * ? *","yyyy-MM-dd HH:mm:ss",new Date()));
+//        System.out.println(11);
+//    }
 }

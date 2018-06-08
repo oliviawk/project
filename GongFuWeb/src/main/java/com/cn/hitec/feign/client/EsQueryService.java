@@ -3,6 +3,7 @@ package com.cn.hitec.feign.client;
 
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
+import com.cn.hitec.bean.EsQueryBean_web;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +57,14 @@ public interface EsQueryService {
 
     @RequestMapping(value="/query/indexIsExist",method= RequestMethod.POST,consumes="application/json")
     public Map<String,Object> indexIsExist(@RequestBody EsQueryBean_Exsit esQueryBean);
+
+
+    /**
+     * 聚合查询流程图各环节状态
+     * 2018.05.18  fukl
+     * @return
+     */
+    @RequestMapping(value = "/query/lctAggQuery", method = RequestMethod.POST, consumes = "application/json")
+    public Map<String, Object> lctAggQuery(@RequestBody EsQueryBean_web  esQueryBean);
 
 }

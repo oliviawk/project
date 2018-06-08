@@ -89,7 +89,7 @@ public class ESRepository {
             public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
             }
         }).setBulkActions(5000)
-                .setBulkSize(new ByteSizeValue(5, ByteSizeUnit.MB))
+                .setBulkSize(new ByteSizeValue(3, ByteSizeUnit.MB))
                 .setFlushInterval(TimeValue.timeValueSeconds(5))
                 .setConcurrentRequests(1)
                 .setBackoffPolicy(

@@ -8,5 +8,6 @@ public class MistsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MistsApplication.class, args);
+
 	}
 }

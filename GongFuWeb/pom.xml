@@ -122,6 +122,7 @@
             <artifactId>kafka-clients</artifactId>
             <version>RELEASE</version>
         </dependency>
+
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>

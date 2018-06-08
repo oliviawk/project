@@ -7,9 +7,10 @@ public class DataBean {
 	private String name = "";
 	private String should_time; // 应到时间
 	private String last_time; // 最晚时间
-	private String aging_status = "待处理"; // 时效状态
+	private String aging_status = "未处理"; // 时效状态
 	private Map<String, Object> fields;
 	private String serviceType = ""; // 所属业务(1级)
+	private String startMoniter = "yes";
 
 	public String getName() {
 		return name;
@@ -65,5 +66,13 @@ public class DataBean {
 
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
+	}
+
+	public String getStartMoniter() {
+		return startMoniter;
+	}
+
+	public void setStartMoniter(String startMoniter) {
+		this.startMoniter = startMoniter;
 	}
 }

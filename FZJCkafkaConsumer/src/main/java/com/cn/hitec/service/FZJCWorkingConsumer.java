@@ -7,21 +7,16 @@ import java.util.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FZJCWorkingConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(FZJCWorkingConsumer.class);
     private static String topic = "FZJC";
-	private static String group;
 	private static String type = "FZJC";
 
-	static{
-		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		group = bundle.getString("FZJC.group.id");
-	}
-
-    public FZJCWorkingConsumer() {
+    public FZJCWorkingConsumer(@Value("${FZJC.group.id}")String group) {
 		super(topic,group,type);
     }
 

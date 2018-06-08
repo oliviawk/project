@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cn.hitec.domain.DataInfo;
+import com.cn.hitec.feign.client.DataSourceEsInterface;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.CronPub;
 import com.cn.hitec.util.Pub;
 
+import javax.sql.DataSource;
+
 @Service
 public class ConfigService {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
@@ -30,6 +36,10 @@ public class ConfigService {
 	EsQueryService esQueryService;
 	@Autowired
 	EsWriteService esWriteService;
+	@Autowired
+	DataInfoRepository dataInfoRepository;
+	@Autowired
+	DataSourceEsInterface dataSourceEsInterface;
 
 	/**
 	 * 初始化 采集 DI信息表
@@ -54,7 +64,7 @@ public class ConfigService {
 		jsonList.add(
 				"{\"DI_name\":\"L1S\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/l1s/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
-				"{\"DI_name\":\"GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/lgr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
+				"{\"DI_name\":\"GR2\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":1500,\"last_time\":2400,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.242\",\"path\":\"/home/laps/laps_data/lapsprd/gr2/\",\"file_name\":\"\",\"transfer_type\":\"\",\"module\":\"采集\",\"serviceType\":\"LAPS\"}");
 
 		EsWriteBean esWriteBean = new EsWriteBean();
 		esWriteBean.setIndex("config");
@@ -132,9 +142,10 @@ public class ConfigService {
 				"{\"DI_name\":\"LAPS3KMGEO_RH\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2700,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KM_ME\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":3600,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.0.74.226\",\"path\":\"/home/datamgr/cvs_new/laps/gr2/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
+
+		// 10.30.16.220服务器的LAP分发
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KMGEO_PRCPV\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":3000,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
-		// 10.30.16.220服务器的LAP分发
 		jsonList.add(
 				"{\"DI_name\":\"LAPS3KMGEO_EU4\",\"time_interval\":\"0 0 * * * ? *\",\"should_time\":2400,\"last_time\":4200,\"data_type\":\"\",\"data_source\":\"\",\"contacts\":\"\",\"IP\":\"10.30.16.220\",\"path\":\"/home/datamgr/laps/jpg/\",\"file_name\":\"\",\"transfer_type\":\"ftp推送\",\"module\":\"分发\",\"serviceType\":\"LAPS\"}");
 		jsonList.add(
@@ -190,201 +201,335 @@ public class ConfigService {
 	}
 
 	public void initAlertMap() {
-		List<Map> listMap_Config = getConfigAlert();
-		if (listMap_Config != null) {
-			for (Map map : listMap_Config) {
-				if (map.containsKey("DI_name")) {
-					String DI_name = map.get("DI_name").toString();
-					String IP = map.get("IP").toString();
-					String serviceType = map.get("serviceType").toString();
-					String module = map.get("module").toString();
-					if ("FZJC".equals(serviceType) && ("T639".equals(DI_name) || "风流场".equals(DI_name))) {
-						Pub.DIMap_t639.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-					} else if ("采集".equals(module)) {
-						Pub.DIMap_collect.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-					} else if ("加工".equals(module)) {
-						Pub.DIMap_machining.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-					} else if ("分发".equals(module)) {
-						Pub.DIMap_distribute.put(DI_name + "," + IP + "," + serviceType + "," + module, map);
-					}
-				}
+
+		/*  ------------ > 3.7日修改的新代码 < ------------------*/
+		List<DataInfo> listDataInfo = dataInfoRepository.findAllChilden(3);
+
+		//循环所有数据,区分是采集、加工、分发 的数据，分别存入不同的map
+		for (DataInfo di : listDataInfo){
+			Map<String ,Object> map = new HashMap<>();
+			map.put("DI_name",di.getName());
+			map.put("sub_name",di.getSub_name());
+			map.put("time_interval",di.getMonitor_times());
+			map.put("should_time",di.getShould_time());
+			map.put("last_time",di.getTimeout_threshold());
+			map.put("IP",di.getIp());
+			map.put("path",di.getFile_path());
+			map.put("module",di.getModule());
+			map.put("serviceType",di.getService_type());
+			map.put("startMonitor",di.getStart_moniter());
+			map.put("regular",di.getRegular());
+			map.put("size_define",StringUtils.isEmpty(di.getFile_size_define()) ? "" : di.getFile_size_define());
+			map.put("name_define",StringUtils.isEmpty(di.getFile_name_define()) ? "" : di.getFile_name_define());
+
+			if ("FZJC".equals(di.getService_type()) && ("T639".equals(di.getName()) || "风流场".equals(di.getName()))) {
+				Pub.DIMap_t639.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+
+			} else if ("采集".equals(di.getModule())) {
+				Pub.DIMap_collect.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+
+			} else if ("加工".equals(di.getModule())) {
+				Pub.DIMap_machining.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+
+			} else if ("分发".equals(di.getModule())) {
+				Pub.DIMap_distribute.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+
+			} else if("DS".equals(di.getModule())){
+				Pub.DIMap_DS.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+
 			}
+
 		}
 
-		/*---------------------采集------------------------*/
-		/*
-		 * List<Map> listMap_collect = getConfigAlert("collect"); for (Map map :
-		 * listMap_collect) { String DI_name = map.get("DI_name").toString(); if
-		 * ("T639".equals(DI_name) || "风流场".equals(DI_name)) {
-		 * Pub.DIMap_t639.put(DI_name, map); } else {
-		 * Pub.DIMap_collect.put(DI_name, map); }
-		 * 
-		 * } List<Map> listMap_machining = getConfigAlert("machining"); for (Map
-		 * map : listMap_machining) { String DI_name =
-		 * map.get("DI_name").toString(); if ("T639".equals(DI_name) ||
-		 * "风流场".equals(DI_name)) { Pub.DIMap_t639.put(DI_name, map); } else {
-		 * Pub.DIMap_machining.put(DI_name, map); }
-		 * 
-		 * } List<Map> listMap_distribute = getConfigAlert("distribute"); for
-		 * (Map map : listMap_distribute) { String DI_name =
-		 * map.get("DI_name").toString(); if ("T639".equals(DI_name) ||
-		 * "风流场".equals(DI_name)) { Pub.DIMap_t639.put(DI_name, map); } else {
-		 * Pub.DIMap_distribute.put(DI_name, map); }
-		 * 
-		 * }
-		 */
+		List<Object> listStrategy = dataInfoRepository.findDataStrategyAll();
+		//循环所有数据,区分是采集、加工、分发 的数据，分别存入不同的map
+		for (Object di : listStrategy){
+			Map<String ,Object> map = new HashMap<>();
+
+			List list = JSON.parseArray(JSON.toJSONString(di),String.class);
+			if(list.size() == 11 ){
+				map.put("serviceType",list.get(0));
+				map.put("DI_name",list.get(1));
+				map.put("module",list.get(2));
+				map.put("ip",list.get(3));
+				map.put("strategy_name",list.get(4));
+				map.put("wechart_send_enable",list.get(5));
+				map.put("wechart_content",list.get(6));
+				map.put("sms_send_enable",list.get(7));
+				map.put("sms_content",list.get(8));
+				map.put("send_users",list.get(9));
+				map.put("regular",list.get(10));
+
+				Pub.DI_ConfigMap.put(list.get(0)+","+list.get(1)+","+list.get(2)+","+list.get(3), map);
+			}
+
+		}
+
 	}
 
 	/**
 	 * 生成 ID 数据表（节目表）
 	 * 
-	 * @param type
-	 * @param module
+	 * @param DIMap    基础数据配置
+	 * @param module   环节名
 	 */
-	public void createAlertDI(String module, Map<String, Object> DIMap) {
+	public void createAlertDI(String module, Map<String, Map> DIMap,int day,Date runDate) throws Exception{
 
 		if (DIMap == null || DIMap.size() < 1) {
-			logger.warn("createAlertItem is fail ： alertMap is null or 0 in length");
+			logger.warn("createAlertDI is fail ： alertMap is null or 0 in length");
 			return;
 		}
+		// 生成日历插件， 计算出 第二天的开始时间和结束时间
+		Calendar calendar = Calendar.getInstance();
+
+		Date date = new Date();
+
+		calendar.setTime(date);
+
+		calendar.add(Calendar.DAY_OF_MONTH, day);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		Date startDate = calendar.getTime();
+
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		Date endDate = calendar.getTime();
+
+		Calendar calendarYesterday = Calendar.getInstance();
+		calendarYesterday.setTime(startDate);
+		calendarYesterday.add(Calendar.DAY_OF_MONTH, -1);
+		Date startDateYesterday = calendarYesterday.getTime();
+
+		String strIndex = Pub.Index_Head + Pub.transform_DateToString(startDate, Pub.Index_Food_Simpledataformat);
+		String strIndexYesterday = Pub.Index_Head
+				+ Pub.transform_DateToString(startDateYesterday, Pub.Index_Food_Simpledataformat);
+		Map<String, Object> map = null;
+		// 循环 告警配置信息
+		for (String key : DIMap.keySet()) {
+			map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
+
+			try {
+				String cron = map.get("time_interval").toString();
+				List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
+				List<String> listDataBean = new ArrayList<>();
+				List<String> listDataBeanYesterday = new ArrayList<>();
+				String serviceType = map.get("serviceType").toString();
+				String subType = map.get("DI_name").toString();
+				// if(!"炎热指数".equals(subType)){
+				// continue;
+				// }
+				String name = map.get("sub_name").toString();;
+				String IP = map.get("IP").toString();
+				String path = map.get("path").toString();
+
+				for (Date dt : timeList) {
+					if (runDate.getTime() > dt.getTime()){
+						continue;
+					}
+					DataBean dataBean = new DataBean();
+					dataBean.setName(name);
+					dataBean.setServiceType(serviceType);
+					dataBean.setType(subType);
+					// 这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
+					int cron_shouldTime = Integer.valueOf(map.get("should_time").toString()) * 60;
+					int cron_lastTime = Integer.valueOf(map.get("last_time").toString()) * 60;
+					dataBean.setShould_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_shouldTime,
+							"yyyy-MM-dd HH:mm:ss.SSSZ"));
+					dataBean.setLast_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_shouldTime + cron_lastTime,
+							"yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+					dataBean.setAging_status("未处理");
+					dataBean.setStartMoniter(map.get("startMonitor").toString());
+
+					Map<String, Object> fields = new HashMap<>();
+					fields.put("module", module);
+					fields.put("ip_addr", IP);
+//					fields.put("file_name", path);
+
+					// 用beforeHour和afterHour获取时区转换后是否变成了昨天
+					int beforeHour = dt.getHours();
+					// 对资料的时区不是北京时的数据进行加减处理
+					if (("CIMISS".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+							|| ("LSX".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+							|| ("L1S".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+							|| ("GR2".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))) {
+						dt = setWorldTime(dt, -8);
+						fields.put("data_time",
+								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
+					} else if ("T639".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType)) {
+						dt = setWorldTime(dt, -14);
+						fields.put("data_time",
+								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
+					} else {
+						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+					}
+					//添加文件大小范围和文件名
+					fields.put("file_size_define",map.get("size_define").toString());
+					String nameDefine = map.get("name_define").toString();
+					String fileName = "";
+					if (StringUtils.isNotEmpty(nameDefine)){
+						String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
+						fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(dt,timeFormat));
+					}
+					fields.put("file_name",path+fileName);
+
+					int afterHour = dt.getHours();
+
+					dataBean.setFields(fields);
+
+					if (beforeHour < afterHour) {
+						listDataBeanYesterday.add(JSON.toJSONString(dataBean));
+					} else {
+						listDataBean.add(JSON.toJSONString(dataBean));
+					}
+				}
+				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				// 统计录入数据条数
+				int addNum = 0;
+				// 分批次录入数据,当天
+				EsWriteBean esWriteBean = new EsWriteBean();
+				esWriteBean.setIndex(strIndex);
+				// esWriteBean.setType(type);
+				esWriteBean.setData(listDataBean);
+				Map<String, Object> response = esWriteService.insert1(esWriteBean);
+				Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
+				if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
+					addNum += (int) responseData.get("insert_number");
+				} else {
+					logger.error(module + "->" + map.get("DI_name") + "->" + response.get(Pub.KEY_MESSAGE));
+				}
+				// 分批次录入数据,当天的前一天
+				esWriteBean.setIndex(strIndexYesterday);
+				esWriteBean.setData(listDataBeanYesterday);
+				response = esWriteService.insert1(esWriteBean);
+				responseData = (Map<String, Object>) response.get("resultData");
+				if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
+					addNum += (int) responseData.get("insert_number");
+				} else {
+					logger.error(module + "->" + map.get("DI_name") + "->" + response.get(Pub.KEY_MESSAGE));
+				}
+
+				logger.info(module + "->" + map.get("DI_name") + "->录入数据条数：" + addNum);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	/**
+	 * 定时生成数据源节目表
+	 * @param date
+	 * @param num
+	 */
+	public void makeProjectTable(Date date , int num , Map<String, Map> DIMap,Date runDate){
+		if (DIMap == null || DIMap.size() < 1) {
+			logger.warn("makeProjectTable is fail ： alertMap is null or 0 in length");
+			return;
+		}
+
 		try {
+			List<Object> outData = new ArrayList<Object>();
 
-			// 生成日历插件， 计算出 第二天的开始时间和结束时间
-			Calendar calendar = Calendar.getInstance();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DAY_OF_MONTH, num);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			Date startDate = cal.getTime();
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			Date endDate = cal.getTime();
 
-			Date date = new Date();
 
-			calendar.setTime(date);
-
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
-
-			Date startDate = calendar.getTime();
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			Date endDate = calendar.getTime();
-
-			Calendar calendarYesterday = Calendar.getInstance();
-			calendarYesterday.setTime(startDate);
-			calendarYesterday.add(Calendar.DAY_OF_MONTH, -1);
-			Date startDateYesterday = calendarYesterday.getTime();
-
-			String strIndex = Pub.Index_Head + Pub.transform_DateToString(startDate, Pub.Index_Food_Simpledataformat);
-			String strIndexYesterday = Pub.Index_Head
-					+ Pub.transform_DateToString(startDateYesterday, Pub.Index_Food_Simpledataformat);
 			Map<String, Object> map = null;
 			// 循环 告警配置信息
 			for (String key : DIMap.keySet()) {
-				map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
-
 				try {
+					map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
+
 					String cron = map.get("time_interval").toString();
-					List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
-					List<String> listDataBean = new ArrayList<>();
-					List<String> listDataBeanYesterday = new ArrayList<>();
-					String serviceType = map.get("serviceType").toString();
 					String subType = map.get("DI_name").toString();
-					// if(!"炎热指数".equals(subType)){
-					// continue;
-					// }
-					String name = "";
+					String name = map.get("sub_name").toString();;
 					String IP = map.get("IP").toString();
 					String path = map.get("path").toString();
+					String[] shuld_time = map.get("should_time").toString().split(",");
+					String[] last_time = map.get("last_time").toString().split(",");
 
-					for (Date dt : timeList) {
-						DataBean dataBean = new DataBean();
-						dataBean.setName(name);
-						dataBean.setServiceType(serviceType);
-						dataBean.setType(subType);
-						// 这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
-						int cron_shouldTime = Integer.valueOf(map.get("should_time").toString());
-						int cron_lastTime = Integer.valueOf(map.get("last_time").toString());
-						dataBean.setShould_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_shouldTime,
-								"yyyy-MM-dd HH:mm:ss.SSSZ"));
-						dataBean.setLast_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_lastTime,
-								"yyyy-MM-dd HH:mm:ss.SSSZ"));
-
-						dataBean.setAging_status("未处理");
-
-						Map<String, Object> fields = new HashMap<>();
-						fields.put("module", module);
-						fields.put("ip_addr", IP);
-						fields.put("file_name", path);
-
-						// 用beforeHour和afterHour获取时区转换后是否变成了昨天
-						int beforeHour = dt.getHours();
-						// 对资料的时区不是北京时的数据进行加减处理
-						if (("CIMISS".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-								|| ("LSX".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-								|| ("L1S".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-								|| ("GR2".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))) {
-							dt = setWorldTime(dt, -8);
-							fields.put("data_time",
-									Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
-						} else if ("T639".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType)) {
-							dt = setWorldTime(dt, -14);
-							fields.put("data_time",
-									Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
-						} else {
-							fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
-						}
-						int afterHour = dt.getHours();
-
-						dataBean.setFields(fields);
-
-						if (beforeHour < afterHour) {
-							listDataBeanYesterday.add(JSON.toJSONString(dataBean));
-						} else {
-							listDataBean.add(JSON.toJSONString(dataBean));
+					List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss", startDate, endDate);
+					int regular = Integer.parseInt(map.get("regular").toString());
+					if(regular == 2){
+						if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
+							logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!!");
+							continue;
 						}
 					}
-					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-					// 统计录入数据条数
-					int addNum = 0;
-					// 分批次录入数据,当天
-					EsWriteBean esWriteBean = new EsWriteBean();
-					esWriteBean.setIndex(strIndex);
-					// esWriteBean.setType(type);
-					esWriteBean.setData(listDataBean);
-					Map<String, Object> response = esWriteService.insert1(esWriteBean);
-					Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
-					if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
-						addNum += (int) responseData.get("insert_number");
-					} else {
-						logger.error(module + "->" + map.get("DI_name") + "->" + response.get(Pub.KEY_MESSAGE));
-					}
-					// 分批次录入数据,当天的前一天
-					esWriteBean.setIndex(strIndexYesterday);
-					esWriteBean.setData(listDataBeanYesterday);
-					response = esWriteService.insert1(esWriteBean);
-					responseData = (Map<String, Object>) response.get("resultData");
-					if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
-						addNum += (int) responseData.get("insert_number");
-					} else {
-						logger.error(module + "->" + map.get("DI_name") + "->" + response.get(Pub.KEY_MESSAGE));
-					}
 
-					logger.info(module + "->" + map.get("DI_name") + "->录入数据条数：" + addNum);
+					for (int i = 0; i < timerList.size(); i++) {
+						Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss");
+						if (runDate.getTime() > dt.getTime()){
+							continue;
+						}
+                        Map<String, Object> data = new HashMap<String, Object>();
+                        data.put("aging_status", "未处理");
+                        data.put("occur_time", 0);
+                        data.put("name", name);
+
+                        data.put("type", subType);
+                        data.put("startMoniter", "yes");
+
+                        Map<String, Object> fields = new HashMap<String, Object>();
+                        fields.put("data_time", timerList.get(i));
+
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(dt);
+						if(regular == 2){
+							calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[i]));
+						}else{
+							calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[0]));
+						}
+                        data.put("should_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss"));
+
+						if(regular == 2){
+							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[i]));
+						}else{
+							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[0]));
+						}
+						data.put("last_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss"));
+
+                        fields.put("file_name", path);
+                        fields.put("ip_addr", IP);
+                        fields.put("module", "DS");
+
+                        data.put("fields", fields);
+                        outData.add(data);
+                    }
 				} catch (Exception e) {
 					e.printStackTrace();
+					logger.warn(e.getMessage());
 				}
 			}
+
+			Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
+			logger.info("DS -> SEVP_NMC_RFFC_SCON_EME_ACHN_LNO_P9 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
-		} finally {
-			return;
 		}
+
 	}
+
 
 	/**
 	 * 生成T639 DI数据 只适用于T639
 	 * 
 	 * @param DIMapObj
 	 */
-	public void createT639DI(String type, Map<String, Object> DIMapObj, int numDay) {
+	public void createT639DI(String type, Map<String, Map> DIMapObj, int numDay) {
 		if (DIMapObj == null || DIMapObj.size() < 1) {
 			logger.warn("createT639DI is fail ： alertMap is null or 0 in length");
 			return;
@@ -409,7 +554,7 @@ public class ConfigService {
 			Map<String, Object> map = null;
 			// 循环 告警配置信息
 			for (String key : DIMapObj.keySet()) {
-				String module = "T639".equals(key) ? "分发" : "加工";
+				String module = key.contains("T639") ? "分发" : "加工";
 				int addNum = 0;
 				map = (Map<String, Object>) DIMapObj.get(key); // 获取单条配置信息
 
@@ -424,10 +569,10 @@ public class ConfigService {
 				Map<String, Object> indexMap = new HashMap<>();
 				for (Date dt : timeList) {
 					String indexKey = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
-					// 判断是否预生成过，没有的话生成
-					if (isExist_DI_Data(indexKey, type, key)) {
-						continue;
-					}
+//					// 判断是否预生成过，没有的话生成
+//					if (isExist_DI_Data(indexKey, type, key)) {
+//						continue;
+//					}
 					if (!indexMap.containsKey(indexKey)) {
 						indexMap.put(indexKey, new ArrayList<>());
 					}
@@ -443,7 +588,21 @@ public class ConfigService {
 					fields.put("ip_addr", IP);
 					fields.put("file_name", path);
 					fields.put("end_time", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+					//添加文件大小范围和文件名
+					fields.put("file_size_define",map.get("size_define").toString());
+					String nameDefine = map.get("name_define").toString();
+					String fileName = "";
+					if (StringUtils.isNotEmpty(nameDefine)){
+						String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
+						fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(dt,timeFormat));
+					}
+					fields.put("file_name",fileName);
+
 					dataBean.setFields(fields);
+
+					dt.setMinutes(startDate.getMinutes()-30);
+					dataBean.setLast_time(Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 
 					((List<String>) indexMap.get(indexKey)).add(JSON.toJSONString(dataBean));
 				}

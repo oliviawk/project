@@ -1,0 +1,117 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none !important;
+}
+body{
+  font-size: 14px;
+  background: url(../img/bg.jpg) no-repeat ;
+  background-size: cover;
+}
+.header{
+  height:70px;
+  line-height: 70px;
+  font-size: 26px;
+  background: rgba(6,112,214,.6);
+  color: #fff;
+}
+.logo{
+  height: 70px;
+  background: url(../img/logo.png) no-repeat 8px center;
+  padding-left: 65px;
+}
+.tab-bar{
+  position:absolute;
+  right:0;
+  top:18px;
+}
+.wrap{
+  padding: 10px 0;
+}
+.tab-bar .dropdown-toggle{
+   width: 130px;
+ }
+.tab-bar .btn{
+  padding:2px 6px;
+}
+@media screen and (max-width:1500px) {
+  .tab-bar{
+    position: static;
+    margin-bottom: 5px;
+  }
+}
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #60a0dd;
+    border-color: #60a0dd;
+    font-size: 18px;
+}
+.warning-type li{
+  list-style: none;
+  line-height: 30px;
+}
+.warning-type,.warning-type li{
+  position: relative;
+}
+.warning-type .right{
+  position: absolute;
+  right: 5px;
+  top: 0;
+}
+.warning-type .badge{
+  border-radius: 2px;
+  margin-left: 2px;
+}
+.warning-type .type1{
+  background: #f3b050 !important;
+}
+.warning-type .type2{
+  background: #f39191 !important;
+}
+.warning-type .type3{
+  background: #d9534f !important;
+}
+.task h4{
+  color: #60A0DD;
+  border-bottom: 1px #ddd solid;
+  margin-bottom: 0px;
+  padding-bottom: 4px;
+}
+.task ul li{
+  line-height: 30px;
+}
+.side-warningType .panel-default{
+  border: none;
+}
+.side-warningType .panel-default>.panel-heading{
+  background: none;
+  border: none;
+}
+.table-lg>tbody>tr>td,
+.table-lg>tbody>tr>th,
+.table-lg>thead>tr>td,
+.table-lg>thead>tr>th{
+  padding: 10px;
+}
+.panel,.table-lg{
+  background: rgba(255,255,255,.5);
+}
+.panel-body{
+  padding:5px 15px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover,.nav>li>a:focus, .nav>li>a:hover{
+  background: #60A0DD;
+  color: #fff;
+}
+.nav-tabs>li>a:hover{
+  border-color: #60A0DD;
+}
+.nav-tabs{
+  border-bottom: 3px #60A0DD solid;
+  font-size: 16px;
+}

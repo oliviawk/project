@@ -324,4 +324,43 @@ public class QueryApi extends BaseController {
 		}
 	}
 
+
+
+
+	@RequestMapping(value = "/getDocumentById", method = RequestMethod.POST, consumes = "application/json")
+	public String getDocumentById(@RequestBody String json) {
+		return esClientAdminService.getDocumentById(json);
+	}
+
+
+	@RequestMapping(value = "/lctAggQuery", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> lctAggQuery(@RequestBody EsQueryBean esQueryBean) {
+		long start = System.currentTimeMillis();
+		Map<String, Object> resultMap = null;
+		try {
+			if (esQueryBean == null) {
+				outMap.put(KEY_RESULT, VAL_ERROR);
+				outMap.put(KEY_RESULTDATA, null);
+				outMap.put(KEY_MESSAGE, "参数错误！");
+			}else{
+				Map params = esQueryBean.getParameters();
+				String[] subTypes = params.get("subTypes").toString().split(",");
+				resultMap = esWebService.lct_AggTerms(esQueryBean.getIndices(),esQueryBean.getTypes(),subTypes);
+				outMap.put(KEY_RESULT, VAL_SUCCESS);
+				outMap.put(KEY_RESULTDATA, resultMap);
+				outMap.put(KEY_MESSAGE, "获取数据成功");
+			}
+
+		} catch (Exception e) {
+			resultMap = new HashMap<>();
+			outMap.put(KEY_RESULT, VAL_ERROR);
+			outMap.put(KEY_RESULTDATA, null);
+			outMap.put(KEY_MESSAGE, e.getMessage());
+		} finally {
+			long spend = System.currentTimeMillis() - start;
+			outMap.put(KEY_SPEND, spend + "ms");
+			return outMap;
+		}
+	}
+
 }

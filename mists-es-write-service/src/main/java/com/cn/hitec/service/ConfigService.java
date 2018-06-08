@@ -1,6 +1,9 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
+import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,37 +30,79 @@ import java.util.Map;
 public class ConfigService {
     @Autowired
     ESRepository esRepository;
+    @Autowired
+    DataInfoRepository dataInfoRepository;
 
     public void initAlertMap(){
         try {
-        /*---------------------采集------------------------*/
-            List<Map> listMap_collect = getConfigAlert("config","collect",null);
-            for (Map map : listMap_collect){
-                String DI_name = map.get("DI_name").toString();
-                Pub.alertMap_collect.put(DI_name,map);
+            /*  ------------ > 3.8日修改的新代码 < ------------------*/
+            List<DataInfo> listDataInfo = dataInfoRepository.findAll_isData();
+
+            for (DataInfo di : listDataInfo){
+                Map<String ,Object> map = new HashMap<>();
+                map.put("DI_name",di.getName());
+                map.put("sub_name",di.getSub_name());
+//                map.put("time_interval",di.getMonitor_times());
+//                map.put("should_time",di.getShould_time());
+//                map.put("last_time",di.getTimeout_threshold());
+                map.put("IP",di.getIp());
+                map.put("path",di.getFile_path());
+                map.put("module",di.getModule());
+                map.put("serviceType",di.getService_type());
+
+                Pub.alert_time_map.put(di.getService_type()+","+di.getName()+","+di.getModule()+","+di.getIp(), map);
+
             }
 
-            List<Map> listMap_machining = getConfigAlert("config","machining",null);
-            for (Map map : listMap_machining){
-                String DI_name = map.get("DI_name").toString();
-                Pub.alertMap_machining.put(DI_name,map);
-            }
+            List<Object> listStrategy = dataInfoRepository.findDataStrategyAll();
+            //循环所有数据,区分是采集、加工、分发 的数据，分别存入不同的map
+            for (Object di : listStrategy){
+                Map<String ,Object> map = new HashMap<>();
 
-            List<Map> listMap_distribute = getConfigAlert("config","distribute",null);
-            for (Map map : listMap_distribute){
-                String DI_name = map.get("DI_name").toString();
-                Pub.alertMap_distribute.put(DI_name,map);
-            }
+                List list = JSON.parseArray(JSON.toJSONString(di),String.class);
+                if(list.size() == 10 ){
+                    map.put("serviceType",list.get(0));
+                    map.put("DI_name",list.get(1));
+                    map.put("module",list.get(2));
+                    map.put("ip",list.get(3));
+                    map.put("strategy_name",list.get(4));
+                    map.put("wechart_send_enable",list.get(5));
+                    map.put("wechart_content",list.get(6));
+                    map.put("sms_send_enable",list.get(7));
+                    map.put("sms_content",list.get(8));
+                    map.put("send_users",list.get(9));
 
-
-            List<Map> list_alert_time_map = getConfigAlertDI("config");
-            for (Map map : list_alert_time_map){
-                 if(map.containsKey("DI_name")){
-                    String DI_name = map.get("DI_name").toString();
-                    Pub.alert_time_map.put(DI_name,1);
+                    Pub.DI_ConfigMap.put(list.get(0)+","+list.get(1)+","+list.get(2)+","+list.get(3), map);
                 }
 
             }
+            log.info("DI_configMap.size = "+Pub.DI_ConfigMap.size());
+        /*---------------------3.8 日，旧代码------------------------*/
+//            List<Map> listMap_collect = getConfigAlert("config","collect",null);
+//            for (Map map : listMap_collect){
+//                String DI_name = map.get("DI_name").toString();
+//                Pub.alertMap_collect.put(DI_name,map);
+//            }
+//
+//            List<Map> listMap_machining = getConfigAlert("config","machining",null);
+//            for (Map map : listMap_machining){
+//                String DI_name = map.get("DI_name").toString();
+//                Pub.alertMap_machining.put(DI_name,map);
+//            }
+//
+//            List<Map> listMap_distribute = getConfigAlert("config","distribute",null);
+//            for (Map map : listMap_distribute){
+//                String DI_name = map.get("DI_name").toString();
+//                Pub.alertMap_distribute.put(DI_name,map);
+//            }
+//            List<Map> list_alert_time_map = getConfigAlertDI("config");
+//            for (Map map : list_alert_time_map){
+//                 if(map.containsKey("DI_name")){
+//                    String DI_name = map.get("DI_name").toString();
+//                    Pub.alert_time_map.put(DI_name,1);
+//                }
+//
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +145,7 @@ public class ConfigService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+//            log.error(e.getMessage());
             resultList = null;
         } finally {
        //     System.out.println(resultList.toString());
@@ -154,7 +200,7 @@ public class ConfigService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+//            log.error(e.getMessage());
             resultList = null;
         } finally {
             System.out.println(resultList.toString());

@@ -1,0 +1,148 @@
+@CHARSET "UTF-8";
+
+.BeijingToXIan_start{
+	position:absolute;
+	left:850px;
+	top:50px;
+	width:100px;
+	height:30px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_start_1_tianjin{
+	position:absolute;
+	left:100px;
+	top:72px;
+	width:100px;
+	height:21px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_start_1{
+	position:absolute;
+	left:850px;
+	top:50px;
+	width:100px;
+	height:30px;
+	background:#c0c0c0;
+	display:none;
+
+}
+.BeijingToXIan_process{
+	position:absolute;
+	left:700px;
+	top:280px;
+	width:100px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_process_tianjin{
+	position:absolute;
+	left:192px;
+	top:219px;
+	width:89px;
+	height:43px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_process_1{
+	position:absolute;
+	left:700px;
+	top:280px;
+	width:100px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+	
+}
+.BeijingToXIan_process_plane{
+	position:absolute;
+	left:571px;
+	top:305px;
+	width:100px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+	
+}
+.BeijingToXIan_arrive{
+	position:absolute;
+	left:250px;
+	top:630px;
+	width:80px;
+	height:55px;
+	background:#c0c0c0;
+	display:none;	
+}
+.BeijingToXIan_arrive_tianjin{
+	position:absolute;
+	left:400px;
+	top:414px;
+	width:63px;
+	height:43px;
+	background:#c0c0c0;
+	display:none;	
+}
+.BeijingToXIan_arrive_1{
+	position:absolute;
+	left:250px;
+	top:630px;
+	width:80px;
+	height:55px;
+	background:#c0c0c0;
+	display:none;
+	
+}
+.BeijingToXIan_hotel{
+	position:absolute;
+	left:315px;
+	top:500px;
+	width:150px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_hotel_1{
+	position:absolute;
+	left:2px;
+	top:283px;
+	width:150px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+}
+.BeijingToXIan_hotel_1_tianjin{
+	position:absolute;
+	left:512px;
+	top:591px;
+	width:150px;
+	height:60px;
+	background:#c0c0c0;
+	display:none;
+}
+.plan1{
+	background:url(../img/Tour1.PNG) ;
+	background-repeat:no-repeat ;
+	background-size:100% 100%;
+	color:#00F
+}
+.plan1_tianjin{
+	background:url(../img/Tour1_tianjin.PNG) ;
+	background-repeat:no-repeat ;
+	background-size:100% 100%;
+	color:#00F
+}
+
+.plan2{
+	background:url(../img/Tour2.PNG) ;
+	background-repeat:no-repeat ;
+	background-size:100% 100%;
+	color:#00F
+}
+.plan3{
+	background:url(../img/Tour3.PNG) ;
+	background-repeat:no-repeat ;
+	background-size:100% 100%;
+	color:#00F
+}

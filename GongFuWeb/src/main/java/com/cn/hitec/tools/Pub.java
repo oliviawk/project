@@ -34,7 +34,12 @@ public class Pub {
         list.add("10.30.16.223");
         list.add("10.30.16.236");
         list.add("10.0.74.226");
-        list.add("120.26.9.109");
+//        list.add("120.26.9.109");
+
+        // laps基础资源
+        list.add("10.30.16.242");
+        list.add("10.30.16.224");
+
         return list;
     }
     /**

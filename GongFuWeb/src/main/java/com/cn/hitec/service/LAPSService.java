@@ -132,6 +132,42 @@ public class LAPSService extends BaseController{
 
 
     /**
+     * 聚合查询流程图各环节状态，不包括无规律
+     * 2018.05.18  fukl
+     * @return
+     */
+    public Map<String,Object> lctAggQuery(){
+        long start = System.currentTimeMillis();
+        try {
+            long st = System.currentTimeMillis();
+
+            EsQueryBean_web esQueryBean = new EsQueryBean_web();
+            String[] index = Pub.getIndices(new Date(),2);
+            esQueryBean.setIndices(index);
+            esQueryBean.setTypes(new String[]{"LAPS"});
+
+            Map params = new HashMap();
+            params.put("subTypes","LAPS3KM_ME,LAPS3KMGEO_EU4,LAPS3KMGEO_PRCPV,LAPS3KMGEO_RH,LAPS3KMGEO_T,LAPS3KMGEO_TD,T639" +
+                    ",LapsTemperature,Lapstemperature,Laps降水累加产品,LapsDT,LapsRain,LapsRain1Hour,LapsTD,LapsTRH,LapsWSWD,CIMISS" +
+                    ",GR2,L1S,LSX");
+            esQueryBean.setParameters(params);
+            outMap = esQueryService.lctAggQuery(esQueryBean);
+
+            outMap.put("server_"+KEY_SPEND,(System.currentTimeMillis() - start)+"ms");
+        } catch (Exception e) {
+            outMap.put(KEY_RESULT,VAL_ERROR);
+            outMap.put(KEY_RESULTDATA,null);
+            outMap.put(KEY_MESSAGE,e.getMessage());
+            e.printStackTrace();
+        } finally {
+            long spend = System.currentTimeMillis()-start;
+            outMap.put(KEY_SPEND,spend+"ms");
+            return outMap;
+        }
+    }
+
+
+    /**
      * LAPS历史数据查询方法
      * @param esQueryBean
      * @return
@@ -147,8 +183,11 @@ public class LAPSService extends BaseController{
                 outMap.put(KEY_MESSAGE,"参数错误！");
             }else{
                 if(StringUtils.isEmpty(esQueryBean.getIndices())){
+                    // 查询今天和昨天的记录
                     String index = Pub.Index_Head + DateFormatUtils.format(new Date(), Pub.Index_Food_Simpledataformat);
-                    esQueryBean.setIndices(new String[] { index });
+                    Date d2 = DateUtils.addDays(new Date(), -1);    // 昨天的日期
+                    String index2 = Pub.Index_Head + DateFormatUtils.format(d2, Pub.Index_Food_Simpledataformat);
+                    esQueryBean.setIndices(new String[] { index, index2 });
                 }
 
                 Map<String,Object> params = new HashMap<>();    //查询参数
@@ -183,6 +222,7 @@ public class LAPSService extends BaseController{
                 Map<String, Object> mustMap = new HashMap<>();
                 mustMap.put("type",esQueryBean.getSubType());
                 mustMap.put("fields.module",esQueryBean.getModule());
+                mustMap.put("fields.ip_addr",esQueryBean.getStrIp());
 
                 Map<String, Object> mustNotMap = new HashMap<>();
                 mustNotMap.put("aging_status", "未处理");

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<title>Insert title here</title>
+	<link rel="stylesheet" href="../css/bootstrap.css"></link>
+	<link rel="stylesheet" href="../css/bootstrap-table.min.css"></link>
+</head>
+<body>
+
+	<div style="float:left;">
+		<button class="alertLevelBtn" style="background:rgba(0, 204, 102, 1);">正常</button>
+		<button class="alertLevelBtn" style="background:rgba(255, 51, 51, 1);">严重</button>
+		<button class="alertLevelBtn" style="background:rgba(255, 153, 153, 1);">紧急</button>
+		<button class="alertLevelBtn" style="background:rgba(255, 204, 51, 1);">警告</button>
+	</div>
+	<div style="float:left;margin-left:50px;">
+		<button class="queryTypeBtn">所有</button>
+		<button class="queryTypeBtn">告警</button>
+	</div>
+	<table id="dataSourceTable"></table>
+	
+	<script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+  	<script type="text/javascript" src="../js/bootstrap.js"></script>
+  	<script type="text/javascript" src="../js/bootstrap-table.min.js"></script>
+  	<script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
+  	<script type="text/javascript" src="../js/dataSource/dataSource.js"></script>
+</body>
+</html>

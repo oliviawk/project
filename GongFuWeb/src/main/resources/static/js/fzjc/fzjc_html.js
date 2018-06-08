@@ -102,6 +102,117 @@ function alert_div_update(id,obj_json){
 
 }
 
+/**
+ * 聚合查询流程图环节状态（不包括无规律数据）
+ */
+function lct_status_agg() {
+
+    $.ajax({
+        type: 'POST',
+        url: '../fzjc/lctAggQuery',
+        dataType: "json",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (json) {
+            var list1  = new Array();
+            list1.push("collect_radarlatlon_10-30-16-220");
+            list1.push("distribute_radarlatlon_10-30-16-220");
+            list1.push("distribute_radarlatlon_10-0-74-226");
+            list1.push("collect_satellite_10-30-16-220");
+            list1.push("machining_ReadFY2NC_10-30-16-223");
+            list1.push("distribute_satellite_10-30-16-220");
+            list1.push("distribute_satellite_10-0-74-226");
+            list1.push("machining_hot_10-30-16-223");
+            list1.push("distribute_hot_10-30-16-220");
+            list1.push("distribute_hot_10-0-74-226");
+            list1.push("machining_T639_10-30-16-223");
+            list1.push("distribute_T639_10-30-16-220");
+            list1.push("distribute_T639_10-0-74-226");
+
+
+            if(json.result != "success" || json.resultData.length < 1){
+                for (var i = 0; i < list1.length ; i++){
+                    var strId = list1[i];
+                        $("#"+strId).attr({
+                            "class":"list-red"
+                        });
+                }
+                return ;
+            }
+            var data = json.resultData;
+            $.each(data,function(key,values){
+                var liStatus = "list-red";
+
+                var agingStatus_isOK = false ;
+                var eventStatus_isOK = false ;
+                console.log("-----")
+
+
+                var strKeys = key.split("_");
+                var strType = strKeys[0];
+                var strModule = strKeys[1];
+                var strIp = strKeys[2];
+                if(strType == "雷达"){
+                    strType = "radarlatlon";
+                }else if(strType == "云图"){
+                    strType = "satellite";
+                }else if(strType == "炎热指数"){
+                    strType = "hot";
+                }else if(strType == "风流场"){
+                    strType = "T639";
+                }
+                if(strModule == "采集"){
+                    strModule = "collect";
+                }else if(strModule == "加工"){
+                    strModule = "machining";
+                }else if(strModule == "分发"){
+                    strModule = "distribute";
+                }
+                var strIdHtml = strModule+"_"+strType+"_"+strIp.replace(/\./g,"-");
+                console.log(strIdHtml)
+                console.log(values)
+                if(values.hasOwnProperty("aging_status")){
+                    console.log(values.aging_status)
+                    if(values.aging_status == "未处理" || values.aging_status == "正常"){
+                        agingStatus_isOK = true;
+                    }else{
+                        agingStatus_isOK = false;
+                    }
+                }else {
+                    agingStatus_isOK = true;
+                }
+                if(values.fields.hasOwnProperty("event_status") ){
+                    console.log(values.fields.event_status)
+                    if(values.fields.event_status == "0" || values.fields.event_status.toUpperCase() == "OK") {
+                        eventStatus_isOK = true;
+                    }else{
+                        eventStatus_isOK = false;
+                    }
+                }else{
+                    eventStatus_isOK = true;
+                }
+
+                console.log(agingStatus_isOK+"__"+eventStatus_isOK)
+                if(agingStatus_isOK && eventStatus_isOK){
+                    liStatus = "list-green";
+                }
+
+                $("#"+strIdHtml).attr({
+                    "class":liStatus
+                });
+                $("#" + strIdHtml).attr("title", values.fields.data_time);
+
+            });
+
+            data = null;
+        },
+        error:function (e) {
+            console.error(e);
+        }
+    });
+}
+
 
 /**
  * 流程图各环节状态
@@ -132,6 +243,8 @@ function lct_status_regular(findType) {
                 list1.push("distribute_satellite")
                 list1.push("machining_hot")
                 list1.push("distribute_hot")
+                list1.push("machining_T639")
+                list1.push("distribute_T639")
             }else if(findType == "no_regular"){
                 list1.push("machining_LatLonQREFEnd")
                 list1.push("collect_LAPS3KM")
@@ -141,31 +254,28 @@ function lct_status_regular(findType) {
                 list1.push("collect_emergency")
                 list1.push("collect_boats")
                 list1.push("collect_trafficjam")
-            }else if(findType == "T639"){
-                list1.push("machining_T639")
-                list1.push("distribute_T639")
             }
 
 
             if(json.result != "success" || json.resultData.length < 1){
                 for (var i = 0; i < list1.length ; i++){
                     var strId = list1[i];
-                    if(strId.indexOf("distribute_") > -1){
-                        $("#"+strId).attr({
-                            "class":"list-red-f"
-                        });
-                        $("#"+strId +" i").each(function (i) {
-                            if( i == 1){
-                                $(this).attr("class","sn-r bd");
-                            }else{
-                                $(this).attr("class","sn-r");
-                            }
-                        })
-                    }else{
+//                    if(strId.indexOf("distribute_") > -1){
+//                        $("#"+strId).attr({
+//                            "class":"list-red-f"
+//                        });
+//                        $("#"+strId +" i").each(function (i) {
+//                            if( i == 1){
+//                                $(this).attr("class","sn-r bd");
+//                            }else{
+//                                $(this).attr("class","sn-r");
+//                            }
+//                        })
+//                    }else{
                         $("#"+strId).attr({
                             "class":"list-red"
                         });
-                    }
+//                    }
                 }
                 return ;
             }
@@ -233,7 +343,7 @@ function lct_status_regular(findType) {
                 }
 
                 if(agingStatus_isOK && eventStatus_isOK){
-                    liStatus = "list-green";
+                    liStatus = "list-green f";
                     liI = "sn-g";
                 }
 
@@ -243,23 +353,27 @@ function lct_status_regular(findType) {
                         continue;
                     }
                     console.log(strId)
-                    if(strId.indexOf("distribute_") > -1){
-                        $("#"+strId).attr({
-                            "class":liStatus+"-f"
-                        });
-                        $("#"+strId +" i").each(function (i) {
-                            if( i == 1){
-                                $(this).attr("class", liI +" bd");
-                            }else{
-                                $(this).attr("class", liI );
-                            }
-                        })
-                    }else{
+//                    if(strId.indexOf("distribute_") > -1){
+//                        $("#"+strId).attr({
+//                            "class":liStatus+"-f"
+//                        });
+//                        $("#" + strId).attr("title", values.fields.data_time);
+//                        $("#"+strId +" i").each(function (i) {
+//                            if( i == 1){
+//                                $(this).attr("class", liI +" bd");
+//                            }else{
+//                                $(this).attr("class", liI );
+//                            }
+//                        })
+//                    }else{
                         $("#"+strId).attr({
                             "class":liStatus
                         });
-                    }
+                        $("#" + strId).attr("title", values.fields.data_time);
+//                    }
                 }
+
+
             });
             data = null;
         },
@@ -327,44 +441,44 @@ function lct_statusNew(moduleName,ip,subType) {
 
             if(json.result != "success"){
                 var upId = moduleE+"_"+subType;
-                if(moduleName == "分发"){
-                    $("#"+upId).attr({
-                        "class":"list-red-f"
-                    });
-                    $("#"+upId +" i").each(function (i) {
-                        if( i == 1){
-                            $(this).attr("class","sn-r bd");
-                        }else{
-                            $(this).attr("class","sn-r");
-                        }
-                    })
-                }else{
+//                if(moduleName == "分发"){
+//                    $("#"+upId).attr({
+//                        "class":"list-red-f"
+//                    });
+//                    $("#"+upId +" i").each(function (i) {
+//                        if( i == 1){
+//                            $(this).attr("class","sn-r bd");
+//                        }else{
+//                            $(this).attr("class","sn-r");
+//                        }
+//                    })
+//                }else{
                     $("#"+upId).attr({
                         "class":"list-red"
                     });
-                }
+//                }
                 return;
             }
             var data = json.resultData;
 
             if(data.length < 1){
                 var upId = moduleE+"_"+subType;
-                if(moduleName == "分发"){
+//                if(moduleName == "分发"){
+//                    $("#"+upId).attr({
+//                        "class":"list-red-f"
+//                    });
+//                    $("#"+upId +" i").each(function (i) {
+//                        if( i == 1){
+//                            $(this).attr("class","sn-r bd");
+//                        }else{
+//                            $(this).attr("class","sn-r");
+//                        }
+//                    })
+//                }else{
                     $("#"+upId).attr({
-                        "class":"list-red-f"
+                        "class":"list-red f"
                     });
-                    $("#"+upId +" i").each(function (i) {
-                        if( i == 1){
-                            $(this).attr("class","sn-r bd");
-                        }else{
-                            $(this).attr("class","sn-r");
-                        }
-                    })
-                }else{
-                    $("#"+upId).attr({
-                        "class":"list-red"
-                    });
-                }
+//                }
                 console.error("查询到的数据为空")
                 return;
             }
@@ -399,24 +513,24 @@ function lct_statusNew(moduleName,ip,subType) {
                         liI = "sn-g";
                     }
                     var upId = moduleE+"_"+subType;
-                    if(moduleName == "分发"){
-                        $("#"+upId).attr({
-                            "class":liStatus+"-f",
-                            "title":this.fields.data_time
-                        });
-                        $("#"+upId +" i").each(function (i) {
-                            if( i == 1){
-                                $(this).attr("class",liI + " bd");
-                            }else{
-                                $(this).attr("class",liI);
-                            }
-                        })
-                    }else{
+//                    if(moduleName == "分发"){
+//                        $("#"+upId).attr({
+//                            "class":liStatus+"-f",
+//                            "title":this.fields.data_time
+//                        });
+//                        $("#"+upId +" i").each(function (i) {
+//                            if( i == 1){
+//                                $(this).attr("class",liI + " bd");
+//                            }else{
+//                                $(this).attr("class",liI);
+//                            }
+//                        })
+//                    }else{
                         $("#"+upId).attr({
                             "class":liStatus,
                             "title":this.fields.data_time
                         });
-                    }
+//                    }
 
                 });
             });
@@ -435,11 +549,13 @@ $('#pubModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var subType = button.data('subtype');
     var module = button.data('module');
+    var ip = button.data('ip')==null?"*":button.data('ip');
     var modal = $(this);
     modal.find('#modalHeader').text(module+' 环节历史数据');
     var size = $("#sizeHidden").val();
     $("#moduleHidden").val(module);
     $("#subTypeHidden").val(subType);
+    $("#ipHidden").val(ip);
 
     /* Mod by Edward 2017/11/15
      * 雷达的加工过程隐藏文件名和耗时列
@@ -457,25 +573,25 @@ $('#pubModal').on('show.bs.modal', function (event) {
         historyHead += "<th style='width: 245px;'>资料时次</th>";
         historyHead += "<th style='width: 245px;'>更新时间</th>";
 
-        if(subType == "风流场" || subType == "T639"){
-            //$("#sizeNumberButton").attr("disabled","true");
-            $("#sizeNumberButton").addClass('disabled');
-        }else{
-            //$("#sizeNumberButton").removeAttr("disabled");
-            $("#sizeNumberButton").removeClass('disabled');
-        }
+//        if(subType == "风流场" || subType == "T639"){
+//            //$("#sizeNumberButton").attr("disabled","true");
+//            $("#sizeNumberButton").addClass('disabled');
+//        }else{
+//            //$("#sizeNumberButton").removeAttr("disabled");
+//            $("#sizeNumberButton").removeClass('disabled');
+//        }
 
-        if(!regex.test(subType)){
-            historyHead += "<th style='width: 75px;'>耗时</th>";
-        }
+
+        historyHead += "<th style='width: 75px;'>耗时</th>";
+
 
         historyHead += "<th style='width: 60px;'>状态</th>";
-        historyHead += "<th>错误信息</th>";
+        historyHead += "<th>信息</th>";
         historyHead += "</tr>";
 
     $("#history_thead").html(historyHead);
     //拼接数据
-    initHistory(subType,module,size);
+    initHistory(subType,module,ip,size);
 
 })
 
@@ -487,7 +603,8 @@ function changeSize(size){
     $("#sizeHidden").val(size);
     var module = $("#moduleHidden").val();
     var subType = $("#subTypeHidden").val();
-    initHistory(subType,module,size);
+    var ip = $("#ipHidden").val();
+    initHistory(subType,module,ip,size);
 
     $("#sizeNumber").html("展示数量："+size+" <span class='caret'></span>");
 }
@@ -498,13 +615,16 @@ function changeSize(size){
  * @param module
  * @param size
  */
-function initHistory(subType,module,size) {
+function initHistory(subType,module,ip,size) {
     var esQeuryBean_web = {
         // "indices":["log_20170920"],
         "types":["FZJC"],
         "subType":subType,
         "module":module,
         "size":size
+    }
+    if(ip != "*"){
+        esQeuryBean_web.strIp = ip;
     }
 
     $("#history_tbody").html("");
@@ -566,21 +686,21 @@ function initHistory(subType,module,size) {
                     if (this.fields.hasOwnProperty('end_time')) {
                         tds += "<td>"+this.fields.end_time+"</td>";
                     } else {
-                        tds += "<td> -</td>";
+                        tds += "<td>-</td>";
                     }
 
                     //耗时
-                    if (this.fields.module == "加工" && (this.type == "LatLonQREFEnd" || this.type == "ReadFY2NC")
-                        || this.fields.module == "采集" && regex.test(this.type)) { }
-                    else {
-                    if(this.fields.hasOwnProperty("total_time")){
-                        var totalTime = this.fields.total_time;
-
-                        tds += "<td>"+ (Math.round(totalTime*100)/100) +" 秒</td>";
+                    if(this.fields.hasOwnProperty("totalTime")){
+                        tds += "<td>"+ Math.round(this.fields.totalTime*10)/10 +"秒</td>";
+                    }else if(this.fields.hasOwnProperty("start_time") && this.fields.hasOwnProperty("end_time")){
+                        var begin = this.fields.start_time;
+                        begin = new Date(begin.replace(new RegExp("-","gm"),"/")).getTime();
+                        var end = this.fields.end_time;
+                        end = new Date(end.replace(new RegExp("-","gm"),"/")).getTime();
+                        tds += "<td>"+ Math.round((end-begin)/100)/10 + "秒</td>";
                     }else{
-                        tds += "<td> -</td>";
-                    }
-                    }
+                         tds += "<td>-</td>";
+                     }
 
                     if(this.hasOwnProperty("aging_status")){
                         if(this.aging_status == "未处理" || this.aging_status == "正常"){
@@ -604,7 +724,7 @@ function initHistory(subType,module,size) {
                     if(agingStatus_isOK && eventStatus_isOK){
                         trStatus = "info";
                         tds += "<td>正常</td>";
-                        tds += "<td>-</td>";
+                        tds += "<td>"+(this.fields.event_info==null?"正常":this.fields.event_info)+"</td>";
                     }else if(!agingStatus_isOK  && eventStatus_isOK){
                         if(this.aging_status == "迟到"){
                             trStatus = "danger";
@@ -613,7 +733,6 @@ function initHistory(subType,module,size) {
                         }else if(this.aging_status == "超时"){
                             trStatus = "danger";
                             tds += "<td>异常</td>";
-                            //tds += "<td>数据未到达</td>";
                             tds += "<td>日志未采集到</td>";
                         }
                     }else if(agingStatus_isOK  && !eventStatus_isOK){

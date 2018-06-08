@@ -17,11 +17,13 @@ $(function(){
 
         $('#subTypeHidden').val(arr[0]);
         $('#moduleHidden').val(arr[1]);
+        arr[2] = arr[2].replace(new RegExp("-","gm"),".");
+        $('#ipHidden').val(arr[2]);
         //var pageSize = $('pageSizeHidden').val();
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
         $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
-        getLapsHistory(arr[0], arr[1], pageSize,'');
+        getLapsHistory(arr[0], arr[1], pageSize,arr[2]);
 
     });
 
@@ -33,26 +35,37 @@ $(function(){
         $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
         var subType = $('#subTypeHidden').val();
         var module = $('#moduleHidden').val();
-        getLapsHistory(subType, module, pageSize, '');
+        var ip = $('#ipHidden').val();
+        getLapsHistory(subType, module, pageSize, ip);
 
     });
 
 
+    // var func = function () {
+    //     console.log('get data...');
+    //     $.each(dataTypes, function (i, v) {
+    //         //console.log(i);
+    //         $.each(v, function (i2, v2) {
+    //             //console.log(v2);
+    //             setTimeout(function () {
+    //                 getLapsData(v2, i, '');
+    //             }, i2*160);
+    //         });
+    //     });
+    // };
+    //
+    // // 设置定时刷新
+    // var delay = 60000;  // 30s刷新一次
+    // var timerId = setInterval(func, delay);
+    //
+    // func();
+
     var func = function () {
-        console.log('get data...');
-        $.each(dataTypes, function (i, v) {
-            //console.log(i);
-            $.each(v, function (i2, v2) {
-                //console.log(v2);
-                setTimeout(function () {
-                    getLapsData(v2, i, '');
-                }, i2*160);
-            });
-        });
+        getLapsDataAggQuery();
     };
 
     // 设置定时刷新
-    var delay = 20000;  // 10s刷新一次
+    var delay = 60000;  // 30s刷新一次
     var timerId = setInterval(func, delay);
 
     func();
@@ -166,6 +179,7 @@ function getLapsData(type, module, ip) {
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        async:false,
         beforeSend: function () { },
         complete: function () { },
         success: function (d) {
@@ -190,6 +204,7 @@ function getLapsData(type, module, ip) {
                         // 如果第1条是未处理判断第2条如果是正常外报警
                         if (data.aging_status != '正常') {
                             // 界面报警
+                            //list-red
                             $("#" + subType + "_" + module).attr("class", "list-red");
                             return;
                         }
@@ -206,7 +221,7 @@ function getLapsData(type, module, ip) {
                             data = recv[0];
                             data_1 = recv[1];
                         }
-
+                        console.log(recv);
                         // data[0]为外网分发data[1]为内网分发
                         // 分发id编码type_module_ip末位
                         var suff_1 = data.fields.ip_addr.split('.')[3];
@@ -215,7 +230,7 @@ function getLapsData(type, module, ip) {
                         var selecter_1 = "#" + subType + "_" + module + "_" + suff_1;
                         var selecter_2 = "#" + subType + "_" + module + "_" + suff_2;
 
-                        if (data.aging_status != '正常' || data_1.aging_status != '正常') {
+                        if (data.aging_status != '正常' && data_1.aging_status != '正常') {
                             // 界面报警
                             $(selecter_1).attr("class", "list-red");
                             $(selecter_2).attr("class", "list-red");
@@ -259,12 +274,67 @@ function getLapsData(type, module, ip) {
 
         },
         error: function (err) {
-            alert(err);
+//            alert(err);
         }
     });
 
 }
 
+
+
+/**
+ * 聚合获取LAPS数据状态信息
+ *
+ */
+function getLapsDataAggQuery() {
+
+    $.ajax({
+        type: "POST",
+        url: "../laps/lctAggQuery",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async:false,
+        beforeSend: function () { },
+        complete: function () { },
+        success: function (d) {
+            console.log(d)
+            if (d.result == 'success') {
+                var recv = d.resultData;
+                $.each(recv,function(key,dmap){
+                    key = key.replace(/\./g,"-");
+                    console.log(key)
+                    console.log(dmap)
+                    console.log("------")
+
+                    // 如果第1条是未处理判断第2条如果是正常外报警
+                    if (dmap.aging_status != '正常') {
+                        // 界面报警
+                        //list-red
+                        $("#" + key).attr("class", "list-red");
+                        return;
+                    }
+
+                    $("#" + key).attr("class", "list-green");
+                    $("#" + key).attr("title", dmap.fields.data_time);
+
+                })
+
+            } else {
+                // 查询失败
+                //alert("失败！" + d.message);
+                console.log("%c失败！" + d.message, "color:#c7254e");
+                $("div[data-target='#pubModal']").each(function () {
+                    $(this).attr("class", "list-red");
+                })
+            }
+
+        },
+        error: function (err) {
+//            alert(err);
+        }
+    });
+
+}
 
 /**
  * 获取LAPS历史数据信息
@@ -320,7 +390,7 @@ function getLapsHistory(type, module, size, ip) {
                     historyHead += "<th style='width: 245px;'>更新时间</th>";
                     historyHead += "<th style='width: 75px;'>耗时</th>";
                     historyHead += "<th style='width: 60px;'>状态</th>";
-                    historyHead += "<th>错误信息</th>";
+                    historyHead += "<th>信息</th>";
                     historyHead += "</tr>";
                     $("#history_thead").html(historyHead);
 
@@ -336,23 +406,36 @@ function getLapsHistory(type, module, size, ip) {
                         // 资料时间
                         tds += "<td>"+v.fields.data_time+"</td>";
                         // 更新时间
-                        tds += "<td>"+v.fields.end_time+"</td>";
+                        if(v.fields.end_time != null){
+                            tds += "<td>"+v.fields.end_time+"</td>";
+                        }
+                        else{
+                            tds += "<td>-</td>";
+                        }
                         // 耗时
-                        //tds += "<td>"+(Math.round((111)*100)/100)+" 秒</td>";
-                        tds += "<td>"+Math.round((v.receive_time-v.occur_time)/1000)+" 秒</td>";
+                        if(v.fields.hasOwnProperty("totalTime")){
+                            tds += "<td>"+ Math.round(v.fields.totalTime*10)/10 +"秒</td>";
+                        }else if(v.fields.hasOwnProperty("start_time") && v.fields.hasOwnProperty("end_time")){
+                            var begin = v.fields.start_time;
+                            begin = new Date(begin.replace(new RegExp("-","gm"),"/")).getTime();
+                            var end = v.fields.end_time;
+                            end = new Date(end.replace(new RegExp("-","gm"),"/")).getTime();
+                            tds += "<td>"+ Math.round((end-begin)/100)/10 + "秒</td>";
+                        }else{
+                             tds += "<td>-</td>";
+                         }
+
                         // 状态
                         tds += "<td>"+ v.aging_status + "</td>";
-                        // 错误信息
-                        tds += "<td>"+ v.aging_status + "</td>";
-
-
-                        if (/异常|迟到/.test(v.aging_status)) {
-                            trStatus = "danger";
-                        } else {
-                            trStatus = "info";
+                        // 信息
+                        //tds += "<td>"+ v.fields.event_info + "</td>";
+                         if(v.aging_status == "超时"){
+                            tds += "<td>日志未采集到</td>";
+                        }else{
+                            tds += "<td>"+ (/分发/.test(module) ? v.aging_status : v.fields.event_info) + "</td>";
                         }
 
-                        trs += "<tr class='" + trStatus + "'>" + tds + "</tr>";
+                        trs += "<tr class='" + (/异常|迟到|超时/.test(v.aging_status) ? "danger" : "info") + "'>" + tds + "</tr>";
                     });
 
                     $("#history_tbody").html(trs);
@@ -383,5 +466,26 @@ function getLapsHistory(type, module, size, ip) {
     });
 }
 
+
+/**
+ * 基础资源监控
+ */
+$('#baseSourceModal').on('shown.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var ip = button.data('ip');
+    var modal = $(this);
+    modal.find('#baseSourceModalHeader').text("基础资源实时运行情况("+ip+")");
+
+    var params = {
+        "host":ip,
+        "minute":120
+    };
+
+    displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000*60*10,JSON.stringify(params));
+    displayMemoryUsed("../laps/getMemoryData" , "#memoryUsed",1000*60*10,JSON.stringify(params));
+    displayNetUsed("../laps/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
+    directorUsage("../laps/getDirectoryUsedData", "#directoryUsed",1000*60*10,JSON.stringify(params));
+
+});
 
 

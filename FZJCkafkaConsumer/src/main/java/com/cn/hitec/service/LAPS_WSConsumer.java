@@ -7,20 +7,16 @@ import java.util.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LAPS_WSConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(LAPS_WSConsumer.class);
 	private static String topic = "WS";
-	private static String group;
 	private static String type = "LAPS";
 
-	static{
-		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		group = bundle.getString("LAPS.group.id");
-	}
-    public LAPS_WSConsumer() {
+    public LAPS_WSConsumer(@Value("${LAPS.group.id}")String group) {
 		super(topic,group,type);
 	}
 

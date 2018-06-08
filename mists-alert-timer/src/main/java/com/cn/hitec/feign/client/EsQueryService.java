@@ -42,4 +42,8 @@ public interface EsQueryService {
 
     @RequestMapping(value="/query/indexIsExist",method= RequestMethod.POST,consumes="application/json")
     public Map<String,Object> indexIsExist(@RequestBody EsQueryBean_Exsit esQueryBean);
+
+
+    @RequestMapping(value = "/query/getDocumentById", method = RequestMethod.POST, consumes = "application/json")
+    public String getDocumentById(@RequestBody String json);
 }

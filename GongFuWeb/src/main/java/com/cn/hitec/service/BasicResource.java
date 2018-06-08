@@ -226,7 +226,7 @@ public class BasicResource {
                 com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
 
                 String device = obj.getJSONObject("fields").getString("device");
-                if(!device.equals("eth0")){
+                if(!device.equals("eth0") && device.indexOf("Intel(R) I350 Gigabit") < 0){     // 添加224服务器网卡
                     continue;
                 }
                 double upload = Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("in")/(8*1024)));

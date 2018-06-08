@@ -35,70 +35,166 @@ public class AgingStatusService {
 	@Autowired
 	EsWriteService esWriteService;
 
-	public int collect_task(Date nowDate) throws Exception {
-		int up_number = 0;
-		EsQueryBean esQueryBean = new EsQueryBean();
-		String index = Pub.Index_Head + Pub.transform_DateToString(nowDate, Pub.Index_Food_Simpledataformat);
-		esQueryBean.setIndices(new String[] { index });
-		esQueryBean.setTypes(new String[] { "FZJC" });
+	/**
+	 * 定时处理超时未到的数据，将状态致为超时
+	 * @return
+	 * @throws Exception
+	 */
+	public void collect_task() throws Exception{
 
-		Map<String, Object> params = new HashMap<>();
-		// params.put("type","satellite");
-		// params.put("fields.module","采集");
-		params.put("aging_status", "未处理");
-		params.put("size", "50");
-		// params.put("sort","fields.data_time");
-		List<Map> list = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("name", "last_time");
-		map.put("lt", Pub.transform_DateToString(nowDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
-		list.add(map);
-		params.put("range", list);
+        int up_number = 0;
+        int all_number = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, -1);   //将时间往前推一分钟，简单避免入库延迟导致的报警
 
-		esQueryBean.setParameters(params);
+        EsQueryBean esQueryBean = new EsQueryBean();
+        String[] str_indexs = Pub.getIndices(new Date(), 1);
+        esQueryBean.setIndices(str_indexs);
+        esQueryBean.setTypes(new String[]{"FZJC", "LAPS"});
 
-		// System.out.println(Pub.transform_DateToString(nowDate,"yyyy-MM-dd
-		// HH:mm:ss.SSSZ"));
-		// 查询到 所有未处理状态的数据，按照资料时间排序
-		Map<String, Object> responseMap = esQueryService.getData_resultId(esQueryBean);
+        Map<String, Object> mustMap = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        mustMap.put("aging_status", "未处理");
 
-		if (!responseMap.get(Pub.KEY_RESULT).equals(Pub.VAL_SUCCESS)) {
-			return -1;
-		}
+        List<Map> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "last_time");
+        map.put("lt", Pub.transform_DateToString(calendar.getTime(), "yyyy-MM-dd HH:mm:ss.SSSZ"));
+        list.add(map);
+        params.put("range", list);
+        params.put("must", mustMap);
+        params.put("sort", "fields.data_time");
+        params.put("sortType", "asc");
+        params.put("_index", "true");
+        params.put("_type", "true");
+        params.put("_id", "true");
+        params.put("resultAll", true);
 
-		// 得到结果集
-		Map<String, Object> tempMap = (Map<String, Object>) responseMap.get(Pub.KEY_RESULTDATA);
+        esQueryBean.setParameters(params);
 
-		Map<String, Object> fields = null;
-		EsWriteBean esWriteBean = null;
-		for (String uid : tempMap.keySet()) {
-			try {
-				fields = (Map<String, Object>) tempMap.get(uid);
+        // 查询到 所有未处理状态的数据，按照资料时间排序
+        Map<String, Object> responseMap = esQueryService.getData_new(esQueryBean);
+        if (responseMap != null && Pub.VAL_SUCCESS.equals(responseMap.get(Pub.KEY_RESULT))) {
+            List dataList = (List) responseMap.get(Pub.KEY_RESULTDATA);
+            all_number = dataList.size();
+            for (Object object : dataList) {
+                try {
+                    Map<String, Object> objMap = (Map<String, Object>) object;
 
-				Map<String, Object> pam = new HashMap<>();
-				esWriteBean = new EsWriteBean();
-				esWriteBean.setIndex(index);
-				esWriteBean.setType("FZJC");
-				esWriteBean.setId(uid);
-				pam.put("aging_status", "超时");
-				esWriteBean.setParams(pam);
-				esWriteService.update_field(esWriteBean);
-				up_number++;
+                    String str_index = objMap.get("_index").toString();
+                    String str_type = objMap.get("_type").toString();
+                    String str_id = objMap.get("_id").toString();
 
-				sendMessage.sendAlert(index, "alert", fields);
+                    Map<String, Object> pam = new HashMap<>();
+                    EsWriteBean esWriteBean = new EsWriteBean();
+                    esWriteBean.setIndex(str_index);
+                    esWriteBean.setType(str_type);
+                    esWriteBean.setId(str_id);
+                    pam.put("aging_status", "超时");
+                    esWriteBean.setParams(pam);
+                    esWriteService.update_field(esWriteBean);
+                    up_number++;
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+                    if ("yes".equals(objMap.get("startMoniter").toString())) {
+                        //修改发送消息代码，先入es，再定时执行发送， 这样不会妨碍入库程序的速度
+                        sendMessage.sendAlert(str_index, "alert", objMap);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            logger.error(JSON.toJSONString(responseMap));
+        }
 
-		logger.info("---查询出: " + tempMap.size() + " 条超时数据，修改了：" + up_number + " 条");
-		return up_number;
+        logger.info("---查询出: " + all_number + " 条超时数据，修改了：" + up_number + " 条");
 	}
 
+
+    /**
+     * 定时处理超时未到的数据，将状态致为超时
+     * @return
+     * @throws Exception
+     */
+    public void collectDataSource_task() throws Exception{
+
+        int up_number = 0;
+        int all_number = 0;
+        Date nowDate = new Date();
+        EsQueryBean esQueryBean = new EsQueryBean();
+        String[] str_indexs = Pub.getIndices(new Date(), 1);
+        esQueryBean.setIndices(str_indexs);
+        esQueryBean.setTypes(new String[]{"DATASOURCE"});
+
+        Map<String, Object> mustMap = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        mustMap.put("aging_status", "未处理");
+
+        List<Map> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "last_time");
+        map.put("lte", Pub.transform_DateToString(nowDate, "yyyy-MM-dd HH:mm:ss"));
+        list.add(map);
+        params.put("range", list);
+        params.put("must", mustMap);
+        params.put("sort", "fields.data_time");
+        params.put("sortType", "asc");
+        params.put("_index", "true");
+        params.put("_type", "true");
+        params.put("_id", "true");
+        params.put("resultAll", true);
+
+        esQueryBean.setParameters(params);
+
+        // 查询到 所有未处理状态的数据，按照资料时间排序
+        Map<String, Object> responseMap = esQueryService.getData_new(esQueryBean);
+        if (responseMap != null && Pub.VAL_SUCCESS.equals(responseMap.get(Pub.KEY_RESULT))) {
+            List dataList = (List) responseMap.get(Pub.KEY_RESULTDATA);
+            all_number = dataList.size();
+            for (Object object : dataList) {
+                try {
+                    Map<String, Object> objMap = (Map<String, Object>) object;
+
+                    String str_index = objMap.get("_index").toString();
+                    String str_type = objMap.get("_type").toString();
+                    String str_id = objMap.get("_id").toString();
+
+                    Map<String, Object> pam = new HashMap<>();
+                    EsWriteBean esWriteBean = new EsWriteBean();
+                    esWriteBean.setIndex(str_index);
+                    esWriteBean.setType(str_type);
+                    esWriteBean.setId(str_id);
+                    pam.put("aging_status", "超时");
+                    esWriteBean.setParams(pam);
+                    esWriteService.update_field(esWriteBean);
+                    up_number++;
+
+                    if ("yes".equals(objMap.get("startMoniter").toString())) {
+                        //修改发送消息代码，先入es，再定时执行发送， 这样不会妨碍入库程序的速度
+                        sendMessage.sendAlert(str_index, "alert", objMap);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            logger.error(JSON.toJSONString(responseMap));
+        }
+
+        logger.info("---查询出: " + all_number + " 条数据源 超时 数据，修改了：" + up_number + " 条");
+    }
+
+
+    /**
+     * 定时处理超时未到的数据，将状态致为超时
+     * @return
+     * @throws Exception
+     */
 	public int task_T639() throws Exception {
 		int up_number = 0;
-		// 生成日历插件， 计算出 第二天的开始时间和结束时间
+		int all_number = 0;
+		// 生成日历插件， 计算出 今天和第六天后的0点 的时间
 		Calendar calendar = Calendar.getInstance();
 		Date date = new Date();
 		calendar.setTime(date);
@@ -115,6 +211,7 @@ public class AgingStatusService {
 
 		List<String> indicesList = new ArrayList<>();
 		List<String> temp = new ArrayList<>();
+		//计算出需要查询的index
 		for (Date dt : timeList) {
 			String indexKey = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
 			if (temp.contains(indexKey)) {
@@ -133,11 +230,17 @@ public class AgingStatusService {
 			return -1;
 		}
 
+		//拼接查询条件
 		EsQueryBean esQueryBean = new EsQueryBean();
 		esQueryBean.setIndices(indices);
 		esQueryBean.setTypes(new String[] { "FZJC" });
 
+        Map<String, Object> mustMap = new HashMap<>();
+        mustMap.put("aging_status", "未处理");
+        mustMap.put("type", "T639,风流场");
+
 		Map<String, Object> params = new HashMap<>();
+        params.put("must", mustMap);
 
 		List<Map> rangeList = new ArrayList<>();
 		Map<String, Object> rangeMap_1 = new HashMap<>();
@@ -145,58 +248,59 @@ public class AgingStatusService {
 		rangeMap_1.put("gte", Pub.transform_DateToString(startDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 		rangeMap_1.put("lt", Pub.transform_DateToString(endDate, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 		rangeList.add(rangeMap_1);
-
-		params.put("aging_status", "未处理");
-		params.put("type", "T639,风流场");
 		params.put("range", rangeList);
-		params.put("size", "50");
+
+        params.put("_index", "true");
+        params.put("_type", "true");
+        params.put("_id", "true");
+        params.put("resultAll", true);
 
 		esQueryBean.setParameters(params);
 
-		// System.out.println(Pub.transform_DateToString(nowDate,"yyyy-MM-dd
-		// HH:mm:ss.SSSZ"));
 		// 查询到 所有未处理状态的数据
-		Map<String, Object> responseMap = esQueryService.getData_resultId(esQueryBean);
+		Map<String, Object> responseMap = esQueryService.getData_new(esQueryBean);
 
-		if (!responseMap.get(Pub.KEY_RESULT).equals(Pub.VAL_SUCCESS)) {
-			return -1;
-		}
+        if (responseMap != null && Pub.VAL_SUCCESS.equals(responseMap.get(Pub.KEY_RESULT))) {
+            List dataList = (List) responseMap.get(Pub.KEY_RESULTDATA);
+            all_number = dataList.size();
+            long overTime = 24 * 60 * 60 * 1000;
+            for (Object object : dataList) {
+                try {
+                    Map<String, Object> resMap = (Map<String, Object>) object;
 
-		// 得到结果集
-		Map<String, Object> tempMap = (Map<String, Object>) responseMap.get(Pub.KEY_RESULTDATA);
+                    String str_index = resMap.get("_index").toString();
+                    String str_type = resMap.get("_type").toString();
+                    String str_id = resMap.get("_id").toString();
 
-		Map<String, Object> resMap = null;
-		EsWriteBean esWriteBean = null;
-		long overTime = 24 * 60 * 60 * 1000;
-		for (String uid : tempMap.keySet()) {
-			try {
-				resMap = (Map<String, Object>) tempMap.get(uid);
-				Map<String, Object> fields = (Map<String, Object>) resMap.get("fields");
-				Date endTime = Pub.transform_StringToDate(fields.get("data_time").toString(),
-						"yyyy-MM-dd HH:mm:ss.SSSZ");
-				if (date.getTime() - endTime.getTime() > overTime) {
-					Date dt = Pub.transform_StringToDate(fields.get("data_time").toString(),
-							"yyyy-MM-dd HH:mm:ss.SSSZ");
-					String index = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
-					Map<String, Object> pam = new HashMap<>();
-					esWriteBean = new EsWriteBean();
-					esWriteBean.setIndex(index);
-					esWriteBean.setType("FZJC");
-					esWriteBean.setId(uid);
-					pam.put("aging_status", "超时");
-					esWriteBean.setParams(pam);
-					esWriteService.update_field(esWriteBean);
-					up_number++;
+                    Map<String, Object> fields = (Map<String, Object>) resMap.get("fields");
+                    Date endTime = Pub.transform_StringToDate(fields.get("data_time").toString(),
+                            "yyyy-MM-dd HH:mm:ss.SSSZ");
+                    if (date.getTime() - endTime.getTime() > overTime) {    //判断是否超过阈值
+                        Map<String, Object> pam = new HashMap<>();
+                        EsWriteBean esWriteBean = new EsWriteBean();
+                        esWriteBean.setIndex(str_index);
+                        esWriteBean.setType(str_type);
+                        esWriteBean.setId(str_id);
+                        pam.put("aging_status", "超时");
+                        esWriteBean.setParams(pam);
+                        esWriteService.update_field(esWriteBean);   //修改超时数据
+                        up_number++;
 
-					sendMessage.sendAlert(index, "alert", resMap);
-				}
+                        if ("yes".equals(resMap.get("startMoniter").toString())) {
+                            //修改发送消息代码，先入es，再定时执行发送， 这样不会妨碍入库程序的速度
+                            sendMessage.sendAlert(str_index, "alert", resMap);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+            }
+        }else {
+            logger.error(JSON.toJSONString(responseMap));
+        }
 
-		logger.info("---查询出: " + tempMap.size() + " 条数据，修改了：" + up_number + " 条");
+		logger.info("---查询出: " + all_number + " 条T639超时数据，修改了：" + up_number + " 条");
 		return up_number;
 	}
 
@@ -220,7 +324,6 @@ public class AgingStatusService {
 		if (!"success".equals(resultMap.get("result"))) {
 			throw new Exception("查询发生了错误,错误信息:" + resultMap.get("message"));
 		}
-		logger.info(JSON.toJSONString(resultMap));
 		flag = (Boolean) resultMap.get("resultData");
 
 		return flag;

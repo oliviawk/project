@@ -1,11 +1,13 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
 import com.cn.hitec.repository.ESRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -69,5 +71,31 @@ public class ESClientAdminService {
         }
         flag = es.exists(index);
         return flag;
+    }
+
+
+    /**
+     * 根据查询id，返回id
+     * @param json
+     * @return
+     */
+    public String getDocumentById(String json){
+        String documentId = null;
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            String index = jsonObject.getString("index");
+            String type = jsonObject.getString("type");
+            String id = jsonObject.getString("id");
+
+            GetResponse response = es.client.prepareGet(index, type, id).get();
+            if (response != null && response.isExists()){
+                documentId = response.getId();
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            return documentId;
+        }
     }
 }

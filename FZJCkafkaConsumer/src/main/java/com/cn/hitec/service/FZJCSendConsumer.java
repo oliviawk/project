@@ -14,41 +14,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class FZJCSendConsumer extends MsgConsumer {
 	private static final Logger logger = LoggerFactory.getLogger(FZJCSendConsumer.class);
-    private static String topic = "SEND";
-    private static String group;
-    private static String type = "FZJC";
+	private static String topic = "SEND";
+	private static String type = "FZJC";
 
-    @Value("${FZJC.send.target.ips}")
-    private String ips;
-    @Value("${FZJC.datatype}")
-    private String datatypes;
-    @Value("${collect}")
-    private String collect;
-    @Value("${send}")
-    private String send;
+	@Value("${FZJC.send.target.ips}")
+	private String ips;
+	@Value("${FZJC.datatype}")
+	private String datatypes;
+	@Value("${collect}")
+	private String collect;
+	@Value("${send}")
+	private String send;
 
-    static{
-		ResourceBundle bundle = ResourceBundle.getBundle("application");
-		group = bundle.getString("FZJC.group.id");
+	public FZJCSendConsumer(@Value("${FZJC.group.id}")String group) {
+		super(topic,group,type);
 	}
 
-    public FZJCSendConsumer() {
-		super(topic,group,type);
-    }
+	@Override
+	public List<String> processing(String msg){
 
-    @Override
-    public List<String> processing(String msg){
-    	List<String> toEsJsons = new ArrayList<>();
+		List<String> toEsJsons = new ArrayList<>();
 
-    	Pattern ipspattern = Pattern.compile(ips);
-    	Matcher matcher = ipspattern.matcher(msg);
-    	if(!matcher.find()){
-    		return toEsJsons;
-    	}
+		Pattern ipspattern = Pattern.compile(ips);
+		Matcher matcher = ipspattern.matcher(msg);
+		if(!matcher.find()){
+			return toEsJsons;
+		}
 
-    	try{
+		try{
 
-			String[] lines = msg.split("※");
+			String[] lines = msg.split("\\※|\\?");
 			String date = "";
 			String beginTime = "";
 			String endTime = "";
@@ -127,7 +122,7 @@ public class FZJCSendConsumer extends MsgConsumer {
 								subobj.put("module", "分发");
 							}
 
-							if(type.equals("satellite") || type.equals("cloudmap_Guowuyuan")){
+							if(type.equals("satellite") || type.equals("cloudmap_Guowuyuan") || type.equals("cloudProduct")){
 								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20171018060000000.png
 								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20170904190000000.HDF
 								String[] arr = matcher.group(1).split("_");
@@ -156,7 +151,7 @@ public class FZJCSendConsumer extends MsgConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							else if(type.equals("radar_Guowuyuan")){
+							else if(type.equals("radar_Guowuyuan") || type.equals("radarProduct")){
 								//MSP3_PMSC_RADAR_BREF_L88_CHN_201710170736_00000-00000.PNG
 								String[] arr = matcher.group(1).split("_");
 								obj.put("type", "雷达");
@@ -168,7 +163,7 @@ public class FZJCSendConsumer extends MsgConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							else if(type.equals("T639_Guowuyuan")){
+							else if(type.equals("T639_Guowuyuan") || type.equals("T639product")){
 								//T639_GMFS_WIND_2017101613.json
 								String[] arr = matcher.group(1).split("_");
 								obj.put("type", "T639");
@@ -180,7 +175,7 @@ public class FZJCSendConsumer extends MsgConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							else if(type.equals("hotIndex_Guowuyuan")){
+							else if(type.equals("hotIndex_Guowuyuan") || type.equals("hotIndex")){
 								//hot2017101707.txt
 								String fname = matcher.group(1);
 								obj.put("type", "炎热指数");
@@ -204,7 +199,7 @@ public class FZJCSendConsumer extends MsgConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							else{
+							else{//lapsSUN,LapsTemperature,dizhizaihai,forestfire,micapsJson,shanhong
 								obj.put("type", type);
 							}
 
@@ -248,14 +243,14 @@ public class FZJCSendConsumer extends MsgConsumer {
 					}
 				}
 			}
-    	}catch(Exception e){
-    		logger.error("!!!!!!error");
-        	logger.debug("",e);
-        	System.out.println(msg);
-            e.printStackTrace();
-    	}
+		}catch(Exception e){
+			logger.error("!!!!!!error");
+			logger.debug("",e);
+			System.out.println(msg);
+			e.printStackTrace();
+		}
 
-    	return toEsJsons;
-    }
+		return toEsJsons;
+	}
 
 }

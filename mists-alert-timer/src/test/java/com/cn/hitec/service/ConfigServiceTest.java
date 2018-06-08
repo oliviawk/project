@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.cn.hitec.util.HttpPub;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,9 +14,12 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.Pub;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({ "local" })
+@ActiveProfiles({ "dev" })
 public class ConfigServiceTest {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigServiceTest.class);
 
@@ -24,6 +28,9 @@ public class ConfigServiceTest {
 
 	@Autowired
 	ConfigService service;
+
+	@Autowired
+	HttpPub httpPub;
 
 	// @Test
 	public void createAlertItem() throws Exception {
@@ -52,18 +59,22 @@ public class ConfigServiceTest {
 	 * 创建数据测试
 	 */
 	@Test
-	public void initData() {
-		// 初始化 alertMap
-		configService.initAlertMap();
-		logger.info("alertMap_collect.size:" + Pub.DIMap_collect.size() + "");
-		logger.info("alertMap_machining.size:" + Pub.DIMap_machining.size() + "");
-		logger.info("alertMap_distribute.size:" + Pub.DIMap_distribute.size() + "");
-		configService.createAlertDI("采集", Pub.DIMap_collect);
-		// configService.createAlertDI("加工", Pub.DIMap_machining);
-		// configService.createAlertDI("分发", Pub.DIMap_distribute);
+	public void initData() throws Exception {
 
-		logger.info("DIMap_t639.size:" + Pub.DIMap_t639.size() + "");
-		// configService.createT639DI("FZJC", Pub.DIMap_t639, 5);
+		Calendar calendar = Calendar.getInstance();
+		Date date = new Date();
+		calendar.setTime(date);
+//		calendar.add(Calendar.HOUR_OF_DAY, -1);
+
+		// 初始化 alertMap
+		configService.createAlertDI("采集", Pub.DIMap_collect,0,calendar.getTime());
+		configService.createAlertDI("加工", Pub.DIMap_machining,0,calendar.getTime());
+		configService.createAlertDI("分发", Pub.DIMap_distribute,0,calendar.getTime());
+
+		configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,calendar.getTime());
+
+		logger.info("---------------------------------开始执行定时任务，生成后5天的数据--------------------------------");
+		configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
 		logger.info("------");
 	}
@@ -100,5 +111,10 @@ public class ConfigServiceTest {
 		// a.put("风流场",map);
 		// configService.createT639DI("FZJC",a,5);
 		System.out.println("");
+	}
+
+	@Test
+	public void testWX(){
+		httpPub.httpPost("@all","test");
 	}
 }

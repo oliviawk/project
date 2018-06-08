@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>告警配置</title>
+    <link rel="stylesheet" href="../static/css/gjpz.css"></link>
+</head>
+<body>
+<div id="main">
+    <div id="div_1">
+        <button id="bu1_1">告警策略配置</button>
+        <button id="bu1_2">用户组配置</button>
+        <button id="bu1_3">发布模板配置</button>
+    </div>
+    <div id="div_2">
+        <button id="bu2_1">新增模板</button><hr></hr>
+        <span id="sp2_1">模板名称：</span>
+        <input id="in2_1" type="text"></input>
+        <span id="sp2_2">模板名称：</span>
+        <span style="position: absolute;left:470px;top:107px;">微信</span>
+        <input id="in2_2" type="checkbox"></input>
+        <span style="position: absolute;left:550px;top:107px;">短信</span>
+        <input id="in2_3" type="checkbox"></input>
+        <span id="sp2_3">模板状态</span>
+        <input id="in2_4" type="radio" name="radio" value="start"></input>
+        <input id="in2_5" type="radio" name="radio" value="close"></input>
+        <span style="position: absolute;left:171px;top:156px;">启用</span>
+        <span style="position: absolute;left:250px;top:156px;">停用</span>
+        <button id="bu2_2">查询</button>
+        <div id="div_3">
+            <table id="table_1" >
+                <tr>
+                    <td><input type="checkbox" name="cc1"></td>
+                    <td>模板名</td>
+                    <td>发布手段</td>
+                    <td>模板状态</td>
+                    <td><button>修改</button><button>删除</button><button>查看</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="cc1"></td>
+                    <td>雷达模板</td>
+                    <td>微信</td>
+                    <td>启用</td>
+                    <td><button>修改</button><button>删除</button><button>查看</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="cc1"></td>
+                    <td>采集模板</td>
+                    <td>微信、短信</td>
+                    <td>启用</td>
+                    <td><button>修改</button><button>删除</button><button>查看</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

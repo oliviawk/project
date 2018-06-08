@@ -1,0 +1,126 @@
+@CHARSET "UTF-8";
+#nav{position:absolute;left:8x;top:25px;width:200px; margin:30px}
+#a123{position:relative;text-align:center; display:block;top:50px;left:50px;} 
+#nav h4{ cursor:pointer; line-height:50px; height:20px;color:#fff}
+#nav a{display:block; line-height:30px;color:#ffffff;} 
+#nav a:hover{background-color:#eee; color:#ff0909;}
+#nav div{display:none; border-top:none}
+  
+.div{
+	position:absolute;
+	left:0px;
+	top:0px;
+	height:10%;
+	width:100%;
+	background:#0000ff;
+}
+.div0{
+	position:absolute;
+	left:0px;
+	top:10%;
+	height:90%;
+	width:100%;
+	background:#0080ff;
+}
+.div1{
+	position:absolute;
+	left:30px;
+	top:30px;
+	height:600px;
+	width:320px;
+	background:#0080ff;
+}
+
+.d2_1_1{
+	position:absolute;
+	left:375px;
+	top:30px;
+	height:35px;
+	width:150px;
+	background:#0000ff;
+	color:#ffffff;
+	font-size:18px;
+	text-align:center
+}
+.d2_1_2{
+	position:absolute;
+	left:527px;
+	top:30px;
+	height:35px;
+	width:150px;
+	background:#0000ff;
+	color:#ffffff;
+	font-size:18px;
+	text-align:center
+}
+.d2_1_3{
+	position:absolute;
+	left:679px;
+	top:30px;
+	height:35px;
+	width:150px;
+	background:#0000ff;
+	color:#ffffff;
+	font-size:18px;
+	text-align:center
+}
+.div2_2{
+	position:absolute;
+	left:375px;
+	top:66px;
+	height:760px;
+	width:1299px;
+	background:#71b8ff;
+	z-index:10;
+}
+.div3{
+	position:absolute;
+	left:1700px;
+	top:30px;
+	height:600px;
+	width:200px;
+	background:#0080ff;
+	color:#e6ffec;
+	z-index:10;
+}
+#table_total{
+	
+	width:1299px;
+	border-collapse:collapse;
+	text-align:center;
+	z-index:20;
+}
+#table_total td{
+	
+	border:1px solid #00a4f2;
+}
+#table_renwu{
+	height:600px;
+	width:200px;
+}
+.top_brand{
+	position:absolute;
+	left:966px;
+	top:34px;
+	height:35px;
+	width:800px;
+	background:#0080ff;
+	
+}
+#span_caozuo{
+	background-color:#0080ff;
+	color:#ffffff;
+	padding:3px 12px 3px 12px;
+	border-radius:7px;
+}
+#chsory{
+	position:absolute;
+	left:300px;
+	top:50px;
+	height:300px;
+	width:300px;
+	background:#e6ffec;
+	z-index:28;
+	display:none;
+}
+

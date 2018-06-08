@@ -29,6 +29,8 @@ public class RunnerEsComponent implements CommandLineRunner {
     LAPSSendConsumer lapsSendConsumer;
     @Autowired
     LAPSCollectConsumer lapsCollectConsumer;
+    @Autowired
+    LAPSCollectConsumerEX LAPSCollectConsumerEX;
     @Override
     public void run(String... strings) throws Exception {
         Thread fzjc = new Thread(){
@@ -37,7 +39,7 @@ public class RunnerEsComponent implements CommandLineRunner {
 			public void run() {
 				kafkaConsumer.consume();
 			}
-        	
+
         };
         
         Thread laps = new Thread(){
@@ -74,12 +76,31 @@ public class RunnerEsComponent implements CommandLineRunner {
             }
 
         };
+//        Thread lapsEX = new Thread(){
+//
+//            @Override
+//            public void run() {
+//                lapsCollectConsumer.consume();
+//            }
+//
+//        };
 
         fzjc.start();
         laps.start();
         fzjcSend.start();
         lapsSend.start();
         lapsColl.start();
+
+        Thread xjf = new Thread(){
+
+            @Override
+            public void run() {
+                LAPSCollectConsumerEX.consume();
+            }
+
+        };
+        xjf.start();
     }
+
 
 }

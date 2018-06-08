@@ -79,6 +79,14 @@ public class FZJCController{
         return map;
     }
 
+    @RequestMapping(value="/lctAggQuery",method= RequestMethod.POST , consumes = "application/json")
+    @ResponseBody
+    public Map lctAggQuery(){
+        Map<String,Object> map = fzjcService.lctAggQuery();
+//        JSON.toJSONStringWithDateFormat(map,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);     //fastjson 插件异常处理方法
+        return map;
+    }
+
     /**
      *  云图、雷达 ， 历史数据查询
      * @param esQueryBean

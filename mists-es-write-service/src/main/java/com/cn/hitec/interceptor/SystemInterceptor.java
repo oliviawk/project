@@ -33,7 +33,7 @@ public class SystemInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
 //		 System.out.println(">>>系统拦截器>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
-		 System.out.println(">>>请求的IP地址:"+arg0.getRemoteAddr());
+//		 System.out.println(">>>请求的IP地址:"+arg0.getRemoteAddr());
 		return true;// 只有返回true才会继续向下执行，返回false取消当前请求
 	}
 

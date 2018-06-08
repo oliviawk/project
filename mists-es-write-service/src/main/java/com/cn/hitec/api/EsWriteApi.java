@@ -1,9 +1,7 @@
 package com.cn.hitec.api;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cn.hitec.bean.EsBean;
+import com.cn.hitec.bean.*;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.service.ESClientAdminService;
 import com.cn.hitec.service.ESService;
@@ -47,9 +45,10 @@ public class EsWriteApi extends BaseController {
 		return outMap;
 	}
 
+
 	@RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> add(@RequestBody EsBean esBean) {
-		if (esBean == null || esBean.getData() == null) {
+		if (esBean == null || esBean.getData() == null || StringUtils.isEmpty(esBean.getType())) {
 			outMap.put(KEY_RESULT, VAL_ERROR);
 			outMap.put(KEY_RESULTDATA, null);
 			outMap.put(KEY_MESSAGE, "ES写入数据失败！数据为 null");
@@ -61,12 +60,13 @@ public class EsWriteApi extends BaseController {
 			SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
 			index = Pub.Index_Head + (sdf.format(new Date()));
 		}
+
 		long start = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<>();
 
 		// System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
 
-		int num = esService.add(index, esBean.getType(), esBean.getData());
+		int num = esService.add(index, esBean.getType(), esBean.getId(),esBean.getData());
 
 		map.put("insert_number", num);
 		long spend = System.currentTimeMillis() - start;
@@ -175,14 +175,29 @@ public class EsWriteApi extends BaseController {
 		// System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
 
 		int num = esService.update_field(esBean.getIndex(), esBean.getType(), esBean.getId(), esBean.getParams());
-		if (num > 0) {
+		if (num > -1) {
 			outMap.put(KEY_MESSAGE, "数据修改成功");
+			outMap.put(KEY_RESULT, VAL_SUCCESS);
 		} else {
 			outMap.put(KEY_MESSAGE, "数据修改失败");
+			outMap.put(KEY_RESULT, VAL_ERROR);
 		}
 		long spend = System.currentTimeMillis() - start;
-		outMap.put(KEY_RESULT, VAL_SUCCESS);
 		outMap.put(KEY_SPEND, spend + "mm");
+		return outMap;
+	}
+
+	@RequestMapping(value="/getId",method=RequestMethod.POST,consumes="application/json")
+	public Map<String,Object> getDocumentId1(@RequestBody SearchBean esBean){
+		outMap=esService.getDocumentId1(esBean.getIndex(),esBean.getType(),esBean.getParams());
+		return outMap;
+	}
+
+	// esService.add("data_20180206","LAPS",id,JSON.toJSONString(resultMap));
+
+	@RequestMapping(value="/updatebyid",method=RequestMethod.POST,consumes="application/json")
+	public Map<String,Object> add(@RequestBody UpdatebyIdBean esbean ){
+		esService.add(esbean.getIndex(),esbean.getType(), esbean.getId(),esbean.getJson());
 		return outMap;
 	}
 

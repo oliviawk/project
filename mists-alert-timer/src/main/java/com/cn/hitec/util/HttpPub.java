@@ -12,6 +12,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +28,13 @@ import java.util.Map;
  * @author: fukl
  * @data: 2017年10月01日 14:39
  */
+@Component
 public class HttpPub {
+
+    @Value("${wechat.url}")
+    private  String url;
+    @Value("${wechat.agentid}")
+    private  String agentid;
 
     /**
      * post请求
@@ -34,9 +42,9 @@ public class HttpPub {
      * @param jsonParam 告警内容
      * @return
      */
-    public static Map<String, Object> httpPost(String users,String jsonParam){
+    public  Map<String, Object> httpPost(String users,String jsonParam){
         //post请求返回结果
-        String url = "http://10.16.41.126:9999/ws/sendwx/1/2";
+//        String url = "http://10.16.41.126:9999/ws/sendwx/1/2";
         HttpClient httpClient = HttpClients.createDefault();
         Map<String,Object> resultMap = new HashMap<>();
         HttpPost method = new HttpPost(url);
@@ -46,7 +54,7 @@ public class HttpPub {
             params.put("totag","");
             params.put("msgtype","text");
             params.put("touser",users);
-            params.put("agentid","1000004");
+            params.put("agentid",agentid);
             params.put("toparty","");
             Map<String,String> alertMessage = new HashMap<>();
             alertMessage.put("content",jsonParam);
@@ -79,9 +87,4 @@ public class HttpPub {
         return resultMap;
     }
 
-    public static void main(String[] args){
-        HttpPub httpPub = new HttpPub();
-        httpPub.httpPost("@all","在这里是测试数据");
-
-    }
 }

@@ -341,14 +341,14 @@ ul,li{list-style: none;}
 }
 /*弹出框样式 end*/
 /*屏幕适配*/
-@media (max-width: 1280px) {
+@media (min-width: 1280px) {
 	.modal-bg {
 		width: 90%;
 	}
 }
-@media (min-width: 1280px) {
+@media (max-width: 1280px) {
 	.modal-bg {
-		width: 75%;
+		width: 100%;
 	}
 }
 /*屏幕适配 end*/

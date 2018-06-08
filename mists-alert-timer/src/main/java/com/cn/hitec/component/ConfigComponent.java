@@ -1,20 +1,15 @@
 package com.cn.hitec.component;
 
-import com.cn.hitec.bean.EsWriteBean;
-import com.cn.hitec.feign.client.EsWriteService;
-import com.cn.hitec.service.AgingStatusService;
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.util.Pub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @ClassName:
@@ -29,14 +24,19 @@ public class ConfigComponent implements CommandLineRunner {
 
     @Autowired
     ConfigService configService;
+    @Value("${es.indexHeader}")
+    private String indexHeader ;
 
     @Override
     public void run(String... strings) throws Exception {
         try {
-
             //初始化 alertMap
             configService.initAlertMap();
-
+            if (Pub.DI_ConfigMap.size() < 1){
+                logger.error("请添加数据的告警策略！！");
+            }
+//            System.out.println(JSON.toJSONString(Pub.DI_ConfigMap));
+            Pub.Index_Head = indexHeader;
         } catch (Exception e) {
             e.printStackTrace();
         }

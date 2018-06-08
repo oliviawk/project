@@ -40,8 +40,43 @@ public class BoolTermQuery implements BoolTermQuery_I{
     private ESRepository es;
 
 
+    /**
+     *
+     * @param indices   //不可为空
+     * @param types     //可以为空
+     * @param params    //可以为空
+     *       {
+     *          "_id":"true",               //是否返回id，默认false
+     *          "_type":"true",             //是否返回type，默认false
+     *          "_index":"true",            //是否返回index，默认false
+     *          "from":"10",                //从第几条开始返回数据， 默认0
+     *          "size":"30",                //返回多少条数据，默认30
+     *          "sortType":"desc",          //排序类型，默认desc倒序
+     *          "sort":"last_time",         //可以为空
+     *          "resultAll":"false",        //是否返回所有数据 , 默认false
+     *          "must":{                    //可以为空,term查询，类似 ==
+     *              "key_name":"value",
+     *                  .....
+     *          },
+     *          "mustNot":{                 //可以为空，term查询，类似 !=
+     *              "key_name":"value",
+     *                  .....
+     *          },
+     *          "range":[                   //可以为空，数值比较查询
+     *              {
+     *                  "name":"value",
+     *                  "gt":"10",
+     *                  "lte":"30"
+     *              },
+     *              ....
+     *          ]
+     *       }
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<Map> query_new(String[] indices, String[] types, Map<String, Object> params) throws Exception {
+        System.out.println(JSON.toJSONString(params));
         List<Map> resultList = new ArrayList<>();
         int fromInt = 0;
         int sizeInt = 30;
@@ -57,7 +92,6 @@ public class BoolTermQuery implements BoolTermQuery_I{
         //创建查询类
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
 
-//        RangeQueryBuilder rangeQueryBuilder = null;
         if(params != null){
             if(params.containsKey("_id") && "true".equals(params.get("_id"))){
                 is_ID = true;
@@ -140,23 +174,27 @@ public class BoolTermQuery implements BoolTermQuery_I{
             }
         }
 
-        log.info(queryBuilder.toString());
+//        log.info(queryBuilder.toString());
         //验证去除没有的index
         List<String> listIndice = new ArrayList<>();
-        for (String str : indices){
-            if(es.exists(str)){
-               listIndice.add(str);
+        if(indices != null){
+            for (String str : indices){
+                if(es.exists(str)){
+                    listIndice.add(str);
+                }
             }
+            if(listIndice.size() > 0){
+                indices = listIndice.toArray(new String [listIndice.size()]);
+            }else{
+                throw new Exception("index not be null");
+            }
+        }else {
+            throw new Exception("index not be null");
         }
-        if(listIndice.size() > 0){
-            indices = listIndice.toArray(new String [listIndice.size()]);
-        }else{
-            indices = null;
-        }
-
+        log.info("indices:"+JSON.toJSONString(indices));
         SearchRequestBuilder requestBuilder = es.client.prepareSearch(indices)
                 .setTypes(types)
-                .setSearchType(SearchType.DEFAULT)
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(queryBuilder);
 
         if(!StringUtils.isEmpty(strSort)){
@@ -166,7 +204,6 @@ public class BoolTermQuery implements BoolTermQuery_I{
 
         long start = System.currentTimeMillis();
         if(resultAll){
-            log.info("进入查询所有方法");
             requestBuilder.setSize(1000);
             //创建查询
             SearchResponse response = requestBuilder.setScroll(new TimeValue(2000)).get();
@@ -194,14 +231,13 @@ public class BoolTermQuery implements BoolTermQuery_I{
             } while(response.getHits().getHits().length != 0); // Zero hits mark the end of the scroll and the while loop.
 
         }else{
-            log.info("进入查询指定条数方法");
             if(fromInt > 0){
                 requestBuilder.setFrom(fromInt);
             }
             if(sizeInt > 0){
                 requestBuilder.setSize(sizeInt);
             }
-            log.info(JSON.toJSONString(requestBuilder));
+//            log.info(JSON.toJSONString(requestBuilder));
 
             //创建查询
             SearchResponse response = requestBuilder
@@ -410,6 +446,8 @@ public class BoolTermQuery implements BoolTermQuery_I{
             for (SearchHit hits : response.getHits().getHits()) {
                 //Handle the hit...
                 try {
+                    hits.getSource().put("_id",hits.getId());
+                    hits.getSource().put("_type",hits.getType());
                     resultMap.put(hits.getId(),hits.getSource());
                 } catch (Exception e) {
                     e.printStackTrace();
