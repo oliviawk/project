@@ -29,21 +29,7 @@ import com.cn.hitec.tools.Pub;
 @RequestMapping("/write")
 public class EsWriteApi extends BaseController {
 	@Autowired
-	ESClientAdminService esClientAdminService;
-	@Autowired
 	ESService esService;
-
-	@RequestMapping(value = "/getHealth", method = RequestMethod.GET)
-	public Map<String, Object> getHealth() {
-		long start = System.currentTimeMillis();
-		Map<String, Object> map = esClientAdminService.getClusterHealth();
-		long spend = System.currentTimeMillis() - start;
-		outMap.put(KEY_RESULT, VAL_SUCCESS);
-		outMap.put(KEY_RESULTDATA, map);
-		outMap.put(KEY_MESSAGE, "数据获取成功！");
-		outMap.put(KEY_SPEND, spend + "mm");
-		return outMap;
-	}
 
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/json")

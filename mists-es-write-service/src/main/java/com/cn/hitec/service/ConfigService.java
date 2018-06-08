@@ -1,6 +1,7 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
@@ -209,6 +210,16 @@ public class ConfigService {
     }
 
 
+    public void initAlertMould(){
+        List<Object> list = dataInfoRepository.findAlertModule();
+        for (Object obj : list){
+            JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(obj));
+            if (jsonArray.size() == 2){
+                Pub.alertModuleMap.put(jsonArray.get(0).toString(),jsonArray.get(1).toString());
+            }
+        }
+
+    }
 
 
 }

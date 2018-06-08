@@ -1,7 +1,6 @@
 package com.cn.hitec.service.task;
 
 import com.alibaba.fastjson.JSON;
-import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsWriteBean;
 import com.cn.hitec.domain.DataInfo;
@@ -22,7 +21,7 @@ import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({ "fu" })
+@ActiveProfiles({ "dev" })
 public class Task_create_DIdata_Test {
 
     @Autowired
@@ -40,7 +39,7 @@ public class Task_create_DIdata_Test {
     public void test1() throws Exception{
         List<DataInfo> listDataInfo = dataInfoRepository.findAllChilden(3);
 
-        //循环所有数据,区分是采集、加工、分发 的数据，分别存入不同的map
+        //循环所有数据
         for (DataInfo di : listDataInfo){
             Map<String ,Object> map = new HashMap<>();
             map.put("DI_name",di.getName());
@@ -55,24 +54,29 @@ public class Task_create_DIdata_Test {
 
             if ("FZJC".equals(di.getService_type()) && ("T639".equals(di.getName()) || "风流场".equals(di.getName()))) {
                 Pub.DIMap_t639.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-            } else if ("采集".equals(di.getModule())) {
-                Pub.DIMap_collect.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-            } else if ("加工".equals(di.getModule())) {
-                Pub.DIMap_machining.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-            } else if ("分发".equals(di.getModule())) {
-                Pub.DIMap_distribute.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-            }
+//            } else if ("采集".equals(di.getModule())) {
+//                Pub.DIMap.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//            } else if ("加工".equals(di.getModule())) {
+//                Pub.DIMap_machining.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//            } else if ("分发".equals(di.getModule())) {
+//                Pub.DIMap_distribute.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//            }
+            } else if("DS".equals(di.getModule())){
+                Pub.DIMap_DS.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
 
+            } else{
+                Pub.DIMap.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+            }
         }
 
-        System.out.println("alertMap_collect.size:"+ Pub.DIMap_collect.size()+",--:"+ JSON.toJSONString(Pub.DIMap_collect));
-        System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
-        System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
+        System.out.println("DItMap.size:"+ Pub.DIMap.size()+",--:"+ JSON.toJSONString(Pub.DIMap));
+//        System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
+//        System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
         System.out.println("DIMap_t639.size:"+ Pub.DIMap_t639.size()+",--:"+ JSON.toJSONString(Pub.DIMap_t639));
 
-        configService.createAlertDI("采集", Pub.DIMap_collect,0,new Date());
-        configService.createAlertDI("加工", Pub.DIMap_machining,0,new Date());
-        configService.createAlertDI("分发", Pub.DIMap_distribute,0,new Date());
+        configService.createAlertDI(Pub.DIMap,0,new Date());
+//        configService.createAlertDI("加工", Pub.DIMap_machining,0,new Date());
+//        configService.createAlertDI("分发", Pub.DIMap_distribute,0,new Date());
 
         configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
@@ -140,9 +144,9 @@ public class Task_create_DIdata_Test {
             System.out.println("---------------------------------开始执行定时任务，生成第二天的数据--------------------------------");
             try {
 
-                System.out.println("alertMap_collect.size:"+ Pub.DIMap_collect.size()+",--:"+ JSON.toJSONString(Pub.DIMap_collect));
-                System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
-                System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
+                System.out.println("DIMap.size:"+ Pub.DIMap.size()+",--:"+ JSON.toJSONString(Pub.DIMap));
+//                System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
+//                System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
                 System.out.println("DIMap_t639.size:"+ Pub.DIMap_t639.size()+",--:"+ JSON.toJSONString(Pub.DIMap_t639));
 
                 Calendar cal = Calendar.getInstance();
@@ -151,9 +155,9 @@ public class Task_create_DIdata_Test {
 //                cal.set(Calendar.MINUTE, 0);
 //                cal.set(Calendar.SECOND, 0);
 
-                configService.createAlertDI("采集", Pub.DIMap_collect,0,cal.getTime());
-                configService.createAlertDI("加工", Pub.DIMap_machining,0,cal.getTime());
-                configService.createAlertDI("分发", Pub.DIMap_distribute,0,cal.getTime());
+                configService.createAlertDI(Pub.DIMap,0,cal.getTime());
+//                configService.createAlertDI("加工", Pub.DIMap_machining,0,cal.getTime());
+//                configService.createAlertDI("分发", Pub.DIMap_distribute,0,cal.getTime());
 
                 configService.createT639DI("FZJC",Pub.DIMap_t639,5);
                 configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,cal.getTime());

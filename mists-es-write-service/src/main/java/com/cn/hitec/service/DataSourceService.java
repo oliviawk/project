@@ -120,7 +120,7 @@ public class DataSourceService {
 //
 //                }
                 String[] indices = Pub.getIndices(occrTime, 1); // 获取今天和昨天的
-                Map<String,Object> resultMap = esClientAdminService.getDocumentById(indices, str_type, str_id) ;
+                Map<String,Object> resultMap = esClientAdminService.getDocumentById(es,indices, str_type, str_id) ;
                 logger.info("indices :{} , str_type: {} , str_id :{}" , indices,str_type,str_id);
                 if(resultMap.containsKey("_id")){
                     AlertBeanNew alertBean = null;
@@ -166,7 +166,7 @@ public class DataSourceService {
                     }
 
                     if (alertBean != null) {
-                        alertService.alert(str_index, alertType, alertBean); // 生成告警
+                        alertService.alert(es,str_index, alertType, alertBean); // 生成告警
                         alertBean = null;
                     }
                     // 数据入库

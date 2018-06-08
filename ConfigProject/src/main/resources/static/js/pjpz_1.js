@@ -66,6 +66,8 @@ $(document)
                     }
                     $("#selectUser").html(m)
                     $("#usergroup").html(m);
+                    $("#usergroup option[value='1']").remove();   //删除Select中索引值为0的Option(第一个)
+					$("#user_group").html(m);
                 },
                 error : function(err) {
                     alert(err);
@@ -480,8 +482,8 @@ function addTemple() {
             }
         });
 
-    window.location.reload();
-
+//    window.location.reload();
+        searchUser();
 }
 function addUser() {
     $('#ueserAdd').modal('hide');
@@ -1029,7 +1031,7 @@ function onchangeSelect2(m) {
             }
         });
 }
-
+alertStrategy_Search();
 function alertStrategy_Search() {
     var select4 = $("#basic_ifo3").val();
     var select3 = $("#basic_ifo2").val();
@@ -1041,61 +1043,59 @@ function alertStrategy_Search() {
         "select2" : select2,
         "select1" : select1
     }
-    $
-        .ajax({
-            type : "POST",
-            url : "/pjpz/pzSearch",
-            datatype : "json",
-            async : false,
-            data : JSON.stringify(requestData),
-            headers : {
-                "Content-Type" : "application/json; charset=utf-8"
-            },
-            success : function(r) {
-                var t = {};
-                $.each(r, function(i, o) {
-                    if (typeof t[o.parent_id] === 'undefined')
-                        t[o.parent_id] = [];
-                    t[o.parent_id].push(o);
-                }); // 数据预处理 by Edward
+    $.ajax({
+        type : "POST",
+        url : "/pjpz/pzSearch",
+        datatype : "json",
+        async : false,
+        data : JSON.stringify(requestData),
+        headers : {
+            "Content-Type" : "application/json; charset=utf-8"
+        },
+        success : function(r) {
+            var t = {};
+            $.each(r, function(i, o) {
+                if (typeof t[o.parent_id] === 'undefined')
+                    t[o.parent_id] = [];
+                t[o.parent_id].push(o);
+            }); // 数据预处理 by Edward
 
-                var s = '';
-                s = "<tr><td>业务名/IP</td><td>资料名</td><td>环节配置</td><td>操作</td></tr>";
+            var s = '';
+            s = "<tr><td>业务名/IP</td><td>资料名</td><td>环节配置</td><td>操作</td></tr>";
 
-                $.each(t, function(k, o) {
-                    var modules = '';
-                    $.each(o, function(i, o2) {
-                        modules += o2.module + '<br>';
-                    });
-
-                    s += "<tr><td height='20px'>"
-                        + o[0].service_type
-                        + "</td><td>"
-                        + o[0].sub_name
-                        + "</td><td>"
-                        + modules
-                        + "</td>"
-                        + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(+"
-                        + k + ")'>查看</button>&nbsp;&nbsp;" +
-                            // "<button type='button' class='btn
-                            // btn-info'>修改</button>&nbsp;&nbsp;" +
-                        "<button type='button' class='btn btn-info' onclick='pztodelet("
-                        + k + ")'>删除</button>" + "</td></tr>";
+            $.each(t, function(k, o) {
+                var modules = '';
+                $.each(o, function(i, o2) {
+                    modules += o2.module + '<br>';
                 });
 
-                $("#dataTable").html(s);
-            },
-            error : function(err) {
-                alert(err);
-                console.log(err.message)
-            }
-        });
+                s += "<tr><td height='20px'>"
+                    + o[0].service_type
+                    + "</td><td>"
+                    + o[0].sub_name
+                    + "</td><td>"
+                    + modules
+                    + "</td>"
+                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy("
+                    + k + ")'>查看</button>&nbsp;&nbsp;" +
+                        // "<button type='button' class='btn
+                        // btn-info'>修改</button>&nbsp;&nbsp;" +
+                    "<button type='button' class='btn btn-info' disabled='disabled' onclick='pztodelet("
+                    + k + ")'>删除</button>" + "</td></tr>";
+            });
+
+            $("#dataTable").html(s);
+        },
+        error : function(err) {
+            alert(err);
+            console.log(err.message)
+        }
+    });
 }
 
 function lookAlertStrategy(strid) {
     $('#alertStrategy_look').modal('show');
-    $
-        .ajax({
+    $.ajax({
             type : "POST",
             url : "/pjpz/look_strategy",
             datatype : "json",
@@ -1106,51 +1106,26 @@ function lookAlertStrategy(strid) {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(res) {
-                var tableHtml1 = "<tr>"
-                    + "<td width=\"100px\">业务名：</td> <td width=\"300px\" ></td>"
-                    + "<td width=\"100px\">资料名：</td> <td width=\"300px\" ></td></tr>"
-                    + "<tr>"
-                    + "<td>环节名：</td><td ></td>"
-                    + "<td>策略名：</td><td ></td></tr>"
-                    + "<tr>"
-                    + "<td>发送微信：</td><td ></td>"
-                    + "<td>发送短信：</td><td ></td></tr>"
-                    + "<tr>"
-                    + "<td colspan=\"2\"> <textarea class=\"form-control\"  rows=\"5\" readonly = 'readonly' ></textarea></td>"
-                    + "<td colspan=\"2\"> <textarea class=\"form-control\"  rows=\"5\" readonly = 'readonly' ></textarea></td></tr>";
+                // Mod by Edward
+                if (res.result == "ok") {
+                    var configObj = res.data.config;
+                    var alertObj = res.data.alert;
 
-                $("#strategyDescTable").html(tableHtml1);
-                if (res.result == "ok" && res.data.length > 0) {
-                    var obj = res.data[0];
-                    var tableHtml = "<tr>"
-                        + "<td width=\"100px\">业务名：</td> <td width=\"300px\" >"
-                        + obj[0]
-                        + "</td>"
-                        + "<td width=\"100px\">资料名：</td> <td width=\"300px\" >"
-                        + obj[1]
-                        + "</td></tr>"
-                        + "<tr>"
-                        + "<td>环节名：</td><td >"
-                        + obj[2]
-                        + "</td>"
-                        + "<td>策略名：</td><td >"
-                        + obj[3]
-                        + "</td></tr>"
-                        + "<tr>"
-                        + "<td>发送微信：</td><td >"
-                        + obj[4]
-                        + "</td>"
-                        + "<td>发送短信：</td><td >"
-                        + obj[5]
-                        + "</td></tr>"
-                        + "<tr>"
-                        + "<td colspan=\"2\"> <textarea class=\"form-control\"  rows=\"5\" readonly = 'readonly' >"
-                        + obj[6]
-                        + "</textarea></td>"
-                        + "<td colspan=\"2\"> <textarea class=\"form-control\"  rows=\"5\" readonly = 'readonly' >"
-                        + obj[7] + "</textarea></td></tr>";
 
-                    $("#strategyDescTable").html(tableHtml);
+                    var html = '<tr><td colspan="3"><span>TODO: 资料名</span> - <span>'+configObj[0][1]+'</span></td></tr>';
+                    $.each(configObj, function(i, v) {
+                        html += '<tr><td rowspan="4">'+v[2]+'</td><td>时次表达式</td><td>'+v[8]+'</td></tr>';
+                        html += '<tr><td>间隔规律</td><td>'+v[3]+'</td></tr>';
+                        html += '<tr><td>应到时间</td><td>'+v[6]+'</td></tr>';
+                        html += '<tr><td>超时阈值</td><td>'+v[4]+'</td></tr>';
+                    });
+
+                    // 告警内容，目前只取[0]
+                    html += '<tr><td rowspan="3">告警策略</td><td>发送用户：<span>TODO: 用户组名</span></td><td>发布模板：<span>TODO: 模板名称</span></td></tr>';
+                    html += '<tr><td colspan="2">微信模板：<textarea class="form-control" rows="3" readonly="readonly">'+alertObj[0][6]+'</textarea></td></tr>';
+                    html += '<tr><td colspan="2">短信模板：<textarea class="form-control" rows="3" readonly="readonly">'+alertObj[0][7]+'</textarea></td></tr>';
+
+                    $("#strategyDescTable").html(html);
                 }
             },
             error : function(err) {

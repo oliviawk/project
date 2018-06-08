@@ -4,12 +4,10 @@
 <meta charset="UTF-8" />
 <title>告警配置</title>
 <link rel="stylesheet" href="../css/bootstrap_3.3.7.css" />
-<script src="../js/jquery2.1.1.js"></script>
+
 <link rel="stylesheet" href="../css/bootstrap-select.css"></link>
 	<link rel="stylesheet" href="../css/pjpz.css" />
-<script type="text/javascript" src="../js/bootstrap-select.js"></script>
-<script src="../js/bootstrap_3.3.7.js"></script>
-<script type="text/javascript" src="../js/pjpz_1.js"></script>
+
 <style>
 	dd>a {
 		color: rgba(54, 159, 255, 0.97);
@@ -85,26 +83,25 @@
 	<!--用户组配置-->
 	<div class="tab-pane fade" id="ios"
 		 style="height: 700px; width: 90%; background-color: white">
-		<div style="width: 200px; position: relative; left: 25px; top: 20px">
-			组名:<input class="form-control" type="text" id="user_group" /><br />
+		<div class="userDiv">
+			组名:
+			<select class="form-control"  name="user_group" id="user_group" style=""></select>
+			<br />
 		</div>
-		<div
-				style="width: 200px; position: relative; left: 236px; top: -54px">
+		<div class="userDiv">
 			用户名:<input class="form-control" type="text" id="user_name" /><br />
 		</div>
-		<div
-				style="width: 200px; position: relative; left: 448px; top: -128px">
+		<div class="userDiv">
 			手机号:<input class="form-control" type="text" id="user_phone" /><br />
 		</div>
-		<div
-				style="width: 200px; position: relative; left: 660px; top: -202px">
+		<div class="userDiv">
 			公众号:<input class="form-control" type="text" id="user_wechart" /><br />
 		</div>
-		<div style="position: absolute; left: 295px; top: 160px;">
+		<div class="userDiv" style="margin-top: 40px;">
 			<button type="button" class="btn btn-success"
 					onclick="searchUser()">确认查询</button>
 		</div>
-		<div style="position: absolute; left: 500px; top: 160px;">
+		<div class="userDiv" style="margin-top: 40px;">
 			<button type="button" class="btn btn-success btn-primary"
 					data-toggle="modal" data-target="#ueserAdd">添加用户</button>
 		</div>
@@ -442,9 +439,9 @@
 		<div class="modal-body">
 			<!--告警策略表格-->
 			<table class="table table-bordered table-hover"
-				   id="strategyDescTable1">
+				   id="strategyDescTable">
 				<tr>
-					<td colspan="3" width="">
+					<td colspan="3">
 						<span>辅助决策</span> - <span>雷达</span>
 					</td>
 				</tr>
@@ -494,17 +491,17 @@
 				<tr>
 					<td colspan="2">
 						微信模板：
-						<textarea class="form-control" style="margin: 5px;" rows="5" id="wechartTextTd" readonly='readonly'></textarea>
+						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
 						短信模板：
-						<textarea class="form-control" style="margin: 5px;" rows="5" id="smsTextTd" readonly='readonly'></textarea>
+						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 			</table>
-<!--
+			<!--
 			<table class="table table-bordered table-hover"
 				   id="strategyDescTable">
 				<tr>
@@ -542,5 +539,9 @@
 	</div>
 </div>
 </div>
+<script src="../js/jquery2.1.1.js"></script>
+<script type="text/javascript" src="../js/bootstrap-select.js"></script>
+<script src="../js/bootstrap_3.3.7.js"></script>
+<script type="text/javascript" src="../js/pjpz_1.js"></script>
 </body>
 </html>

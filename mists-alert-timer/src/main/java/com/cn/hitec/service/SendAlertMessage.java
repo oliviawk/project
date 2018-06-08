@@ -41,52 +41,6 @@ public class SendAlertMessage {
 	@Value("${profile.environment}")
 	private String env;
 
-//	public void sendAlert(String index, String type, Map<String, Object> map) {
-//
-//		try {
-//			Map<String, Object> fields = (Map<String, Object>) map.get("fields");
-//			// 去掉资料时次里的时区
-//			fields.put("data_time",
-//					Pub.transform_DateToString(
-//							Pub.transform_StringToDate(fields.get("data_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-//							"yyyy-MM-dd HH:mm:ss"));
-//
-//			String alertTitle = map.get("type") + "--" + fields.get("module") + "--" + fields.get("data_time")
-//					+ " 时次产品 ，超时未到达";
-//			AlertBean alertBean = new AlertBean();
-//			alertBean.setType("OP_FZJC_TIMER");
-//			alertBean.setAlertType("超时");
-//			alertBean.setLevel(fields.containsKey("event_status") ? fields.get("event_status").toString() : "");
-//			alertBean.setTitle(alertTitle);
-//			alertBean.setTime(Pub.transform_DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-//			alertBean.setIp(fields.containsKey("ip_addr") ? fields.get("ip_addr").toString() : "");
-//			alertBean.setDesc(fields.containsKey("event_info") ? fields.get("event_info").toString() : "");
-//			alertBean.setCause("");
-//			alertBean.setData_name(map.get("type").toString());
-//			alertBean.setData_time(fields.get("data_time").toString());
-//			alertBean.setModule(fields.get("module").toString());
-//			// 初始化告警实体类
-//
-//			EsWriteBean esWriteBean = new EsWriteBean();
-//			esWriteBean.setIndex(index);
-//			esWriteBean.setType(type);
-//			List<String> params = new ArrayList<>();
-//			params.add(JSON.toJSONString(alertBean));
-//			esWriteBean.setData(params);
-//			esWriteService.add(esWriteBean); // 将告警信息写入ES
-//			if ("local".equals(env) || "dev".equals(env)) {
-//				// System.out.println("跳过了告警");
-//			} else {
-//				// System.out.println("没有跳过告警");
-//				// 推送到前端
-//				kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
-//				// 发送告警消息 到微信
-//				HttpPub.httpPost("@all", alertTitle);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
 
@@ -123,10 +77,10 @@ public class SendAlertMessage {
 				alertBean.setType("SYSTEM.ALARM.EI");
 				alertBean.setName(""+str_type+"业务告警");
 				alertBean.setMessage(str_type+"业务告警");
-				alertBean.setGroupId("OP_"+str_type +"_"+ Pub.moduleMap.get(module));
+				alertBean.setGroupId("OP_"+str_type +"_"+ module);
 				alertBean.setOccur_time(Pub.transform_DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 				alertBean.setAlertType("01");
-				alertBean.setEventType("OP_"+str_type +"_"+ Pub.moduleMap.get(module)+"-1-01-01");
+				alertBean.setEventType("OP_"+str_type +"_"+ module+"-1-01-01");
 				alertBean.setLevel(fields.containsKey("event_status") ? fields.get("event_status").toString() : "1");
 				alertBean.setCause("-");
 				alertBean.setModule(module);
@@ -161,8 +115,8 @@ public class SendAlertMessage {
 				EsWriteBean esWriteBean = new EsWriteBean();
 				esWriteBean.setIndex(index);
 				esWriteBean.setType(type);
-				String dataName = Pub.dataNameMap.containsKey(alertBean.getDataName())? Pub.dataNameMap.get(alertBean.getDataName()) : alertBean.getDataName();
-				String str_id = Pub.MD5(alertBean.getGroupId()+","+dataName+","+alertBean.getData_time());
+				String module_key = alertBean.getGroupId()+","+alertBean.getDataName()+","+alertBean.getIpAddr();
+				String str_id = Pub.MD5(module_key+","+alertBean.getData_time());
 				esWriteBean.setId(str_id);
 				List<String> params = new ArrayList<>();
 				params.add(JSON.toJSONString(alertBean));
@@ -174,42 +128,26 @@ public class SendAlertMessage {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("index",index);
 				jsonObject.put("type",type);
-				if("分发".equals(alertBean.getModule())){
+                String moduleKey = module_key;
+                String moduleKeyParent = "";
+                while (true){
+                    moduleKeyParent = Pub.alertModuleMap.containsKey(moduleKey) ? Pub.alertModuleMap.get(moduleKey):moduleKey;
 
-					AlertBeanNew alertBean_CJ = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-					alertBean_CJ.setGroupId(alertBean_CJ.getGroupId().substring(0,alertBean_CJ.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("分发").toString())) + "_" +Pub.moduleMap.get("采集").toString());
-					// 根据id ，查询数据是否存在
-					String dataName_cj = Pub.dataNameMap.containsKey(alertBean_CJ.getDataName())? Pub.dataNameMap.get(alertBean_CJ.getDataName()) : alertBean_CJ.getDataName();
-					jsonObject.put("id",Pub.MD5(alertBean_CJ.getGroupId()+","+dataName_cj+","+alertBean_CJ.getData_time()));
-					String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
-					if (StringUtils.isEmpty(id_cj)){
-						AlertBeanNew alertBean_JG = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-						alertBean_JG.setGroupId(alertBean_JG.getGroupId().substring(0,alertBean_JG.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("分发").toString())) + "_" +Pub.moduleMap.get("加工").toString());
-						String dataName_jg = Pub.dataNameMap.containsKey(alertBean_JG.getDataName())? Pub.dataNameMap.get(alertBean_JG.getDataName()) : alertBean_JG.getDataName();
-						jsonObject.put("id",Pub.MD5(alertBean_JG.getGroupId()+","+dataName_jg+","+alertBean_JG.getData_time()));
-						String id_jg = esQueryService.getDocumentById(jsonObject.toJSONString()) ;
-						if (!StringUtils.isEmpty(id_jg)){
-							isAlert_parent = true;
-							logger.info("-------> 存在加工告警");
-							logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
-						}
-					}else{
-						isAlert_parent = true;
-						logger.info("-------> 存在采集告警");
-						logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
-					}
-				}else if("加工".equals(alertBean.getModule())){
-					AlertBeanNew alertBean_CJ = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-					alertBean_CJ.setGroupId(alertBean_CJ.getGroupId().substring(0,alertBean_CJ.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("加工").toString())) + "_" +Pub.moduleMap.get("采集").toString());
-					jsonObject.put("id",Pub.MD5(alertBean_CJ.getGroupId()+","+alertBean_CJ.getDataName()+","+alertBean_CJ.getData_time()));
-					String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
-					if(!org.springframework.util.StringUtils.isEmpty(id_cj)){
-						isAlert_parent = true;
-						logger.info("-------> 存在采集告警1");
-						logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
-					}
+                    if (moduleKey.equals(moduleKeyParent)){
+                        break;
+                    }
+                    jsonObject.put("id",Pub.MD5(moduleKeyParent+","+alertBean.getData_time()));
+                    String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
+                    if (!StringUtils.isEmpty(id_cj)){
+                        isAlert_parent = true;
+                        logger.info("-------> 存在上级告警");
+                        logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
+                        break;
+                    }
 
-				}
+                    moduleKey = moduleKeyParent;
+                    moduleKeyParent = "";
+                }
 
 				//如果上游告警了，那么此条告警不生成
 				if(!isAlert_parent){

@@ -30,4 +30,8 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
             ,nativeQuery = true)
     List<Object> findDataStrategyAll();
 
+
+    @Query( value = "SELECT module_key,module_key_parent from alert_module ;" ,nativeQuery = true)
+    List<Object> findAlertModule();
+
 }

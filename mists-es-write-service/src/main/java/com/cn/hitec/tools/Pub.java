@@ -34,26 +34,23 @@ public class Pub {
 
     public static List<String> indexExitsList = new LinkedList<>();
 
-    public static Map<String, Object> moduleMap = new HashMap<>();
-    public static Map<String, Object> moduleMapGet = new HashMap<>();
+//    public static Map<String, Object> moduleMap = new HashMap<>();
+//    public static Map<String, Object> moduleMapGet = new HashMap<>();
 
     /*下游环节报错时，溯源上游使用*/
-    public static Map<String, String> dataNameMap = new HashMap<>();
-    static {
-        moduleMap.put("采集","A");
-        moduleMap.put("加工","B");
-        moduleMap.put("分发","C");
-        moduleMap.put("DS","DS");
-
-        moduleMapGet.put("A","采集");
-        moduleMapGet.put("B","加工");
-        moduleMapGet.put("C","分发");
-        moduleMapGet.put("DS","DS");
-
-        dataNameMap.put("ReadFY2NC","云图");
-        dataNameMap.put("T639","T639风场");
-        dataNameMap.put("风流场","T639风场");
-    }
+    public static Map<String, String> alertModuleMap = Collections.synchronizedMap(new HashMap());
+//    static {
+//        moduleMap.put("采集","A");
+//        moduleMap.put("加工","B");
+//        moduleMap.put("分发","C");
+//        moduleMap.put("DS","DS");
+//
+//        moduleMapGet.put("A","采集");
+//        moduleMapGet.put("B","加工");
+//        moduleMapGet.put("C","分发");
+//        moduleMapGet.put("DS","DS");
+//
+//    }
 
     public static String transform_DateToString(Date date , String simpleDataFormat) throws Exception{
         if(date == null){
@@ -155,7 +152,7 @@ public class Pub {
         str = str.replace("[资料时次]",alertBean.getData_time() == null ? "资料时次为空":alertBean.getData_time());
         str = str.replace("[IP]",alertBean.getIpAddr() == null ? "IP为空":alertBean.getIpAddr());
         str = str.replace("[业务名]",s[1]);
-        str = str.replace("[环节]",moduleMapGet.get(s[2]).toString() == null ? "":moduleMapGet.get(s[2]).toString());
+        str = str.replace("[环节]",s[2]);
         str = str.replace("[路径]",alertBean.getFileName()== null ? "[路径为空]":alertBean.getFileName());
         str = str.replace("[影响的业务]","(影响的业务方法目前还没有实现)");
         str = str.replace("[处理方案]","(目前还没有实现处理方案)");

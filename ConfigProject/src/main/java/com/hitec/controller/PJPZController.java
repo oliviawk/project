@@ -169,6 +169,10 @@ public class PJPZController {
 		String user_phone=jb.getString("user_phone");
 		String user_wechart=jb.getString("user_wechart");
 
+		if(user_group1.equals("1")){
+			user_group1="";
+		}
+
 		List<Object> list = userMessageRepository.findUsers_pname(user_group1.isEmpty()?"":user_group1,user_name.isEmpty()? "":user_name,user_phone.isEmpty()?"":user_phone,user_wechart.isEmpty()?"":user_wechart);
 
 		return list;

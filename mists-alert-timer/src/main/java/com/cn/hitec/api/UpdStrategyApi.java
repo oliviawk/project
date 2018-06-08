@@ -2,7 +2,6 @@ package com.cn.hitec.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cn.hitec.component.ConfigComponent;
 import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.util.Pub;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +50,7 @@ public class UpdStrategyApi {
 				return "更新失败!";
 			}
 
-//			logger.info("DIMap_collect:{}",JSON.toJSON(Pub.DIMap_collect));
+//			logger.info("DIMap:{}",JSON.toJSON(Pub.DIMap));
 //			logger.info("DIMap_machining:{}",JSON.toJSON(Pub.DIMap_machining));
 //			logger.info("DIMap_distribute:{}",JSON.toJSON(Pub.DIMap_distribute));
 //			logger.info("DIMap_t639:{}",JSON.toJSON(Pub.DIMap_t639));
@@ -59,29 +58,29 @@ public class UpdStrategyApi {
 //
 //			logger.info("DI_ConfigMap:{}",JSON.toJSON(Pub.DI_ConfigMap));
 
-			Map collect_temp = new HashMap();
-			for (String key : Pub.DIMap_collect.keySet()){
+			Map DI_temp = new HashMap();
+			for (String key : Pub.DIMap.keySet()){
                 if (key.contains(serviceType)){
-                    collect_temp.put(key,Pub.DIMap_collect.get(key));
+                    DI_temp.put(key,Pub.DIMap.get(key));
                 }
 			}
-			logger.info(JSON.toJSONString(collect_temp));
+			logger.info(JSON.toJSONString(DI_temp));
 
-			Map machining_temp = new HashMap();
-            for (String key : Pub.DIMap_machining.keySet()){
-                if (key.contains(serviceType)){
-                    machining_temp.put(key,Pub.DIMap_machining.get(key));
-                }
-            }
-            logger.info(JSON.toJSONString(machining_temp));
-
-            Map distribute_temp = new HashMap();
-            for (String key : Pub.DIMap_distribute.keySet()){
-                if (key.contains(serviceType)){
-                    distribute_temp.put(key,Pub.DIMap_distribute.get(key));
-                }
-            }
-            logger.info(JSON.toJSONString(distribute_temp));
+//			Map machining_temp = new HashMap();
+//            for (String key : Pub.DIMap_machining.keySet()){
+//                if (key.contains(serviceType)){
+//                    machining_temp.put(key,Pub.DIMap_machining.get(key));
+//                }
+//            }
+//            logger.info(JSON.toJSONString(machining_temp));
+//
+//            Map distribute_temp = new HashMap();
+//            for (String key : Pub.DIMap_distribute.keySet()){
+//                if (key.contains(serviceType)){
+//                    distribute_temp.put(key,Pub.DIMap_distribute.get(key));
+//                }
+//            }
+//            logger.info(JSON.toJSONString(distribute_temp));
 
             Map t639_temp = new HashMap();
             for (String key : Pub.DIMap_t639.keySet()){
@@ -100,15 +99,15 @@ public class UpdStrategyApi {
             logger.info(JSON.toJSONString(datasource_temp));
 
             //更新全部数据
-			if (collect_temp.size() > 0 ){
-                configService.createAlertDI("采集", collect_temp,0,new Date());
+			if (DI_temp.size() > 0 ){
+                configService.createAlertDI(DI_temp,0,new Date());
             }
-            if (machining_temp.size() > 0 ){
-                configService.createAlertDI("加工", machining_temp,0,new Date());
-            }
-            if (distribute_temp.size() > 0 ){
-                configService.createAlertDI("分发", distribute_temp,0,new Date());
-            }
+//            if (machining_temp.size() > 0 ){
+//                configService.createAlertDI("加工", machining_temp,0,new Date());
+//            }
+//            if (distribute_temp.size() > 0 ){
+//                configService.createAlertDI("分发", distribute_temp,0,new Date());
+//            }
             if (t639_temp.size() > 0 ){
                 configService.createT639DI("FZJC",t639_temp,5);
             }
@@ -117,7 +116,7 @@ public class UpdStrategyApi {
             }
 
 //			//更新全部数据
-//			configService.createAlertDI("采集", Pub.DIMap_collect,0,new Date());
+//			configService.createAlertDI("采集", Pub.DIMap,0,new Date());
 //			configService.createAlertDI("加工", Pub.DIMap_machining,0,new Date());
 //			configService.createAlertDI("分发", Pub.DIMap_distribute,0,new Date());
 //

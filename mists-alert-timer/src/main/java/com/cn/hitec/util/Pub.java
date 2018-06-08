@@ -16,16 +16,18 @@ public class Pub {
 
 	public static Map<String, Object> DI_ConfigMap = Collections.synchronizedMap(new HashMap());
 
-	public static Map<String, Object> moduleMap = new HashMap<>();
-	public static Map<String, Object> moduleMapGet = new HashMap<>();
-	public static Map<String, String> dataNameMap = new HashMap<>();
+//	public static Map<String, Object> moduleMap = new HashMap<>();
+//	public static Map<String, Object> moduleMapGet = new HashMap<>();
+//	public static Map<String, String> dataNameMap = new HashMap<>();
 
-	public static Map<String, Map> DIMap_collect = Collections.synchronizedMap(new HashMap());
-	public static Map<String, Map> DIMap_machining = Collections.synchronizedMap(new HashMap());
-	public static Map<String, Map> DIMap_distribute = Collections.synchronizedMap(new HashMap());
+	public static Map<String, Map> DIMap = Collections.synchronizedMap(new HashMap());
+//	public static Map<String, Map> DIMap_machining = Collections.synchronizedMap(new HashMap());
+//	public static Map<String, Map> DIMap_distribute = Collections.synchronizedMap(new HashMap());
 	public static Map<String, Map> DIMap_DS = Collections.synchronizedMap(new HashMap());
 
 	public static Map<String, Map> DIMap_t639 = Collections.synchronizedMap(new HashMap());
+	/*告警上下游关联使用*/
+	public static Map<String, String> alertModuleMap = Collections.synchronizedMap(new HashMap());
 
 	public static final String KEY_RESULT = "result";
 	public static final String KEY_RESULTDATA = "resultData";
@@ -39,21 +41,18 @@ public class Pub {
 	public static String Index_Head = null;
 	public static String Index_Food_Simpledataformat = "yyyyMMdd";
 
-	static {
-		moduleMap.put("采集","A");
-		moduleMap.put("加工","B");
-		moduleMap.put("分发","C");
-		moduleMap.put("DS","DS");
-
-		moduleMapGet.put("A","采集");
-		moduleMapGet.put("B","加工");
-		moduleMapGet.put("C","分发");
-		moduleMapGet.put("DS","DS");
-
-		dataNameMap.put("ReadFY2NC","云图");
-		dataNameMap.put("T639","T639风场");
-		dataNameMap.put("风流场","T639风场");
-	}
+//	static {
+//		moduleMap.put("采集","A");
+//		moduleMap.put("加工","B");
+//		moduleMap.put("分发","C");
+//		moduleMap.put("DS","DS");
+//
+//		moduleMapGet.put("A","采集");
+//		moduleMapGet.put("B","加工");
+//		moduleMapGet.put("C","分发");
+//		moduleMapGet.put("DS","DS");
+//
+//	}
 
 	public static String transform_DateToString(Date date, String simpleDataFormat) throws Exception {
 		if (date == null) {
@@ -188,7 +187,7 @@ public class Pub {
 		str = str.replace("[资料时次]",alertBean.getData_time() == null ? "资料时次为空":alertBean.getData_time());
 		str = str.replace("[IP]",alertBean.getIpAddr() == null ? "IP为空":alertBean.getIpAddr());
 		str = str.replace("[业务名]",s[1]);
-		str = str.replace("[环节]",moduleMapGet.get(s[2]).toString() == null ? "":moduleMapGet.get(s[2]).toString());
+		str = str.replace("[环节]",s[2]);
 		str = str.replace("[路径]",alertBean.getFileName()== null ? "路径为空":alertBean.getFileName());
 		str = str.replace("[影响的业务]","(影响的业务方法目前还没有实现)");
 		str = str.replace("[处理方案]","(目前还没有实现处理方案)");
@@ -208,29 +207,35 @@ public class Pub {
 //		String strDate = simpleDateFormat.format(date);
 //		System.out.println(strDate);
 
-//		try {
-//			String nameDefine = "sdfefe_sssfe_{yyyyMMdd.HHmmss}_0000";
-//
-//			String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
-//
-//			System.out.println(timeFormat);
-//
-//			String fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(new Date(),timeFormat));
-//
-//			System.out.println(fileName);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			String nameDefine = "sdfefe_sssfe_{yyyyMMdd.HHmmss}[+8]_0000";
 
-		Map ma = new HashMap();
-		ma.put("aaa","aaaavalue");
-		ma.put("bb","bbbbvalue");
-		Map files = new HashMap();
-		files.put("111","1111");
+			String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
 
-		ma.put("files",files);
+			System.out.println(timeFormat);
+			String timeZoneFormat = "0";
+			if (nameDefine.indexOf("[") > -1 && nameDefine.indexOf("]") > -1){
+				timeZoneFormat = nameDefine.substring(nameDefine.indexOf("[")+1,nameDefine.indexOf("]"));
+			}
 
-		System.out.println(JSON.toJSONString(ma));
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR_OF_DAY, -Integer.parseInt(timeZoneFormat));
+			String fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(cal.getTime(),timeFormat)).replace("["+timeZoneFormat+"]","");
+			System.out.println(fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+//		Map ma = new HashMap();
+//		ma.put("aaa","aaaavalue");
+//		ma.put("bb","bbbbvalue");
+//		Map files = new HashMap();
+//		files.put("111","1111");
+//
+//		ma.put("files",files);
+//
+//		System.out.println(JSON.toJSONString(ma));
 
 	}
 }

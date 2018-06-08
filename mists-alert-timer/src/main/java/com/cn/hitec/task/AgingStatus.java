@@ -29,6 +29,8 @@ public class AgingStatus {
 
 	@Autowired
 	AgingStatusService agingStatus;
+    @Autowired
+    ConfigService configService;
 
 	/**
 	 * 修改超时数据
@@ -36,6 +38,7 @@ public class AgingStatus {
 	@Scheduled(cron = "10 * * * * ?")
 	public void updTimeoutData() {
 		try {
+            configService.initAlertMould();
 			agingStatus.collect_task();
 			agingStatus.collectDataSource_task();
 		} catch (Exception e) {

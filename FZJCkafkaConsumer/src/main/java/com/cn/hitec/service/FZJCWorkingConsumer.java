@@ -33,6 +33,11 @@ public class FZJCWorkingConsumer extends MsgConsumer {
 			newJson.put("name", "");
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 			Date end = null;
+
+			if("-1".equals(obj.getString("data_time")) || "".equals(obj.getString("data_time"))){
+				obj.put("data_time",obj.getString("start_time"));
+			}
+
 			try {
 				end = df.parse(obj.getString("end_time"));
 				

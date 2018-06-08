@@ -1,0 +1,25 @@
+table#table_cjf .form-group {
+    display: inline-block;
+    margin-bottom: 0px;
+}
+table#table_cjf div.form-control {
+    background-color: #2aabd2;
+    display: inline-block;
+    width: 110px;
+    margin-left: 20px;
+}
+table#table_cjf .row .form-control:nth-child(2n+0) {
+    margin-left: 0;
+}
+table#table_cjf .radio {
+    display: inline-block;
+}
+
+table#table_cjf tr:nth-child(2n+0) td{
+    background:#def2f5;
+}
+.userDiv{
+    float: left;
+    margin-left: 50px;
+    margin-top: 20px;
+}

@@ -14,6 +14,8 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.Pub;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,9 +52,9 @@ public class ConfigServiceTest {
 		// 初始化 alertMap
 		configService.initAlertMap();
 
-		logger.info(JSON.toJSONString(Pub.DIMap_collect));
-		logger.info(JSON.toJSONString(Pub.DIMap_machining));
-		logger.info(JSON.toJSONString(Pub.DIMap_distribute));
+		logger.info(JSON.toJSONString(Pub.DIMap));
+//		logger.info(JSON.toJSONString(Pub.DIMap_machining));
+//		logger.info(JSON.toJSONString(Pub.DIMap_distribute));
 	}
 
 	/**
@@ -67,14 +69,14 @@ public class ConfigServiceTest {
 //		calendar.add(Calendar.HOUR_OF_DAY, -1);
 
 		// 初始化 alertMap
-		configService.createAlertDI("采集", Pub.DIMap_collect,0,calendar.getTime());
-		configService.createAlertDI("加工", Pub.DIMap_machining,0,calendar.getTime());
-		configService.createAlertDI("分发", Pub.DIMap_distribute,0,calendar.getTime());
+		configService.createAlertDI(Pub.DIMap,0,calendar.getTime());
+//		configService.createAlertDI("加工", Pub.DIMap_machining,0,calendar.getTime());
+//		configService.createAlertDI("分发", Pub.DIMap_distribute,0,calendar.getTime());
 
-		configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,calendar.getTime());
+//		configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,calendar.getTime());
 
 		logger.info("---------------------------------开始执行定时任务，生成后5天的数据--------------------------------");
-		configService.createT639DI("FZJC",Pub.DIMap_t639,5);
+//		configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
 		logger.info("------");
 	}
@@ -117,4 +119,5 @@ public class ConfigServiceTest {
 	public void testWX(){
 		httpPub.httpPost("@all","test");
 	}
+
 }

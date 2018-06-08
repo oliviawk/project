@@ -378,7 +378,7 @@ public class ESService {
 											map.put("aging_status", "异常");
 											String alertTitle = subType + "--" + fields.get("module") + "--"
 													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
-											fields.put("event_info", "文件大小异常: "+ "阈值为 大于"+mix+" kb ,实际值为 "+lFileSize+" kb");
+											fields.put("event_info", "文件大小异常: "+ "阈值为 大于"+mix+" byte ,实际值为 "+lFileSize+" byte");
 											// 初始化告警实体类
 											alertBean = alertService.getAlertBean("04", alertTitle, type,map);
 										}
@@ -390,14 +390,14 @@ public class ESService {
 											map.put("aging_status", "异常");
 											String alertTitle = subType + "--" + fields.get("module") + "--"
 													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
-											fields.put("event_info", "文件大小异常: "+ "阈值范围为 "+mix+"--"+max+" kb ,实际值为 "+lFileSize+" kb");
+											fields.put("event_info", "文件大小异常: "+ "阈值范围为 "+mix+"--"+max+" byte ,实际值为 "+lFileSize+" byte");
 											// 初始化告警实体类
 											alertBean = alertService.getAlertBean("04", alertTitle, type,map);
 										}
 									}
 
 									if (alertBean != null) {
-										alertService.alert(index, alertType, alertBean); // 生成告警
+										alertService.alert(es,index, alertType, alertBean); // 生成告警
 										alertBean = null;
 									}
 								}
@@ -419,7 +419,7 @@ public class ESService {
 //									alertBean = alertService.getAlertBean("03", alertTitle, type, map);
 
 									if (alertBean != null) {
-										alertService.alert(index, alertType, alertBean); // 生成告警
+										alertService.alert(es,index, alertType, alertBean); // 生成告警
 										alertBean = null;
 									}
 
@@ -444,14 +444,14 @@ public class ESService {
 						}
 						/*-------5.29 新代码*/
 						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))){
-							fields.put("file_name", resultMap.get("file_name"));
+							fields.put("file_name", hitsSource_fields.get("file_name"));
 						}
 
 
 
 						if (alertBean != null) {
 							/*   需要修改该方法  2018.3.20没有修改   */
-							alertService.alert(index, alertType, alertBean); // 生成告警
+							alertService.alert(es,index, alertType, alertBean); // 生成告警
 							alertBean = null;
 						}
 						// 数据入库
@@ -475,7 +475,7 @@ public class ESService {
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.error(e.getMessage());
+					logger.error("错误数据："+json);
 					error_num++;
 				}
 			}
@@ -500,7 +500,7 @@ public class ESService {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 
-			String[] indices = esClientAdminService.indexExists(indexs);
+			String[] indices = esClientAdminService.indexExists(es,indexs);
 			if (indices == null || indices.length < 1) {
 				return resultMap;
 			}
@@ -527,7 +527,7 @@ public class ESService {
 
 	/**
 	 * 查询单条数据ID
-	 * 
+	 *
 	 * @param indexs
 	 * @param type
 	 * @param subType
@@ -539,7 +539,7 @@ public class ESService {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 
-			String[] indices = esClientAdminService.indexExists(indexs);
+			String[] indices = esClientAdminService.indexExists(es,indexs);
 			if (indices == null || indices.length < 1) {
 				return resultMap;
 			}

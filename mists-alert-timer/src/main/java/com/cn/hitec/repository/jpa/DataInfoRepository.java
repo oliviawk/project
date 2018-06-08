@@ -43,4 +43,6 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     List<String> findNamesByParentId(long parentId);
 
 
+    @Query( value = "SELECT module_key,module_key_parent from alert_module ;" ,nativeQuery = true)
+    List<Object> findAlertModule();
 }

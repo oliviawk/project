@@ -2,13 +2,9 @@ package com.cn.hitec.task;
 
 import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsWriteBean;
-import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.feign.client.EsWriteService;
-import com.cn.hitec.repository.jpa.DataInfoRepository;
-import com.cn.hitec.service.AgingStatusService;
 import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.util.Pub;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +40,14 @@ public class CreateDIDataTask {
 		do {
 			logger.info("---------------------------------开始执行定时任务，生成第二天的数据--------------------------------");
 			try {
-				System.out.println("alertMap_collect.size:"+ Pub.DIMap_collect.size()+",--:"+ JSON.toJSONString(Pub.DIMap_collect));
-				System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
-				System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
+				System.out.println("DIMap.size:"+ Pub.DIMap.size()+",--:"+ JSON.toJSONString(Pub.DIMap));
+//				System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
+//				System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
 				System.out.println("DIMap_t639.size:"+ Pub.DIMap_t639.size()+",--:"+ JSON.toJSONString(Pub.DIMap_t639));
 
-				configService.createAlertDI("采集", Pub.DIMap_collect,1,new Date());
-				configService.createAlertDI("加工", Pub.DIMap_machining,1,new Date());
-				configService.createAlertDI("分发", Pub.DIMap_distribute,1,new Date());
+				configService.createAlertDI( Pub.DIMap,1,new Date());
+//				configService.createAlertDI("加工", Pub.DIMap_machining,1,new Date());
+//				configService.createAlertDI("分发", Pub.DIMap_distribute,1,new Date());
 
 				configService.makeProjectTable(new Date(),1,Pub.DIMap_DS,new Date());
 

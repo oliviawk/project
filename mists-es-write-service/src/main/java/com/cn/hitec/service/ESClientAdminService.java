@@ -27,8 +27,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class ESClientAdminService {
-    @Autowired
-    private ESRepository es;
 
 //    public void clusterHealth() {
 //        ClusterHealthResponse healths = es.client.admin().cluster().prepareHealth().get();
@@ -50,7 +48,7 @@ public class ESClientAdminService {
      * 查询集群健康状态
      * @return  Map
      */
-    public Map<String , Object> getClusterHealth(){
+    public Map<String , Object> getClusterHealth(ESRepository es){
         log.info("getClusterHealth:");
         Map<String,Object> map = new HashMap<>();
         ClusterHealthResponse healths = es.client.admin().cluster().prepareHealth().get();
@@ -61,7 +59,7 @@ public class ESClientAdminService {
         return map;
     }
 
-    public String[] indexExists(String[] indices) throws Exception{
+    public String[] indexExists( ESRepository es,String[] indices) throws Exception{
         if(indices == null){
             return null;
         }
@@ -95,11 +93,11 @@ public class ESClientAdminService {
      * @param id
      * @return
      */
-    public Map<String, Object> getDocumentById(String[] indexs, String type, String id) {
+    public Map<String, Object> getDocumentById(ESRepository es,String[] indexs, String type, String id) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
 
-            String[] indices = indexExists(indexs);
+            String[] indices = indexExists(es,indexs);
             if (indices == null || indices.length < 1) {
                 return resultMap;
             }

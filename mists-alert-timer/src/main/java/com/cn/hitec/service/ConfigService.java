@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.feign.client.DataSourceEsInterface;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
@@ -25,8 +26,6 @@ import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.CronPub;
 import com.cn.hitec.util.Pub;
-
-import javax.sql.DataSource;
 
 @Service
 public class ConfigService {
@@ -225,18 +224,20 @@ public class ConfigService {
 			if ("FZJC".equals(di.getService_type()) && ("T639".equals(di.getName()) || "风流场".equals(di.getName()))) {
 				Pub.DIMap_t639.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
 
-			} else if ("采集".equals(di.getModule())) {
-				Pub.DIMap_collect.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-
-			} else if ("加工".equals(di.getModule())) {
-				Pub.DIMap_machining.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
-
-			} else if ("分发".equals(di.getModule())) {
-				Pub.DIMap_distribute.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//			} else if ("采集".equals(di.getModule())) {
+//				Pub.DIMap.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//
+//			} else if ("加工".equals(di.getModule())) {
+//				Pub.DIMap_machining.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
+//
+//			} else if ("分发".equals(di.getModule())) {
+//				Pub.DIMap_distribute.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
 
 			} else if("DS".equals(di.getModule())){
 				Pub.DIMap_DS.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
 
+			} else{
+				Pub.DIMap.put(di.getName() + "," + di.getIp() + "," + di.getService_type() + "," + di.getModule(), map);
 			}
 
 		}
@@ -271,9 +272,8 @@ public class ConfigService {
 	 * 生成 ID 数据表（节目表）
 	 * 
 	 * @param DIMap    基础数据配置
-	 * @param module   环节名
 	 */
-	public void createAlertDI(String module, Map<String, Map> DIMap,int day,Date runDate) throws Exception{
+	public void createAlertDI(Map<String, Map> DIMap,int day,Date runDate) throws Exception{
 
 		if (DIMap == null || DIMap.size() < 1) {
 			logger.warn("createAlertDI is fail ： alertMap is null or 0 in length");
@@ -309,7 +309,7 @@ public class ConfigService {
 		// 循环 告警配置信息
 		for (String key : DIMap.keySet()) {
 			map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
-
+			String module = map.get("module").toString();
 			try {
 				String cron = map.get("time_interval").toString();
 				List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
@@ -320,7 +320,7 @@ public class ConfigService {
 				// if(!"炎热指数".equals(subType)){
 				// continue;
 				// }
-				String name = map.get("sub_name").toString();;
+				String name = map.get("sub_name").toString();
 				String IP = map.get("IP").toString();
 				String path = map.get("path").toString();
 
@@ -351,29 +351,26 @@ public class ConfigService {
 					// 用beforeHour和afterHour获取时区转换后是否变成了昨天
 					int beforeHour = dt.getHours();
 					// 对资料的时区不是北京时的数据进行加减处理
-					if (("CIMISS".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-							|| ("LSX".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-							|| ("L1S".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-							|| ("GR2".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))) {
-						dt = setWorldTime(dt, -8);
-						fields.put("data_time",
-								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
-					} else if ("T639".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType)) {
-						dt = setWorldTime(dt, -14);
-						fields.put("data_time",
-								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
-					} else {
-						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
-
-					}
+//					if (("CIMISS".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+//							|| ("LSX".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+//							|| ("L1S".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
+//							|| ("GR2".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))) {
+//						dt = setWorldTime(dt, -8);
+//						fields.put("data_time",
+//								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
+//					} else if ("T639".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType)) {
+//						dt = setWorldTime(dt, -14);
+//						fields.put("data_time",
+//								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
+//					} else {
+//						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+//
+//					}
 					//添加文件大小范围和文件名
 					fields.put("file_size_define",map.get("size_define").toString());
 					String nameDefine = map.get("name_define").toString();
-					String fileName = "";
-					if (StringUtils.isNotEmpty(nameDefine)){
-						String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
-						fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(dt,timeFormat));
-					}
+					String fileName = changeFileName(nameDefine,dt);
+
 					fields.put("file_name",path+fileName);
 
 					int afterHour = dt.getHours();
@@ -506,6 +503,13 @@ public class ConfigService {
                         fields.put("ip_addr", IP);
                         fields.put("module", "DS");
 
+						//添加文件大小范围和文件名
+						fields.put("file_size_define",map.get("size_define").toString());
+						String nameDefine = map.get("name_define").toString();
+						String fileName = changeFileName(nameDefine,dt);
+						fields.put("file_name",path+fileName);
+
+
                         data.put("fields", fields);
                         outData.add(data);
                     }
@@ -586,18 +590,13 @@ public class ConfigService {
 					fields.put("module", module);
 					fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 					fields.put("ip_addr", IP);
-					fields.put("file_name", path);
 					fields.put("end_time", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 
 					//添加文件大小范围和文件名
 					fields.put("file_size_define",map.get("size_define").toString());
 					String nameDefine = map.get("name_define").toString();
-					String fileName = "";
-					if (StringUtils.isNotEmpty(nameDefine)){
-						String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
-						fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(dt,timeFormat));
-					}
-					fields.put("file_name",fileName);
+					String fileName = changeFileName(nameDefine,dt);
+					fields.put("file_name",path+fileName);
 
 					dataBean.setFields(fields);
 
@@ -673,4 +672,44 @@ public class ConfigService {
 		return date;
 	}
 
+
+	public void initAlertMould(){
+		List<Object> list = dataInfoRepository.findAlertModule();
+		for (Object obj : list){
+			JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(obj));
+			if (jsonArray.size() == 2){
+				Pub.alertModuleMap.put(jsonArray.get(0).toString(),jsonArray.get(1).toString());
+			}
+		}
+
+	}
+
+	/**
+	 * 预生成文件名
+	 * @param nameDefine
+	 * @param dt
+	 * @return
+	 */
+	public String changeFileName(String nameDefine,Date dt ){
+		String fileName = "";
+		try {
+			if (StringUtils.isNotEmpty(nameDefine)){
+
+                String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
+                String timeZoneFormat = "0";
+                if (nameDefine.indexOf("[") > -1 && nameDefine.indexOf("]") > -1){
+                    timeZoneFormat = nameDefine.substring(nameDefine.indexOf("[")+1,nameDefine.indexOf("]"));
+                }
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dt);
+                cal.add(Calendar.HOUR_OF_DAY,- Integer.parseInt(timeZoneFormat));
+
+                fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(cal.getTime(),timeFormat)).replace("["+timeZoneFormat+"]","");
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return fileName;
+	}
 }

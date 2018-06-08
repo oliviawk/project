@@ -27,8 +27,6 @@ import java.util.*;
 public class AlertService {
 
     @Autowired
-    private ESRepository es;
-    @Autowired
     KafkaProducer kafkaProducer;
     @Autowired
     UsersRepository usersRepository;
@@ -40,7 +38,7 @@ public class AlertService {
      * @param id
      * @return
      */
-    public String getDocumentById(String index , String type , String id){
+    public String getDocumentById(ESRepository es,String index , String type , String id){
         String documentId = null;
         try {
 
@@ -65,15 +63,15 @@ public class AlertService {
      * @param alertBean
      * @throws Exception
      */
-    public void alert(String index , String type , AlertBeanNew alertBean){
+    public void alert(ESRepository es,String index , String type , AlertBeanNew alertBean){
 
         try {
 
             //判断是否重复告警
-            String dataName = Pub.dataNameMap.containsKey(alertBean.getDataName())? Pub.dataNameMap.get(alertBean.getDataName()) : alertBean.getDataName();
-            String str_id = Pub.MD5(alertBean.getGroupId()+","+dataName+","+alertBean.getData_time());
+            String module_key = alertBean.getGroupId()+","+alertBean.getDataName()+","+alertBean.getIpAddr();
+            String str_id = Pub.MD5(module_key+","+alertBean.getData_time());
 
-            String documentId = getDocumentById(index,type,str_id);
+            String documentId = getDocumentById(es,index,type,str_id);
 
             if(documentId != null){ //如果有ID
                 //如果是超时、异常的告警，说明是重复，过滤掉。 如果是迟到的数据，修改告警信息（取消告警）
@@ -82,6 +80,7 @@ public class AlertService {
                     es.bulkProcessor.add(new IndexRequest(index,type,documentId)
                             .source(JSON.toJSONString(alertBean), XContentType.JSON));
                 }
+                return;
 
             }else{
                 //保存告警信息
@@ -94,49 +93,35 @@ public class AlertService {
             if(StringUtils.isEmpty(documentId)){
                 throw new Exception("插入数据失败");
             }
+            //消息推送
+//                kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
 
 
             boolean isAlert_parent = false;
             //判断上游是否告警，如果告警，则该条告警不进行微信、短信告警
-            if("分发".equals(alertBean.getModule())){
-                AlertBeanNew alertBean_CJ = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-                alertBean_CJ.setGroupId(alertBean_CJ.getGroupId().substring(0,alertBean_CJ.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("分发").toString())) + "_" +Pub.moduleMap.get("采集").toString());
-                // 根据id ，查询数据是否存在
-                String dataName_cj = Pub.dataNameMap.containsKey(alertBean_CJ.getDataName())? Pub.dataNameMap.get(alertBean_CJ.getDataName()) : alertBean_CJ.getDataName();
-                String id_cj = getDocumentById(index,type,Pub.MD5(alertBean_CJ.getGroupId()+","+dataName_cj+","+alertBean_CJ.getData_time()));
-                if (StringUtils.isEmpty(id_cj)){
-                    AlertBeanNew alertBean_JG = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-                    alertBean_JG.setGroupId(alertBean_JG.getGroupId().substring(0,alertBean_JG.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("分发").toString())) + "_" +Pub.moduleMap.get("加工").toString());
-                    String dataName_jg = Pub.dataNameMap.containsKey(alertBean_JG.getDataName())? Pub.dataNameMap.get(alertBean_JG.getDataName()) : alertBean_JG.getDataName();
-                    String id_jg = getDocumentById(index,type,Pub.MD5(alertBean_JG.getGroupId()+","+dataName_jg+","+alertBean_JG.getData_time())) ;
-                    if (!org.apache.commons.lang.StringUtils.isEmpty(id_jg)){
-                        isAlert_parent = true;
-                        log.info("-------> 存在加工告警");
-                    }
-                }else{
+            String moduleKey = module_key;
+            String moduleKeyParent = "";
+            while (true){
+                moduleKeyParent = Pub.alertModuleMap.containsKey(moduleKey) ? Pub.alertModuleMap.get(moduleKey):moduleKey;
+
+                if (moduleKey.equals(moduleKeyParent)){
+                    break;
+                }
+                String id_cj = getDocumentById(es,index,type,Pub.MD5(moduleKeyParent+","+alertBean.getData_time()));
+                if (!StringUtils.isEmpty(id_cj)){
                     isAlert_parent = true;
-                    log.info("-------> 存在采集告警");
+                    log.info("-------> 存在上级告警");
+                    log.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
+                    break;
                 }
 
-            }else if("加工".equals(alertBean.getModule())){
-                AlertBeanNew alertBean_CJ = JSON.parseObject(JSON.toJSONString(alertBean),AlertBeanNew.class);
-                alertBean_CJ.setGroupId(alertBean_CJ.getGroupId().substring(0,alertBean_CJ.getGroupId().lastIndexOf("_"+Pub.moduleMap.get("加工").toString())) + "_" +Pub.moduleMap.get("采集").toString());
-
-                String dataName_cj = Pub.dataNameMap.containsKey(alertBean_CJ.getDataName())? Pub.dataNameMap.get(alertBean_CJ.getDataName()) : alertBean_CJ.getDataName();
-                log.info("index:{},type:{},id:{}",index,type,Pub.MD5(alertBean_CJ.getGroupId()+","+dataName_cj+","+alertBean_CJ.getData_time()));
-                String id_cj = getDocumentById(index,type,Pub.MD5(alertBean_CJ.getGroupId()+","+dataName_cj+","+alertBean_CJ.getData_time()));
-                if(!StringUtils.isEmpty(id_cj)){
-                    isAlert_parent = true;
-                    log.info("-------> 存在采集告警");
-                }
+                moduleKey = moduleKeyParent;
+                moduleKeyParent = "";
             }
 
             //如果上游告警了，那么此条告警不生成
             if(!isAlert_parent){
                 log.warn("生成微信、短信告警："+JSON.toJSONString(alertBean));
-
-                //                //发送消息并推送
-//                kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
 
                 /* 生成 微信告警信息*/
                 String[] s = alertBean.getGroupId().split("_");
@@ -151,7 +136,7 @@ public class AlertService {
 
 
                 Map<String,Object> strategyMap = null;
-                String strKey = service_type+","+subName+","+Pub.moduleMapGet.get(module)+","+ipAddr;
+                String strKey = service_type+","+subName+","+module+","+ipAddr;
 //                log.info("配置map:"+Pub.DI_ConfigMap.size()+",--"+strKey);
                 if(Pub.DI_ConfigMap.containsKey(strKey)){
                     strategyMap = (Map<String, Object>) Pub.DI_ConfigMap.get(strKey);
@@ -225,10 +210,10 @@ public class AlertService {
             alertBean.setType("SYSTEM.ALARM.EI");
             alertBean.setName(""+str_type+"业务告警");
             alertBean.setMessage(str_type+"业务告警");
-            alertBean.setGroupId("OP_"+str_type +"_"+ Pub.moduleMap.get(module));
+            alertBean.setGroupId("OP_"+str_type +"_"+ module);
             alertBean.setOccur_time(Pub.transform_DateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
             alertBean.setAlertType(alertType);
-            alertBean.setEventType("OP_"+str_type +"_"+ Pub.moduleMap.get(module)+"-1-"+alertType+"-01");
+            alertBean.setEventType("OP_"+str_type +"_"+ module+"-1-"+alertType+"-01");
             alertBean.setEventTitle(alertTitle);
             alertBean.setLevel(fields.containsKey("event_status") ? fields.get("event_status").toString() : "1");
             alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : alertTitle);

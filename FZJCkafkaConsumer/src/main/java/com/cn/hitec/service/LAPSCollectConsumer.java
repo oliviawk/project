@@ -68,16 +68,17 @@ public class LAPSCollectConsumer extends MsgConsumer {
 
 		ms = data_time.substring(data_time.indexOf("."),data_time.indexOf("+"));
 		data_time = data_time.replace(ms, StringUtils.rightPad(ms,4,"0"));
-		sub.put("data_time",data_time);
+		try {
+			sub.put("data_time",df.format(df.parse(data_time)));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		sub.put("file_name",arr[9]);
 		sub.put("file_size",arr[10]);
 		sub.put("event_status",arr[11]);
 		sub.put("event_info",arr[12]);
 		sub.put("ip_addr",arr[0]);
-		if("运行".equals(minfo[0])){
-			minfo[0] = "采集";
-		}
 		sub.put("module",minfo[0]);
 		sub.put("step",minfo[1]);
 
