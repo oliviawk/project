@@ -7,8 +7,8 @@ public class AlertBean {
 
     private String type;              //告警编号
     private String alertType;         //告警类型  、  超时、迟到、异常
-    private String level;             //告警等级
-    private String title;             //告警标题
+    private String level;               //告警等级
+    private String title;               //告警标题
     private String time;
     private String ip;
     private String desc;                //events_info的内容
@@ -17,8 +17,15 @@ public class AlertBean {
     private String data_time;           //资料时间
     private String  module;             //环节
 
-    private String documentId;
 
+
+    public String getAlertType() {
+        return alertType;
+    }
+
+    public void setAlertType(String alertType) {
+        this.alertType = alertType;
+    }
     public String getType() {
         return type;
     }
@@ -97,21 +104,5 @@ public class AlertBean {
 
     public void setModule(String module) {
         this.module = module;
-    }
-
-    public String getAlertType() {
-        return alertType;
-    }
-
-    public void setAlertType(String alertType) {
-        this.alertType = alertType;
-    }
-
-    public String getDocumentId() {
-        return documentId;
-    }
-
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
     }
 }
