@@ -236,3 +236,13 @@ pip-log.txt
 /mists-es-write-service/.idea
 /mists-es-write-service/.idea/dictionaries
 /mists-es-write-service/.idea/libraries
+/FZJCkafkaConsumer/*.iml
+/FZJCkafkaConsumer/.idea
+/GongFuWeb/*.iml
+/mists-alert-timer/mists-alert-timer.iml
+/mists-alert-timer/.idea
+/mists-es-query-service/*.iml
+/mists-es-query-service/.idea
+/mists-es-write-service/.idea
+/mists-es-write-service/*.DS_Store
+/mists-es-write-service/*.iml
