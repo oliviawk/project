@@ -223,3 +223,16 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/FZJCkafkaConsumer/.idea
+/FZJCkafkaConsumer/*.iml
+/FZJCkafkaConsumer/.idea/libraries
+/GongFuWeb/*.iml
+/mists-alert-timer/*.iml
+/mists-alert-timer/.idea
+/mists-alert-timer/.idea/libraries
+/mists-es-query-service/*.iml
+/mists-es-query-service/.idea
+/mists-es-write-service/*.iml
+/mists-es-write-service/.idea
+/mists-es-write-service/.idea/dictionaries
+/mists-es-write-service/.idea/libraries
