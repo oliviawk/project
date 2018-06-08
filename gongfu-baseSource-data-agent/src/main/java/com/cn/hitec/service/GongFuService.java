@@ -46,7 +46,7 @@ public class GongFuService {
 
 	public void writeData() {
 		int totalPage = 1;
-		for (int i = 0; i < totalPage; i++) {
+		for (int i = 1; i <= totalPage; i++) {
 			String url = "http://10.30.17.182:80/adapter/res/list.json?treeNodeId=00&pageIndex=" + i;
 			String data = null;
 			JSONObject jsonObject = null;
