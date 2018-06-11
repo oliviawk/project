@@ -1,5 +1,8 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.D3NetBean;
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.feign.client.EsQueryService;
@@ -27,30 +30,34 @@ public class BasicResource {
     EsQueryService esQueryService;
 
 
-
     /**
      * 获取CPU信息
+     *
      * @param ip
      * @return
      */
-    public Object getCpuData(String ip,int minute){
+    public Object getCpuData(String ip, int minute) {
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         List<Object> controlsData = new ArrayList<Object>();
         List list = new ArrayList();
-        String data = getBaseSourceData(ip,"system.cpu.pct_usage",minute);
+        String data = getBaseSourceData(ip, "system.cpu.pct_usage", minute);
 //        logger.info("data:"+data);
         com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
         com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
             try {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
 
                 com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
                 String str = obj.getJSONObject("fields").getString("value");
+                //当锐捷监控取不到服务器指标时,value字段的值为"-",需要特殊处理
+                if ("-".equals(str)) {
+                    str = "0.01%";
+                }
                 String string = str.split("%")[0];
                 String time = obj.getJSONObject("fields").getString("data_time");
                 jsonData.put("used", Double.parseDouble(string));
-                jsonData.put("free", 100-Double.parseDouble(string));
+                jsonData.put("free", 100 - Double.parseDouble(string));
                 Date parse = sdf2.parse(time);
                 jsonData.put("time", sdf2.format(parse));
                 list.add(string);
@@ -61,12 +68,12 @@ public class BasicResource {
                 logger.error(e.getMessage());
             }
         }
-        return returnDataTransFormat(list,controlsData);
+        return returnDataTransFormat(list, controlsData);
 
     }
 
 
-    public Object getMemoryData(String host,int minute) {
+    public Object getMemoryData(String host, int minute) {
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
@@ -76,20 +83,24 @@ public class BasicResource {
 
         List<String> ipListIn = Pub.getIpList_in();
         List<String> ipListOut = Pub.getIpList_out();
-        if(ipListIn.contains(host)){
-            String data = getBaseSourceData(host,"system.memory.pct_usage",minute);
+        if (ipListIn.contains(host)) {
+            String data = getBaseSourceData(host, "system.memory.pct_usage", minute);
             com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
             com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
             for (Object object : jsonArr) {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
                 String m = obj.getJSONObject("fields").getString("metric");
-                if(m.contains("memory")){
+                if (m.contains("memory")) {
                     com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
                     String str = obj.getJSONObject("fields").getString("value");
+                    //当锐捷监控取不到服务器指标时,value字段的值为"-",需要特殊处理
+                    if ("-".equals(str)) {
+                        str = "0%";
+                    }
                     String string = str.split("%")[0];
                     String time = obj.getJSONObject("fields").getString("data_time");
                     jsonData.put("used", Double.parseDouble(string));
-                    jsonData.put("free", 100-Double.parseDouble(string));
+                    jsonData.put("free", 100 - Double.parseDouble(string));
                     try {
                         Date parse = sdf2.parse(time);
                         jsonData.put("time", sdf2.format(parse));
@@ -102,21 +113,21 @@ public class BasicResource {
 
                 }
             }
-        }else if(ipListOut.contains(host)){
-            String data = getBaseSourceData(host,"system.memory_usage",minute);
+        } else if (ipListOut.contains(host)) {
+            String data = getBaseSourceData(host, "system.memory_usage", minute);
             com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
             com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
             for (Object object : jsonArr) {
                 try {
-                    com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+                    com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
                     String m = obj.getJSONObject("fields").getString("metric");
-                    if(m.contains("memory")){
+                    if (m.contains("memory")) {
                         com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
                         double free = obj.getJSONObject("fields").getDouble("free");
                         double total = obj.getJSONObject("fields").getDouble("total");
                         String time = obj.getJSONObject("fields").getString("data_time");
-                        String string = decimalFormat.format(100 -(free/total*100));
-                        jsonData.put("used", 100-Double.parseDouble(string));
+                        String string = decimalFormat.format(100 - (free / total * 100));
+                        jsonData.put("used", 100 - Double.parseDouble(string));
                         jsonData.put("free", Double.parseDouble(string));
                         Date parse = sdf2.parse(time);
                         jsonData.put("time", sdf2.format(parse));
@@ -129,11 +140,12 @@ public class BasicResource {
             }
         }
 
-        return returnDataTransFormat(list,controlsData);
+        return returnDataTransFormat(list, controlsData);
     }
 
     /**
      * 查询磁盘使用情况
+     *
      * @param host
      * @return
      */
@@ -143,53 +155,85 @@ public class BasicResource {
         dataMap.put("name", host);
 
         List<String> ipListIn = Pub.getIpList_in();
-        String data = getBaseSourceData(host,"system.disk_usage",0);
+        String data = getBaseSourceData(host, "system.disk_usage", 0);
 
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
-        com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-        com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+        JSONObject jsonObj = JSONObject.parseObject(data);
+        JSONArray jsonArr = jsonObj.getJSONArray("resultData");
 
-        Map<String,Object> valuesMap = new HashMap<>();
-        List<Map<String, Object>> values = new ArrayList<Map<String, Object>>();
+        Map<String, Object> valuesMap = new HashMap<>();
+        List<JSONObject> values = new ArrayList<JSONObject>();
+        List<Map<String, Object>> sortedValues = new ArrayList<Map<String, Object>>();
 
         for (Object object : jsonArr) {
-            com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
-            com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
-            if(ipListIn.contains(host)){
+            JSONObject obj = (JSONObject) object;
+            JSONObject jsonData = new JSONObject();
+            if (ipListIn.contains(host)) {
                 String path = obj.getJSONObject("fields").getString("path");
-                if(valuesMap.containsKey(path)){
+                if (valuesMap.containsKey(path)) {
                     continue;
                 }
                 double total = obj.getJSONObject("fields").getDouble("total");
-                double free =  total - obj.getJSONObject("fields").getDouble("used");
+                double free = total - obj.getJSONObject("fields").getDouble("used");
 
-                jsonData.put("path",path);
-                jsonData.put("free", decimalFormat.format(free/1024));
+                jsonData.put("path", path);
+                jsonData.put("free", decimalFormat.format(free / 1024));
                 jsonData.put("unit", "GB");
-                jsonData.put("total", decimalFormat.format(total/1024));
+                jsonData.put("total", decimalFormat.format(total / 1024));
+                //perc是磁盘剩余空间百分比,用于排序
+                jsonData.put("perc", free / total);
 
-                valuesMap.put(path,jsonData);
-            }else {
+                valuesMap.put(path, jsonData);
+            } else {
                 String path = obj.getJSONObject("fields").getString("device") + obj.getJSONObject("fields").getString("path");
-                if(valuesMap.containsKey(path)){
+                if (valuesMap.containsKey(path)) {
                     continue;
                 }
 
                 double total = obj.getJSONObject("fields").getDouble("total");
-                double free =  obj.getJSONObject("fields").getDouble("free");
+                double free = obj.getJSONObject("fields").getDouble("free");
 
-                jsonData.put("path",path);
-                jsonData.put("free", decimalFormat.format(free/1024));
+                jsonData.put("path", path);
+                jsonData.put("free", decimalFormat.format(free / 1024));
                 jsonData.put("unit", "GB");
-                jsonData.put("total", decimalFormat.format(total/1024));
+                jsonData.put("total", decimalFormat.format(total / 1024));
 
-                valuesMap.put(path,jsonData);
+                valuesMap.put(path, jsonData);
             }
             values.add(jsonData);
 
         }
 
-        dataMap.put("values", values);
+        //把磁盘空间排序
+        Collections.sort(values, new Comparator<JSONObject>() {
+            //You can change "Name" with "ID" if you want to sort by ID
+            private static final String KEY_NAME = "perc";
+
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                double valA = 0;
+                double valB = 0;
+
+                try {
+                    valA = a.getDouble(KEY_NAME);
+                    valB = b.getDouble(KEY_NAME);
+                } catch (JSONException e) {
+                    //do something
+                }
+
+                if (valA < valB) {
+                    return -1;
+                } else return 1;
+                //if you want to change the sort order, simply use the following:
+                //return -valA.compareTo(valB);
+            }
+        });
+
+        for (int i = 0; i < values.size(); i++) {
+            sortedValues.add(values.get(i));
+        }
+
+        dataMap.put("values", sortedValues);
 
         Map<String, Object> outMap = new HashMap<String, Object>();
         outMap.put("result", "success");
@@ -204,7 +248,7 @@ public class BasicResource {
     /**
      * 网络net
      */
-    public Object getNetData(String host,int minute) {
+    public Object getNetData(String host, int minute) {
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Map<String, Object> resultData = new HashMap<String, Object>();
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
@@ -216,21 +260,21 @@ public class BasicResource {
         double currentUpload = 0;
         double totalDown = 0;
         double currentDown = 0;
-        String data = getBaseSourceData(host,"system.net_state",minute);
+        String data = getBaseSourceData(host, "system.net_state", minute);
         com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
         com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
 
             try {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject)object;
+                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
                 com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
 
                 String device = obj.getJSONObject("fields").getString("device");
-                if(!device.equals("eth0") && device.indexOf("Intel(R) I350 Gigabit") < 0){     // 添加224服务器网卡
+                if (!device.equals("eth0") && device.indexOf("Intel(R) I350 Gigabit") < 0) {     // 添加224服务器网卡
                     continue;
                 }
-                double upload = Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("in")/(8*1024)));
-                double down =  Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("out")/(8*1024)));
+                double upload = Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("in") / (8 * 1024)));
+                double down = Double.valueOf(decimalFormat.format(obj.getJSONObject("fields").getDouble("out") / (8 * 1024)));
                 listUpload.add(upload);
                 listDown.add(down);
                 totalUpload += upload;
@@ -248,7 +292,7 @@ public class BasicResource {
             }
 
         }
-        if(listUpload.size() < 1 || listDown.size() < 1){
+        if (listUpload.size() < 1 || listDown.size() < 1) {
             Map<String, Object> outMap = new HashMap<String, Object>();
             outMap.put("result", "fail");
             outMap.put("resultData", new ArrayList<>());
@@ -291,14 +335,15 @@ public class BasicResource {
 
     /**
      * 拼接返回参数
+     *
      * @param list
      * @param controlsData
      * @return
      */
-    private Map<String,Object> returnDataTransFormat(List list,List<Object> controlsData){
+    private Map<String, Object> returnDataTransFormat(List list, List<Object> controlsData) {
         com.alibaba.fastjson.JSONObject resultData = new com.alibaba.fastjson.JSONObject();
         List<Object> tableData = new ArrayList<Object>();
-        if(list == null || list.size() < 1){
+        if (list == null || list.size() < 1) {
             Map<String, Object> outMap = new HashMap<String, Object>();
             outMap.put("result", "fail");
             outMap.put("resultData", new ArrayList<>());
@@ -312,12 +357,12 @@ public class BasicResource {
         double total = 0;
         double current = 0;
         for (Object object : list) {
-            double d = Double.parseDouble(object.toString()) ;
+            double d = Double.parseDouble(object.toString());
             total += d;
             current = d;
         }
         Collections.sort(list);
-        max = Double.parseDouble(list.get(list.size()-1).toString());
+        max = Double.parseDouble(list.get(list.size() - 1).toString());
         min = Double.parseDouble(list.get(0).toString());
         double n = total / list.size();
         double avg = Double.parseDouble(String.format("%.1f", n));
@@ -346,7 +391,8 @@ public class BasicResource {
         return outMap;
     }
 
-    /** 假数据
+    /**
+     * 假数据
      * cpu
      */
     public Object getCpuDataSham() {
@@ -420,7 +466,8 @@ public class BasicResource {
         return outMap;
     }
 
-    /** 假数据
+    /**
+     * 假数据
      * 内存memory
      */
     public Object getMemoryDataSham() {
@@ -561,9 +608,9 @@ public class BasicResource {
         return outMap;
     }
 
-	/*
-	 * 磁盘directory
-	 */
+    /*
+     * 磁盘directory
+     */
 
     public Object getDirectoryUsedDataSham(String ip) {
 
@@ -594,33 +641,34 @@ public class BasicResource {
     /**
      * 基础资源数据查询
      * 统一查询ES
+     *
      * @return
      */
-    public  String getBaseSourceData(String ip,String metric,int minute) {
+    public String getBaseSourceData(String ip, String metric, int minute) {
         EsQueryBean es = new EsQueryBean();
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
-            String s1 = Pub.Index_Head+ sdf.format(System.currentTimeMillis());
-            String s2 = Pub.Index_Head+ sdf.format(System.currentTimeMillis()-(3600*24*1000));
+            String s1 = Pub.Index_Head + sdf.format(System.currentTimeMillis());
+            String s2 = Pub.Index_Head + sdf.format(System.currentTimeMillis() - (3600 * 24 * 1000));
 
-            String[] indice = new String[] { s2 ,s1 };
+            String[] indice = new String[]{s2, s1};
             es.setIndices(indice);
-            String[] types = { "FZJC" };
+            String[] types = {"FZJC"};
             es.setTypes(types);
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> mustMap = new HashMap<>();
             mustMap.put("fields.ip", ip);
-            mustMap.put("fields.metric",metric);
+            mustMap.put("fields.metric", metric);
 //		mustMap.put("fields.metric", "system.cpu.pct_usage");
 
             params.put("must", mustMap);
             params.put("sort", "fields.data_time");
 
 
-            if(metric.indexOf("disk") > -1){
+            if (metric.indexOf("disk") > -1) {
                 params.put("size", 10);
-            }else{
+            } else {
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
@@ -640,7 +688,7 @@ public class BasicResource {
 
             es.setParameters(params);
 
-            logger.info("es:"+ com.alibaba.fastjson.JSON.toJSONString(es));
+            logger.info("es:" + com.alibaba.fastjson.JSON.toJSONString(es));
 //            long start = System.currentTimeMillis();
             Map<String, Object> data_new = esQueryService.getData_new(es);
 //            logger.info(metric+" 查询耗时："+(System.currentTimeMillis() - start) +" ms");
