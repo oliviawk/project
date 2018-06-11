@@ -6,6 +6,7 @@ import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,12 @@ public class DataSourceService {
     public void add(String index, String type, String id, String json) {
 
         try {
+            //判断数据是否被修改过(aging_status 不是'未处理'状态 ，表示为修改过)，如果修改过，则不再修改
+            Map<String, Object> tempMap = getDocumentById(new String[]{index},type,id);
+            if (tempMap.containsKey("aging_status") && !tempMap.get("aging_status").equals("未处理")){
+                logger.info("已修改："+id);
+                return;
+            }
             es.bulkProcessor.add(new IndexRequest(index, type, id).source(json, XContentType.JSON));
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,5 +198,39 @@ public class DataSourceService {
         RestStatus restStatus = deleteResponse.status();
         num = restStatus.getStatus();
         return num;
+    }
+
+    /**
+     * 查询单条数据
+     *
+     * @param indexs
+     * @param type
+     * @param id
+     * @return
+     */
+    public Map<String, Object> getDocumentById(String[] indexs, String type, String id) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+
+            String[] indices = esClientAdminService.indexExists(es,indexs);
+            if (indices == null || indices.length < 1) {
+                return resultMap;
+            }
+            for (String s : indices){
+//			    System.out.println(s+"--"+type+"---"+id);
+                GetResponse response = es.client.prepareGet(s, type, id).get();
+                if (response != null && response.getSource() != null){
+                    resultMap = response.getSource();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultMap = new HashMap<>();
+        } finally {
+            return resultMap;
+        }
+
     }
 }
