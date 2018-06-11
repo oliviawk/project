@@ -50,6 +50,10 @@ public class BasicResource {
 
                 JSONObject jsonData = new JSONObject();
                 String str = obj.getJSONObject("fields").getString("value");
+                //当锐捷监控取不到服务器指标时,value字段的值为"-",需要特殊处理
+                if ("-".equals(str)) {
+                    str = "0.01%";
+                }
                 String string = str.split("%")[0];
                 String time = obj.getJSONObject("fields").getString("data_time");
                 jsonData.put("used", Double.parseDouble(string));

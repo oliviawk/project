@@ -363,7 +363,7 @@ public class ConfigService {
 //						fields.put("data_time",
 //								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
 //					} else {
-//						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 //
 //					}
 					//添加文件大小范围和文件名

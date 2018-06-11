@@ -38,9 +38,6 @@ public class SendAlertMessage {
 	@Autowired
 	UsersRepository usersRepository;
 
-	@Value("${profile.environment}")
-	private String env;
-
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
 
@@ -158,21 +155,14 @@ public class SendAlertMessage {
 					//转换微信格式告警信息
 					weChartContent = Pub.transformTitle(weChartContent,alertBean);
 
-					if ("local".equals(env) || "dev".equals(env) || "fu".equals(env)) {
-
-						if("1".equals(wechart_send_enable)){
-							initWeChart(esWriteBean,strategyMap,weChartContent);
-						}
-
-					} else {
 						// 推送到前端
 //					kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
 
-						if("1".equals(wechart_send_enable)){
-							//查询发送的用户
-							initWeChart(esWriteBean,strategyMap,weChartContent);
-						}
+					if("1".equals(wechart_send_enable)){
+						//查询发送的用户
+						initWeChart(esWriteBean,strategyMap,weChartContent);
 					}
+
 				}
 
 			}
