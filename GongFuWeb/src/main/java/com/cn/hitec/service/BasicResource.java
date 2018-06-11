@@ -42,18 +42,14 @@ public class BasicResource {
         List list = new ArrayList();
         String data = getBaseSourceData(ip, "system.cpu.pct_usage", minute);
 //        logger.info("data:"+data);
-        com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-        com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+        JSONObject jsonObj = JSONObject.parseObject(data);
+        JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
             try {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
+                JSONObject obj = (JSONObject) object;
 
-                com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+                JSONObject jsonData = new JSONObject();
                 String str = obj.getJSONObject("fields").getString("value");
-                //当锐捷监控取不到服务器指标时,value字段的值为"-",需要特殊处理
-                if ("-".equals(str)) {
-                    str = "0.01%";
-                }
                 String string = str.split("%")[0];
                 String time = obj.getJSONObject("fields").getString("data_time");
                 jsonData.put("used", Double.parseDouble(string));
@@ -85,13 +81,13 @@ public class BasicResource {
         List<String> ipListOut = Pub.getIpList_out();
         if (ipListIn.contains(host)) {
             String data = getBaseSourceData(host, "system.memory.pct_usage", minute);
-            com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-            com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+            JSONObject jsonObj = JSONObject.parseObject(data);
+            JSONArray jsonArr = jsonObj.getJSONArray("resultData");
             for (Object object : jsonArr) {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
+                JSONObject obj = (JSONObject) object;
                 String m = obj.getJSONObject("fields").getString("metric");
                 if (m.contains("memory")) {
-                    com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+                    JSONObject jsonData = new JSONObject();
                     String str = obj.getJSONObject("fields").getString("value");
                     //当锐捷监控取不到服务器指标时,value字段的值为"-",需要特殊处理
                     if ("-".equals(str)) {
@@ -115,14 +111,14 @@ public class BasicResource {
             }
         } else if (ipListOut.contains(host)) {
             String data = getBaseSourceData(host, "system.memory_usage", minute);
-            com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-            com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+            JSONObject jsonObj = JSONObject.parseObject(data);
+            JSONArray jsonArr = jsonObj.getJSONArray("resultData");
             for (Object object : jsonArr) {
                 try {
-                    com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
+                    JSONObject obj = (JSONObject) object;
                     String m = obj.getJSONObject("fields").getString("metric");
                     if (m.contains("memory")) {
-                        com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+                        JSONObject jsonData = new JSONObject();
                         double free = obj.getJSONObject("fields").getDouble("free");
                         double total = obj.getJSONObject("fields").getDouble("total");
                         String time = obj.getJSONObject("fields").getString("data_time");
@@ -261,13 +257,13 @@ public class BasicResource {
         double totalDown = 0;
         double currentDown = 0;
         String data = getBaseSourceData(host, "system.net_state", minute);
-        com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-        com.alibaba.fastjson.JSONArray jsonArr = jsonObj.getJSONArray("resultData");
+        JSONObject jsonObj = JSONObject.parseObject(data);
+        JSONArray jsonArr = jsonObj.getJSONArray("resultData");
         for (Object object : jsonArr) {
 
             try {
-                com.alibaba.fastjson.JSONObject obj = (com.alibaba.fastjson.JSONObject) object;
-                com.alibaba.fastjson.JSONObject jsonData = new com.alibaba.fastjson.JSONObject();
+                JSONObject obj = (JSONObject) object;
+                JSONObject jsonData = new JSONObject();
 
                 String device = obj.getJSONObject("fields").getString("device");
                 if (!device.equals("eth0") && device.indexOf("Intel(R) I350 Gigabit") < 0) {     // 添加224服务器网卡
@@ -305,13 +301,13 @@ public class BasicResource {
         Collections.sort(listDown);
 
         List tableData = new ArrayList();
-        com.alibaba.fastjson.JSONObject data1 = new com.alibaba.fastjson.JSONObject();
+        JSONObject data1 = new JSONObject();
         data1.put("min", Double.parseDouble((String.format("%.2f", listUpload.get(0)))) + "MB");
         data1.put("max", Double.parseDouble((String.format("%.2f", listUpload.get(listUpload.size() - 1)))) + "MB");
         data1.put("avg", decimalFormat.format(totalUpload / listUpload.size()) + "MB");
         data1.put("current", Double.parseDouble((String.format("%.2f", currentUpload))) + "MB");
 
-        com.alibaba.fastjson.JSONObject data2 = new com.alibaba.fastjson.JSONObject();
+        JSONObject data2 = new JSONObject();
         data2.put("min", Double.parseDouble((String.format("%.2f", listDown.get(0)))) + "MB");
         data2.put("max", Double.parseDouble((String.format("%.2f", listDown.get(listDown.size() - 1)))) + "MB");
         data2.put("avg", decimalFormat.format(totalDown / listDown.size()) + "MB");
@@ -341,7 +337,7 @@ public class BasicResource {
      * @return
      */
     private Map<String, Object> returnDataTransFormat(List list, List<Object> controlsData) {
-        com.alibaba.fastjson.JSONObject resultData = new com.alibaba.fastjson.JSONObject();
+        JSONObject resultData = new JSONObject();
         List<Object> tableData = new ArrayList<Object>();
         if (list == null || list.size() < 1) {
             Map<String, Object> outMap = new HashMap<String, Object>();
@@ -583,8 +579,8 @@ public class BasicResource {
         Collections.sort(list2);
 
         List tableData = new ArrayList();
-        com.alibaba.fastjson.JSONObject data = new com.alibaba.fastjson.JSONObject();
-        com.alibaba.fastjson.JSONObject data2 = new com.alibaba.fastjson.JSONObject();
+        JSONObject data = new JSONObject();
+        JSONObject data2 = new JSONObject();
         data2.put("min", Double.parseDouble((String.format("%.2f", list2.get(0)))) + "MB");
         data2.put("max", Double.parseDouble((String.format("%.2f", list2.get(list2.size() - 1)))) + "MB");
         data2.put("avg", total2 / list2.size() + "MB");
