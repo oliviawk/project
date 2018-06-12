@@ -30,7 +30,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.tools.Pub;
 
-import static org.apache.kafka.common.requests.DeleteAclsResponse.log;
 
 /**
  * @ClassName:
@@ -164,7 +163,7 @@ public class ESService {
 					//判断数据是否被修改过(aging_status 不是'未处理'状态 ，表示为修改过)，如果修改过，则不再修改
 					Map<String, Object> tempMap = getDocumentById(new String[]{index},type,strid);
 					if (tempMap.containsKey("aging_status") && !tempMap.get("aging_status").equals("未处理")){
-						log.info("已修改："+type+","+strType+","+strModule+","+strIp+","+strDataTime);
+						logger.info("已修改："+type+","+strType+","+strModule+","+strIp+","+strDataTime);
 						continue;
 					}
 					IndexResponse response = es.client.prepareIndex(index, type,strid).setSource(json, XContentType.JSON).get();
@@ -613,10 +612,10 @@ public class ESService {
 					.setExplain(true).get();
 
 			SearchHit[] searchHits = response.getHits().getHits();
-			log.info("searchHits.dataLength :" + response.getHits().getTotalHits());
+			logger.info("searchHits.dataLength :" + response.getHits().getTotalHits());
 			System.out.println("searchHits.dataLength :" + response.getHits().getTotalHits());
 			if (response.getHits().getTotalHits() != 1) {
-				log.error("请查询ES，查询条件为：indexs:{} , type:{} , fields:{},id不唯一，多条入库", index, type, fields);
+				logger.error("请查询ES，查询条件为：indexs:{} , type:{} , fields:{},id不唯一，多条入库", index, type, fields);
 			} else {
 				for (SearchHit hits : searchHits) {
 					resultMap = hits.getSource();
@@ -638,7 +637,7 @@ public class ESService {
                 break;
             }*/
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			logger.error(e.getMessage());
 //            resultMap = new HashMap<>();
 		} finally {
 			return resultMap;
