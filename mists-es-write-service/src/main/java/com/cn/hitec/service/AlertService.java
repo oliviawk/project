@@ -2,7 +2,6 @@ package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.domain.Users;
 import com.cn.hitec.repository.ESRepository;
@@ -107,7 +106,7 @@ public class AlertService {
                 if(StringUtils.isEmpty(documentId)){
                     throw new Exception("插入数据失败");
                 }
-                if(rulesArray.size() > 0 && AlertType.BEFORE.getValue().equals(alertBean.getAlertType())){
+                if(rulesArray.size() > 0 && AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
                     dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
                 }
             }
@@ -142,7 +141,7 @@ public class AlertService {
             boolean isAlert = true;
 
             //如果不是提示类告警，要判断各种告警规则
-            if(!AlertType.BEFORE.getValue().equals(alertBean.getAlertType())){
+            if(!AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
                 //先比较当前的告警时间范围和最大告警数
                 isAlert = isAlert(rulesArray);
                 //告警溯源

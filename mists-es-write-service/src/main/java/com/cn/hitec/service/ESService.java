@@ -492,7 +492,7 @@ public class ESService {
 								if(rulesArray.getInteger(4) == 1){
 									String alertTitle = subType + "--" + fields.get("module") + "--"
 											+ fields.get("data_time") + " 时次产品到达";
-									alertBean = alertService.getAlertBean(AlertType.BEFORE.getValue(), alertTitle, type,map);
+									alertBean = alertService.getAlertBean(AlertType.NOTE.getValue(), alertTitle, type,map);
 									alertService.alert(es,index, alertType, alertBean,rulesArray);
 								}
 							}
