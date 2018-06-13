@@ -1,10 +1,14 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.domain.Users;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.repository.jpa.UsersRepository;
+import com.cn.hitec.tools.AlertType;
 import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.get.GetResponse;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -30,6 +35,9 @@ public class AlertService {
     KafkaProducer kafkaProducer;
     @Autowired
     UsersRepository usersRepository;
+
+    @Autowired
+    DataInfoRepository dataInfoRepository;
 
     /**
      * 获取告警id
@@ -63,7 +71,7 @@ public class AlertService {
      * @param alertBean
      * @throws Exception
      */
-    public void alert(ESRepository es,String index , String type , AlertBeanNew alertBean){
+    public void alert(ESRepository es,String index , String type , AlertBeanNew alertBean,JSONArray rulesArray){
 
         try {
 
@@ -75,12 +83,19 @@ public class AlertService {
 
             if(documentId != null){ //如果有ID
                 //如果是超时、异常的告警，说明是重复，过滤掉。 如果是迟到的数据，修改告警信息（取消告警）
-                if("03".equals(alertBean.getAlertType())){
+                if(AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
                     //保存告警信息
                     es.bulkProcessor.add(new IndexRequest(index,type,documentId)
                             .source(JSON.toJSONString(alertBean), XContentType.JSON));
+
+                    //是否迟到提示
+                    if(rulesArray.size() > 0 && rulesArray.getInteger(5) == 0){
+                        return;
+                    }
                 }
-                return;
+                else{
+                    return;
+                }
 
             }else{
                 //保存告警信息
@@ -88,16 +103,20 @@ public class AlertService {
                         .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
 
                 documentId = response.getId();
+
+                if(StringUtils.isEmpty(documentId)){
+                    throw new Exception("插入数据失败");
+                }
+                if(rulesArray.size() > 0 && AlertType.BEFORE.getValue().equals(alertBean.getAlertType())){
+                    dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
+                }
             }
 
-            if(StringUtils.isEmpty(documentId)){
-                throw new Exception("插入数据失败");
-            }
             //消息推送
 //                kafkaProducer.sendMessage("ALERT",null,JSON.toJSONString(alertBean));
 
 
-            boolean isAlert_parent = false;
+            /*boolean isAlert_parent = false;
             //判断上游是否告警，如果告警，则该条告警不进行微信、短信告警
             String moduleKey = module_key;
             String moduleKeyParent = "";
@@ -117,10 +136,32 @@ public class AlertService {
 
                 moduleKey = moduleKeyParent;
                 moduleKeyParent = "";
+            }*/
+
+            /*====================modified by czt 2018.6.11=======================*/
+            boolean isAlert = true;
+
+            //如果不是提示类告警，要判断各种告警规则
+            if(!AlertType.BEFORE.getValue().equals(alertBean.getAlertType())){
+                //先比较当前的告警时间范围和最大告警数
+                isAlert = isAlert(rulesArray);
+                //告警溯源
+                if(isAlert){
+                    List<Object> pres = dataInfoRepository.findPreModules(module_key);
+                    for(Object pre : pres){
+                        String id_cj = getDocumentById(es,index,type,Pub.MD5(pre+","+alertBean.getData_time()));
+                        if (!org.apache.commons.lang.StringUtils.isEmpty(id_cj)){
+                            isAlert = false;
+                            logger.info("-------> 存在上级告警");
+                            logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
+                            break;
+                        }
+                    }
+                }
             }
 
-            //如果上游告警了，那么此条告警不生成
-            if(!isAlert_parent){
+
+            if(isAlert){
                 log.warn("生成微信、短信告警："+JSON.toJSONString(alertBean));
 
                 /* 生成 微信告警信息*/
@@ -191,6 +232,42 @@ public class AlertService {
 
     }
 
+    boolean isAlert(JSONArray rulesArray){
+        boolean isAlert = true;
+        if(rulesArray.size() > 0){
+            if(rulesArray.getInteger(2) != null ){
+                if(rulesArray.getInteger(3) > rulesArray.getInteger(2)){
+                    isAlert = false;
+                }
+            }
+
+            if(isAlert && rulesArray.getString(1) != null && !"".equals(rulesArray.getString(1))){
+                String[] range = rulesArray.getString(1).split("-");
+                String[] times = range[0].split("-");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+                String now = df.format(new Date());
+                if(times[0].compareTo(times[1]) >= 0){
+                    if(now.compareTo(times[0]) >= 0 || now.compareTo(times[0]) <= 0){
+                        isAlert = true;
+                    }
+                    else{
+                        isAlert = false;
+                    }
+                }
+                else{
+                    if(now.compareTo(times[0]) >= 0 && now.compareTo(times[0]) <= 0){
+                        isAlert = true;
+                    }
+                    else{
+                        isAlert = false;
+                    }
+                }
+            }
+        }
+
+        return isAlert;
+    }
+
     /**
      * 生成告警类
      * @param alertType 告警类型
@@ -244,14 +321,15 @@ public class AlertService {
             alertBean.setPath(fields.containsKey("path") ? fields.get("path").toString() : "-");
             alertBean.setFileName(fields.containsKey("file_name") ? fields.get("file_name").toString() : "-");
 
-            if("01".equals(alertType)){
+            if(AlertType.OVERTIME.getValue().equals(alertType)){
                 alertBean.setDesc("超时未到达");
-            }else if("02".equals(alertType)){
+            }else if(AlertType.ABNORMAL.getValue().equals(alertType)){
                 alertBean.setDesc("数据异常");
-            }else if("03".equals(alertType)){
+            }else if(AlertType.DELAY.getValue().equals(alertType)){
                 String  temp = alertTitle.substring(alertTitle.indexOf(",延迟")+1,alertTitle.length());
                 alertBean.setDesc(temp);
-            }else if("04".equals(alertType)){
+            }else /*if(AlertType.FILEEX.getValue().equals(alertType))*/{
+                //文件错误或提前到达
                 alertBean.setDesc(alertBean.getErrorMessage());
             }
         } catch (Exception e) {

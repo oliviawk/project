@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.tools.AlertType;
 import com.cn.hitec.tools.Pub;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
@@ -159,7 +160,7 @@ public class DataSourceService {
 
                                 fieldsMap.put("event_info", "延迟" + temp + "到达");
                                 // 初始化告警实体类
-                                alertBean = alertService.getAlertBean("03", alertTitle, str_type, dataMap);
+                                alertBean = alertService.getAlertBean(AlertType.DELAY.getValue(), alertTitle, str_type, dataMap);
                             } else {
                                 dataMap.put("aging_status", "正常");
                             }
@@ -169,7 +170,7 @@ public class DataSourceService {
                                     + "时次："+dataTime + " 产品 ，发送失败";
                             fieldsMap.put("event_info", "数据异常");
                                 // 初始化告警实体类
-                            alertBean = alertService.getAlertBean("02", alertTitle, str_type,dataMap);
+                            alertBean = alertService.getAlertBean(AlertType.ABNORMAL.getValue(), alertTitle, str_type,dataMap);
                         }
                     }
 

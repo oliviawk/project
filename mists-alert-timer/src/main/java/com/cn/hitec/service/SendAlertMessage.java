@@ -1,24 +1,24 @@
 package com.cn.hitec.service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.domain.Users;
 import com.cn.hitec.feign.client.EsQueryService;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.repository.jpa.UsersRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.cn.hitec.bean.AlertBean;
 import com.cn.hitec.bean.EsWriteBean;
 import com.cn.hitec.feign.client.EsWriteService;
-import com.cn.hitec.util.HttpPub;
 import com.cn.hitec.util.Pub;
 
 /**
@@ -37,6 +37,9 @@ public class SendAlertMessage {
 	KafkaProducer kafkaProducer;
 	@Autowired
 	UsersRepository usersRepository;
+
+	@Autowired
+	DataInfoRepository dataInfoRepository;
 
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
@@ -120,9 +123,9 @@ public class SendAlertMessage {
 				esWriteBean.setData(params);
 				esWriteService.add(esWriteBean); // 将告警信息写入ES
 
-				//判断上游是否告警  如果有告警，此次不发送微信、短信
-				boolean isAlert_parent = false;
-				JSONObject jsonObject = new JSONObject();
+				//判断是否发送微信、短信告警
+				boolean isAlert = true;
+				/*JSONObject jsonObject = new JSONObject();
 				jsonObject.put("index",index);
 				jsonObject.put("type",type);
                 String moduleKey = module_key;
@@ -144,10 +147,65 @@ public class SendAlertMessage {
 
                     moduleKey = moduleKeyParent;
                     moduleKeyParent = "";
-                }
+                }*/
 
-				//如果上游告警了，那么此条告警不生成
-				if(!isAlert_parent){
+
+                /*====================modified by czt 2018.6.11=======================*/
+				//先比较当前的告警时间范围和最大告警数
+                List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,map.get("type").toString(),ipAddr);
+				if(curmodules.size() > 0){
+					JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(curmodules));
+
+					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
+
+					if(jsonArray.getInteger(2) != null ){
+						if(jsonArray.getInteger(3) > jsonArray.getInteger(2)){
+							isAlert = false;
+						}
+					}
+
+					if(isAlert){
+						String[] range = jsonArray.getString(1).split("-");
+						String[] times = range[0].split("-");
+						SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+						String now = df.format(new Date());
+						if(times[0].compareTo(times[1]) >= 0){
+							if(now.compareTo(times[0]) >= 0 || now.compareTo(times[0]) <= 0){
+								isAlert = true;
+							}
+							else{
+								isAlert = false;
+							}
+						}
+						else{
+							if(now.compareTo(times[0]) >= 0 && now.compareTo(times[0]) <= 0){
+								isAlert = true;
+							}
+							else{
+								isAlert = false;
+							}
+						}
+					}
+				}
+				if(isAlert){
+					List<Object> pres = dataInfoRepository.findPreModules(module_key);
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("index",index);
+					jsonObject.put("type",type);
+					for(Object pre : pres){
+						jsonObject.put("id",Pub.MD5(pre.toString()+","+alertBean.getData_time()));
+						String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
+						if (!StringUtils.isEmpty(id_cj)){
+							isAlert = false;
+							logger.info("-------> 存在上级告警");
+							logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
+							break;
+						}
+					}
+				}
+
+
+				if(isAlert){
 					String weChartContent = strategyMap.get("wechart_content").toString();
 					String smsContent = strategyMap.get("wechart_content").toString();
 					String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();

@@ -2,7 +2,9 @@ package com.cn.hitec.repository.jpa;
 
 import com.cn.hitec.domain.DataInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,4 +47,15 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
 
     @Query( value = "SELECT module_key,module_key_parent from alert_module ;" ,nativeQuery = true)
     List<Object> findAlertModule();
+
+    @Query( value = "SELECT id,alertTimeRange,maxAlerts,currentAlerts FROM alert_rules RIGHT JOIN (SELECT id as fid FROM data_info WHERE service_type=?1 and module=?2 and  name=?3 and ip=?4) t ON id=fid" ,nativeQuery = true)
+    List<Object> findAlertRules(String service_type, String module, String name, String ip);
+
+    @Query( value = "SELECT module_key from alert_module_copy where FIND_IN_SET(id,getPreAlerts(?1)) ;" ,nativeQuery = true)
+    List<Object> findPreModules(String module_key);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE alert_rules SET currentAlerts=currentAlerts+1 WHERE id = ?1",nativeQuery = true)
+    void addAlertCnt(long id);
 }

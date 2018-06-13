@@ -1,5 +1,7 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.util.HttpPub;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +16,9 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.Pub;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,6 +31,9 @@ public class ConfigServiceTest {
 
 	@Autowired
 	ConfigService service;
+
+	@Autowired
+	DataInfoRepository dataInfoRepository;
 
 	@Autowired
 	HttpPub httpPub;
@@ -120,4 +124,19 @@ public class ConfigServiceTest {
 		httpPub.httpPost("@all","test");
 	}
 
+	@Test
+	public void getAlertModule(){
+		List<Object> currentAlert = dataInfoRepository.findAlertRules("LAPS","分发","LAPS3KMGEO_EU41","10.0.74.226");
+		JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(currentAlert));
+		for(Object o : jsonArray){
+			System.out.println(o.toString());
+		}
+		System.out.println(jsonArray);
+		System.out.println(currentAlert.size());
+
+		List<Object> preAlerts = dataInfoRepository.findPreModules("OP_LAPS_分发,LAPS3KMGEO_EU4,10.0.74.226");
+		for(Object o : preAlerts){
+			System.out.println(o.toString());
+		}
+	}
 }
