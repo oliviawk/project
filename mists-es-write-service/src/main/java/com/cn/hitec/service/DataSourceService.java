@@ -1,9 +1,11 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.tools.AlertType;
 import com.cn.hitec.tools.Pub;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -32,6 +34,9 @@ public class DataSourceService {
     private ESClientAdminService esClientAdminService;
     @Autowired
     AlertService alertService;
+
+    @Autowired
+    DataInfoRepository dataInfoRepository;
 
     /**
      * 添加数据 指定id
@@ -131,6 +136,10 @@ public class DataSourceService {
                 String[] indices = Pub.getIndices(occrTime, 1); // 获取今天和昨天的
                 Map<String,Object> resultMap = esClientAdminService.getDocumentById(es,indices, str_type, str_id) ;
                 logger.info("indices :{} , str_type: {} , str_id :{}" , indices,str_type,str_id);
+
+                List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,sub_type,ipAddr);
+                JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+
                 if(resultMap.containsKey("_id")){
                     AlertBeanNew alertBean = null;
                     String alertType = "alert";
@@ -175,8 +184,22 @@ public class DataSourceService {
                     }
 
                     if (alertBean != null) {
-                        alertService.alert(es,str_index, alertType, alertBean); // 生成告警
+                        alertService.alert(es,str_index, alertType, alertBean,rulesArray); // 生成告警
                         alertBean = null;
+                    }else{
+                        if(rulesArray.size() > 0){
+                            //告警状态正常置零告警次数
+                            if(rulesArray.getInteger(3) != 0){
+                                dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
+                            }
+                            //无告警时提前到达是否提示
+                            if(rulesArray.getInteger(4) == 1){
+                                String alertTitle = "数据源数据，" + sub_type + ",IP:"+ipAddr
+                                        + "时次："+dataTime + " 产品到达";
+                                alertBean = alertService.getAlertBean(AlertType.NOTE.getValue(), alertTitle, str_type,dataMap);
+                                alertService.alert(es,str_index, alertType, alertBean,rulesArray);
+                            }
+                        }
                     }
                     // 数据入库
                     es.bulkProcessor.add(new IndexRequest(str_index, str_type, str_id).source(dataMap));

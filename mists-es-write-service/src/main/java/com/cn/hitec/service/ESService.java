@@ -297,6 +297,7 @@ public class ESService {
 					index = Pub.Index_Head + Pub.transform_DateToString(dataTimeIndex, Pub.Index_Food_Simpledataformat);
 
 					List<Object> curmodules = dataInfoRepository.findAlertRules(type,subModule,subType,subIp);
+					JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
 
 					// 如果是定时 有规律的数据， 需要查询后入库
 					Map<String, Object> resultMap = new HashMap<>();
@@ -322,14 +323,13 @@ public class ESService {
 							}
 						}
 
-						if(curmodules.size() > 0) {
-							JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(curmodules));
+						if(rulesArray.size() > 0) {
 
 							if("异常".equals(map.get("aging_status"))){
-								dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
+								dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
 							}
-							else if(jsonArray.getLongValue(3) != 0){
-								dataInfoRepository.resetAlertCnt(jsonArray.getLongValue(0));
+							else if(rulesArray.getLongValue(3) != 0){
+								dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
 							}
 
 						}
@@ -475,8 +475,6 @@ public class ESService {
 							fields.put("file_name", hitsSource_fields.get("file_name"));
 						}
 
-
-						JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
 						if (alertBean != null) {
 							/*   需要修改该方法  2018.3.20没有修改   */
 							alertService.alert(es,index, alertType, alertBean,rulesArray); // 生成告警
