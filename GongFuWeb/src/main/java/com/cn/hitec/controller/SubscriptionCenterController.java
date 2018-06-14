@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,12 @@ public class SubscriptionCenterController {
         return "SubscriptionCenter/relationView";
     }
 
+    @RequestMapping("/sourcedata")
+    public String dataConfig() {
+        // System.out.println("进入MICAPS4.html");
+        return "SubscriptionCenter/sourcedata";
+    }
+
     /**
      * 获取 数据、环节 关系数据
      * @return
@@ -46,8 +53,24 @@ public class SubscriptionCenterController {
     @RequestMapping(value="/getdatamodulerelation", method = RequestMethod.GET)
     @ResponseBody
     public List getDataModuleRelation(){
+
         return mySqlService.getRelationData();
     }
+
+    /**
+     * 获取源数据 数据、环节 关系数据
+     * @return
+     */
+    @RequestMapping(value="/getsourcedata", method = RequestMethod.GET)
+    @ResponseBody
+    public List getsourceData(){
+ //       System.out.println(1111111111);
+        ArrayList ls= (ArrayList) mySqlService.getSourceDataInfo();
+ //       System.out.println(ls.get(1));
+        return mySqlService.getSourceDataInfo();
+    }
+
+
 
     /**
      * 获取 数据、环节 关系图数据
@@ -58,8 +81,6 @@ public class SubscriptionCenterController {
     public Map getDataModuleRelationView(){
         return mySqlService.getRelationDataView();
     }
-
-
 
     /**
      * 添加 数据、环节 关系数据
@@ -86,6 +107,28 @@ public class SubscriptionCenterController {
         }
     }
 
+    @RequestMapping(value="/deletdatamodulerelation", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public JSONObject deletDataModuleRelation(@RequestBody String id){
+        mySqlService.deletDataModuleRelation(id);
+        return null;
+    }
+
+    @RequestMapping(value="/addsourcedata", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public List addSourceData(@RequestBody String strJson){
+ //       System.out.println(2222);
+        mySqlService.addSourceDataInfo(strJson);
+        return mySqlService.getSourceDataInfo();
+    }
+
+    @RequestMapping(value="/deletsourcedata", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public List deletSourceData(@RequestBody String id){
+ //       System.out.println(id);
+        System.out.println(mySqlService.delSourceDataInfo(id));
+        return null;
+    }
     /**
      * 添加 源数据
      * @return
