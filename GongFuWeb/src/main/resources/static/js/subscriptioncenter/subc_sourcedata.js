@@ -28,7 +28,6 @@ function getsourceData() {
             $("#data_module_relation_tab").html(tboty_html);
         },
         error: function (err) {
-//            alert(err);
             console.error(err)
             $("#data_module_relation_tab").html("");
         }
@@ -93,7 +92,6 @@ function addSourceData(){
 
 function deletSourceData() {
     var id=$("#hideVlue").val();
-    alert(id);
     $.ajax({
         type: "POST",
         url: "../subscription/deletsourcedata",

@@ -110,12 +110,10 @@ $(function(){
 //删除提示方法
 function cueDel(id) {
     $("#hideVlue").val(id);
-    alert(id);
 }
 
 function deletMoudleData() {
     var id=$("#hideVlue").val();
-    alert(id);
     $.ajax({
         type: "POST",
         url: "../subscription/deletdatamodulerelation",

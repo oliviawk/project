@@ -64,9 +64,9 @@ public class SubscriptionCenterController {
     @RequestMapping(value="/getsourcedata", method = RequestMethod.GET)
     @ResponseBody
     public List getsourceData(){
-        System.out.println(1111111111);
+ //       System.out.println(1111111111);
         ArrayList ls= (ArrayList) mySqlService.getSourceDataInfo();
-        System.out.println(ls.get(1));
+ //       System.out.println(ls.get(1));
         return mySqlService.getSourceDataInfo();
     }
 
@@ -117,7 +117,7 @@ public class SubscriptionCenterController {
     @RequestMapping(value="/addsourcedata", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     public List addSourceData(@RequestBody String strJson){
-        System.out.println(2222);
+ //       System.out.println(2222);
         mySqlService.addSourceDataInfo(strJson);
         return mySqlService.getSourceDataInfo();
     }
@@ -125,7 +125,7 @@ public class SubscriptionCenterController {
     @RequestMapping(value="/deletsourcedata", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     public List deletSourceData(@RequestBody String id){
-        System.out.println(id);
+ //       System.out.println(id);
         System.out.println(mySqlService.delSourceDataInfo(id));
         return null;
     }
