@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.bean.AlertBeanNew;
+import com.cn.hitec.repository.jpa.DataInfoRepository;
+import com.cn.hitec.tools.AlertType;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -46,6 +49,9 @@ public class ESService {
 	ESClientAdminService esClientAdminService;
 	@Autowired
 	AlertService alertService;
+
+	@Autowired
+	DataInfoRepository dataInfoRepository;
 
 	/**
 	 * 添加数据 自动生成id
@@ -290,6 +296,9 @@ public class ESService {
 							"yyyy-MM-dd HH:mm:ss.SSSZ");
 					index = Pub.Index_Head + Pub.transform_DateToString(dataTimeIndex, Pub.Index_Food_Simpledataformat);
 
+					List<Object> curmodules = dataInfoRepository.findAlertRules(type,subModule,subType,subIp);
+					JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+
 					// 如果是定时 有规律的数据， 需要查询后入库
 					Map<String, Object> resultMap = new HashMap<>();
 					if (Pub.alert_time_map.containsKey(subKey)) {
@@ -306,6 +315,26 @@ public class ESService {
 
 					} else {
 						map.put("aging_status", "正常");
+						if(fields.containsKey("event_status")){
+							// 判断数据状态
+							if (!fields.get("event_status").toString().toUpperCase().equals("OK")
+									&& !fields.get("event_status").toString().equals("0")) {
+								map.put("aging_status", "异常");
+							}
+						}
+
+						if(rulesArray.size() > 0) {
+
+							if("异常".equals(map.get("aging_status"))){
+								dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
+							}
+							else if(rulesArray.getLongValue(3) != 0){
+								dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
+							}
+
+						}
+
+
 //						logger.info("这是一条非定时数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
 						es.bulkProcessor.add(new IndexRequest(index, type,str_id).source(json, XContentType.JSON));
 						continue;
@@ -343,7 +372,7 @@ public class ESService {
 										+ fields.get("event_info").toString();
 
 								// 初始化告警实体类
-								alertBean = alertService.getAlertBean("02", alertTitle,type, map);
+								alertBean = alertService.getAlertBean(AlertType.ABNORMAL.getValue(), alertTitle,type, map);
 							}
 						}
 						// 当 数据库里的数据 和 当前数据 一样时（目前是按照数据状态来判断），放弃掉该条数据
@@ -379,7 +408,7 @@ public class ESService {
 													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
 											fields.put("event_info", "文件大小异常: "+ "阈值为 大于"+mix+" byte ,实际值为 "+lFileSize+" byte");
 											// 初始化告警实体类
-											alertBean = alertService.getAlertBean("04", alertTitle, type,map);
+											alertBean = alertService.getAlertBean(AlertType.FILEEX.getValue(), alertTitle, type,map);
 										}
 
 									}else if(strSizeDefines.length == 2){
@@ -391,36 +420,36 @@ public class ESService {
 													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
 											fields.put("event_info", "文件大小异常: "+ "阈值范围为 "+mix+"--"+max+" byte ,实际值为 "+lFileSize+" byte");
 											// 初始化告警实体类
-											alertBean = alertService.getAlertBean("04", alertTitle, type,map);
+											alertBean = alertService.getAlertBean(AlertType.FILEEX.getValue(), alertTitle, type,map);
 										}
 									}
 
-									if (alertBean != null) {
+									/*if (alertBean != null) {
 										alertService.alert(es,index, alertType, alertBean); // 生成告警
 										alertBean = null;
-									}
+									}*/
 								}
 								//用文件本身的到达时间和最晚到达时间做比较，判断是否超时到达
 								long occurTime = Long.valueOf(map.get("occur_time").toString());
 								Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(),
 										"yyyy-MM-dd HH:mm:ss.SSSZ");
 								// 确定是否 时效告警 ,修改时效状态
-								if (occurTime - lastDate.getTime() >= 1000) {
+								if (occurTime - lastDate.getTime() >= 1000 && "正常".equals(map.get("aging_status"))) {
 									Date shuldDate = Pub.transform_StringToDate(resultMap.get("should_time").toString(),
 											"yyyy-MM-dd HH:mm:ss.SSSZ");
 									map.put("aging_status", "迟到");
 									String temp = Pub.transform_time((int) (occurTime - shuldDate.getTime()));
-//									String alertTitle = subType + "--" + fields.get("module") + "--"
-//											+ fields.get("data_time") + " 时次产品,延迟" + temp + "到达";
+									String alertTitle = subType + "--" + fields.get("module") + "--"
+											+ fields.get("data_time") + " 时次产品,延迟" + temp + "到达";
 
 									fields.put("event_info", "延迟" + temp + "到达");
 									// 初始化告警实体类
-//									alertBean = alertService.getAlertBean("03", alertTitle, type, map);
+									alertBean = alertService.getAlertBean(AlertType.DELAY.getValue(), alertTitle, type, map);
 
-									if (alertBean != null) {
-										alertService.alert(es,index, alertType, alertBean); // 生成告警
-										alertBean = null;
-									}
+//									if (alertBean != null) {
+//										alertService.alert(es,index, alertType, alertBean); // 生成告警
+//										alertBean = null;
+//									}
 
 								}
 							} else {
@@ -437,7 +466,7 @@ public class ESService {
 										+ fields.get("event_info").toString();
 								fields.put("event_info", "数据异常");
 								// 初始化告警实体类
-								alertBean = alertService.getAlertBean("02", alertTitle, type,map);
+								alertBean = alertService.getAlertBean(AlertType.ABNORMAL.getValue(), alertTitle, type,map);
 							}
 
 						}
@@ -446,12 +475,25 @@ public class ESService {
 							fields.put("file_name", hitsSource_fields.get("file_name"));
 						}
 
-
-
 						if (alertBean != null) {
 							/*   需要修改该方法  2018.3.20没有修改   */
-							alertService.alert(es,index, alertType, alertBean); // 生成告警
+							alertService.alert(es,index, alertType, alertBean,rulesArray); // 生成告警
 							alertBean = null;
+						}
+						else{
+							if(rulesArray.size() > 0){
+								//告警状态正常置零告警次数
+								if(rulesArray.getInteger(3) != 0){
+									dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
+								}
+								//无告警时提前到达是否提示
+								if(rulesArray.getInteger(4) == 1){
+									String alertTitle = subType + "--" + fields.get("module") + "--"
+											+ fields.get("data_time") + " 时次产品到达";
+									alertBean = alertService.getAlertBean(AlertType.NOTE.getValue(), alertTitle, type,map);
+									alertService.alert(es,index, alertType, alertBean,rulesArray);
+								}
+							}
 						}
 						// 数据入库
 						es.bulkProcessor.add(new IndexRequest(index, type, str_id).source(map));

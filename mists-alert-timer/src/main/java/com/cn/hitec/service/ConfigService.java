@@ -243,7 +243,6 @@ public class ConfigService {
 		}
 
 		List<Object> listStrategy = dataInfoRepository.findDataStrategyAll();
-		//循环所有数据,区分是采集、加工、分发 的数据，分别存入不同的map
 		for (Object di : listStrategy){
 			Map<String ,Object> map = new HashMap<>();
 
