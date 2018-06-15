@@ -978,7 +978,7 @@ function onchangeSelect2(m) {
 
                         $("#before_alert_" + i).prop("checked",dio[12]==1);
                         $("#after_alert_" + i).prop("checked",dio[13]==1);
-                        $("#alertTimeRange_" + i + "").val(dio[14]);
+                        $("#alertTimeRange_" + i + "").val(dio[14]?dio[14]:"00:00:00-23:59:59");
                         $("#maxAlerts_" + i + "").val(dio[15]);
 
 
