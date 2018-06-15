@@ -11,12 +11,14 @@ function getDataModuleRelation() {
             var tboty_html = "";
             if (resultData != null){
                 $.each(resultData,function (i,dt) {
+                    console.log(dt);
                     tboty_html += "" +
                         "<tr>" +
                         "   <td>"+dt[1]+"</td>" +
                         "   <td>"+dt[2]+"</td>" +
                         "   <td>"+dt[3]+"</td>" +
                         "   <td>"+dt[4]+"</td>" +
+                        "   <td><button type='submit' class='btn btn-default' data-toggle='modal' data-target='.bs-example-modal-sm' onclick='cueDel("+dt[0]+")'>删除</button></td>" +
                         "</tr>";
                 })
             }
@@ -92,6 +94,7 @@ function addDataModuleRelation(){
             if (rd != null){
                 alert(rd.resultData);
             }
+            getDataModuleRelation();
         }
     });
     $('#SCModal').modal('hide')
@@ -103,3 +106,28 @@ $(function(){
     getDataModuleRelation();
     initSelectsData();
 });
+
+//删除提示方法
+function cueDel(id) {
+    $("#hideVlue").val(id);
+}
+
+function deletMoudleData() {
+    var id=$("#hideVlue").val();
+    $.ajax({
+        type: "POST",
+        url: "../subscription/deletdatamodulerelation",
+        datatype:"json",
+        data:JSON.stringify({"pkId":id}),
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        success: function (sourceData) {
+            var tboty_html = "";
+            getDataModuleRelation();
+        },
+        error: function (err) {
+            console.error(err)
+        }
+    });
+}

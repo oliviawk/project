@@ -37,4 +37,35 @@ public interface MySqlService {
 
     @RequestMapping(value = "/sqlserver/adddmrelation", method = RequestMethod.POST, consumes = "application/json")
     public JSONObject addDataModuleRelation(@RequestBody String json);
+
+
+    /**
+     *  获取 源数据
+     * @return
+     */
+    @RequestMapping(value = "/sqlserver/getsourcedatainfo", method = RequestMethod.GET)
+    public List getSourceDataInfo();
+
+    /**
+     * 添加 源数据
+     * @param
+     * {
+     *     "name":"",
+     *     "path":"",
+     *     "fileName":"",
+     *     "subName":"",
+     *     "ipAddr":"",
+     *     "topic":"",
+     * }
+     * @return
+     */
+    @RequestMapping(value = "/sqlserver/addsourcedata", method = RequestMethod.POST, consumes = "application/json")
+    public JSONObject addSourceDataInfo(@RequestBody String json);
+
+    @RequestMapping(value = "/sqlserver/delsourcedata", method = RequestMethod.POST, consumes = "application/json")
+    public JSONObject delSourceDataInfo(@RequestBody String json);
+
+    @RequestMapping(value = "/sqlserver/deldmrelation", method = RequestMethod.POST, consumes = "application/json")
+    public JSONObject deletDataModuleRelation(@RequestBody String json);
+
 }

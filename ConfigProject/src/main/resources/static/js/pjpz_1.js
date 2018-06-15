@@ -650,14 +650,19 @@ function pzsave() {
                 var inputHidden = $(this).find("input[name='moduleSpan']");
                 dataInfoParams.push({
                     "id" : inputHidden[0].value,
-                    "timeoutValue" : $("#pzAddtimeyz" + m).val(),
-                    "shouldtimeValue" : $("#pzShouleTimeyz" + m).val(),
+                    "timeoutValue" : $("#pzAddtimeyz" + m).val()?$("#pzAddtimeyz" + m).val():null,
+                    "shouldtimeValue" : $("#pzShouleTimeyz" + m).val()?$("#pzShouleTimeyz" + m).val():null,
                     "regular" : $(
                         ":radio[name='regular_" + m + "']:checked")
-                        .val(),
-                    "monitorTimes" : $("#dataTimeCron_" + m).val(),
-                    "fileSizeDefine":$("#fileSizeDefine_" + m).val(),
-                    "fileNameDefine":$("#fileNameDefine_" + m).val()
+                        .val()?$(":radio[name='regular_" + m + "']:checked").val():0,
+                    "monitorTimes" : $("#dataTimeCron_" + m).val()?$("#dataTimeCron_" + m).val():null,
+                    "fileSizeDefine":$("#fileSizeDefine_" + m).val()?$("#fileSizeDefine_" + m).val():null,
+                    "fileNameDefine":$("#fileNameDefine_" + m).val()?$("#fileNameDefine_" + m).val():null,
+                    "beforeAlert":$("#before_alert_" + m).prop("checked")?1:0,
+                    "delayAlert":$("#after_alert_" + m).prop("checked")?1:0,
+                    "alertTimeRange":$("#alertTimeRange_" + m).val(),
+                    "maxAlerts":$("#maxAlerts_" + m).val()
+
                 });
             })
         var params = {
@@ -857,7 +862,7 @@ function onchangeSelect2(m) {
                 $("#tip_cjf").html("");
                 if ($("#pzAddSelect1").val() == 3) {
                     $("#tip_cjf").html(
-                        " (有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开) ");
+                        " (有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开,报警时间段格式'00:00:00-23:59:59') ");
                 }
                 for (var i = 0; i < r.length; i++) {
                     var dio = r[i];
@@ -879,76 +884,86 @@ function onchangeSelect2(m) {
                             + "</td>"
                             + "<td><div id='tr_div"
                             + i
-                            + "'>"
-                            + "                       <div class='row'>"
-                            + "                                    <div class='form-control'>时次表达式</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control'  placeholder='' id='dataTimeCron_"
-                            + i
-                            + "'/>"
-                            + "                                    </div>"
-                            + "                                    <div class='form-control'>间隔规律</div>"
-                            + "                                    <div class='radio'>"
-                            + "                                        <label>"
-                            + "                                            <input type='radio' name='regular_"
-                            + i
-                            + "' value='1' /> 有规律"
-                            + "                                        </label>"
-                            + "                                    </div>"
-                            + "                                    <div class='radio'>"
-                            + "                                        <label>"
-                            + "                                            <input type='radio' name='regular_"
-                            + i
-                            + "' value='2' /> 无规律"
-                            + "                                        </label>"
-                            + "                                    </div>"
-                            + "                               </div>"
-                            + "                           <div class='row'>"
+                            + "'>";
+                        if(dio[3] == 1){
+                            m+= "                       <div class='row'>"
+                           + "                                    <div class='form-control'>时次表达式</div>"
+                           + "                                    <div class='form-group'>"
+                           + "                                        <input type='text' class='form-control'  placeholder='' id='dataTimeCron_"
+                           + i
+                           + "'/>"
+                           + "                                    </div>"
+                           + "                                    <div class='form-control'>间隔规律</div>"
+                           + "                                    <div class='radio'>"
+                           + "                                        <label>"
+                           + "                                            <input type='radio' name='regular_"
+                           + i
+                           + "' value='1' /> 有规律"
+                           + "                                        </label>"
+                           + "                                    </div>"
+                           + "                                    <div class='radio'>"
+                           + "                                        <label>"
+                           + "                                            <input type='radio' name='regular_"
+                           + i
+                           + "' value='2' /> 无规律"
+                           + "                                        </label>"
+                           + "                                    </div>"
+                           + "                               </div>"
+                           + "                           <div class='row'>"
 
-                            + "                                    <div class='form-control'>文件名</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control'  placeholder='' id='fileNameDefine_" + i + "'/>"
-                            + "                                    </div>"
-                            + "                                    <div class='form-control'>文件大小</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control'  placeholder='' id='fileSizeDefine_" + i + "'/>"
-                            + "                                    </div>"
+                           + "                                    <div class='form-control'>文件名</div>"
+                           + "                                    <div class='form-group'>"
+                           + "                                        <input type='text' class='form-control'  placeholder='' id='fileNameDefine_" + i + "'/>"
+                           + "                                    </div>"
+                           + "                                    <div class='form-control'>文件大小</div>"
+                           + "                                    <div class='form-group'>"
+                           + "                                        <input type='text' class='form-control'  placeholder='' id='fileSizeDefine_" + i + "'/>"
+                           + "                                    </div>"
 //                            + "                                    <div >"
-                            + "                                        <span>byte</span>"
+                           + "                                        <span>byte</span>"
 //                            + "                                    </div>"
+                           + "                       </div>"
+                           + "                       <div class='row'>"
+                           + "                                    <div class='form-control'>应到时间</div>"
+                           + "                                    <div class='form-group'>"
+                           + "                                        <input type='text' class='form-control'  placeholder='' id='pzShouleTimeyz"
+                           + i
+                           + "'/>"
+                           + "                                    </div>"
+                           + "                                        <span>分</span>"
+                           + "                                    <div class='form-control'>超时阈值</div>"
+                           + "                                    <div class='form-group'>"
+                           + "                                        <input type='text' class='form-control'  placeholder='' id='pzAddtimeyz"
+                           + i
+                           + "'/>"
+                           + "                                    </div>"
+                           + "                                        <span>分</span>"
+                           + "                       </div>"
+                           + "                       <div class='row'>"
+                            + "                                    <div class='form-control' >报警提示</div>"
+                            + "                                    <div class='checkbox'>"
+                            + "                                        <label>"
+                            + "                                            <input type='checkbox' id='before_alert_"+i+"' name='alertType_" + i + "' /> 正常到达"
+                            + "                                        </label>"
+                            + "                                    </div>"
+                            + "                                    <div class='checkbox'>"
+                            + "                                        <label>"
+                            + "                                            <input type='checkbox' id='after_alert_"+i+"' name='alertType_" + i + "' /> 延迟到达"
+                            + "                                        </label>"
+                            + "                                    </div>"
+                           + "                               </div>"
+                        }
+
+                            m+= "                           <div class='row'>"
+                            + "                                    <div class='form-control'>报警时间段</div>"
+                            + "                                    <div class='form-group'>"
+                            + "                                        <input type='text' class='form-control' id='alertTimeRange_" + i + "'/>"
+                            + "                                    </div>"
+                            + "                                    <div class='form-control'>连续报警数</div>"
+                            + "                                    <div class='form-group'>"
+                            + "                                        <input type='text' class='form-control' id='maxAlerts_" + i + "'/>"
+                            + "                                    </div>"
                             + "                       </div>"
-                            + "                       <div class='row'>"
-                            + "                                    <div class='form-control'>应到时间</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control'  placeholder='' id='pzShouleTimeyz"
-                            + i
-                            + "'/>"
-                            + "                                    </div>"
-//                            + "                                    <div >"
-                            + "                                        <span>分</span>"
-//                            + "                                    </div>"
-                            + "                                    <div class='form-control'>超时阈值</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control'  placeholder='' id='pzAddtimeyz"
-                            + i
-                            + "'/>"
-                            + "                                    </div>"
-//                            + "                                    <div>"
-                            + "                                        <span>分</span>"
-//                            + "                                    </div>"
-                            // + "                                    <div class='form-control' style='background-color: #2aabd2;float: left;width: 100px;margin-left: 36px;'>报警类型</div>"
-                            // + "                                    <div class='checkbox' style='float: left;left: 20px;top:-2px;margin-bottom: 0px;' >"
-                            // + "                                        <label>"
-                            // + "                                            <input type='checkbox' id='before_alert_"+i+"' name='alertType_" + i + "' /> 提前到达报警"
-                            // + "                                        </label>"
-                            // + "                                    </div>"
-                            // + "                                    <div class='checkbox' style='float: left;left: 32px;top:12px;margin-bottom: 0px;' >"
-                            // + "                                        <label>"
-                            // + "                                            <input type='checkbox' id='after_alert_"+i+"' name='alertType_" + i + "' /> 延迟到达报警"
-                            // + "                                        </label>"
-                            // + "                                    </div>"
-                            + "                               </div>"
-
                             + "          </div></td></tr>";
                         $("#table_cjf").append(m);
                         $("#pzAddtimeyz" + i + "").val(dio[4]);
@@ -960,6 +975,11 @@ function onchangeSelect2(m) {
 
                         $("#fileSizeDefine_" + i + "").val(dio[9]);
                         $("#fileNameDefine_" + i + "").val(dio[10]);
+
+                        $("#before_alert_" + i).prop("checked",dio[12]==1);
+                        $("#after_alert_" + i).prop("checked",dio[13]==1);
+                        $("#alertTimeRange_" + i + "").val(dio[14]);
+                        $("#maxAlerts_" + i + "").val(dio[15]);
 
 
                     } else if (putId == "pzAddSelect2" && selectType == 1) {

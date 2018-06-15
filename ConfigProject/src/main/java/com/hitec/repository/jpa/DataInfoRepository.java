@@ -14,8 +14,18 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     @Query(value="SELECT * FROM `data_info` WHERE is_data = 1  LIMIT 0, 1000;", nativeQuery = true)
     List<DataInfo> initData();
 
-    @Query(value="select id,`name`,`module`,is_data,timeout_threshold,sub_name,should_time,regular,monitor_times,file_size_define,file_name_define,ip from data_info where parent_id = ?1", nativeQuery = true)
+    /*@Query(value="select id,`name`,`module`,is_data,timeout_threshold,sub_name,should_time,regular,monitor_times,file_size_define,file_name_define,ip from data_info where parent_id = ?1", nativeQuery = true)*/
+    @Query(value="select d.id,`name`,`module`,`is_data`,timeout_threshold,sub_name,should_time,regular,monitor_times,file_size_define,file_name_define,ip,beforeAlert,delayAlert,alertTimeRange,maxAlerts from alert_rules a RIGHT JOIN (SELECT * FROM data_info WHERE parent_id = ?1) d on a.id=d.id", nativeQuery = true)
     List<Object> initSelected(int parent_id);
+
+    @Transactional
+    @Modifying
+    /*@Query(value="UPDATE alert_module_copy RIGHT JOIN (SELECT id,service_type,module,`name`,ip FROM data_info WHERE id=?5) d ON module_key=CONCAT('OP_',service_type,'_',module,',',d.name,',',ip) SET beforeAlert=?1,delayAlert=?2,alertTimeRange=?3,maxAlerts=?4", nativeQuery = true)*/
+    @Query(value="INSERT INTO alert_rules(id,beforeAlert,delayAlert,alertTimeRange,maxAlerts) VALUES(?5,?1,?2,?3,?4) ON DUPLICATE KEY UPDATE beforeAlert=VALUES(beforeAlert),delayAlert=VALUES(delayAlert),alertTimeRange=VALUES(alertTimeRange),maxAlerts=VALUES(maxAlerts)\n", nativeQuery = true)
+    void updateAlertRules(Integer beforeAlert,Integer delayAlert,String alertTimeRange,Integer maxAlerts,long id);
+
+    @Query(value="select id from data_info where parent_id = ?1", nativeQuery = true)
+    List<Object> findId(int parent_id);
 
     @Transactional
     @Modifying

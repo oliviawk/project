@@ -11,8 +11,9 @@ table#table_cjf div.form-control {
 table#table_cjf .row .form-control:nth-child(2n+0) {
     margin-left: 0;
 }
-table#table_cjf .radio {
+table#table_cjf div.radio,table#table_cjf div.checkbox {
     display: inline-block;
+    margin-bottom: 0;
 }
 
 table#table_cjf tr:nth-child(2n+0) td{
@@ -22,4 +23,16 @@ table#table_cjf tr:nth-child(2n+0) td{
     float: left;
     margin-left: 50px;
     margin-top: 20px;
+}
+
+div.radio input[type="radio"],div.checkbox input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+    margin-top: 0;
+}
+input.form-control{
+    padding-bottom:0;
+}
+table#table_cjf tr td:first-child{
+    max-width:68px;
 }

@@ -14,9 +14,10 @@ public interface AlertStrategyRepository extends JpaRepository<AlertStrategy,Lon
     @Override
 	List<AlertStrategy> findAll();
 
-    @Query(value = "select dt.service_type,dt.name,dt.module,als.strategy_name ,als.wechart_send_enable,als.sms_send_enable,als.wechart_content,als.sms_content" +
+    /*@Query(value = "select dt.service_type,dt.name,dt.module,als.strategy_name ,als.wechart_send_enable,als.sms_send_enable,als.wechart_content,als.sms_content" +
             " from data_info dt , alert_strategy als " +
-            " where dt.id = als.di_id and dt.id = ?1",nativeQuery = true)
+            " where dt.id = als.di_id and dt.id = ?1",nativeQuery = true)*/
+    @Query(value="select dt.service_type,dt.name,dt.module,als.strategy_name ,als.wechart_send_enable,als.sms_send_enable,als.wechart_content,als.sms_content from alert_strategy als RIGHT JOIN (SELECT * FROM data_info WHERE parent_id = ?1) dt ON dt.id = als.di_id",nativeQuery = true)
     List<Object> findDesc(long id);
 
     @Transactional

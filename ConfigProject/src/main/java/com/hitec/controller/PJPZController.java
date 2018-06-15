@@ -373,13 +373,13 @@ public class PJPZController {
 			List<Object> list = dataInfoRepository.initSelected(pid);
 			dataMap.put("config", list);
 
-			List<Object> list2 = new ArrayList<>();
+			List<Object> list2 = alertStrategyRepository.findDesc(pid);
 			// 再查每个环节下的告警配置 by Edward
-			for (Object i : list) {
-				Long lid = ((BigInteger)((Object[])i)[0]).longValue();
-				List<Object> l = alertStrategyRepository.findDesc(lid);
-				list2.add(l.get(0));
-			}
+//			for (Object i : list) {
+//				Long lid = ((BigInteger)((Object[])i)[0]).longValue();
+//				List<Object> l = alertStrategyRepository.findDesc(lid);
+//				list2.add(l.get(0));
+//			}
 			dataMap.put("alert", list2);
 
 			resultMap.put("result","ok");
@@ -413,6 +413,12 @@ public class PJPZController {
 				String fileNameDefine = diObj.getString("fileNameDefine");
 
 				dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
+
+				Integer beforeAlert = diObj.getInteger("beforeAlert");
+				Integer delayAlert = diObj.getInteger("delayAlert");
+				String alertTimeRange = diObj.getString("alertTimeRange");
+				Integer maxAlerts = diObj.getInteger("maxAlerts");
+				dataInfoRepository.updateAlertRules(beforeAlert,delayAlert,alertTimeRange,maxAlerts,id);
 				try {
 					//删除原有的绑定的策略
 					alertStrategyRepository.deleteByDi_id(id);
