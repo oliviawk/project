@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -331,6 +332,98 @@ public class BasicResource {
 
         return outMap;
 //        return returnDataTransFormat(list,controlsData);
+    }
+
+    /**
+     * 获取最近n分钟内的基础资源告警信息
+     *
+     * @param arrayListIp 要获取告警信息的服务器IP列表
+     * @param minute      最近n分钟
+     * @return 告警信息mapEventData
+     */
+    public Object getEventData(JSONArray arrayListIp, int minute) {
+        //把JSONArray格式的IP列表转换为List
+        Iterator<Object> itListIp = arrayListIp.iterator();
+        List<String> listIp = new ArrayList<>();
+        while (itListIp.hasNext()) {
+            listIp.add(itListIp.next().toString());
+        }
+        //初始化mapEventData
+        Map<String, String[]> mapEventData = new HashMap<>();
+        for (String serverip : listIp) {
+            //CPU,内存,网络,磁盘
+            String[] resourceStatus = {"0", "0", "0", "0"};
+            /*//测试
+            if ("10.30.16.223".equals(serverip)) {
+                resourceStatus[1] = "1";
+                resourceStatus[2] = "1";
+            }
+            if ("10.30.16.220".equals(serverip)) {
+                resourceStatus[0] = "1";
+                resourceStatus[3] = "1";
+            }*/
+            mapEventData.put(serverip, resourceStatus);
+        }
+        String index = "data_" + DateTool.getSysTime("yyyyMMdd");
+        EsQueryBean eventQueryBean = new EsQueryBean();
+        eventQueryBean.setIndices(new String[]{index});
+        eventQueryBean.setTypes(new String[]{"iaasAlert"});
+        //给告警查询增加时间范围
+        List<Map> listTimeRange = new ArrayList<>();
+        Map<String, String> mapTimeRange = new HashMap<>();
+        mapTimeRange.put("name", "createTime");
+        mapTimeRange.put("lte", DateTool.getSysTime("yyyy-MM-dd HH:mm:ss"));
+        mapTimeRange.put("gte", DateTool.dateToString(DateTool.getDateTimeFromNow(new Date(), minute), "yyyy-MM-dd HH:mm:ss"));
+        listTimeRange.add(mapTimeRange);
+        Map<String, Object> params = new HashMap<>();
+        params.put("range", listTimeRange);
+        eventQueryBean.setParameters(params);
+
+        try {
+            //查询全部告警信息
+            Map<String, Object> responseMap = esQueryService.getData(eventQueryBean);
+            //提取查询结果
+            JSONArray jsonQueryResult = JSONArray.parseArray(JSON.toJSONString(responseMap.get("resultData")));
+            if (jsonQueryResult == null) {
+                return null;
+            } else {
+                Iterator<Object> itJsonQueryResult = jsonQueryResult.iterator();
+                while (itJsonQueryResult.hasNext()) {
+                    JSONObject jsob = (JSONObject) itJsonQueryResult.next();
+                    String ip = jsob.getString("ip");
+                    //获取IP列表中的服务器告警
+                    if (listIp.contains(ip)) {
+                        //先当前服务器的状态,0为正常,1为异常
+                        String[] resourceStatus = mapEventData.get(ip);
+                        //根据异常的指标类型,修改字符串数组
+                        String eventType = jsob.getString("resType");
+                        if ("CPU".equals(eventType)) {
+                            resourceStatus[0] = "1";
+                        }
+                        if ("内存".equals(eventType)) {
+                            resourceStatus[1] = "1";
+                        }
+                        if ("网络接口".equals(eventType)) {
+                            resourceStatus[2] = "1";
+                        }
+                        if ("分区".equals(eventType)) {
+                            resourceStatus[3] = "1";
+                        }
+                        mapEventData.put(ip, resourceStatus);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> outMap = new HashMap<String, Object>();
+        outMap.put("result", "success");
+        outMap.put("resultData", mapEventData);
+        String dateStr = DateTool.dateToString(new Date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm");
+        outMap.put("titleTime", dateStr);
+        outMap.put("message", "数据加载成功！");
+        return outMap;
     }
 
     /**

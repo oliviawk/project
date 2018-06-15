@@ -2,7 +2,7 @@
  * Created by Edward on 2017/12/15.
  */
 
-$(function(){
+$(function () {
     // main entry
     //console.log("test!");
 
@@ -17,13 +17,13 @@ $(function(){
 
         $('#subTypeHidden').val(arr[0]);
         $('#moduleHidden').val(arr[1]);
-        arr[2] = arr[2].replace(new RegExp("-","gm"),".");
+        arr[2] = arr[2].replace(new RegExp("-", "gm"), ".");
         $('#ipHidden').val(arr[2]);
         //var pageSize = $('pageSizeHidden').val();
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
-        $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
-        getLapsHistory(arr[0], arr[1], pageSize,arr[2]);
+        $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
+        getLapsHistory(arr[0], arr[1], pageSize, arr[2]);
 
     });
 
@@ -32,7 +32,7 @@ $(function(){
         var $item = $(e.target);
         var pageSize = parseInt($item.html());
         //console.log(pageSize);
-        $("#pageSizeNumber").html('展示数量：'+pageSize+' <span class="caret"></span>');
+        $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
         var subType = $('#subTypeHidden').val();
         var module = $('#moduleHidden').val();
         var ip = $('#ipHidden').val();
@@ -62,15 +62,17 @@ function getLapsDataAggQuery() {
         url: "../laps/lctAggQuery",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        async:false,
-        beforeSend: function () { },
-        complete: function () { },
+        async: false,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
         success: function (d) {
             console.log(d)
             if (d.result == 'success') {
                 var recv = d.resultData;
-                $.each(recv,function(key,dmap){
-                    key = key.replace(/\./g,"-");
+                $.each(recv, function (key, dmap) {
+                    key = key.replace(/\./g, "-");
                     console.log(key)
                     console.log(dmap)
                     console.log("------")
@@ -114,15 +116,15 @@ function getLapsDataAggQuery() {
  * @param ip
  */
 function getLapsHistory(type, module, size, ip) {
-    var r = Math.ceil(Math.random()*100);
+    var r = Math.ceil(Math.random() * 100);
 
     var req = {
-        "types":["LAPS"],
-        "subType":type,
-        "module":module,
-        "size":size,
-        "strIp":ip,
-        "rand":r
+        "types": ["LAPS"],
+        "subType": type,
+        "module": module,
+        "size": size,
+        "strIp": ip,
+        "rand": r
     };
     console.log(r + " request:  " + req.subType);
 
@@ -138,7 +140,8 @@ function getLapsHistory(type, module, size, ip) {
             $("#history_tbody").html("");
             $("#modalHeader").html(req.module + "环节" + req.subType + "历史数据");
         },
-        complete: function () { },
+        complete: function () {
+        },
         success: function (d) {
             //console.log(d);
             if (d.result == 'success') {
@@ -170,39 +173,39 @@ function getLapsHistory(type, module, size, ip) {
                     $.each(recv, function (i, v) {
                         //console.log(v);
                         // 编号
-                        tds = "<td>"+(i+1)+"</td>";
+                        tds = "<td>" + (i + 1) + "</td>";
                         //文件名
-                        tds += !regex.test(subType) ? "<td>"+v.fields.file_name+"</td>" : "";
+                        tds += !regex.test(subType) ? "<td>" + v.fields.file_name + "</td>" : "";
                         // 资料时间
-                        tds += "<td>"+v.fields.data_time+"</td>";
+                        tds += "<td>" + v.fields.data_time + "</td>";
                         // 更新时间
-                        if(v.fields.end_time != null){
-                            tds += "<td>"+v.fields.end_time+"</td>";
+                        if (v.fields.end_time != null) {
+                            tds += "<td>" + v.fields.end_time + "</td>";
                         }
-                        else{
+                        else {
                             tds += "<td>-</td>";
                         }
                         // 耗时
-                        if(v.fields.hasOwnProperty("totalTime")){
-                            tds += "<td>"+ Math.round(v.fields.totalTime*10)/10 +"秒</td>";
-                        }else if(v.fields.hasOwnProperty("start_time") && v.fields.hasOwnProperty("end_time")){
+                        if (v.fields.hasOwnProperty("totalTime")) {
+                            tds += "<td>" + Math.round(v.fields.totalTime * 10) / 10 + "秒</td>";
+                        } else if (v.fields.hasOwnProperty("start_time") && v.fields.hasOwnProperty("end_time")) {
                             var begin = v.fields.start_time;
-                            begin = new Date(begin.replace(new RegExp("-","gm"),"/")).getTime();
+                            begin = new Date(begin.replace(new RegExp("-", "gm"), "/")).getTime();
                             var end = v.fields.end_time;
-                            end = new Date(end.replace(new RegExp("-","gm"),"/")).getTime();
-                            tds += "<td>"+ Math.round((end-begin)/100)/10 + "秒</td>";
-                        }else{
-                             tds += "<td>-</td>";
-                         }
+                            end = new Date(end.replace(new RegExp("-", "gm"), "/")).getTime();
+                            tds += "<td>" + Math.round((end - begin) / 100) / 10 + "秒</td>";
+                        } else {
+                            tds += "<td>-</td>";
+                        }
 
                         // 状态
-                        tds += "<td>"+ v.aging_status + "</td>";
+                        tds += "<td>" + v.aging_status + "</td>";
                         // 信息
                         //tds += "<td>"+ v.fields.event_info + "</td>";
-                         if(v.aging_status == "超时"){
+                        if (v.aging_status == "超时") {
                             tds += "<td>日志未采集到</td>";
-                        }else{
-                            tds += "<td>"+ (/分发/.test(module) ? v.aging_status : v.fields.event_info) + "</td>";
+                        } else {
+                            tds += "<td>" + (/分发/.test(module) ? v.aging_status : v.fields.event_info) + "</td>";
                         }
 
                         trs += "<tr class='" + (/异常|迟到|超时/.test(v.aging_status) ? "danger" : "info") + "'>" + tds + "</tr>";
@@ -244,18 +247,67 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var ip = button.data('ip');
     var modal = $(this);
-    modal.find('#baseSourceModalHeader').text("基础资源实时运行情况("+ip+")");
+    modal.find('#baseSourceModalHeader').text("基础资源实时运行情况(" + ip + ")");
 
     var params = {
-        "host":ip,
-        "minute":120
+        "host": ip,
+        "minute": 120
     };
 
-    displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000*60*10,JSON.stringify(params));
-    displayMemoryUsed("../laps/getMemoryData" , "#memoryUsed",1000*60*10,JSON.stringify(params));
-    displayNetUsed("../laps/getNetData" , "#netUsed", 1000*60*10,JSON.stringify(params));
-    directorUsage("../laps/getDirectoryUsedData", "#directoryUsed",1000*60*10,JSON.stringify(params));
+    displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayMemoryUsed("../laps/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayNetUsed("../laps/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
+    directorUsage("../laps/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
 
 });
 
 
+$(document).ready(function () {
+    //一分钟自动刷新一次
+    setInterval(getBase, 60000);
+
+    function getBase() {
+        var url = "../laps/getBaseEventData";
+        var params = {
+            "listIp": [
+                "10.30.16.242",
+                "10.30.16.224",
+                "10.30.16.220",
+                "10.0.74.226"
+            ],
+            "minute": -240
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(params),
+            dataType: "json",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            success: function (data2) {
+                if ("fail" == data2["result"]) {
+                    console.log("获取基础设施告警信息数据失败,失败原因："
+                        + data2["message"]);
+                } else {
+                    var resultdata = data2["resultData"];
+                    for (var i in resultdata) {
+                        var ary = resultdata[i];
+                        var div_ip = $('div[data-ip="' + i + '"]');
+                        if (div_ip.length > 0) {
+                            div_ip.find('li').removeClass();
+                            for (var j in ary) {
+                                var num = ary[j];
+                                var class_name = num == 0 ? "green" : "red";
+                                div_ip.find('li').eq(j).addClass(class_name);
+                            }
+                        }
+                    }
+                }
+            },
+            error: function (e2) {
+                console.error(e2)
+            }
+        });
+    }
+})
