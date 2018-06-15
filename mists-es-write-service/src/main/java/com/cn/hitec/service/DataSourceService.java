@@ -139,6 +139,9 @@ public class DataSourceService {
 
                 List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,sub_type,ipAddr);
                 JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+                if(rulesArray.size() > 0){
+                    rulesArray = (JSONArray)rulesArray.get(0);
+                }
 
                 if(resultMap.containsKey("_id")){
                     AlertBeanNew alertBean = null;

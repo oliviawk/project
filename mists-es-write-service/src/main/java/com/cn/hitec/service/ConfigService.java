@@ -29,6 +29,7 @@ import java.util.Map;
 @Slf4j
 @Service
 public class ConfigService {
+
     @Autowired
     ESRepository esRepository;
     @Autowired

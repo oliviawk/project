@@ -1,6 +1,8 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.util.HttpPub;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.util.Pub;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,9 @@ public class ConfigServiceTest {
 
 	@Autowired
 	HttpPub httpPub;
+
+	@Autowired
+	EsQueryService esQueryService;
 
 	// @Test
 	public void createAlertItem() throws Exception {
@@ -77,10 +83,10 @@ public class ConfigServiceTest {
 //		configService.createAlertDI("加工", Pub.DIMap_machining,0,calendar.getTime());
 //		configService.createAlertDI("分发", Pub.DIMap_distribute,0,calendar.getTime());
 
-//		configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,calendar.getTime());
+		configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,calendar.getTime());
 
 		logger.info("---------------------------------开始执行定时任务，生成后5天的数据--------------------------------");
-//		configService.createT639DI("FZJC",Pub.DIMap_t639,5);
+		configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
 		logger.info("------");
 	}
@@ -126,17 +132,52 @@ public class ConfigServiceTest {
 
 	@Test
 	public void getAlertModule(){
-		List<Object> currentAlert = dataInfoRepository.findAlertRules("LAPS","分发","LAPS3KMGEO_EU41","10.0.74.226");
-		JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(currentAlert));
-		for(Object o : jsonArray){
-			System.out.println(o.toString());
-		}
-		System.out.println(jsonArray);
-		System.out.println(currentAlert.size());
+//		List<Object> currentAlert = dataInfoRepository.findAlertRules("LAPS","前处理","LSX","10.30.16.242");
+//		JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(currentAlert));
+//		boolean alert = true;
+//		if(jsonArray.size() > 0){
+//			System.out.println(jsonArray.get(0));
+//			jsonArray = (JSONArray)jsonArray.get(0);
+//			String[] times = jsonArray.getString(1).split("-");
+//			SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+//			String now = df.format(new Date());
+//
+//			System.out.println(now);
+//			System.out.println(times[0]);
+//			System.out.println(times[1]);
+//			if(times[0].compareTo(times[1]) >= 0){
+//				if(now.compareTo(times[0]) >= 0 || now.compareTo(times[1]) <= 0){
+//					alert = true;
+//				}
+//				else{
+//					alert = false;
+//				}
+//			}
+//			else{
+//				if(now.compareTo(times[0]) >= 0 && now.compareTo(times[1]) <= 0){
+//					alert = true;
+//				}
+//				else{
+//					alert = false;
+//				}
+//			}
+//		}
+//		System.out.println(alert);
 
-		List<Object> preAlerts = dataInfoRepository.findPreModules("OP_LAPS_分发,LAPS3KMGEO_EU4,10.0.74.226");
+//		System.out.println(JSON.toJSONString(currentAlert));
+////		System.out.println(((Object[]) jsonArray.get(0))[0]);
+//		System.out.println(((JSONArray)jsonArray.get(0)).getLongValue(0));
+//
+		List<Object> preAlerts = dataInfoRepository.findPreModules("OP_LAPS_前处理,LSX,10.30.16.242");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("index","data_20180615");
+		jsonObject.put("type","LAPS");
 		for(Object o : preAlerts){
-			System.out.println(o.toString());
+			jsonObject.put("id",Pub.MD5(o.toString()+",2018-06-15 17:00:00.000+0800"));
+			String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
+			System.out.println(id_cj);
 		}
+
+
 	}
 }

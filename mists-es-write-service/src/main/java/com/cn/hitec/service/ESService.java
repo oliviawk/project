@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.tools.AlertType;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -40,9 +41,9 @@ import com.cn.hitec.tools.Pub;
  * @author: fukl
  * @data: 2017年08月3日 下午1:14
  */
+@Slf4j
 @Service
 public class ESService {
-	private static final Logger logger = LoggerFactory.getLogger(ESService.class);
 	@Autowired
 	private ESRepository es;
 	@Autowired
@@ -84,7 +85,7 @@ public class ESService {
 			// es.bulkProcessor.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
-            logger.error(e+"");
+            log.error(e+"");
 		} finally {
 			return listSize - error_num;
 		}
@@ -169,7 +170,7 @@ public class ESService {
 					//判断数据是否被修改过(aging_status 不是'未处理'状态 ，表示为修改过)，如果修改过，则不再修改
 					Map<String, Object> tempMap = getDocumentById(new String[]{index},type,strid);
 					if (tempMap.containsKey("aging_status") && !tempMap.get("aging_status").equals("未处理")){
-						logger.info("已修改："+type+","+strType+","+strModule+","+strIp+","+strDataTime);
+						log.info("已修改："+type+","+strType+","+strModule+","+strIp+","+strDataTime);
 						continue;
 					}
 					IndexResponse response = es.client.prepareIndex(index, type,strid).setSource(json, XContentType.JSON).get();
@@ -266,7 +267,7 @@ public class ESService {
 		int listSize = 0;
 		try {
 			if (listJson == null || listJson.size() < 1) {
-				logger.error("参数为空");
+				log.error("参数为空");
 				return 0;
 			}
 			listSize = listJson.size();
@@ -277,7 +278,7 @@ public class ESService {
 			for (String json : listJson) {
 				try {
 					if (StringUtils.isEmpty(json)) {
-						logger.error("数据为空");
+						log.error("数据为空");
 						error_num++;
 						continue;
 
@@ -298,6 +299,9 @@ public class ESService {
 
 					List<Object> curmodules = dataInfoRepository.findAlertRules(type,subModule,subType,subIp);
 					JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+					if(rulesArray.size() > 0){
+						rulesArray = (JSONArray)rulesArray.get(0);
+					}
 
 					// 如果是定时 有规律的数据， 需要查询后入库
 					Map<String, Object> resultMap = new HashMap<>();
@@ -335,12 +339,12 @@ public class ESService {
 						}
 
 
-//						logger.info("这是一条非定时数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+//						log.info("这是一条非定时数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
 						es.bulkProcessor.add(new IndexRequest(index, type,str_id).source(json, XContentType.JSON));
 						continue;
 					}
 					if (resultMap.containsKey("_id")) { // 如果查询到id
-//						logger.info("这是预生成数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+//						log.info("这是预生成数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
 						AlertBeanNew alertBean = null;
 						String alertType = "alert";
 						index = resultMap.get("_index").toString();
@@ -363,7 +367,7 @@ public class ESService {
 								if (hitsSource_fields.containsKey("event_status")
 										&& (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK")
 												|| hitsSource_fields.get("event_status").toString().equals("0"))) {
-									logger.warn("--舍弃掉 预修改错误的数据：" + json);
+									log.warn("--舍弃掉 预修改错误的数据：" + json);
 									continue;
 								}
 								map.put("aging_status", "异常");
@@ -378,7 +382,7 @@ public class ESService {
 						// 当 数据库里的数据 和 当前数据 一样时（目前是按照数据状态来判断），放弃掉该条数据
 						else if (hitsSource_fields.containsKey("event_status") && fields.get("event_status").toString()
 								.equals(hitsSource_fields.get("event_status"))) {
-							logger.warn("--舍弃掉 相同的数据：" + json);
+							log.warn("--舍弃掉 相同的数据：" + json);
 							continue;
 						} else {
 							// 将 应到时间 和 最晚到达时间，添到的数据中
@@ -457,7 +461,7 @@ public class ESService {
 								if (hitsSource_fields.containsKey("event_status")
 										&& (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK")
 												|| hitsSource_fields.get("event_status").toString().equals("0"))) {
-									logger.warn("--舍弃掉 预修改错误的数据：" + json);
+									log.warn("--舍弃掉 预修改错误的数据：" + json);
 									continue;
 								}
 								map.put("aging_status", "异常");
@@ -510,13 +514,13 @@ public class ESService {
 							}
 						}
 
-						logger.info("这是一条未查询到的数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+						log.info("这是一条未查询到的数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
 						es.bulkProcessor.add(new IndexRequest(index, type,str_id).source(map));
 					}
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.error("错误数据："+json);
+					log.error("错误数据："+json);
 					error_num++;
 				}
 			}
@@ -558,7 +562,7 @@ public class ESService {
 
 		} catch (Exception e) {
 		    e.printStackTrace();
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			resultMap = new HashMap<>();
 		} finally {
 			return resultMap;
@@ -592,7 +596,7 @@ public class ESService {
 			queryBuilder.must(QueryBuilders.termQuery("fields.module", fields.get("module").toString()));
 			queryBuilder.must(QueryBuilders.termQuery("fields.ip_addr", fields.get("ip_addr").toString()));
 
-//            logger.info(queryBuilder.toString());
+//            log.info(queryBuilder.toString());
 			// 返回查询结果
 			SearchResponse response = es.client.prepareSearch(indices).setTypes(type)
 					.setSearchType(SearchType.DFS_QUERY_THEN_FETCH).setQuery(queryBuilder).setExplain(true).get();
@@ -600,8 +604,8 @@ public class ESService {
 			SearchHit[] searchHits = response.getHits().getHits();
 
 			if (response.getHits().getTotalHits() != 1) {
-                logger.info("searchHits.dataLength :" + response.getHits().getTotalHits());
-				logger.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, name:{}, fields:{}", indexs, type,
+                log.info("searchHits.dataLength :" + response.getHits().getTotalHits());
+				log.error("预生成数据有误，请查询ES，查询条件为：indexs:{} , type:{} , module:{}, name:{}, fields:{}", indexs, type,
 						subType, name, fields);
 			}
 			for (SearchHit hits : searchHits) {
@@ -609,11 +613,11 @@ public class ESService {
 				resultMap.put("_id", hits.getId());
 				resultMap.put("_type", hits.getType());
 				resultMap.put("_index", hits.getIndex());
-//				logger.info("查询后的数据："+JSON.toJSONString(resultMap));
+//				log.info("查询后的数据："+JSON.toJSONString(resultMap));
 				break;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			// resultMap = new HashMap<>();
 		} finally {
 			return resultMap;
@@ -654,10 +658,10 @@ public class ESService {
 					.setExplain(true).get();
 
 			SearchHit[] searchHits = response.getHits().getHits();
-			logger.info("searchHits.dataLength :" + response.getHits().getTotalHits());
+			log.info("searchHits.dataLength :" + response.getHits().getTotalHits());
 			System.out.println("searchHits.dataLength :" + response.getHits().getTotalHits());
 			if (response.getHits().getTotalHits() != 1) {
-				logger.error("请查询ES，查询条件为：indexs:{} , type:{} , fields:{},id不唯一，多条入库", index, type, fields);
+				log.error("请查询ES，查询条件为：indexs:{} , type:{} , fields:{},id不唯一，多条入库", index, type, fields);
 			} else {
 				for (SearchHit hits : searchHits) {
 					resultMap = hits.getSource();
@@ -679,7 +683,7 @@ public class ESService {
                 break;
             }*/
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 //            resultMap = new HashMap<>();
 		} finally {
 			return resultMap;
