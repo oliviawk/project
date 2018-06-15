@@ -36,3 +36,9 @@ input.form-control{
 table#table_cjf tr td:first-child{
     max-width:68px;
 }
+.unit{
+    height: 32px;
+    position: relative;
+    top: -4px;
+    width: 50px;
+}

@@ -648,22 +648,33 @@ function pzsave() {
         $("#table_cjf").find("tr").each(
             function(m) {
                 var inputHidden = $(this).find("input[name='moduleSpan']");
-                dataInfoParams.push({
-                    "id" : inputHidden[0].value,
-                    "timeoutValue" : $("#pzAddtimeyz" + m).val()?$("#pzAddtimeyz" + m).val():null,
-                    "shouldtimeValue" : $("#pzShouleTimeyz" + m).val()?$("#pzShouleTimeyz" + m).val():null,
-                    "regular" : $(
-                        ":radio[name='regular_" + m + "']:checked")
-                        .val()?$(":radio[name='regular_" + m + "']:checked").val():0,
-                    "monitorTimes" : $("#dataTimeCron_" + m).val()?$("#dataTimeCron_" + m).val():null,
-                    "fileSizeDefine":$("#fileSizeDefine_" + m).val()?$("#fileSizeDefine_" + m).val():null,
-                    "fileNameDefine":$("#fileNameDefine_" + m).val()?$("#fileNameDefine_" + m).val():null,
-                    "beforeAlert":$("#before_alert_" + m).prop("checked")?1:0,
-                    "delayAlert":$("#after_alert_" + m).prop("checked")?1:0,
-                    "alertTimeRange":$("#alertTimeRange_" + m).val(),
-                    "maxAlerts":$("#maxAlerts_" + m).val()
+                var tparams = {
+                                  "id" : inputHidden[0].value,
+                                  "timeoutValue" : $("#pzAddtimeyz" + m).val()?$("#pzAddtimeyz" + m).val():null,
+                                  "shouldtimeValue" : $("#pzShouleTimeyz" + m).val()?$("#pzShouleTimeyz" + m).val():null,
+                                  "regular" : $(
+                                      ":radio[name='regular_" + m + "']:checked")
+                                      .val()?$(":radio[name='regular_" + m + "']:checked").val():0,
+                                  "monitorTimes" : $("#dataTimeCron_" + m).val()?$("#dataTimeCron_" + m).val():null,
+                                  "fileNameDefine":$("#fileNameDefine_" + m).val()?$("#fileNameDefine_" + m).val():null,
+                                  "beforeAlert":$("#before_alert_" + m).prop("checked")?1:0,
+                                  "delayAlert":$("#after_alert_" + m).prop("checked")?1:0,
+                                  "alertTimeRange":$("#alertTimeRange_" + m).val(),
+                                  "maxAlerts":$("#maxAlerts_" + m).val()
 
-                });
+                              };
+
+                var sizes = $("#fileSizeDefine_" + m).val()?$("#fileSizeDefine_" + m).val():null;
+                if(sizes!=null){
+                    var sarr = sizes.split(",");
+                    var unit = $("#unit_" + m).val();
+                    sizes = sarr[0] * eval(unit);
+                    if(sarr.length == 2){
+                        sizes += "," + sarr[1] * eval(unit);
+                    }
+                }
+                tparams["fileSizeDefine"] = sizes;
+                dataInfoParams.push(tparams);
             })
         var params = {
             "datainfo" : dataInfoParams,
@@ -919,9 +930,11 @@ function onchangeSelect2(m) {
                            + "                                    <div class='form-group'>"
                            + "                                        <input type='text' class='form-control'  placeholder='' id='fileSizeDefine_" + i + "'/>"
                            + "                                    </div>"
-//                            + "                                    <div >"
-                           + "                                        <span>byte</span>"
-//                            + "                                    </div>"
+                            + "                                    <div class='form-group'>"
+                           + "                                        <select id='unit_"+i+ "' class='unit'>"
+                           + "                                        <option value='1'>B</option><option value='1024'>KB</option><option value='1024*1024'>MB</option><option value='1024*1024*1024'>GB</option>"
+                           + "                                        </select>"
+                            + "                                    </div>"
                            + "                       </div>"
                            + "                       <div class='row'>"
                            + "                                    <div class='form-control'>应到时间</div>"
