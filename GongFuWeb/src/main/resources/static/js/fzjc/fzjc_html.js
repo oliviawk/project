@@ -726,14 +726,12 @@ function initHistory(subType,module,ip,size) {
                         tds += "<td>正常</td>";
                         tds += "<td>"+(this.fields.event_info==null?"正常":this.fields.event_info)+"</td>";
                     }else if(!agingStatus_isOK  && eventStatus_isOK){
-                        if(this.aging_status == "迟到"){
-                            trStatus = "danger";
-                            tds += "<td>异常</td>";
-                            tds += "<td>"+this.fields.event_info+"</td>";
-                        }else if(this.aging_status == "超时"){
-                            trStatus = "danger";
-                            tds += "<td>异常</td>";
+                        trStatus = "danger";
+                        tds += "<td>异常</td>";
+                         if(this.aging_status == "超时"){
                             tds += "<td>日志未采集到</td>";
+                        }else{
+                            tds += "<td>"+this.fields.event_info+"</td>";
                         }
                     }else if(agingStatus_isOK  && !eventStatus_isOK){
                         trStatus = "danger";
