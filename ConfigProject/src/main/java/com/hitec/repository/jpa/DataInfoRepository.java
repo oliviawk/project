@@ -21,7 +21,7 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     @Transactional
     @Modifying
     /*@Query(value="UPDATE alert_module_copy RIGHT JOIN (SELECT id,service_type,module,`name`,ip FROM data_info WHERE id=?5) d ON module_key=CONCAT('OP_',service_type,'_',module,',',d.name,',',ip) SET beforeAlert=?1,delayAlert=?2,alertTimeRange=?3,maxAlerts=?4", nativeQuery = true)*/
-    @Query(value="INSERT INTO alert_rules(id,beforeAlert,delayAlert,alertTimeRange,maxAlerts) VALUES(?5,?1,?2,?3,?4) ON DUPLICATE KEY UPDATE beforeAlert=VALUES(beforeAlert),delayAlert=VALUES(delayAlert),alertTimeRange=VALUES(alertTimeRange),maxAlerts=VALUES(maxAlerts)\n", nativeQuery = true)
+    @Query(value="INSERT INTO alert_rules(id,beforeAlert,delayAlert,alertTimeRange,maxAlerts,currentAlerts) VALUES(?5,?1,?2,?3,?4,0) ON DUPLICATE KEY UPDATE beforeAlert=VALUES(beforeAlert),delayAlert=VALUES(delayAlert),alertTimeRange=VALUES(alertTimeRange),maxAlerts=VALUES(maxAlerts)\n", nativeQuery = true)
     void updateAlertRules(Integer beforeAlert,Integer delayAlert,String alertTimeRange,Integer maxAlerts,long id);
 
     @Query(value="select id from data_info where parent_id = ?1", nativeQuery = true)
