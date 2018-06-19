@@ -327,8 +327,7 @@ public class ESService {
 							}
 						}
 
-						if(rulesArray.size() > 0) {
-
+						if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
 							if("异常".equals(map.get("aging_status"))){
 								dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
 							}
@@ -485,7 +484,7 @@ public class ESService {
 							alertBean = null;
 						}
 						else{
-							if(rulesArray.size() > 0){
+							if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
 								//告警状态正常置零告警次数
 								if(rulesArray.getInteger(3) != 0){
 									dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));

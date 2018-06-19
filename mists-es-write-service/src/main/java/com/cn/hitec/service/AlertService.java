@@ -109,7 +109,7 @@ public class AlertService {
                     throw new Exception("插入数据失败");
                 }
                 //对非提示类告警数+1
-                if(rulesArray.size() > 0 && !AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
+                if(rulesArray.size() > 0 && rulesArray.getString(0) != null && !AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
                     dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
                 }
             }
@@ -238,7 +238,7 @@ public class AlertService {
 
     boolean isAlert(JSONArray rulesArray){
         boolean isAlert = true;
-        if(rulesArray.size() > 0){
+        if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
             if(rulesArray.getInteger(2) != null ){
                 //有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
                 if(rulesArray.getInteger(3) >= rulesArray.getInteger(2)){

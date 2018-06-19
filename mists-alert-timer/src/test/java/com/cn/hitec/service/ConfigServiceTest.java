@@ -132,43 +132,51 @@ public class ConfigServiceTest {
 
 	@Test
 	public void getAlertModule(){
-//		List<Object> currentAlert = dataInfoRepository.findAlertRules("LAPS","前处理","LSX","10.30.16.242");
-//		JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(currentAlert));
-//		boolean alert = true;
-//		if(jsonArray.size() > 0){
-//			System.out.println(jsonArray.get(0));
-//			jsonArray = (JSONArray)jsonArray.get(0);
-//			String[] times = jsonArray.getString(1).split("-");
-//			SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-//			String now = df.format(new Date());
-//
-//			System.out.println(now);
-//			System.out.println(times[0]);
-//			System.out.println(times[1]);
-//			if(times[0].compareTo(times[1]) >= 0){
-//				if(now.compareTo(times[0]) >= 0 || now.compareTo(times[1]) <= 0){
-//					alert = true;
-//				}
-//				else{
-//					alert = false;
-//				}
-//			}
-//			else{
-//				if(now.compareTo(times[0]) >= 0 && now.compareTo(times[1]) <= 0){
-//					alert = true;
-//				}
-//				else{
-//					alert = false;
-//				}
-//			}
-//		}
-//		System.out.println(alert);
+		List<Object> currentAlert = dataInfoRepository.findAlertRules("LAPS","前处理","LSX1","10.30.16.242");
+		JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(currentAlert));
+		if(jsonArray.size() > 0){
+			jsonArray = (JSONArray)jsonArray.get(0);
+		}
 
-//		System.out.println(JSON.toJSONString(currentAlert));
-////		System.out.println(((Object[]) jsonArray.get(0))[0]);
+		boolean alert = true;
+		if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
+			System.out.println(jsonArray.get(0));
+
+
+
+				String[] times = jsonArray.getString(1).split("-");
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+				String now = df.format(new Date());
+
+				System.out.println(now);
+				System.out.println(times[0]);
+				System.out.println(times[1]);
+				if(times[0].compareTo(times[1]) >= 0){
+					if(now.compareTo(times[0]) >= 0 || now.compareTo(times[1]) <= 0){
+						alert = true;
+					}
+					else{
+						alert = false;
+					}
+				}
+				else{
+					if(now.compareTo(times[0]) >= 0 && now.compareTo(times[1]) <= 0){
+						alert = true;
+					}
+					else{
+						alert = false;
+					}
+
+			}
+
+		}
+		System.out.println(alert);
+
+		System.out.println(JSON.toJSONString(currentAlert));
+//		System.out.println(((Object[]) jsonArray.get(0))[0]);
 //		System.out.println(((JSONArray)jsonArray.get(0)).getLongValue(0));
-//
-		List<Object> preAlerts = dataInfoRepository.findPreModules("OP_LAPS_前处理,LSX,10.30.16.242");
+
+		/*List<Object> preAlerts = dataInfoRepository.findPreModules("OP_LAPS_前处理,LSX,10.30.16.242");
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("index","data_20180615");
 		jsonObject.put("type","LAPS");
@@ -176,7 +184,7 @@ public class ConfigServiceTest {
 			jsonObject.put("id",Pub.MD5(o.toString()+",2018-06-15 17:00:00.000+0800"));
 			String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
 			System.out.println(id_cj);
-		}
+		}*/
 
 
 	}

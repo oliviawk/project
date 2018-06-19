@@ -154,9 +154,10 @@ public class SendAlertMessage {
 				//先比较当前的告警时间范围和最大告警数
                 List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,map.get("type").toString(),ipAddr);
 				JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(curmodules));
-                if(jsonArray.size() > 0){
-
+				if(jsonArray.size() > 0){
 					jsonArray = (JSONArray)jsonArray.get(0);
+				}
+				if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
 					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
 
 					if(jsonArray.getInteger(2) != null ){

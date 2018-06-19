@@ -119,8 +119,9 @@ public class ESServiceTest {
 	@Test
 	public void insertTest_hot() {
 		List<String> list = new ArrayList<>();
-		list.add("{\"receive_time\":1529051105854,\"type\":\"LSX\",\"fields\":{\"start_time\":\"2018-06-15 16:24:02.000+0800\",\"ip_addr\":\"10.30.16.242\",\"module\":\"前处理\",\"data_time\":\"2018-06-15 21:00:00.000+0800\",\"file_name\":\"/home/laps/laps_data/lapsprd/lsx/181661300.lsx\",\"event_status\":\"0\",\"file_size\":\"138264\",\"end_time\":\"2018-06-15 16:24:02.000+0800\"},\"occur_time\":1529051042000}");
-		esService.update("", "LAPS", list);
+//		list.add("{\"receive_time\":1529051105854,\"type\":\"LSX\",\"fields\":{\"start_time\":\"2018-06-15 16:24:02.000+0800\",\"ip_addr\":\"10.30.16.242\",\"module\":\"前处理\",\"data_time\":\"2018-06-15 21:00:00.000+0800\",\"file_name\":\"/home/laps/laps_data/lapsprd/lsx/181661300.lsx\",\"event_status\":\"0\",\"file_size\":\"138264\",\"end_time\":\"2018-06-15 16:24:02.000+0800\"},\"occur_time\":1529051042000}");
+		list.add("{\"receive_time\":1529164682612,\"type\":\"雷达\",\"name\":\"ACHN.QREF000\",\"fields\":{\"start_time\":\"2018-06-16 23:57:49.000+0800\",\"ip_addr\":\"10.30.16.220\",\"ip_addr_target\":\"10.30.16.223\",\"module\":\"采集\",\"data_time\":\"2018-06-19 16:00:00.000+0800\",\"file_name\":\"ACHN.QREF000.20180616.080000.latlon\",\"event_status\":\"0\",\"totalTime\":\"0.500426\",\"file_size\":\"15757612\",\"mtime\":\"23:57:40\",\"end_time\":\"2018-06-16 23:57:50.000+0800\"},\"occur_time\":1529164670000}");
+		esService.update("", "FZJC", list);
 
 	}
 
