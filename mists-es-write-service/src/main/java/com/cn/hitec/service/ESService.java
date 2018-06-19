@@ -474,8 +474,20 @@ public class ESService {
 
 						}
 						/*-------5.29 新代码*/
-						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))){
-							fields.put("file_name", hitsSource_fields.get("file_name"));
+//						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))){
+//							fields.put("file_name", hitsSource_fields.get("file_name"));
+//						}
+						/*-------6.19 设置文件名新代码*/
+						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
+							if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
+								if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
+									String old_fileName = hitsSource_fields.get("file_name").toString();
+									old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
+									fields.put("file_name", old_fileName + fields.get("file_name").toString().replace("/", ""));
+								}
+							} else {
+								fields.put("file_name", hitsSource_fields.get("file_name"));
+							}
 						}
 
 						if (alertBean != null) {
