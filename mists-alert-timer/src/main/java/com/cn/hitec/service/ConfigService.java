@@ -526,7 +526,7 @@ public class ConfigService {
 	}
 
 	/**
-	 * 预生成文件名
+	 * 预生成文件名 对比对象：北京时间
 	 * @param nameDefine
 	 * @param dt
 	 * @return
@@ -544,7 +544,7 @@ public class ConfigService {
 
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dt);
-                cal.add(Calendar.HOUR_OF_DAY,- Integer.parseInt(timeZoneFormat));
+                cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(timeZoneFormat));
 
                 fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(cal.getTime(),timeFormat)).replace("["+timeZoneFormat+"]","");
             }
