@@ -14,6 +14,8 @@ import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -106,7 +108,8 @@ public class AlertService {
                 if(StringUtils.isEmpty(documentId)){
                     throw new Exception("插入数据失败");
                 }
-                if(rulesArray.size() > 0 && AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
+                //对非提示类告警数+1
+                if(rulesArray.size() > 0 && rulesArray.getString(0) != null && !AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
                     dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
                 }
             }
@@ -148,12 +151,14 @@ public class AlertService {
                 if(isAlert){
                     List<Object> pres = dataInfoRepository.findPreModules(module_key);
                     for(Object pre : pres){
-                        String id_cj = getDocumentById(es,index,type,Pub.MD5(pre+","+alertBean.getData_time()));
-                        if (!org.apache.commons.lang.StringUtils.isEmpty(id_cj)){
-                            isAlert = false;
-                            logger.info("-------> 存在上级告警");
-                            logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
-                            break;
+                        if(!module_key.equals(pre.toString())){
+                            String id_cj = getDocumentById(es,index,type,Pub.MD5(pre+","+alertBean.getData_time()));
+                            if (!org.apache.commons.lang.StringUtils.isEmpty(id_cj)){
+                                isAlert = false;
+                                log.info("-------> 存在上级告警");
+                                log.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
+                                break;
+                            }
                         }
                     }
                 }
@@ -233,20 +238,20 @@ public class AlertService {
 
     boolean isAlert(JSONArray rulesArray){
         boolean isAlert = true;
-        if(rulesArray.size() > 0){
+        if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
             if(rulesArray.getInteger(2) != null ){
-                if(rulesArray.getInteger(3) > rulesArray.getInteger(2)){
+                //有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
+                if(rulesArray.getInteger(3) >= rulesArray.getInteger(2)){
                     isAlert = false;
                 }
             }
 
             if(isAlert && rulesArray.getString(1) != null && !"".equals(rulesArray.getString(1))){
-                String[] range = rulesArray.getString(1).split("-");
-                String[] times = range[0].split("-");
+                String[] times = rulesArray.getString(1).split("-");
                 SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
                 String now = df.format(new Date());
                 if(times[0].compareTo(times[1]) >= 0){
-                    if(now.compareTo(times[0]) >= 0 || now.compareTo(times[0]) <= 0){
+                    if(now.compareTo(times[0]) >= 0 || now.compareTo(times[1]) <= 0){
                         isAlert = true;
                     }
                     else{
@@ -254,7 +259,7 @@ public class AlertService {
                     }
                 }
                 else{
-                    if(now.compareTo(times[0]) >= 0 && now.compareTo(times[0]) <= 0){
+                    if(now.compareTo(times[0]) >= 0 && now.compareTo(times[1]) <= 0){
                         isAlert = true;
                     }
                     else{

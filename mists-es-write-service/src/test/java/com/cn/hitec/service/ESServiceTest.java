@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSON;
@@ -16,6 +18,7 @@ import com.cn.hitec.bean.AlertBeanNew;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles({ "dev" })
 public class ESServiceTest {
 	@Autowired
 	ESService esService;
@@ -116,10 +119,10 @@ public class ESServiceTest {
 	@Test
 	public void insertTest_hot() {
 		List<String> list = new ArrayList<>();
-		list.add(
-				"{\"occur_time\":1510190402148,\"last_time\":\"2017-11-09 09:26:00.000+0800\",\"should_time\":\"2017-11-09 09:21:00.000+0800\",\"name\":\"20\",\"receive_time\":1510190808694,\"type\":\"炎热指数\",\"fields\":{\"start_time\":\"2017-11-09 09:20:01.192+0800\",\"event_info\":\"正常\",\"data_time\":\"2017-11-09 09:00:00.000+0800\",\"file_name\":\"Z://NoGeography//live//hotIndex//hot2017110909.txt\",\"module\":\"加工\",\"end_time\":\"2017-11-09 09:20:02.148+0800\",\"step\":\"1\",\"ip_addr\":\"10.30.16.223\",\"file_size\":\"139510\",\"event_status\":\"ok\"}}");
+//		list.add("{\"receive_time\":1529051105854,\"type\":\"LSX\",\"fields\":{\"start_time\":\"2018-06-15 16:24:02.000+0800\",\"ip_addr\":\"10.30.16.242\",\"module\":\"前处理\",\"data_time\":\"2018-06-15 21:00:00.000+0800\",\"file_name\":\"/home/laps/laps_data/lapsprd/lsx/181661300.lsx\",\"event_status\":\"0\",\"file_size\":\"138264\",\"end_time\":\"2018-06-15 16:24:02.000+0800\"},\"occur_time\":1529051042000}");
+		list.add("{\"receive_time\":1529164682612,\"type\":\"雷达\",\"name\":\"ACHN.QREF000\",\"fields\":{\"start_time\":\"2018-06-16 23:57:49.000+0800\",\"ip_addr\":\"10.30.16.220\",\"ip_addr_target\":\"10.30.16.223\",\"module\":\"采集\",\"data_time\":\"2018-06-19 16:00:00.000+0800\",\"file_name\":\"ACHN.QREF000.20180616.080000.latlon\",\"event_status\":\"0\",\"totalTime\":\"0.500426\",\"file_size\":\"15757612\",\"mtime\":\"23:57:40\",\"end_time\":\"2018-06-16 23:57:50.000+0800\"},\"occur_time\":1529164670000}");
 		esService.update("", "FZJC", list);
-		System.out.println("");
+
 	}
 
 }

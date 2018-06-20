@@ -153,24 +153,26 @@ public class SendAlertMessage {
                 /*====================modified by czt 2018.6.11=======================*/
 				//先比较当前的告警时间范围和最大告警数
                 List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,map.get("type").toString(),ipAddr);
-				if(curmodules.size() > 0){
-					JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(curmodules));
-
+				JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(curmodules));
+				if(jsonArray.size() > 0){
+					jsonArray = (JSONArray)jsonArray.get(0);
+				}
+				if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
 					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
 
 					if(jsonArray.getInteger(2) != null ){
-						if(jsonArray.getInteger(3) > jsonArray.getInteger(2)){
+						//有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
+						if(jsonArray.getInteger(3) >= jsonArray.getInteger(2)){
 							isAlert = false;
 						}
 					}
 
 					if(isAlert){
-						String[] range = jsonArray.getString(1).split("-");
-						String[] times = range[0].split("-");
+						String[] times = jsonArray.getString(1).split("-");
 						SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
 						String now = df.format(new Date());
 						if(times[0].compareTo(times[1]) >= 0){
-							if(now.compareTo(times[0]) >= 0 || now.compareTo(times[0]) <= 0){
+							if(now.compareTo(times[0]) >= 0 || now.compareTo(times[1]) <= 0){
 								isAlert = true;
 							}
 							else{
@@ -178,7 +180,7 @@ public class SendAlertMessage {
 							}
 						}
 						else{
-							if(now.compareTo(times[0]) >= 0 && now.compareTo(times[0]) <= 0){
+							if(now.compareTo(times[0]) >= 0 && now.compareTo(times[1]) <= 0){
 								isAlert = true;
 							}
 							else{
@@ -193,13 +195,15 @@ public class SendAlertMessage {
 					jsonObject.put("index",index);
 					jsonObject.put("type",type);
 					for(Object pre : pres){
-						jsonObject.put("id",Pub.MD5(pre.toString()+","+alertBean.getData_time()));
-						String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
-						if (!StringUtils.isEmpty(id_cj)){
-							isAlert = false;
-							logger.info("-------> 存在上级告警");
-							logger.info("过滤掉的告警信息："+JSON.toJSONString(alertBean));
-							break;
+						if(!module_key.equals(pre.toString())) {
+							jsonObject.put("id", Pub.MD5(pre.toString() + "," + alertBean.getData_time()));
+							String id_cj = esQueryService.getDocumentById(jsonObject.toJSONString());
+							if (!StringUtils.isEmpty(id_cj)) {
+								isAlert = false;
+								logger.info("-------> 存在上级告警");
+								logger.info("过滤掉的告警信息：" + JSON.toJSONString(alertBean));
+								break;
+							}
 						}
 					}
 				}

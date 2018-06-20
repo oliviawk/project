@@ -139,6 +139,9 @@ public class DataSourceService {
 
                 List<Object> curmodules = dataInfoRepository.findAlertRules(str_type,module,sub_type,ipAddr);
                 JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+                if(rulesArray.size() > 0){
+                    rulesArray = (JSONArray)rulesArray.get(0);
+                }
 
                 if(resultMap.containsKey("_id")){
                     AlertBeanNew alertBean = null;
@@ -187,7 +190,7 @@ public class DataSourceService {
                         alertService.alert(es,str_index, alertType, alertBean,rulesArray); // 生成告警
                         alertBean = null;
                     }else{
-                        if(rulesArray.size() > 0){
+                        if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
                             //告警状态正常置零告警次数
                             if(rulesArray.getInteger(3) != 0){
                                 dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
