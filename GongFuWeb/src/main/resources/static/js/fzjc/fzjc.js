@@ -43,7 +43,7 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
 
 $(document).ready(function () {
     //一分钟自动刷新一次
-    setInterval(getBase, 60000);
+    setInterval(getBase, 60 * 1000);
 
     function getBase() {
         var url = "../fzjc/getBaseEventData";
@@ -73,12 +73,14 @@ $(document).ready(function () {
                         var ary = resultdata[i];
                         var div_ip = $('div[data-ip="' + i + '"]');
                         if (div_ip.length > 0) {
-                            div_ip.find('li').removeClass();
-                            for (var j in ary) {
-                                var num = ary[j];
-                                var class_name = num == 0 ? "green" : "red";
-                                div_ip.find('li').eq(j).addClass(class_name);
-                            }
+                            div_ip.each(function () {
+                                $(this).find('li').removeClass();
+                                for (var j in ary) {
+                                    var num = ary[j];
+                                    var class_name = num == 0 ? "green" : "red";
+                                    $(this).find('li').eq(j).addClass(class_name);
+                                }
+                            })
                         }
                     }
                 }
