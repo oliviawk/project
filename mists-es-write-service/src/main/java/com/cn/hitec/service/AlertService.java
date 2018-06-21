@@ -85,9 +85,8 @@ public class AlertService {
             if(documentId != null){ //如果有ID
                 //如果是超时、异常的告警，说明是重复，过滤掉。 如果是迟到的数据，修改告警信息（取消告警）
                 if(AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
-                    //保存告警信息
-                    es.bulkProcessor.add(new IndexRequest(index,type,documentId)
-                            .source(JSON.toJSONString(alertBean), XContentType.JSON));
+                    //保存告警信息 用该方法能够立刻入库
+                    es.client.prepareIndex(index, type,documentId).setSource(JSON.toJSONString(alertBean), XContentType.JSON).get();
 
                     //是否迟到提示
                     if(rulesArray.size() > 0 && rulesArray.getInteger(5) == 0){
@@ -297,7 +296,7 @@ public class AlertService {
             alertBean.setEventType("OP_"+str_type +"_"+ module+"-1-"+alertType+"-01");
             alertBean.setEventTitle(alertTitle);
             alertBean.setLevel(fields.containsKey("event_status") ? fields.get("event_status").toString() : "1");
-            alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : alertTitle);
+            alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : "-");
             alertBean.setCause("-");
 
             alertBean.setModule(module);
@@ -305,21 +304,24 @@ public class AlertService {
             alertBean.setSubName(map.get("name").toString());
             alertBean.setData_time(fields.get("data_time").toString());
             alertBean.setIpAddr(fields.containsKey("ip_addr") ? fields.get("ip_addr").toString() : "-");
-            if(!"DATASOURCE".equals(str_type)){
-                alertBean.setShould_time(map.containsKey("should_time") ?
-                        Pub.transform_DateToString(
-                                Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-                                "yyyy-MM-dd HH:mm:ss")
-                        : "0");
-                alertBean.setLast_time(map.containsKey("last_time") ?
-                        Pub.transform_DateToString(
-                                Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-                                "yyyy-MM-dd HH:mm:ss")
-                        : "0");
-            }else{
-                alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
-                alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
-            }
+//            if(!"DATASOURCE".equals(str_type)){
+//                alertBean.setShould_time(map.containsKey("should_time") ?
+//                        Pub.transform_DateToString(
+//                                Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//                                "yyyy-MM-dd HH:mm:ss")
+//                        : "0");
+//                alertBean.setLast_time(map.containsKey("last_time") ?
+//                        Pub.transform_DateToString(
+//                                Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//                                "yyyy-MM-dd HH:mm:ss")
+//                        : "0");
+//            }else{
+//                alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
+//                alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
+//            }
+
+            alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
+            alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
 
             alertBean.setReceive_time("0");
             alertBean.setPath(fields.containsKey("path") ? fields.get("path").toString() : "-");
@@ -332,9 +334,11 @@ public class AlertService {
             }else if(AlertType.DELAY.getValue().equals(alertType)){
                 String  temp = alertTitle.substring(alertTitle.indexOf(",延迟")+1,alertTitle.length());
                 alertBean.setDesc(temp);
-            }else /*if(AlertType.FILEEX.getValue().equals(alertType))*/{
-                //文件错误或提前到达
-                alertBean.setDesc(alertBean.getErrorMessage());
+            }else if(AlertType.FILEEX.getValue().equals(alertType)){
+                //文件错误
+                alertBean.setDesc("文件大小异常");
+            }else if (AlertType.NOTE.getValue().equals(alertType)){
+                alertBean.setDesc("正常到达");
             }
         } catch (Exception e) {
             e.printStackTrace();

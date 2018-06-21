@@ -1,11 +1,6 @@
 package com.cn.hitec.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.domain.DataInfo;
@@ -42,6 +37,12 @@ public class ConfigService {
 
 
 	public void initAlertMap() {
+
+		//清空列表
+		Pub.DIMap_DS = Collections.synchronizedMap(new HashMap());
+		Pub.DIMap_t639 = Collections.synchronizedMap(new HashMap());
+		Pub.DIMap = Collections.synchronizedMap(new HashMap());
+		Pub.DI_ConfigMap = Collections.synchronizedMap(new HashMap());
 
 		/*  ------------ > 3.7日修改的新代码 < ------------------*/
 		List<DataInfo> listDataInfo = dataInfoRepository.findAllChilden(3);
@@ -298,7 +299,7 @@ public class ConfigService {
 					String[] shuld_time = map.get("should_time").toString().split(",");
 					String[] last_time = map.get("last_time").toString().split(",");
 
-					List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss", startDate, endDate);
+					List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss.SSSZ", startDate, endDate);
 					int regular = Integer.parseInt(map.get("regular").toString());
 					if(regular == 2){
 						if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
@@ -308,7 +309,7 @@ public class ConfigService {
 					}
 
 					for (int i = 0; i < timerList.size(); i++) {
-						Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss");
+						Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss.SSSZ");
 						if (runDate.getTime() > dt.getTime()){
 							continue;
 						}
@@ -331,14 +332,14 @@ public class ConfigService {
 						}else{
 							calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[0]));
 						}
-                        data.put("should_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss"));
+                        data.put("should_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
 
 						if(regular == 2){
 							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[i]));
 						}else{
 							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[0]));
 						}
-						data.put("last_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss"));
+						data.put("last_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
 
                         fields.put("file_name", path);
                         fields.put("ip_addr", IP);

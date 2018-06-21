@@ -49,14 +49,14 @@ public class SendAlertMessage {
 			Map<String, Object> fields = (Map<String, Object>) map.get("fields");
 
 			String str_type = map.get("_type").toString();
-			if(!"DATASOURCE".equals(str_type)){
-				// 去掉资料时次里的时区
-				fields.put("data_time",
-						Pub.transform_DateToString(
-								Pub.transform_StringToDate(fields.get("data_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-								"yyyy-MM-dd HH:mm:ss"));
-
-			}
+//			if(!"DATASOURCE".equals(str_type)){
+//				// 去掉资料时次里的时区
+//				fields.put("data_time",
+//						Pub.transform_DateToString(
+//								Pub.transform_StringToDate(fields.get("data_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//								"yyyy-MM-dd HH:mm:ss"));
+//
+//			}
 
 			String module = fields.get("module").toString();
 			String ipAddr = fields.containsKey("ip_addr") ? fields.get("ip_addr").toString() : "-";
