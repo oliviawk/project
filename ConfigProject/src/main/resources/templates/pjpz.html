@@ -287,12 +287,12 @@
 			<input type="hidden" value="id" name="id" id="id_v" />
 			<div
 					style="position: absolute; left: 20px; top: 20px; width: 200px">
-				模板名：<input id="name_upd" class="form-control" type="text"
+				模板名：<input id="name_upd" class="form-control top-option-border" type="text"
 						   name="name" />
 			</div>
 			<div
 					style="position: absolute; left: 250px; top: 20px; width: 200px">
-				<span>数据源</span> <select class="form-control" title="资源类型"
+				<span>数据源</span> <select class="form-control top-option-border" title="资源类型"
 										 id="type_upd" name="type" width="50px">
 				<option value="业务数据">业务数据</option>
 				<option value="测试数据">测试数据</option>
@@ -301,12 +301,12 @@
 			<div
 					style="position: absolute; left: 20px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control" rows="3" name="wechart_content"
+				<textarea class="form-control top-option-border" rows="3" name="wechart_content"
 						  id="wechart_content_upd"></textarea>
 			</div>
 			<div
 					style="position: absolute; left: 20px; top: 100px; width: 200px">
-				是否发送微信 <select class="form-control" title="是否发送" id="weixin_upd"
+				是否发送微信 <select class="form-control top-option-border" title="是否发送" id="weixin_upd"
 							   name="wei_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
@@ -315,12 +315,12 @@
 			<div
 					style="position: absolute; left: 250px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control" rows="3" name="sns_content"
+				<textarea class="form-control top-option-border" rows="3" name="sns_content"
 						  id="sns_content_upd"></textarea>
 			</div>
 			<div
 					style="position: absolute; left: 250px; top: 100px; width: 200px">
-				是否发送短信 <select class="form-control" title="是否发送" id="sms_upd"
+				是否发送短信 <select class="form-control top-option-border" title="是否发送" id="sms_upd"
 							   name="sms_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
@@ -343,7 +343,7 @@
 		 style="height: 380px; width: 500px; position: absolute; left: 20%; top: 50%;">
 
 		<div style="width: 200px; position: relative; left: 25px; top: 20px">
-			用户名:<input class="form-control" type="text" name="username"
+			用户名:<input class="form-control top-option-border" type="text" name="username"
 					   id="username" /><br />
 		</div>
 		<div
@@ -354,23 +354,23 @@
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 25px; top: -50px">
-			手机号:<input class="form-control" type="text" name="userphone"
+			手机号:<input class="form-control top-option-border" type="text" name="userphone"
 					   id="userphone" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 237px; top: -124px">
-			邮箱:<input class="form-control" type="text" name="useremail"
+			邮箱:<input class="form-control top-option-border" type="text" name="useremail"
 					  id="useremail" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 25px; top: -140px">
-			公众号:<input class="form-control" type="text" name="usergzh"
+			公众号:<input class="form-control top-option-border" type="text" name="usergzh"
 					   id="usergzh" /><br />
 		</div>
 		<div class="form-group"
 			 style="position: relative; left: 25px; top: -140px; height: 300px; width: 250px">
 			<label for="name">说明:</label>
-			<textarea class="form-control" rows="3" name="usersm" id="usersm"></textarea>
+			<textarea class="form-control top-option-border" rows="3" name="usersm" id="usersm"></textarea>
 		</div>
 		<div style="position: absolute; left: 350px; top: 275px;">
 			<button type="button" class="btn btn-success" onclick="addUser()">确认提交</button>
@@ -390,12 +390,12 @@
 		<div style="width: 200px">
 			<span style="position: relative; left: 10px; top: 13px">模板名:</span><input
 				style="position: relative; left: 69px; top: -13px"
-				class="form-control" type="text" id="name" name="name" />
+				class="form-control top-option-border" type="text" id="name" name="name" />
 		</div>
 		<div style="position: relative; left: 10px; top: 7px; width: 300px">
 				<span
 						style="position: relative; float: left; top: 5px; margin-right: 12px;">数据源:</span>
-			<select class="form-control" title="资源类型" id="type" name="type"
+			<select class="form-control top-option-border" title="资源类型" id="type" name="type"
 					style="width: 200px;">
 				<option value="业务数据">业务数据</option>
 				<option value="基础资源">基础资源</option>
@@ -418,14 +418,14 @@
 			<input type="checkbox" id="wechart_send_c"
 				   onclick="checkClick('wechart_send_c')" />微信 <input type="hidden"
 																	  name="wechart_send" id="wechart_send" value="0" />
-			<textarea class="form-control" rows="5" name="wechart_content"
+			<textarea class="form-control top-option-border" rows="5" name="wechart_content"
 					  id="wechart_content"></textarea>
 		</div>
 		<div style="width: 400px; position: relative; left: 10px; top: 22px">
 			<input type="checkbox" id="sms_send_c"
 				   onclick="checkClick('sms_send_c')" />短信 <input type="hidden"
 																  name="sms_send" id="sms_send" value="0" />
-			<textarea class="form-control" rows="5" name="sns_content"
+			<textarea class="form-control top-option-border" rows="5" name="sns_content"
 					  id="sns_content"></textarea>
 		</div>
 		<div style="position: absolute; left: 380px; top: 453px;">
@@ -500,13 +500,13 @@
 				<tr>
 					<td colspan="2">
 						微信模板：
-						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
+						<textarea class="form-control top-option-border" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
 						短信模板：
-						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
+						<textarea class="form-control top-option-border" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 			</table>
