@@ -3,13 +3,13 @@ table#table_cjf .form-group {
     margin-bottom: 0px;
 }
 table#table_cjf div.form-control {
-    background-color: #2aabd2;
-    display: inline-block;
+    /*    background-color: #2aabd2;
+    */    display: inline-block;
     width: 110px;
     margin-left: 20px;
 }
 table#table_cjf .row .form-control:nth-child(2n+0) {
-    margin-left: 0;
+    margin-left: 6px;
 }
 table#table_cjf div.radio,table#table_cjf div.checkbox {
     display: inline-block;
@@ -17,8 +17,8 @@ table#table_cjf div.radio,table#table_cjf div.checkbox {
 }
 
 table#table_cjf tr:nth-child(2n+0) td{
-    background:#def2f5;
-}
+    /*    background:#def2f5;
+    */}
 .userDiv{
     float: left;
     margin-left: 50px;
@@ -32,6 +32,7 @@ div.radio input[type="radio"],div.checkbox input[type="checkbox"]{
 }
 input.form-control{
     padding-bottom:0;
+    padding-top: 5px;
 }
 table#table_cjf tr td:first-child{
     max-width:68px;
