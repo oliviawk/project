@@ -116,7 +116,7 @@ public class DataSourceService {
             try {
                 Map<String,Object> fieldsMap = (Map<String, Object>) dataMap.get("fields");
 
-                Date occrTime = Pub.transform_StringToDate(dataMap.get("occur_time").toString(),"yyyy-MM-dd HH:mm:ss");
+                Date occrTime = Pub.transform_StringToDate(dataMap.get("occur_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
                 String str_index = Pub.Index_Head + Pub.transform_DateToString(occrTime, Pub.Index_Food_Simpledataformat);
                 String str_type = "DATASOURCE";
 
@@ -160,9 +160,9 @@ public class DataSourceService {
                                 resultMap.containsKey("name") ? resultMap.get("name") : "");
                         // 确定是否进行 数据状态 告警
                         if ("0".equals(fieldsMap.get("event_status").toString())){
-                            Date nowDate = Pub.transform_StringToDate(dataMap.get("occur_time").toString(),"yyyy-MM-dd HH:mm:ss");
-                            Date shouldDate = Pub.transform_StringToDate(resultMap.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss");
-                            Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss");
+                            Date nowDate = Pub.transform_StringToDate(dataMap.get("occur_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+                            Date shouldDate = Pub.transform_StringToDate(resultMap.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ");
+                            Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ");
                             // 确定是否 时效告警 ,修改时效状态
                             if (nowDate.getTime() - lastDate.getTime() >= 1000) {
                                 dataMap.put("aging_status", "迟到");

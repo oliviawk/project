@@ -38,6 +38,8 @@ public class CreateDIDataTask {
 		boolean isError = false;
 		int errorNum = 0;
 		do {
+
+			configService.initAlertMap();
 			logger.info("---------------------------------开始执行定时任务，生成第二天的数据--------------------------------");
 			try {
 				System.out.println("DIMap.size:"+ Pub.DIMap.size()+",--:"+ JSON.toJSONString(Pub.DIMap));
