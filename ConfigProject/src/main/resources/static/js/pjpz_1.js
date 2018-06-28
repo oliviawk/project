@@ -1070,12 +1070,10 @@ function alertStrategy_Search() {
                     + "</td><td>"
                     + modules
                     + "</td>"
-                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy("
-                    + k + ")'>查看</button>&nbsp;&nbsp;" +
+                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(" + k + ")'>查看</button>&nbsp;&nbsp;" +
                         // "<button type='button' class='btn
                         // btn-info'>修改</button>&nbsp;&nbsp;" +
-                    "<button type='button' class='btn btn-info' disabled='disabled' onclick='pztodelet("
-                    + k + ")'>删除</button>" + "</td></tr>";
+                    "<button type='button' class='btn btn-info' onclick='pztodelet(" + k + ")'>删除</button>" + "</td></tr>";
             });
 
             $("#dataTable").html(s);
