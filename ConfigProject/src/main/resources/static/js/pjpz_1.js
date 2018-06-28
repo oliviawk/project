@@ -812,7 +812,7 @@ function onchangeSelect(m) {
 function onchangeSelect2(m) {
     var id = $(m).context.id;
     var value = $("#" + id).val();
-    console.log($(m))
+    // console.log($(m))
 
     if (id == "pzAddSelect1" && value == -1) {
         document.getElementById("baseSourceIp").style.display = 'none';
@@ -879,7 +879,6 @@ function onchangeSelect2(m) {
                 // }
                 for (var i = 0; i < r.length; i++) {
                     var dio = r[i];
-                    console.log(dio)
                     if (putId == "pzAddSelect4") {
                         // document.getElementById("baseSourceIp").style="visibility:hidden";
                         m = "<tr><td >";

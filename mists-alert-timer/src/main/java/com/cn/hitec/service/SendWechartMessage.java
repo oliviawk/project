@@ -64,6 +64,11 @@ public class SendWechartMessage {
 
                     //发送消息
                     if (sendwechart){
+                        String alertTitle = map.get("alertTitle").toString();
+                        if (alertTitle.indexOf(".tmp") > -0){
+                            //去掉.tmp 后缀名
+                            alertTitle.replace(".tmp","");
+                        }
                         Map<String, Object> resultMap =  httpPub.httpPost(
                                 StringUtils.isEmpty(map.get("sendUser").toString())? "@all":map.get("sendUser").toString(),
                                 map.get("alertTitle").toString());
