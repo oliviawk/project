@@ -236,8 +236,15 @@ public class PJPZController {
 	public void pztodelet(@RequestBody String id) {
 		//这种写法不对，不是删除data_info 里的数据
 		JSONObject jb=JSON.parseObject(id);
-		Long l=Long.parseLong(jb.getString("id"));
-		alertStrategyRepository.deleteByDi_id(l);
+//		Long l=Long.parseLong(jb.getString("id"));
+//		alertStrategyRepository.deleteByDi_id(l);
+		// data_info中的数据不用删，只删alert_strategy的数据 by Edward
+		int pid = jb.getInteger("id");
+		List<Object> list = dataInfoRepository.initSelected(pid);
+		for (Object i : list) {
+			Long di_id = ((BigInteger)((Object[])i)[0]).longValue();
+			alertStrategyRepository.deleteByDi_id(di_id);
+		}
 	}
 	@RequestMapping(value = "/temptodelet", method = RequestMethod.POST)
 	@ResponseBody

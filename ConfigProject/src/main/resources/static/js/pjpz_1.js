@@ -812,7 +812,7 @@ function onchangeSelect(m) {
 function onchangeSelect2(m) {
     var id = $(m).context.id;
     var value = $("#" + id).val();
-    console.log($(m))
+    // console.log($(m))
 
     if (id == "pzAddSelect1" && value == -1) {
         document.getElementById("baseSourceIp").style.display = 'none';
@@ -879,7 +879,6 @@ function onchangeSelect2(m) {
                 // }
                 for (var i = 0; i < r.length; i++) {
                     var dio = r[i];
-                    console.log(dio)
                     if (putId == "pzAddSelect4") {
                         // document.getElementById("baseSourceIp").style="visibility:hidden";
                         m = "<tr><td >";
@@ -1070,12 +1069,10 @@ function alertStrategy_Search() {
                     + "</td><td>"
                     + modules
                     + "</td>"
-                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy("
-                    + k + ")'>查看</button>&nbsp;&nbsp;" +
+                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(" + k + ")'>查看</button>&nbsp;&nbsp;" +
                         // "<button type='button' class='btn
                         // btn-info'>修改</button>&nbsp;&nbsp;" +
-                    "<button type='button' class='btn btn-info' disabled='disabled' onclick='pztodelet("
-                    + k + ")'>删除</button>" + "</td></tr>";
+                    "<button type='button' class='btn btn-info' onclick='pztodelet(" + k + ")'>删除</button>" + "</td></tr>";
             });
 
             $("#dataTable").html(s);
