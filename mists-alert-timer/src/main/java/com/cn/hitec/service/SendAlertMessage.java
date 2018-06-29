@@ -158,10 +158,8 @@ public class SendAlertMessage {
 					jsonArray = (JSONArray)jsonArray.get(0);
 				}
 				if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
-					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
-
+					logger.info(jsonArray.getString(0)+"当前告警数:"+jsonArray.getInteger(3)+",最大告警数:"+jsonArray.getInteger(2));
 					if(jsonArray.getInteger(2) != null ){
-						//有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
 						if(jsonArray.getInteger(3) >= jsonArray.getInteger(2)){
 							isAlert = false;
 						}
@@ -188,6 +186,9 @@ public class SendAlertMessage {
 							}
 						}
 					}
+
+					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
+					logger.info("isAlert:"+isAlert);
 				}
 				if(isAlert){
 					List<Object> pres = dataInfoRepository.findPreModules(module_key);

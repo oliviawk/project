@@ -88,10 +88,6 @@ public class AlertService {
                     //保存告警信息 用该方法能够立刻入库
                     es.client.prepareIndex(index, type,documentId).setSource(JSON.toJSONString(alertBean), XContentType.JSON).get();
 
-                    //是否迟到提示
-                    if(rulesArray.size() > 0 && rulesArray.getInteger(5) == 0){
-                        return;
-                    }
                 }
                 else{
                     return;
@@ -106,10 +102,6 @@ public class AlertService {
 
                 if(StringUtils.isEmpty(documentId)){
                     throw new Exception("插入数据失败");
-                }
-                //对非提示类告警数+1
-                if(rulesArray.size() > 0 && rulesArray.getString(0) != null && !AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
-                    dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
                 }
             }
 
@@ -140,10 +132,18 @@ public class AlertService {
             }*/
 
             /*====================modified by czt 2018.6.11=======================*/
+
+            //提示类(超时到达提示)
+            if(AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
+                if(rulesArray.size() == 0 || rulesArray.getInteger(5) != 1){
+                    return;
+                }
+            }
+
             boolean isAlert = true;
 
             //如果不是提示类告警，要判断各种告警规则
-            if(!AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
+            if(!AlertType.NOTE.getValue().equals(alertBean.getAlertType()) && !AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
                 //先比较当前的告警时间范围和最大告警数
                 isAlert = isAlert(rulesArray);
                 //告警溯源
@@ -163,7 +163,7 @@ public class AlertService {
                 }
             }
 
-
+            log.info(rulesArray.getString(0)+"当前告警数:"+rulesArray.getInteger(3)+",最大告警数:"+rulesArray.getInteger(2)+",before:"+rulesArray.getInteger(4)+",after:"+rulesArray.getInteger(5)+",告警类型:"+alertBean.getAlertType());
             if(isAlert){
                 log.warn("生成微信、短信告警："+JSON.toJSONString(alertBean));
 
@@ -239,7 +239,7 @@ public class AlertService {
         boolean isAlert = true;
         if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
             if(rulesArray.getInteger(2) != null ){
-                //有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
+                //当前告警数从0开始
                 if(rulesArray.getInteger(3) >= rulesArray.getInteger(2)){
                     isAlert = false;
                 }
@@ -266,6 +266,8 @@ public class AlertService {
                     }
                 }
             }
+
+            dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
         }
 
         return isAlert;
