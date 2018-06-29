@@ -296,7 +296,7 @@ public class PJPZController {
 			String timeout=jb.getString("pzAddtimeyz");
 
 			//添加策略表		回头还要改为添加多个
-			AlertStrategy as=new AlertStrategy("",jb.getString("userId"),jb.getString("weChartContent"),jb.getInteger("weChart"),jb.getString("smsContent"),jb.getInteger("sms"),id);
+			AlertStrategy as=new AlertStrategy("",jb.getString("userId"),jb.getString("weChartContent"),jb.getInteger("weChart"),jb.getString("smsContent"),jb.getInteger("sms"),id,jb.getInteger("selectTemp"));
 			alertStrategyRepository.save(as);
 
 			Long[] longs = null;
@@ -344,7 +344,7 @@ public class PJPZController {
 	@RequestMapping("/toupdate")
 	public String addUser3(HttpServletRequest request, ModelMap map) {
 		String id=request.getParameter("id");
-		long iD=Long.parseLong(id);
+		int iD=Integer.parseInt(id);
 		String name=request.getParameter("name");
 		String type=request.getParameter("type");
 		String wechart_content=request.getParameter("wechart_content");
@@ -352,7 +352,7 @@ public class PJPZController {
 		String sns_content=request.getParameter("sns_content");
 		String sms_send=request.getParameter("sms_send");
 		sendTemplateRepository.updateWhereId(iD,name,type,wechart_content,wei_send,sns_content,sms_send);
-
+		alertStrategyRepository.updateDataTemplate(iD,wechart_content,sns_content);
 		return "pjpz";
 	}
 
@@ -433,7 +433,8 @@ public class PJPZController {
 					logger.error(e.getMessage());
 				}
 				//添加策略表		回头还要改为添加多个
-				AlertStrategy as=new AlertStrategy("",strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),id);
+				AlertStrategy as=new AlertStrategy("",strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),id,strategyObj.getInteger("selectTemp"));
+				System.out.println(strategyObj.getInteger("selectTemp"));
 				alertStrategyRepository.save(as);
 
 				if (dataInfo == null){
@@ -448,8 +449,8 @@ public class PJPZController {
 
 				j.put("serviceType",dataInfo.getService_type());
 				//更新策略
-				updStrategyTimer.updInitMap(JSON.toJSONString(j));
-				updStrategyWrite.updInitMap();
+//				updStrategyTimer.updInitMap(JSON.toJSONString(j));
+//				updStrategyWrite.updInitMap();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "更新失败";
@@ -511,7 +512,7 @@ public class PJPZController {
 //				dataInfoRepository.insertExistIpBaseSource(Long.parseLong(id+"00"+temp), Long.parseLong(id), name, 1, 80, null, 0, null, 0, null, null, "-", ip, 0);
 				dataInfoRepository.save(dataInfo);
 
-				AlertStrategy as=new AlertStrategy(name,strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),tempId);
+				AlertStrategy as=new AlertStrategy(name,strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),tempId,strategyObj.getInteger("selectTemp"));
 				alertStrategyRepository.save(as);
 
 			}

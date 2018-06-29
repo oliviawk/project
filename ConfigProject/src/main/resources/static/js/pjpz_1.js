@@ -574,10 +574,11 @@ function pzsave() {
         var userId = $("#selectUser").val();
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
-
+        var selectTemp = $("#selectTemp").val();
         // console.log({"pznameid":pznameid,"alertLevel":alertLevel,"pzAddtimeyz":pzAddtimeyz,"userId":userId,"weChartContent":weChartContent,"weChart":weChart,"smsContent":smsContent,"sms":sms})
         var strategyParams = {
             "userId" : userId,
+            "selectTemp" : selectTemp,
             "weChartContent" : weChartContent,
             "weChart" : weChart,
             "smsContent" : smsContent,
@@ -633,10 +634,12 @@ function pzsave() {
         var userId = $("#selectUser").val();
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
+        var selectTemp = $("#selectTemp").val();
 
         // console.log({"pznameid":pznameid,"alertLevel":alertLevel,"pzAddtimeyz":pzAddtimeyz,"userId":userId,"weChartContent":weChartContent,"weChart":weChart,"smsContent":smsContent,"sms":sms})
         var strategyParams = {
             "userId" : userId,
+            "selectTemp" : selectTemp,
             "weChartContent" : weChartContent,
             "weChart" : weChart,
             "smsContent" : smsContent,
@@ -682,6 +685,7 @@ function pzsave() {
 
         console.log(params)
         // 发送ajax ，保存操作
+        alert(selectTemp);
         $.ajax({
             type : "POST",
             url : "/pjpz/addstrategy",
