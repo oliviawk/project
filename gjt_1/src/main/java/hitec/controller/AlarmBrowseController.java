@@ -23,6 +23,12 @@ public class AlarmBrowseController {
         return "index";
     }
     
+    @RequestMapping("/index")
+    public String index(){
+        System.out.println("进入alertBrowse/index");
+        return "alertBrowse/alertBrowse";
+    }
+    
     /**
      * @Description: TODO(获取左侧分类节点) 
      * @author HYW
@@ -46,9 +52,7 @@ public class AlarmBrowseController {
     @RequestMapping(value="/getAllAlarm", method=RequestMethod.POST)
     @ResponseBody
     public Object getAllAlarm(HttpServletRequest request){
-    	String intervalTimeStr = request.getParameter("intervalTimeStr");
-    	String showType = request.getParameter("showType");
-    	return alarmBrowseService.getAllAlarm(intervalTimeStr, showType);
+    	return alarmBrowseService.getAllAlarm(request);
     }
     
 }

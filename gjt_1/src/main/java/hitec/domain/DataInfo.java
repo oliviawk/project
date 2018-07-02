@@ -25,72 +25,210 @@ public class DataInfo implements Serializable{
 
     @Id
     @GeneratedValue
-    private int pkId;
+    private long pkId;
     
-    private int id;
-    private int parentId;
+    private long id;
+    private long parentId;
     private String name;
-    private int isData;
     private String subName;
+    private String monitorTimes;
+    private String shouldTime;
+    private String timeoutThreshold;
+    private int regular;
+    private String ip;
+    private String filePath;
+    private String module;
+    private String serviceType;
+    private int alertLevel;
+    private String startMoniter;
+    private int isData;
+    
     
     public DataInfo() {}
 
-    public DataInfo(int pkId, int id, int parentId, String name, int isData, String subName) {
-        super();
-        this.pkId = pkId;
-        this.id = id;
-        this.parentId = parentId;
-        this.name = name;
-        this.isData = isData;
-        this.subName = subName;
-    }
 
-    public int getPkId() {
-        return pkId;
-    }
+	public DataInfo(long pkId, long id, long parentId, String name,
+			String subName, String monitorTimes, String shouldTime,
+			String timeoutThreshold, int regular, String ip, String filePath,
+			String module, String serviceType, int alertLevel,
+			String startMoniter, int isData) {
+		super();
+		this.pkId = pkId;
+		this.id = id;
+		this.parentId = parentId;
+		this.name = name;
+		this.subName = subName;
+		this.monitorTimes = monitorTimes;
+		this.shouldTime = shouldTime;
+		this.timeoutThreshold = timeoutThreshold;
+		this.regular = regular;
+		this.ip = ip;
+		this.filePath = filePath;
+		this.module = module;
+		this.serviceType = serviceType;
+		this.alertLevel = alertLevel;
+		this.startMoniter = startMoniter;
+		this.isData = isData;
+	}
 
-    public void setPkId(int pkId) {
-        this.pkId = pkId;
-    }
 
-    public int getId() {
-        return id;
-    }
+	public long getPkId() {
+		return pkId;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public int getParentId() {
-        return parentId;
-    }
+	public void setPkId(long pkId) {
+		this.pkId = pkId;
+	}
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
-    }
 
-    public String getName() {
-        return name;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public int getIsData() {
-        return isData;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public void setIsData(int isData) {
-        this.isData = isData;
-    }
 
-    public String getSubName() {
-        return subName;
-    }
+	public long getParentId() {
+		return parentId;
+	}
 
-    public void setSubName(String subName) {
-        this.subName = subName;
-    }
-    
+
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getSubName() {
+		return subName;
+	}
+
+
+	public void setSubName(String subName) {
+		this.subName = subName;
+	}
+
+
+	public String getMonitorTimes() {
+		return monitorTimes;
+	}
+
+
+	public void setMonitorTimes(String monitorTimes) {
+		this.monitorTimes = monitorTimes;
+	}
+
+
+	public String getShouldTime() {
+		return shouldTime;
+	}
+
+
+	public void setShouldTime(String shouldTime) {
+		this.shouldTime = shouldTime;
+	}
+
+
+	public String getTimeoutThreshold() {
+		return timeoutThreshold;
+	}
+
+
+	public void setTimeoutThreshold(String timeoutThreshold) {
+		this.timeoutThreshold = timeoutThreshold;
+	}
+
+
+	public int getRegular() {
+		return regular;
+	}
+
+
+	public void setRegular(int regular) {
+		this.regular = regular;
+	}
+
+
+	public String getIp() {
+		return ip;
+	}
+
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+
+	public String getModule() {
+		return module;
+	}
+
+
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
+
+	public int getAlertLevel() {
+		return alertLevel;
+	}
+
+
+	public void setAlertLevel(int alertLevel) {
+		this.alertLevel = alertLevel;
+	}
+
+
+	public String getStartMoniter() {
+		return startMoniter;
+	}
+
+
+	public void setStartMoniter(String startMoniter) {
+		this.startMoniter = startMoniter;
+	}
+
+
+	public int getIsData() {
+		return isData;
+	}
+
+
+	public void setIsData(int isData) {
+		this.isData = isData;
+	}
+
 }

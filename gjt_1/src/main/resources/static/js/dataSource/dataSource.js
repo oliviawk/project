@@ -42,14 +42,14 @@ var TableInit = function(){
 			queryParams: oTableIint.queryParams,//传递参数（*）
 			sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
 			pageNumber: 1,                       //初始化加载第一页，默认第一页
-			pageSize: 2,                       //每页的记录行数（*）
+			pageSize: 5,                       //每页的记录行数（*）
 			pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
 //			height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
 			uniqueId: "no",                     //每一行的唯一标识，一般为主键列
 			columns: [{
 				field: 'fields.department_name',
 				title: '单位',
-				sortable: true
+				sortable: true  
 			},{
 				field: 'name',
 				title: '数据名称',
@@ -57,7 +57,27 @@ var TableInit = function(){
 			},{
 				field: 'aging_status',
 				title: '状态',
-				sortable: true
+				sortable: true,
+				cellStyle:function (value, row, index) {  
+					debugger;
+					if (value == "正常"){
+						return{
+				        	css:{"background-color":"rgba(0, 204, 102, 1)"}  
+				        }
+					}else if (value == "超时"){
+						return{
+				        	css:{"background-color":"rgba(255, 51, 51, 1)"}  
+				        }
+					}else if (value == "迟到"){
+						return{
+				        	css:{"background-color":"rgba(255, 204, 51, 1)"}
+				        }
+					}else if (value == "异常"){
+                        return{
+                            css:{"background-color":"rgba(255, 192, 203 ,1)"}
+                        }
+                    }
+			    }
 			},{
 				field: 'fields.data_type',
 				title: '资料类型',
@@ -73,7 +93,14 @@ var TableInit = function(){
 			},{
 				field: 'fields.file_size',
 				title: '文件大小(MB)',
-				sortable: true
+				sortable: true,
+				formatter : function (value, row, index) {
+					if (value == undefined){
+						return;
+					}
+					value = value / 1024 / 1024;
+					return value.toFixed(4);
+				}
 			},{
 				field: 'fields.event_info',
 				title: '描述信息',

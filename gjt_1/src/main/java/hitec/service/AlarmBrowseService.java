@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import hitec.domain.DataInfo;
 import hitec.repository.DataInfoRepository;
 import hitec.repository.ESRepository;
 
+import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -20,12 +23,16 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("AlarmBrowseService")
 public class AlarmBrowseService {
 
+	private static final Logger logger = LoggerFactory.getLogger(AlarmBrowseService.class);
+	
     @Autowired
     DataInfoRepository dataInfoRepository;
     @Autowired
@@ -64,12 +71,12 @@ public class AlarmBrowseService {
         for (int i = 0; i < nodes.size(); i++) {
             DataInfo dataInfo = nodes.get(i);
             nodeHtml.append("<h3>"+ dataInfo.getName() +"</h3>");
-            int id = dataInfo.getId();
+            long id = dataInfo.getId();
             List<DataInfo> childNodes = getChildNode(dataInfos, id);
             if (childNodes != null && childNodes.size() != 0){
                 for (int j = 0; j < childNodes.size(); j++) {
                     DataInfo childDataInfo = childNodes.get(j);
-                    int childId = childDataInfo.getId();
+                    long childId = childDataInfo.getId();
                     List<DataInfo> childNodes2 = getChildNode(dataInfos, childId);
                     if (childNodes2 != null && childNodes2.size() != 0){
                         for (int k = 0; k < childNodes2.size(); k++) {
@@ -140,8 +147,23 @@ public class AlarmBrowseService {
         return responseMap;
     }
     
-    public Object getAllAlarm(String intervalTimeStr, String showType) {
-    	if (intervalTimeStr == null){
+    public Object getAllAlarm(HttpServletRequest request) {
+    	String sort = request.getParameter("sort");
+		String order = request.getParameter("order");
+		String limitStr = request.getParameter("limit");
+		String offsetStr = request.getParameter("offset");
+    	String intervalTimeStr = request.getParameter("intervalTimeStr");
+    	
+    	int limit = 10;
+		int offset = 0;
+		try {
+			offset = Integer.parseInt(offsetStr);
+			limit = Integer.parseInt(limitStr);
+		} catch (Exception e) {
+			logger.error("页数和显示条数转int报错"+ e.toString());
+		}
+    	
+    	if (StringUtils.isEmpty(intervalTimeStr)){
     		intervalTimeStr = "12";
     	}
     	int intervalTime = Integer.parseInt(intervalTimeStr);
@@ -151,8 +173,7 @@ public class AlarmBrowseService {
     	
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String showTime = sdf.format(cal.getTime());
-		List<Map<String,Object>> allAlarm = queryAllAlarmByEs(showTime, showType);
-		return allAlarm;
+    	return queryAllAlarmByEs(showTime, limit, offset, sort, order);
 	}
     
     /**
@@ -160,7 +181,7 @@ public class AlarmBrowseService {
      * @author HYW
      * @date 2018年3月13日 上午11:11:50 
      */
-    public List<DataInfo> getChildNode(List<DataInfo> dataInfos ,int id){
+    public List<DataInfo> getChildNode(List<DataInfo> dataInfos ,long id){
         if (dataInfos == null || dataInfos.size() == 0){
             return null;
         }
@@ -214,8 +235,11 @@ public class AlarmBrowseService {
      * @author HYW
      * @date 2018年3月21日 上午15:25:47 
      */
-    public List<Map<String, Object>> queryAllAlarmByEs(String showTime, String showType){
-    	List<Map<String, Object>> resultList = new ArrayList<Map<String,Object>>();
+    public Object queryAllAlarmByEs(String showTime, int limit,
+    		int offset, String sort, String order){
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	List<Map<String, Object>> rows = new ArrayList<Map<String,Object>>();
+    	long total = 0;
     	// 创建查询类
     	BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
     	
@@ -235,30 +259,36 @@ public class AlarmBrowseService {
     	
     	SearchRequestBuilder requestBuilder = es.client.prepareSearch(queryIndex)
     		.setTypes(new String[]{"alert"})
-    		.setSearchType(SearchType.DEFAULT)
-    		.setQuery(queryBuilder);
+    		.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+    		.setQuery(queryBuilder)
+    		.setFrom(offset)
+    		.setSize(limit);
     	
-    	if (showType != null && !"".equals(showType)){
-    		// 排序
-        	requestBuilder.addSort(showType, SortOrder.DESC);
+    	// 排序
+    	if (!StringUtils.isEmpty(sort)){
+    		if ("asc".equals(order)){
+    			requestBuilder.addSort(sort, SortOrder.ASC);
+    		}else{
+    			requestBuilder.addSort(sort, SortOrder.DESC);
+    		}
+    	}else{
+    		requestBuilder.addSort("occur_time", SortOrder.DESC);
     	}
     	
-    	SearchResponse response = requestBuilder.setScroll(new TimeValue(2000)).get();
-
-    	do {
-            for (SearchHit hits : response.getHits().getHits()) {
-                try {
-                    resultList.add(hits.getSource());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            response = es.client.prepareSearchScroll(response.getScrollId())
-                    .setScroll(new TimeValue(2000))
-                    .execute().actionGet();
-        } while(response.getHits().getHits().length != 0);
+    	SearchResponse response = requestBuilder.setExplain(false).get();
+    	total = response.getHits().getTotalHits();
     	
-    	return resultList;
+        for (SearchHit hits : response.getHits().getHits()) {
+            try {
+            	rows.add(hits.getSource());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    	
+    	resultMap.put("total", total);
+    	resultMap.put("rows", rows);
+    	return resultMap;
     }
 }
