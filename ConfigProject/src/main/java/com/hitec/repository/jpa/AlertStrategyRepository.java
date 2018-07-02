@@ -32,7 +32,7 @@ public interface AlertStrategyRepository extends JpaRepository<AlertStrategy,Lon
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE FROM alert_strategy SET wechart_content = ?2 , sms_content = ?3 WHERE template_id = ?1 ",nativeQuery = true)
+    @Query(value = "UPDATE alert_strategy SET wechart_content = ?2 , sms_content = ?3 WHERE template_id = ?1 ",nativeQuery = true)
     void updateDataTemplate(int template_id, String wechart_content, String sms_content);
     
 }
