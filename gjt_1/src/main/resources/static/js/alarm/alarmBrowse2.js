@@ -1,4 +1,4 @@
-var alarmData;// 告警数据
+var intervalTimeStr;// 告警数据
 $(function(){
 	//获取告警分类
 	$.ajax({
@@ -18,10 +18,77 @@ $(function(){
 		error: function(data){}
 	});
 	
+	var oTable = new TableInit();
+	oTable.init();
+	
+	//选中查看时间范围，刷新表格
+	$("#selectTime").change(function(){
+		debugger;
+		intervalTimeStr = $("#selectTime").find("option:selected").val();
+		$("#alertBrowseTable").bootstrapTable("refresh");	//刷新表格
+	});
 	// 获取所有的告警事件
-	getAlarmByAjax();
+//	getAlarmByAjax();
 	
 })
+
+var TableInit = function(){
+	var oTableIint = new Object();
+	//初始化Table
+	oTableIint.init = function(){
+		$("#alertBrowseTable").bootstrapTable({
+			url: '/alarmBrowse/getAllAlarm',         //请求后台的URL（*）
+			method: 'post',                      //请求方式（*）
+			contentType : "application/x-www-form-urlencoded",
+			showColumns:true,
+			striped: true,                      //是否显示行间隔色
+			cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			pagination: true,                   //是否显示分页（*）
+			queryParams: oTableIint.queryParams,//传递参数（*）
+			sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+			pageNumber: 1,                       //初始化加载第一页，默认第一页
+			pageSize: 8,                       //每页的记录行数（*）
+			pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+			uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+			columns: [{
+				field: 'name',
+				title: '名称',
+				sortable: true  
+			},{
+				field: 'type',
+				title: '告警类型',
+				sortable: true
+			},{
+				field: 'alertType',
+				title: '告警等级',
+				sortable: true
+			},{
+				field: 'occur_time',
+				title: '第一次发生时间',
+				sortable: true
+			},{
+				field: 'eventTitle',
+				title: '告警描述',
+				width: "50px",
+				sortable: false
+			}]
+		});
+	};
+	
+	//得到查询的参数
+	oTableIint.queryParams = function (params) {
+		debugger;
+		var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+				limit: params.limit,   //页面大小
+				offset:params.offset,
+				sort: params.sort,
+				order: params.order,
+				intervalTimeStr: intervalTimeStr
+		};
+		return temp;
+	};
+	return oTableIint;
+};
 
 // 数据加载后才能绑定的事件
 function bindEvent(){
@@ -91,11 +158,11 @@ function bindEvent(){
 	});
 	
 	// 选中查看时间事件
-	$("#selectTime").change(function(){
-		var intervalTimeStr = $(this).find("option:selected").val();	// 获取查看的时间
-		var showType = $("#selectType").find("option:selected").val();
-		getAlarmByAjax(intervalTimeStr, showType);
-	});
+//	$("#selectTime").change(function(){
+//		var intervalTimeStr = $(this).find("option:selected").val();	// 获取查看的时间
+//		var showType = $("#selectType").find("option:selected").val();
+//		getAlarmByAjax(intervalTimeStr, showType);
+//	});
 	
 	// 选中查看分类事件
 	$("#selectType").change(function(){
@@ -224,15 +291,6 @@ function getAlarmByAjax(intervalTimeStr, showType){
 		type: "post",
 		success: function (data){
 			debugger;
-			alarmData = data;
-			var table_GJ = "<tr><td>告警类型</td><td>等级</td><td>第一次发生时间</td><td>告警对象</td><td>告警描述</td><td>解决方式</td></tr>";
-            for (var i =0;i < data.length;i++){
-                var value = data[i];
-//                var e=new Date(parseInt(value.occtime) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
-                table_GJ+="<tr><td>"+value.type+"</td><td>"+value.level+"</td><td>"+value.occur_time
-                	+"</td><td>"+value.name+"</td><td>"+value.desc+"</td><td>"+value.cause+"</td></tr>";
-            }
-            $("#table_1").html(table_GJ);
 		},
 		error: function(data){
 			

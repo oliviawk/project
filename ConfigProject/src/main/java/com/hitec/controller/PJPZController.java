@@ -434,7 +434,7 @@ public class PJPZController {
 				}
 				//添加策略表		回头还要改为添加多个
 				AlertStrategy as=new AlertStrategy("",strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),id,strategyObj.getInteger("selectTemp"));
-				System.out.println(strategyObj.getInteger("selectTemp"));
+//				System.out.println(strategyObj.getInteger("selectTemp"));
 				alertStrategyRepository.save(as);
 
 				if (dataInfo == null){
