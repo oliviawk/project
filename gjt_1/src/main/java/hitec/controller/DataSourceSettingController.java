@@ -238,34 +238,41 @@ public class DataSourceSettingController {
 		String type = "success";
 		String message = "成功";
 		String user_catalog_name=request.getParameter("User_catalog_name");
-		//对文件前段路径进行处理拼接
 		String userfile=request.getParameter("Userfile");
-		String [] userfilearrray=userfile.split("/");
-		String  userfilepath="";
-		String lengstr=new String();
-		for (int i=0;i<userfilearrray.length-1;i++){
-			if(lengstr==null||lengstr.length()<userfilearrray[i].length()){
-				userfilepath=userfilepath+userfilearrray[i]+"/";
-			}
-		}
+		userfile=userfile.trim();
 		user_catalog_name=user_catalog_name.trim();
-        User_Catalog user_catalog=dataSourceSettingService.findAll_User_catalog(user_catalog_name);
+		User_Catalog user_catalog=dataSourceSettingService.findAll_User_catalog(user_catalog_name);
 		if (null==user_catalog){
 			outData.put("type", "fail");
 			outData.put("message", "根据用户名查询数据返回user_catalog为空");
 			return outData;
 		}
+		String [] userfilearrray=userfile.split("/");
+		String  userfilepath="";
+		String lengstr=new String();
+		//截取文件路径去除文件名
+		for (int i=0;i<userfilearrray.length-1;i++){
+			if(lengstr==null||lengstr.length()<userfilearrray[i].length()){
+				userfilepath=userfilepath+userfilearrray[i]+"/";
+			}
+		}
 		String user_content= user_catalog.getUser_catalog_content();
-//		//判断读取的用户名结尾是否为/结束
-//		if (!user_content.substring(user_content.length()-1).equals("/")){
-//			userfilepath="/"+userfilepath;
-//		}
-		//结尾用户名和文件前段拼接返回
-		user_content=user_content+userfilepath;
-		outData.put("type", type);
-		outData.put("message", message);
-		outData.put("Usercatalog",user_content);
-		return  outData;
+		//判断文件名是否是全路径，如果是则不进行拼接直接返回文件名，反之则拼接成全路径
+		if(userfilepath.startsWith(user_content)){
+			outData.put("type", type);
+			outData.put("message", message);
+			outData.put("Usercatalog",userfilepath);
+			return  outData;
+		}
+		else {
+
+			//因为不是全路径，所以截取这部分路径和User_catalog表中的用户路径拼接成全路径
+			user_content=user_content+userfilepath;
+			outData.put("type", type);
+			outData.put("message", message);
+			outData.put("Usercatalog",user_content);
+			return  outData;
+		}
 	}
 	
 }

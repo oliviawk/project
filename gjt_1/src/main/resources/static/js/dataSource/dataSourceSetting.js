@@ -114,9 +114,14 @@ $(function(){
 			"Userfile":$(this).find("option:selected").text()},
             type: "post",
             success: function(result){
-                debugger;
-                $("#directory").val(result.Usercatalog);
-                $("#directory").selectpicker('refresh');
+                if (result.type == 'fail'){
+                    alert("信息有误！"+ result.message);
+                }
+                if(result.type=='success'){
+                    debugger;
+                    $("#directory").val(result.Usercatalog);
+                    $("#directory").selectpicker('refresh');
+				}
 
             },
             error: function(error){
@@ -133,11 +138,11 @@ $(function(){
 		var name = $("#name").val();
 		var directory = $("#directory").val();
 		var fileName = $("#fileName").val();
-		var timeFormat = $("#timeFormat").val();
+		var timeFormat = $("#timeFormat").find("option:selected").text;
 		var senderUser = $("#SendUserNameSelect").val();
 		var ipAddr = $("#IpAddrSelect").val();
-		var dataType = $("#dataType").val();
-		var departmentName = $("#departmentName").val();
+		var dataType = $("#dataType").find("option:selected").text;
+		var departmentName = $("#departmentName").find("option:selected").text;
 		var phone = $("#phone").val();
 		var useDepartment = $("#useDepartment").val();
 		var moniterTimer = $("#moniterTimer").val();
