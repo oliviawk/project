@@ -340,6 +340,14 @@ public class PJPZController {
 		return stp;
 	}
 
+	@RequestMapping(value = "/findstrategy", method = RequestMethod.POST)
+	@ResponseBody
+	public AlertStrategy findAlertStrategy(@RequestBody String d) {
+		JSONObject qi = JSON.parseObject(d);
+		long data_id = qi.getLong("data_id");
+		AlertStrategy alertStrategy= alertStrategyRepository.findOne(data_id);
+		return alertStrategy;
+	}
 
 	@RequestMapping("/toupdate")
 	public String addUser3(HttpServletRequest request, ModelMap map) {
@@ -448,9 +456,10 @@ public class PJPZController {
 				JSONObject j = new JSONObject();
 
 				j.put("serviceType",dataInfo.getService_type());
-				//更新策略
-//				updStrategyTimer.updInitMap(JSON.toJSONString(j));
-//				updStrategyWrite.updInitMap();
+//				//更新策略
+				updStrategyTimer.updInitMap(JSON.toJSONString(j));
+				updStrategyWrite.updInitMap();
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "更新失败";

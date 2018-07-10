@@ -20,6 +20,9 @@ public interface AlertStrategyRepository extends JpaRepository<AlertStrategy,Lon
     @Query(value="select dt.service_type,dt.name,dt.module,als.strategy_name ,als.wechart_send_enable,als.sms_send_enable,als.wechart_content,als.sms_content from alert_strategy als RIGHT JOIN (SELECT * FROM data_info WHERE parent_id = ?1) dt ON dt.id = als.di_id",nativeQuery = true)
     List<Object> findDesc(long id);
 
+    @Query(value="select * from alert_strategy WHERE di_id = ?1 ",nativeQuery = true)
+    AlertStrategy findOne(long di_id);
+
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM alert_strategy WHERE di_id = ?1",nativeQuery = true)

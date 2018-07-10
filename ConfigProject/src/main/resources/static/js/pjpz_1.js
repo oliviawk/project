@@ -2,52 +2,51 @@ $(document)
     .ready(
         function() {
             // 发送模板显示
-            $
-                .ajax({
-                    type : "POST",
-                    url : "/pjpz/sen_list",
-                    async : false,
-                    headers : {
-                        "Content-Type" : "application/json; charset=utf-8"
-                    },
-                    success : function(r) {
-                        var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
-                        var m = "";
-                        for (var i = 0; i < r.length; i++) {
-                            var sendT = r[i];
-                            s += "<tr><td>"
-                                + sendT.id
-                                + "</td><td>"
-                                + sendT.name
-                                + "</td><td>"
-                                + sendT.type
-                                + "</td><td>"
-                                + sendT.wechartContentTemplate
-                                + "</td><td>"
-                                + sendT.wechartSendEnable
-                                + "</td><td>"
-                                + sendT.smsContentTemplate
-                                + "</td><td>"
-                                + sendT.smsSendEnable
-                                + "</td><td><button class='btn btn-primary' onclick='temptodelet("
-                                + sendT.id
-                                + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
-                                + sendT.id
-                                + ")'>修改</button></td></tr>"
-                            m += "<option value='" + sendT.id
-                                + "'>" + sendT.name
-                                + "</option>";
-                        }
-                        // console.log(sendT.wechartContentTemplate);
-                        $("#table_send").html(s);
-                        $("#selectTemp").html(m);
-                        changeContent();
-                    },
-                    error : function(err) {
-                        alert(err);
-                        console.log(err.message)
+            $.ajax({
+                type : "POST",
+                url : "/pjpz/sen_list",
+                async : false,
+                headers : {
+                    "Content-Type" : "application/json; charset=utf-8"
+                },
+                success : function(r) {
+                    var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
+                    var m = "";
+                    for (var i = 0; i < r.length; i++) {
+                        var sendT = r[i];
+                        s += "<tr><td>"
+                            + sendT.id
+                            + "</td><td>"
+                            + sendT.name
+                            + "</td><td>"
+                            + sendT.type
+                            + "</td><td>"
+                            + sendT.wechartContentTemplate
+                            + "</td><td>"
+                            + sendT.wechartSendEnable
+                            + "</td><td>"
+                            + sendT.smsContentTemplate
+                            + "</td><td>"
+                            + sendT.smsSendEnable
+                            + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                            + sendT.id
+                            + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                            + sendT.id
+                            + ")'>修改</button></td></tr>"
+                        m += "<option value='" + sendT.id
+                            + "'>" + sendT.name
+                            + "</option>";
                     }
-                });
+                    // console.log(sendT.wechartContentTemplate);
+                    $("#table_send").html(s);
+                    $("#selectTemp").html(m);
+                    changeContent();
+                },
+                error : function(err) {
+                    alert(err);
+                    console.log(err.message)
+                }
+            });
 
             // 用户表显示
             $.ajax({
@@ -75,47 +74,6 @@ $(document)
                 }
             });
             searchUser();
-
-            // 决策配置表显示
-            /*
-            $.ajax({
-                    type : "POST",
-                    url : "/pjpz/pz_list",
-                    async : false,
-                    headers : {
-                        "Content-Type" : "application/json; charset=utf-8"
-                    },
-                    success : function(r) {
-                        var s = "<tr><td>业务名/IP</td><td>环节名</td><td>资料名</td><td>操作</td></tr>"
-                        for (var i = 0; i < r.length; i++) {
-                            var pzList = r[i];
-                            s += "<tr><td height='20px'>"
-                                + pzList.service_type
-                                + "</td><td>"
-                                + pzList.module
-                                + "</td><td>"
-                                + pzList.sub_name
-                                + "</td>"
-                                + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(+"
-                                + pzList.id
-                                + ")'>查看</button>&nbsp;&nbsp;" +
-                                // "<button type='button'
-                                // class='btn
-                                // btn-info'>修改</button>&nbsp;&nbsp;"
-                                // +
-                                "<button type='button' class='btn btn-info' onclick='pztodelet("
-                                + pzList.id + ")'>删除</button>"
-                                + "</td></tr>"
-                        }
-                        // console.log(s);
-                        $("#dataTable").html(s);
-                    },
-                    error : function(err) {
-                        alert(err);
-                        console.log(err.message)
-                    }
-                });
-            */
 
             // 决策配置查询选择框
             $.ajax({
@@ -217,8 +175,7 @@ function usertodelet(id) {
         });
 }
 function temptodelet(id) {
-    $
-        .ajax({
+    $.ajax({
             type : "POST",
             url : "/pjpz/temptodelet",
             datatype : "json",
@@ -685,7 +642,8 @@ function pzsave() {
 
         console.log(params)
         // 发送ajax ，保存操作
-        alert(selectTemp);
+        // console.log(selectTemp);
+        // alert("测试，未保存")
         $.ajax({
             type : "POST",
             url : "/pjpz/addstrategy",
@@ -709,7 +667,11 @@ function pzsave() {
 
 }
 
+/**
+ * 发布模板初始化
+ */
 function changeContent() {
+    console.info("执行changeContent方法")
     var id = $("#selectTemp").val();
     $.ajax({
         type : "POST",
@@ -884,9 +846,13 @@ function onchangeSelect2(m) {
                 for (var i = 0; i < r.length; i++) {
                     var dio = r[i];
                     if (putId == "pzAddSelect4") {
+                        if (i == 0){
+                            initSendTemplate(dio[0]);
+                        }
+                        console.info(dio)
                         // document.getElementById("baseSourceIp").style="visibility:hidden";
                         m = "<tr><td >";
-                        var spanHtml = dio[2];
+                        var spanHtml = dio[1]+" "+dio[2];
                         if (spanHtml == "DS") {
                             spanHtml = dio[5];
                         }
@@ -1133,4 +1099,51 @@ function lookAlertStrategy(strid) {
 function addalertStrategy() {
     $("#ip").val("");
     $("[name='baseSource']").removeAttr("checked");
+}
+
+function initSendTemplate(data_id){
+    if (data_id > 0){
+        $.ajax({
+            type : "POST",
+            url : "/pjpz/findstrategy",
+            datatype : "json",
+            async : false,
+            data : JSON.stringify({
+                "data_id" : data_id
+            }),
+            headers : {
+                "Content-Type" : "application/json; charset=utf-8"
+            },
+            success : function(r) {
+                if (r == null || r == "null" || r == ""){
+                    $("#tempWc").html(" ");
+                    $("#tempSm").html(" ");
+                    document.getElementById('inlineCheckbox1').checked = false;
+                    document.getElementById('inlineCheckbox2').checked = false;
+                }else{
+                    $("#selectUser").val(r.send_users);
+                    $("#selectTemp").val(r.template_id);
+
+                    $("#tempWc").html(r.wechart_content);
+                    $("#tempSm").html(r.sms_content);
+                    if (r.wechart_send_enable == 1) {
+                        document.getElementById('inlineCheckbox1').checked = true;
+                    } else {
+                        document.getElementById('inlineCheckbox1').checked = false;
+                    }
+                    if (r.sms_send_enable == 1) {
+                        document.getElementById('inlineCheckbox2').checked = true;
+                    } else {
+                        document.getElementById('inlineCheckbox2').checked = false;
+                    }
+
+                }
+
+            },
+            error : function(err) {
+                alert(err);
+                console.log(err.message)
+            }
+        });
+    }
 }

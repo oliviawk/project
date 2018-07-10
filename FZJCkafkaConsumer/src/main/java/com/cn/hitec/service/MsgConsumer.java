@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.ParseException;
 import java.util.*;
 
 public class MsgConsumer {
@@ -75,6 +76,9 @@ public class MsgConsumer {
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
+//                    if(msg.indexOf("1h") > -1 ){
+//                        break;
+//                    }
                     List<String> msgs = processing(msg);
 
                     if(msgs != null && msgs.size() > 0) {
@@ -102,7 +106,8 @@ public class MsgConsumer {
 
     }
 
-    public List<String> processing (String msg) {
+    public List<String> processing (String msg) throws ParseException {
+
         return null;
     }
 

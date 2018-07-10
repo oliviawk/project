@@ -20,63 +20,65 @@ public class RunnerEsComponent implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
 
     @Autowired
-    FZJCWorkingConsumer kafkaConsumer;
-    @Autowired
-    LAPS_WSConsumer lapsConsumer;
-    @Autowired
-    FZJCSendConsumer fzjcSendConsumer;
-    @Autowired
-    LAPSSendConsumer lapsSendConsumer;
-    @Autowired
-    LAPSCollectConsumer lapsCollectConsumer;
-    @Autowired
-    LAPSCollectConsumerEX LAPSCollectConsumerEX;
+    MQPF_AC_Consumer mqpf_ac_consumer;
+//    @Autowired
+//    FZJCWorkingConsumer kafkaConsumer;
+//    @Autowired
+//    LAPS_WSConsumer lapsConsumer;
+//    @Autowired
+//    FZJCSendConsumer fzjcSendConsumer;
+//    @Autowired
+//    LAPSSendConsumer lapsSendConsumer;
+//    @Autowired
+//    LAPSCollectConsumer lapsCollectConsumer;
+//    @Autowired
+//    LAPSCollectConsumerEX LAPSCollectConsumerEX;
     @Override
     public void run(String... strings) throws Exception {
-        Thread fzjc = new Thread(){
-
-			@Override
-			public void run() {
-				kafkaConsumer.consume();
-			}
-
-        };
-        
-        Thread laps = new Thread(){
-
-			@Override
-			public void run() {
-				lapsConsumer.consume();
-			}
-        	
-        };
-
-        Thread fzjcSend = new Thread(){
-
-			@Override
-			public void run() {
-				fzjcSendConsumer.consume();
-			}
-
-        };
-
-        Thread lapsSend = new Thread(){
-
+        Thread mqthread = new Thread(){
             @Override
-            public void run() {
-                lapsSendConsumer.consume();
+            public void run(){
+                mqpf_ac_consumer.consume();
             }
-
         };
-        Thread lapsColl = new Thread(){
+//        mqthread.start();
 
-            @Override
-            public void run() {
-                lapsCollectConsumer.consume();
-            }
-
-        };
-//        Thread lapsEX = new Thread(){
+//        Thread fzjc = new Thread(){
+//
+//			@Override
+//			public void run() {
+//				kafkaConsumer.consume();
+//			}
+//
+//        };
+//
+//        Thread laps = new Thread(){
+//
+//			@Override
+//			public void run() {
+//				lapsConsumer.consume();
+//			}
+//
+//        };
+//
+//        Thread fzjcSend = new Thread(){
+//
+//			@Override
+//			public void run() {
+//				fzjcSendConsumer.consume();
+//			}
+//
+//        };
+//
+//        Thread lapsSend = new Thread(){
+//
+//            @Override
+//            public void run() {
+//                lapsSendConsumer.consume();
+//            }
+//
+//        };
+//        Thread lapsColl = new Thread(){
 //
 //            @Override
 //            public void run() {
@@ -84,22 +86,22 @@ public class RunnerEsComponent implements CommandLineRunner {
 //            }
 //
 //        };
-
-        fzjc.start();
-        laps.start();
-        fzjcSend.start();
-        lapsSend.start();
-        lapsColl.start();
-
-        Thread xjf = new Thread(){
-
-            @Override
-            public void run() {
-                LAPSCollectConsumerEX.consume();
-            }
-
-        };
-        xjf.start();
+//
+//        fzjc.start();
+//        laps.start();
+//        fzjcSend.start();
+//        lapsSend.start();
+//        lapsColl.start();
+//
+//        Thread xjf = new Thread(){
+//
+//            @Override
+//            public void run() {
+//                LAPSCollectConsumerEX.consume();
+//            }
+//
+//        };
+//        xjf.start();
     }
 
 
