@@ -352,6 +352,7 @@ public class ESService {
 						index = resultMap.get("_index").toString();
 						type = resultMap.get("_type").toString();
 						Map<String, Object> hitsSource_fields = (Map<String, Object>) resultMap.get("fields");
+						map.put("name", resultMap.containsKey("name") ? resultMap.get("name") : "");
 
 						// 过滤掉不应该有的数据
 						if ("21".equals(fields.get("event_status"))) {
@@ -391,8 +392,6 @@ public class ESService {
 							map.put("should_time",
 									resultMap.containsKey("should_time") ? resultMap.get("should_time") : "");
 							map.put("last_time", resultMap.containsKey("last_time") ? resultMap.get("last_time") : "");
-							map.put("name",
-									resultMap.containsKey("name") ? resultMap.get("name") : "");
 
 							/*-------6.19 设置文件名新代码*/
 							if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
