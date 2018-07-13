@@ -24,4 +24,7 @@ public interface DataSourceEsInterface {
 	@RequestMapping(value = "/write/update", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> update(@RequestBody EsBean esBean);
 
+	@RequestMapping(value = "/mqpfsource/insert", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> insertMQPFData(@RequestBody EsBean esBean);
+
 }

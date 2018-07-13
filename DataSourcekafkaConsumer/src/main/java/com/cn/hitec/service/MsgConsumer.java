@@ -87,13 +87,22 @@ public class MsgConsumer {
         EsBean esBean = new EsBean();
         esBean.setType("DATASOURCE");
         esBean.setIndex("");
-        long startTime = System.currentTimeMillis();
-        long useaTime = 0;
+
+        EsBean esBean_t639 = new EsBean();
+        esBean_t639.setType("MQPF");
+        esBean_t639.setIndex("");
+
+        long startTime1 = System.currentTimeMillis();
+        long startTime2 = System.currentTimeMillis();
+        long startTime3 = System.currentTimeMillis();
+        long useaTime1 = 0;
+        long useaTime2 = 0;
+        long useaTime3 = 0;
         List<Object> possibleNeedDataList = new ArrayList<Object>();
+        List<String> T639List = new ArrayList<String>();
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(1000);
-                Map<String, Object> possibleNeedData = new HashMap<String, Object>();
 
                 for (ConsumerRecord<String, String> record : records) {
 
@@ -101,51 +110,58 @@ public class MsgConsumer {
                     Map<String, Object> data = processing(msg);
 //                    System.out.println(msg);
                     if (data == null){
-
                         continue;
                     }
                     if ("dataSource".equals(data.get("type"))){
-//                    	if(msgs.size() == 1){	//测试用
-//                    		break;
-//                    	}
                         msgs.add(JSON.toJSONString(data.get("data")));
-//                    	msgs.add((Map<String, Object>)data.get("data"));
-                    }else{
+                    }else if ("noDataSource".equals(data.get("type"))){
                         possibleNeedDataList.add(data.get("data"));
+                    }else if ("MQPF_DataSource".equals(data.get("type"))){
+                        T639List.add(JSON.toJSONString(data.get("data")));
                     }
 //                    break;
                 }
-                esBean.setData(msgs);
-
-                possibleNeedData.put("_index", indexHeader +"possible_needed_data");
-                possibleNeedData.put("_type", "POSSIBLE_NEEDED_DATA");
-                possibleNeedData.put("_data", possibleNeedDataList);
-                useaTime = System.currentTimeMillis() - startTime;
-            //    logger.info("添加时间"+useaTime+"长度"+possibleNeedDataList.size());
+                useaTime1 = System.currentTimeMillis() - startTime1;
+                useaTime2 = System.currentTimeMillis() - startTime2;
+                useaTime3 = System.currentTimeMillis() - startTime3;
 
                 //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
+                if (msgs.size() > 3000 || (msgs.size() > 0 && useaTime1 > 5000)) {
+                    esBean.setData(msgs);
 
-                if (msgs.size() > 5000 || (msgs.size() > 0 && useaTime > 5000)) {
-                    System.out.println("入库数据："+ JSON.toJSONString(msgs));
-//                	Map<String, Object> insertDataSource = dataSourceEsInterface.insertDataSource(JSON.toJSONString(msgs));
+//                    logger.info("入库数据："+ JSON.toJSONString(msgs));
                     Map<String, Object> insertDataSource = dataSourceEsInterface.update(esBean);
 //                	System.out.println(JSON.toJSONString(insertDataSource));
                     logger.info("入库数据返回结果："+ JSON.toJSONString(insertDataSource));
-                    startTime = System.currentTimeMillis();
                     msgs.clear();
-                    consumer.commitSync();
+                    startTime1 = System.currentTimeMillis();
                 }
-                if (possibleNeedDataList.size() > 5000 || (possibleNeedDataList.size() > 0 && useaTime > 5000) ){
+                if (possibleNeedDataList.size() > 3000 || (possibleNeedDataList.size() > 0 && useaTime2 > 5000) ){
+                    Map<String, Object> possibleNeedData = new HashMap<String, Object>();
                  //  logger.info("可能需要的数据"+JSON.toJSONString(possibleNeedData));
+                    possibleNeedData.put("_index", indexHeader +"possible_needed_data");
+                    possibleNeedData.put("_type", "POSSIBLE_NEEDED_DATA");
+                    possibleNeedData.put("_data", possibleNeedDataList);
 
+//                    logger.info("可能需要数据入库："+JSON.toJSONString(possibleNeedDataList));
                     Map<String, Object> insertDataSource = dataSourceEsInterface.insertList(JSON.toJSONString(possibleNeedData));
 //            		System.out.println(insertDataSource);
                     logger.info("可能需要数据返回结果："+ JSON.toJSONString(insertDataSource));
-                    startTime = System.currentTimeMillis();
                     possibleNeedDataList.clear();
-                    consumer.commitSync();
+                    startTime2 = System.currentTimeMillis();
                 }
-
+                if(T639List.size() > 3000 || (T639List.size() > 0 && useaTime3 > 5000)){
+                    esBean_t639.setData(T639List);
+                    //执行入库
+                    //
+//                    logger.info("入T639数据："+T639List.toString());
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.insertMQPFData(esBean_t639);
+//                	System.out.println(JSON.toJSONString(insertDataSource));
+                    logger.info("入库T639数据返回结果："+ JSON.toJSONString(insertDataSource));
+                    T639List.clear();
+                    startTime3 = System.currentTimeMillis();
+                }
+                consumer.commitSync();
 
             }catch (Exception e){
                 logger.error("!!!!!!error");
