@@ -207,25 +207,25 @@ public class Pub {
 //		String strDate = simpleDateFormat.format(date);
 //		System.out.println(strDate);
 
-		try {
-			String nameDefine = "sdfefe_sssfe_{yyyyMMdd.HHmmss}[+8]_0000";
-
-			String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
-
-			System.out.println(timeFormat);
-			String timeZoneFormat = "0";
-			if (nameDefine.indexOf("[") > -1 && nameDefine.indexOf("]") > -1){
-				timeZoneFormat = nameDefine.substring(nameDefine.indexOf("[")+1,nameDefine.indexOf("]"));
-			}
-
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			cal.add(Calendar.HOUR_OF_DAY, -Integer.parseInt(timeZoneFormat));
-			String fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(cal.getTime(),timeFormat)).replace("["+timeZoneFormat+"]","");
-			System.out.println(fileName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String nameDefine = "sdfefe_sssfe_{yyyyMMdd.HHmmss}[+8]_0000";
+//
+//			String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
+//
+//			System.out.println(timeFormat);
+//			String timeZoneFormat = "0";
+//			if (nameDefine.indexOf("[") > -1 && nameDefine.indexOf("]") > -1){
+//				timeZoneFormat = nameDefine.substring(nameDefine.indexOf("[")+1,nameDefine.indexOf("]"));
+//			}
+//
+//			Calendar cal = Calendar.getInstance();
+//			cal.setTime(new Date());
+//			cal.add(Calendar.HOUR_OF_DAY, -Integer.parseInt(timeZoneFormat));
+//			String fileName = nameDefine.replace("{"+timeFormat+"}",Pub.transform_DateToString(cal.getTime(),timeFormat)).replace("["+timeZoneFormat+"]","");
+//			System.out.println(fileName);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 //		Map ma = new HashMap();
 //		ma.put("aaa","aaaavalue");
@@ -237,5 +237,12 @@ public class Pub {
 //
 //		System.out.println(JSON.toJSONString(ma));
 
+		boolean bool1 = false;
+		boolean bool2 = false;
+		if(bool1 && ( bool1 == bool2)){
+			System.out.println(true);
+		}else{
+			System.out.println(false);
+		}
 	}
 }
