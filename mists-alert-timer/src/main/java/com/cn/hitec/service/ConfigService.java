@@ -192,22 +192,8 @@ public class ConfigService {
 
 					// 用beforeHour和afterHour获取时区转换后是否变成了昨天
 					int beforeHour = dt.getHours();
-					// 对资料的时区不是北京时的数据进行加减处理
-//					if (("CIMISS".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-//							|| ("LSX".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-//							|| ("L1S".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))
-//							|| ("GR2".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType))) {
-//						dt = setWorldTime(dt, -8);
-//						fields.put("data_time",
-//								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS" + "+0000"));
-//					} else if ("T639".equals(subType) && "采集".equals(module) && "LAPS".equals(serviceType)) {
-//						dt = setWorldTime(dt, -14);
-//						fields.put("data_time",
-//								Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSS") + "+0000");
-//					} else {
-						fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+					fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 //
-//					}
 					//添加文件大小范围和文件名
 					fields.put("file_size_define",map.get("size_define").toString());
 					String nameDefine = map.get("name_define").toString();

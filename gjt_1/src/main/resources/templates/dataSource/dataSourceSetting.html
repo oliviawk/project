@@ -24,7 +24,8 @@
 		</button>
 	</div>
 	<div style="position: absolute; left: 10px; top: 30px; height: 500px;">
-		<table id="dataSourceTable"></table>
+		<table id
+					   ="dataSourceTable"></table>
 	</div>
 
 
@@ -52,20 +53,52 @@
 							data-live-search="true" data-hide-disabled="true" data-size="6"
 							title="文件名称">
 						</select>
+						<br/><hr/>
+
+
 					</div>
 					<div class="form-group">
 						<span>数据名称</span> 
 						<input type="text" id="name" class="form-control" /> 
-						<span>目录</span>
+						<span>目录(涉及时间或变化请使用正则，如：/forme/2018/06/-->/forme/\\d{4}/\\d{2}/)</span>
 						<input type="text" id="directory" class="form-control" /> 
-						<span>文件名(涉及时间或变化请使用正则，如：/forme/2018/06/-->/forme/\\d{4}/\\d{2}/)</span> 
+						<span>文件名(涉及时间或变化请使用正则，如：/forme/2018/06/-->/forme/\\d{4}/\\d{2}/)</span>
 						<input type="text" id="fileName" class="form-control" />
-						<span>时间格式</span> 
-						<input type="text" id="timeFormat" class="form-control" />
-						<span>数据类型</span> 
-						<input type="text" id="dataType" class="form-control" /> 
-						<span>单位名称</span>
-						<input type="text" id="departmentName" class="form-control" /> 
+						<select id="timeFormat" class="selectpicker"
+								data-live-search="true" data-hide-disabled="true" data-size="6"
+								title="时间格式">
+							<option>yyyyMMddHHmm</option>
+							<option>yyyyMMddHHmmss</option>
+							<option>yyyyMMddHHmmssSSS</option>
+						</select>
+						<select id="dataType" class="selectpicker"
+								data-live-search="true" data-hide-disabled="true" data-size="6"
+								title="数据类型">
+							<option>预报产品</option>
+							<option>公服产品</option>
+							<option>智能网络产品</option>
+							<option>模式预报产品</option>
+							<option>地面观测资料</option>
+							<option>高空观测资料</option>
+							<option>大气成分资料</option>
+							<option>雷达观测资料</option>
+							<option>卫星观测资料</option>
+							<option>灾害预警产品</option>
+							<option>服务产品</option>
+							<option>其他产品</option>
+						</select>
+						<select id="departmentName" class="selectpicker"
+								data-live-search="true" data-hide-disabled="true" data-size="6"
+								title="单位名称">
+							<option>气象中心</option>
+							<option>信息中心</option>
+							<option>卫星中心</option>
+							<option>打探中心</option>
+							<option>气候中心</option>
+							<option>公服中心</option>
+							<option>华风集团</option>
+						</select>
+						<p></p>
 						<span>电话</span>
 						<input type="text" id="phone" class="form-control" /> 
 						<span>影响业务</span>

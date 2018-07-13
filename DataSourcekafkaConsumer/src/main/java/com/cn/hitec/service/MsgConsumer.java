@@ -1,15 +1,19 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.cn.hitec.bean.DataSourceSetting;
 import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.feign.client.DataSourceEsInterface;
+import com.cn.hitec.repository.DataSourceSettingRepository;
 
+import com.cn.hitec.repository.User_Catalog_Repository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
@@ -18,6 +22,12 @@ public class MsgConsumer {
 
     @Autowired
     DataSourceEsInterface dataSourceEsInterface;
+    @Autowired
+    DataSourceSettingRepository dataSourceSettingRepository;
+    @Autowired
+    User_Catalog_Repository user_catalog_repository;
+    @Value("${es.indexHeader}")
+	public String indexHeader;
 
     public String getTopic() {
         return topic;
@@ -35,8 +45,12 @@ public class MsgConsumer {
         this.type = type;
     }
 
+//    public Map<String, List<DataSourceSetting>> insertBaseFilter = new HashMap<String, List<DataSourceSetting>>();
+    public List<DataSourceSetting> insertBaseFilter = new ArrayList<DataSourceSetting>();
+    
     private final KafkaConsumer<String, String> consumer;
-    private List<String> list  = new ArrayList<>();
+  // private List<Map<String, Object>> msgs = new ArrayList<Map<String,Object>>();
+    private List<String> msgs = new ArrayList<String>();
     private String topic;
     private String type;
     public MsgConsumer(String topic, String group, String type) {
@@ -61,47 +75,77 @@ public class MsgConsumer {
         props.put("value.deserializer",
                 "org.apache.kafka.common.serialization.StringDeserializer");
 
-        consumer = new org.apache.kafka.clients.consumer.KafkaConsumer<String, String>(props);
+        consumer = new KafkaConsumer<String, String>(props);
 
     }
 
-    public void consume() {
+	public void consume() {
 
+
+        updateInsertBaseFilter();
         consumer.subscribe(Arrays.asList(topic));
         EsBean esBean = new EsBean();
-        esBean.setType(type);
+        esBean.setType("DATASOURCE");
+        esBean.setIndex("");
         long startTime = System.currentTimeMillis();
         long useaTime = 0;
+        List<Object> possibleNeedDataList = new ArrayList<Object>();
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(1000);
-                List<Map<String, Object>> msgs = new ArrayList<Map<String,Object>>();
+                Map<String, Object> possibleNeedData = new HashMap<String, Object>();
+
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
-                    System.out.println(msg);
                     Map<String, Object> data = processing(msg);
-//                    msgs.add(data);
-//                    if (msgs != null){
-//                    	System.out.println(msgs.toString());
-//                    	Map<String, Object> backData = dataSourceEsInterface.insertDataSource(JSON.toJSONString(msgs));
-//                    	System.out.println(backData.toString());
-//                    }
-//                    if(msgs != null && msgs.size() > 0) {
-//                        list.addAll(msgs);
-//                    }
+//                    System.out.println(msg);
+                    if (data == null){
+
+                        continue;
+                    }
+                    if ("dataSource".equals(data.get("type"))){
+//                    	if(msgs.size() == 1){	//测试用
+//                    		break;
+//                    	}
+                        msgs.add(JSON.toJSONString(data.get("data")));
+//                    	msgs.add((Map<String, Object>)data.get("data"));
+                    }else{
+                        possibleNeedDataList.add(data.get("data"));
+                    }
+//                    break;
                 }
-                
-//                useaTime = System.currentTimeMillis() - startTime;
-//                //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
-//                if (list.size() > 5000 || (list.size() > 0 && useaTime > 5000)) {
-//                    esBean.setData(list);
-//                    String responst = esService.add(esBean);
-//                    System.out.println(responst+"--耗时："+useaTime);
-//                    startTime = System.currentTimeMillis();
-//                    list.clear();
-//                }
-                consumer.commitSync();
+                esBean.setData(msgs);
+
+                possibleNeedData.put("_index", indexHeader +"possible_needed_data");
+                possibleNeedData.put("_type", "POSSIBLE_NEEDED_DATA");
+                possibleNeedData.put("_data", possibleNeedDataList);
+                useaTime = System.currentTimeMillis() - startTime;
+            //    logger.info("添加时间"+useaTime+"长度"+possibleNeedDataList.size());
+
+                //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
+
+                if (msgs.size() > 5000 || (msgs.size() > 0 && useaTime > 5000)) {
+                    System.out.println("入库数据："+ JSON.toJSONString(msgs));
+//                	Map<String, Object> insertDataSource = dataSourceEsInterface.insertDataSource(JSON.toJSONString(msgs));
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.update(esBean);
+//                	System.out.println(JSON.toJSONString(insertDataSource));
+                    logger.info("入库数据返回结果："+ JSON.toJSONString(insertDataSource));
+                    startTime = System.currentTimeMillis();
+                    msgs.clear();
+                    consumer.commitSync();
+                }
+                if (possibleNeedDataList.size() > 5000 || (possibleNeedDataList.size() > 0 && useaTime > 5000) ){
+                 //  logger.info("可能需要的数据"+JSON.toJSONString(possibleNeedData));
+
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.insertList(JSON.toJSONString(possibleNeedData));
+//            		System.out.println(insertDataSource);
+                    logger.info("可能需要数据返回结果："+ JSON.toJSONString(insertDataSource));
+                    startTime = System.currentTimeMillis();
+                    possibleNeedDataList.clear();
+                    consumer.commitSync();
+                }
+
 
             }catch (Exception e){
                 logger.error("!!!!!!error");
@@ -114,6 +158,30 @@ public class MsgConsumer {
 
     public Map<String, Object> processing (String msg) {
         return null;
+    }
+    
+    /**
+    * @Description 查询配置库给全局变量赋值 TODO <pre>
+    * @author HuYiWu <pre>
+    * @date 2018年4月11日 下午3:07:04 <pre>
+     */
+    public void updateInsertBaseFilter(){
+//    	List<DataSourceSetting> dataSourceSettings = dataSourceSettingRepository.findAll();
+//    	System.out.println("查询数据库更新对比map:"+ JSON.toJSONString(dataSourceSettings));
+//    	for (int i = 0; i < dataSourceSettings.size(); i++) {
+//    		DataSourceSetting dataSourceSetting = dataSourceSettings.get(i);
+//    		String key = dataSourceSetting.getIpAddr() +":"+ dataSourceSetting.getSendUser()
+//    				+":"+ dataSourceSetting.getFileName();
+//    		List<DataSourceSetting> value = insertBaseFilter.get(key);
+//    		if (value == null){
+//    			value = new ArrayList<DataSourceSetting>();
+//    			value.add(dataSourceSetting);
+//    		}else{
+//    			value.add(dataSourceSetting);
+//    		}
+//    		insertBaseFilter.put(key, value);
+//		}
+    	insertBaseFilter = dataSourceSettingRepository.findAll();
     }
 
 }

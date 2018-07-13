@@ -158,7 +158,7 @@ public class SendAlertMessage {
 					jsonArray = (JSONArray)jsonArray.get(0);
 				}
 				if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
-					logger.info(jsonArray.getString(0)+"当前告警数:"+jsonArray.getInteger(3)+",最大告警数:"+jsonArray.getInteger(2));
+//					logger.info(jsonArray.getString(0)+"当前告警数:"+jsonArray.getInteger(3)+",最大告警数:"+jsonArray.getInteger(2));
 					if(jsonArray.getInteger(2) != null ){
 						if(jsonArray.getInteger(3) >= jsonArray.getInteger(2)){
 							isAlert = false;
@@ -188,7 +188,7 @@ public class SendAlertMessage {
 					}
 
 					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
-					logger.info("isAlert:"+isAlert);
+//					logger.info("isAlert:"+isAlert);
 				}
 				if(isAlert){
 					List<Object> pres = dataInfoRepository.findPreModules(module_key);
