@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -31,8 +32,8 @@ public class DataSourceSendConsumer extends MsgConsumer{
 
 	private static final Logger logger = LoggerFactory.getLogger(DataSourceSendConsumer.class);
     private static String topic = "XFER_LOG";
-	public DataSourceSendConsumer() {
-		super(topic, "xfer_log_1", null);
+	public DataSourceSendConsumer(@Value("${groupid.xferlog}") String groupid) {
+		super(topic, groupid, null);
 	}
 
 
@@ -100,12 +101,16 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				long occur_time = date.getTime();
 				data.put("occur_time", occur_time);
 
-				String[] filePaths = file_name.split("_");
-				if (filePaths.length != 9){
+				String[] filePaths = file_name.split("/");
+				if (filePaths.length != 4){
+					return null;
+				}
+				String[] fileNames = filePaths[3].split("_");
+				if (fileNames.length != 9){
 					return null;
 				}
 				sdf.applyPattern("yyyyMMddHHmmss");
-				Date dataTime = sdf.parse(filePaths[4]);
+				Date dataTime = sdf.parse(fileNames[4]);
 				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
 				String data_time = sdf.format(dataTime);
 
@@ -114,8 +119,8 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				// 采集数据中不包含的数据，后期从配置库中获取
 //				data.put("should_time", 0);
 //				data.put("last_time", 0);
-				data.put("name", "雷达基数据采集");
-				data.put("type", "雷达基数据");
+				data.put("name", fileNames[0]+"_"+fileNames[1]+"_"+fileNames[2]+"_"+fileNames[3]);
+				data.put("type", fileNames[3]);
 
 				field.put("file_name", file_name);
 				field.put("file_size", file_size_long);

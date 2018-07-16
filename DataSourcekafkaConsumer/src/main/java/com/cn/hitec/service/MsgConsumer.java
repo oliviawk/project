@@ -56,6 +56,7 @@ public class MsgConsumer {
     public MsgConsumer(String topic, String group, String type) {
         this.type = type;
         this.topic = topic;
+        logger.info("groupId:{}",group);
         //*******************bootstrap.servers方式******************//
         Properties props = new Properties();
         // 设置brokerServer(kafka)ip地址
