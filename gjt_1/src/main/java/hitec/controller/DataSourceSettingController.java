@@ -265,7 +265,6 @@ public class DataSourceSettingController {
 			return  outData;
 		}
 		else {
-
 			//因为不是全路径，所以截取这部分路径和User_catalog表中的用户路径拼接成全路径
 			user_content=user_content+userfilepath;
 			outData.put("type", type);
