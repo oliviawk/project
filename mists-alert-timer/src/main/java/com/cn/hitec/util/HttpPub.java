@@ -35,7 +35,8 @@ public class HttpPub {
     private  String url;
     @Value("${wechat.agentid}")
     private  String agentid;
-
+    @Value("${sms.url}")
+    private  String SMSurl;
     /**
      * post请求
      * @param users   发送的联系人 ， 多人用 |  隔开， 所有用 @all
@@ -48,6 +49,7 @@ public class HttpPub {
         HttpClient httpClient = HttpClients.createDefault();
         Map<String,Object> resultMap = new HashMap<>();
         HttpPost method = new HttpPost(url);
+
         try {
             Map<String,Object> params = new HashMap<>();
             params.put("safe","0");
@@ -86,5 +88,49 @@ public class HttpPub {
         }
         return resultMap;
     }
+    public  Map<String, Object> httpSMSPost(String users,String jsonParam){
+        //post请求返回结果
+//        String url = "http://10.16.41.126:9999/ws/sendwx/1/2";
+        HttpClient httpClient = HttpClients.createDefault();
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpPost method = new HttpPost(SMSurl);
+        try {
+            Map<String,Object> params = new HashMap<>();
+            params.put("touser",users);
+            params.put("agentid","");
+            params.put("username","jiankong");
+            params.put("password","jiankong123");
+            Map<String,String> alertMessage = new HashMap<>();
+            alertMessage.put("content","测试，使用接口发送");
+            params.put("text",alertMessage);
+
+            if (null != jsonParam) {
+                //解决中文乱码问题
+                StringEntity entity = new StringEntity(JSON.toJSONString(params), "utf-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                method.setEntity(entity);
+            }
+            HttpResponse result = httpClient.execute(method);
+            SMSurl = URLDecoder.decode(SMSurl, "UTF-8");
+            /**请求发送成功，并得到响应**/
+            if (result.getStatusLine().getStatusCode() == 200) {
+                String str = "";
+                try {
+                    /**读取服务器返回过来的json字符串数据**/
+                    str = EntityUtils.toString(result.getEntity());
+                    /**把json字符串转换成json对象**/
+                    resultMap = JSON.parseObject(str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultMap;
+    }
+
+
 
 }

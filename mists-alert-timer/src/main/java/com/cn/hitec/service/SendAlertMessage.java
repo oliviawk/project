@@ -225,6 +225,9 @@ public class SendAlertMessage {
 						//查询发送的用户
 						initWeChart(esWriteBean,strategyMap,weChartContent);
 					}
+					if("1".equals(sms_send_enable  )||1==1){
+						initSMS(esWriteBean,strategyMap,smsContent);
+					}
 
 				}
 
@@ -268,5 +271,34 @@ public class SendAlertMessage {
 		paramWeichart.add(JSON.toJSONString(weichartMap));
 		esWriteBean.setData(paramWeichart);
 		esWriteService.add(esWriteBean); // 存入微信待发送消息
+	}
+
+	public void initSMS(EsWriteBean esWriteBean,Map<String,Object> strategyMap,String SMSContent){
+//		//查询发送的用户
+//		String strParentId = strategyMap.get("send_users").toString();
+//		long parentId = Long.parseLong(strParentId);
+//		List<Users> usersList = usersRepository.findAllByPid(parentId);
+//		String strUsers = "";
+//		for (Users use : usersList){
+//			if ("".equals(strUsers)){
+//				strUsers += use.getWechart();
+//			}else {
+//				strUsers += "|"+use.getWechart();
+//			}
+//		}
+
+		esWriteBean.setType("sendSMS");
+		Map<String,Object> SMSMap = new HashMap<>();
+		SMSMap.put("sendUser", "15510774707");
+//		weichartMap.put("sendUser","QQ670779441|FuTieQiang");
+		SMSMap.put("alertTitle",SMSContent);
+		SMSMap.put("isSend","false");
+		SMSMap.put("send_time",0);
+		SMSMap.put("create_time",System.currentTimeMillis());
+
+		List<String> paramWeichart = new ArrayList<>();
+		paramWeichart.add(JSON.toJSONString(SMSMap));
+		esWriteBean.setData(paramWeichart);
+		esWriteService.add(esWriteBean); // 存入短信待发送消息
 	}
 }
