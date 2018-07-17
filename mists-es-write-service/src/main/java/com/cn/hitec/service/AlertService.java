@@ -224,6 +224,33 @@ public class AlertService {
 
                         System.out.println("------生成微信");
                     }
+                    if("1".equals(sms_send_enable)){
+
+                        String strParentId = strategyMap.get("send_users").toString();
+                        long parentId = Long.parseLong(strParentId);
+                        List<Users> usersList = usersRepository.findAllByPid(parentId);
+                        String strUsers = "";
+                        for (Users use : usersList){
+                            if ("".equals(strUsers)){
+                                strUsers += use.getWechart();
+                            }else {
+                                strUsers += "|"+use.getWechart();
+                            }
+
+                        }
+                        // 存入微信待发送消息
+                        Map<String,Object> SMSMap = new HashMap<>();
+//                        weichartMap.put("sendUser","QQ670779441|FuTieQiang");      //测试
+                        SMSMap.put("sendUser", StringUtils.isEmpty(strUsers) ? "@all":strUsers);         //正式
+                        SMSMap.put("alertTitle",smsContent);
+                        SMSMap.put("isSend","false");
+                        SMSMap.put("send_time",0);
+                        SMSMap.put("create_time",System.currentTimeMillis());
+                        es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
+                                .source(JSON.toJSONString(SMSMap), XContentType.JSON));
+
+                        System.out.println("------生成短信");
+                    }
 
                 }
 
