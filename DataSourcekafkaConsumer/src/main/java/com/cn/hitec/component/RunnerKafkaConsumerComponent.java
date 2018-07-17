@@ -1,7 +1,6 @@
 package com.cn.hitec.component;
 
 import com.cn.hitec.service.DataSourceSendConsumer;
-import com.cn.hitec.service.DataSourceSendTsix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -20,8 +19,6 @@ public class RunnerKafkaConsumerComponent implements CommandLineRunner{
 
 	@Autowired
 	DataSourceSendConsumer dataSourceSendConsumer;
-	@Autowired
-	DataSourceSendTsix dataSourceSendTsix;
 
 	@Override
 	public void run(String... arg0) throws Exception {
@@ -34,17 +31,7 @@ public class RunnerKafkaConsumerComponent implements CommandLineRunner{
 				dataSourceSendConsumer.consume();
 			}
 		};
-
-		Thread datasourceTsixThread = new Thread(){
-			@Override
-			public void run(){
-				dataSourceSendTsix.consume();
-			}
-		};
-
 		datasourceSendThread.start();
-		datasourceTsixThread.start();
-//		dataSourceSendConsumer.consume();
 
 	}
 

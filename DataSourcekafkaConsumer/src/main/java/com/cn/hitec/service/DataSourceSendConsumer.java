@@ -12,9 +12,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.cn.hitec.bean.User_Catalog;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -29,8 +32,8 @@ public class DataSourceSendConsumer extends MsgConsumer{
 
 	private static final Logger logger = LoggerFactory.getLogger(DataSourceSendConsumer.class);
     private static String topic = "XFER_LOG";
-	public DataSourceSendConsumer() {
-		super(topic, "1234", null);
+	public DataSourceSendConsumer(@Value("${groupid.xferlog}") String groupid) {
+		super(topic, groupid, null);
 	}
 
 
@@ -70,20 +73,89 @@ public class DataSourceSendConsumer extends MsgConsumer{
         }
         String file_name = msgs[8];
 		file_name=file_name.replace(".tmp","");
-        if (file_name.indexOf("?") != -1 || file_name.indexOf("RADA") != -1
-        		|| file_name.indexOf("radar") != -1 || file_name.indexOf("RADR") != -1){	//去除雷达文件
-        	return null;
-        }
+//        if (file_name.indexOf("?") != -1 || file_name.indexOf("RADA") != -1
+//        		|| file_name.indexOf("radar") != -1 || file_name.indexOf("RADR") != -1){	//去除雷达文件
+//        	return null;
+//        }
+		String file_sizeStr = "";
+		String event_status = "";
+		String ipAddr = "";
 
-		String UserCatalog_username=user_catalog_repository.findAll_User_catalog(user).getUser_name();
-		if (UserCatalog_username==null||UserCatalog_username.equals("")){
+        if(file_name.indexOf("/radar-base/bz2") > -1){	//说明是MQPF的雷达日志
+//			Sun Feb 25 03:32:31 2018 1 10.1.72.76 647951 /radar-base/bz2/Z_RADR_I_Z9519_20180224192600_O_DOR_SA_CAP.bin.bz2.tmp b _ i r nmic_provider ftp 0 * c
+			try {
+				file_sizeStr = msgs[7];
+				event_status = msgs[15];
+				ipAddr = msgs[18];
+				String occurTimeStr = "";
+				for (int j = 0; j < 5; j++) {
+					if (j < 4){
+						occurTimeStr += msgs[j] + " ";
+					}
+					if (j == 4){
+						occurTimeStr += msgs[j];
+					}
+				}
+
+				Date date = new Date(occurTimeStr);
+				long occur_time = date.getTime();
+				data.put("occur_time", occur_time);
+
+				String[] filePaths = file_name.split("/");
+				if (filePaths.length != 4){
+					return null;
+				}
+				String[] fileNames = filePaths[3].split("_");
+				if (fileNames.length != 9){
+					return null;
+				}
+				sdf.applyPattern("yyyyMMddHHmmss");
+				Date dataTime = sdf.parse(fileNames[4]);
+				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+				String data_time = sdf.format(dataTime);
+
+				long file_size_long = Long.parseLong(file_sizeStr);
+
+				// 采集数据中不包含的数据，后期从配置库中获取
+//				data.put("should_time", 0);
+//				data.put("last_time", 0);
+				data.put("name", fileNames[0]+"_"+fileNames[1]+"_"+fileNames[2]+"_"+fileNames[3]);
+				data.put("type", fileNames[3]);
+
+				field.put("file_name", file_name);
+				field.put("file_size", file_size_long);
+				field.put("data_time", data_time);
+				field.put("event_status", event_status);
+				field.put("start_time",sdf.format(date));
+				field.put("end_time",sdf.format(date));
+				field.put("ip_addr", ipAddr);
+				field.put("module", "采集");
+
+				data.put("fields", field);
+
+				outData.put("type", "MQPF_DataSource");
+				outData.put("data", data);
+			} catch (ParseException e) {
+				logger.error("解析 雷达基数据 日志并组装入库数据出错");
+				e.printStackTrace();
+				return null;
+			}
+			return outData;
+		}else if(file_name.indexOf("?") > -1  || file_name.indexOf("RADA") != -1 || file_name.indexOf("RADR") != -1){
 			return null;
 		}
-        logger.info(msg);
 
-		String file_sizeStr = msgs[7];
-		String event_status = msgs[15];
-		String ipAddr = msgs[18];
+		User_Catalog user_catalog=user_catalog_repository.findAll_User_catalog(user);
+		if (user_catalog == null || StringUtils.isEmpty(user_catalog.getUser_catalog_content())){
+			return  null;
+		}
+		String UserCatalog_username=user_catalog.getUser_catalog_content();
+
+//        logger.info(msg);
+
+		file_sizeStr = msgs[7];
+		event_status = msgs[15];
+		ipAddr = msgs[18];
 
 		String regEx = "[^0-9]";//匹配指定范围内的数字
 		//Pattern是一个正则表达式经编译后的表现模式
