@@ -212,12 +212,12 @@ public class SendAlertMessage {
 
 				if(isAlert){
 					String weChartContent = strategyMap.get("wechart_content").toString();
-					String smsContent = strategyMap.get("wechart_content").toString();
+					String smsContent = strategyMap.get("sms_content").toString();
 					String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();
 					String sms_send_enable = strategyMap.get("sms_send_enable").toString();
 					//转换微信格式告警信息
 					weChartContent = Pub.transformTitle(weChartContent,alertBean);
-
+					smsContent = Pub.transformTitle(smsContent,alertBean);
 						// 推送到前端
 //					kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
 
@@ -274,23 +274,28 @@ public class SendAlertMessage {
 	}
 
 	public void initSMS(EsWriteBean esWriteBean,Map<String,Object> strategyMap,String SMSContent){
-//		//查询发送的用户
-//		String strParentId = strategyMap.get("send_users").toString();
-//		long parentId = Long.parseLong(strParentId);
-//		List<Users> usersList = usersRepository.findAllByPid(parentId);
-//		String strUsers = "";
-//		for (Users use : usersList){
-//			if ("".equals(strUsers)){
-//				strUsers += use.getWechart();
-//			}else {
-//				strUsers += "|"+use.getWechart();
-//			}
-//		}
+		//查询发送的用户
+		String strParentId = strategyMap.get("send_users").toString();
+		long parentId = Long.parseLong(strParentId);
+		String strUsers = "";
+		List<Users> usersList = null;
+		//如果选择的用户组是 全部（id是1）,则表示发送所有人
+		if (parentId == 1){
+			usersList = usersRepository.findAllData();
+		}else{
+			usersList = usersRepository.findAllByPid(parentId);
+		}
+		for (Users use : usersList){
+			if ("".equals(strUsers)){
+				strUsers += use.getWechart();
+			}else {
+				strUsers += "|"+use.getWechart();
+			}
+		}
 
 		esWriteBean.setType("sendSMS");
 		Map<String,Object> SMSMap = new HashMap<>();
-		SMSMap.put("sendUser", "15510774707");
-//		weichartMap.put("sendUser","QQ670779441|FuTieQiang");
+		SMSMap.put("sendUser", strUsers);
 		SMSMap.put("alertTitle",SMSContent);
 		SMSMap.put("isSend","false");
 		SMSMap.put("send_time",0);

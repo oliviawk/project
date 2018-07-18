@@ -193,12 +193,10 @@ public class AlertService {
                     String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();
                     String sms_send_enable = strategyMap.get("sms_send_enable").toString();
 
-                    //转换微信格式告警信息
-                    weChartContent = Pub.transformTitle(weChartContent,alertBean);
-
                     if("1".equals(wechart_send_enable)){
+                        //转换微信格式告警信息
+                        weChartContent = Pub.transformTitle(weChartContent,alertBean);
                         //查询发送的用户
-
                         String strParentId = strategyMap.get("send_users").toString();
                         long parentId = Long.parseLong(strParentId);
                         List<Users> usersList = usersRepository.findAllByPid(parentId);
@@ -225,28 +223,36 @@ public class AlertService {
                         System.out.println("------生成微信");
                     }
                     if("1".equals(sms_send_enable)){
+                        //转换短信格式告警信息
+                        smsContent = Pub.transformTitle(smsContent,alertBean);
 
                         String strParentId = strategyMap.get("send_users").toString();
                         long parentId = Long.parseLong(strParentId);
-                        List<Users> usersList = usersRepository.findAllByPid(parentId);
+
                         String strUsers = "";
+                        List<Users> usersList = null;
+                        //如果选择的用户组是 全部（id是1）,则表示发送所有人
+                        if (parentId == 1){
+                            usersList = usersRepository.findAllData();
+                        }else{
+                            usersList = usersRepository.findAllByPid(parentId);
+                        }
                         for (Users use : usersList){
                             if ("".equals(strUsers)){
                                 strUsers += use.getWechart();
                             }else {
                                 strUsers += "|"+use.getWechart();
                             }
-
                         }
+
                         // 存入微信待发送消息
                         Map<String,Object> SMSMap = new HashMap<>();
-//                        weichartMap.put("sendUser","QQ670779441|FuTieQiang");      //测试
-                        SMSMap.put("sendUser", StringUtils.isEmpty(strUsers) ? "@all":strUsers);         //正式
+                        SMSMap.put("sendUser", strUsers);         //正式
                         SMSMap.put("alertTitle",smsContent);
                         SMSMap.put("isSend","false");
                         SMSMap.put("send_time",0);
                         SMSMap.put("create_time",System.currentTimeMillis());
-                        es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
+                        es.bulkProcessor.add(new IndexRequest(index,"sendSMS")
                                 .source(JSON.toJSONString(SMSMap), XContentType.JSON));
 
                         System.out.println("------生成短信");

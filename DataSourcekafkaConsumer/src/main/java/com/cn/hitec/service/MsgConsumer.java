@@ -120,7 +120,6 @@ public class MsgConsumer {
                     }else if ("MQPF_DataSource".equals(data.get("type"))){
                         T639List.add(JSON.toJSONString(data.get("data")));
                     }
-//                    break;
                 }
                 useaTime1 = System.currentTimeMillis() - startTime1;
                 useaTime2 = System.currentTimeMillis() - startTime2;

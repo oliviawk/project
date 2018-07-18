@@ -129,44 +129,141 @@ $(function(){
             }
         });
 	});
+	$("#timeFormat").change(function () {
+		var filename=$("#fileNameSelect").find("option:selected").text();
+		var format=$(this).val();
+		if(filename!=null){
+            $.ajax({
+                url: "/dataSourceSetting/formatchange",
+                data:{"filename":filename,
+                    "format":format},
+                type: "post",
+                success: function(result){
+                    if (result.type == 'fail'){
+                        alert("格式有误！"+ result.message);
+                       $("#timeFormat").options.selectedIndex = 0; //回到初始状态
+                        $("#timeFormat").selectpicker('refresh');
+
+                    }
+                    if(result.type=='success'){
+                        debugger;
+                         $("#fileName").val(result.outfilename)
+                    }
+
+                },
+                error: function(error){
+
+                }
+            });
+		}
+
+    })
 	
 	//点击提交元数据
 	$("#submitBtn").click(function(){
-		//获取所有的属性
-		debugger;
-		var deleteId = $("#fileNameSelect").val();
-		var name = $("#name").val();
-		var directory = $("#directory").val();
-		var fileName = $("#fileName").val();
-		var timeFormat = $("#timeFormat").find("option:selected").text;
-		var senderUser = $("#SendUserNameSelect").val();
-		var ipAddr = $("#IpAddrSelect").val();
-		var dataType = $("#dataType").find("option:selected").text;
-		var departmentName = $("#departmentName").find("option:selected").text;
-		var phone = $("#phone").val();
-		var useDepartment = $("#useDepartment").val();
-		var moniterTimer = $("#moniterTimer").val();
-		
-		var data = {"deleteId":deleteId, "name":name, "directory":directory, "fileName":fileName, "timeFormat":timeFormat
-				,"senderUser":senderUser,"ipAddr":ipAddr, "dataType":dataType, "departmentName":departmentName,
-				"phone":phone, "useDepartment":useDepartment, "moniterTimer":moniterTimer};
-		$.ajax({
-			url: "/dataSourceSetting/insertDataSource",
-			data: data,
-			type: "post",
-			success: function(result){
-				if (result.type == 'fail'){
-					alert("添加失败！  "+ result.message);
-				}else{
-					alert("添加成功!!"+ result.message);
-					//关闭模态框
-					$('#insertDataSource').modal('hide');
-				}
-			}, 
-			error: function(error){
-				
+
+		var bool=true;
+
+            //获取所有的属
+            var deleteId = $("#fileNameSelect").val();
+            var name = $("#name").val();
+            var directory = $("#directory").val();
+            var fileNametxt = $("#fileName").val();
+            var fileName=fileNametxt;
+            var timeFormat = $("#timeFormat").val();
+            var senderUser = $("#SendUserNameSelect").val();
+            var ipAddr = $("#IpAddrSelect").val();
+            var dataType = $("#dataType").val();
+            var departmentName = $("#departmentName").val();
+            var phone = $("#phone").val();
+            var useDepartment = $("#useDepartment").val();
+            var moniterTimer = $("#moniterTimer").val();
+            //表单验证
+			if(ipAddr==null ||ipAddr == ""){
+				bool=false;
+
 			}
-		});
+            if(senderUser==null|| senderUser==""){
+                bool=false;
+
+            }
+          if(deleteId==null|| deleteId==""){
+            bool=false;
+
+           }
+           if(timeFormat==null || timeFormat==""){
+            bool=false;
+
+          }
+           if(dataType==null|| dataType==""){
+            bool=false;
+
+         }
+         if(departmentName==null || departmentName==""){
+            bool=false;
+
+          }
+
+
+        if(name==null || name==""){
+            bool=false;
+
+        }
+        if(directory==null || directory==""){
+            bool=false;
+
+        }
+       if(fileName==null || fileName==""){
+            bool=false;
+
+        }
+        if(phone==null || phone==""){
+            bool=false;
+
+        }
+        if(useDepartment==null || useDepartment==""){
+            bool=false;
+
+        }
+        if(moniterTimer==null || moniterTimer==""){
+            bool=false;
+
+        }
+          if (!bool){
+         	alert("你有选项未选择，或有栏目未填写！！！")
+			  return ;
+		  }
+
+        if (bool){
+
+            var data = {
+            	"deleteId":deleteId,
+				"name":name,
+				"directory":directory,
+				"fileName":fileName, "timeFormat":timeFormat
+                ,"senderUser":senderUser,"ipAddr":ipAddr,
+				"dataType":dataType, "departmentName":departmentName,
+                "phone":phone, "useDepartment":useDepartment, "moniterTimer":moniterTimer};
+            $.ajax({
+                url: "/dataSourceSetting/insertDataSource",
+                data: data,
+                type: "post",
+                success: function(result){
+                    if (result.type == 'fail'){
+                        alert("添加失败！  "+ result.message);
+                    }else{
+                        alert("添加成功!!"+ result.message);
+                        //关闭模态框
+                        $('#insertDataSource').modal('hide');
+                    }
+                },
+                error: function(error){
+					alert(error)
+                }
+            });
+		}
+
+
 	});
 	
 });

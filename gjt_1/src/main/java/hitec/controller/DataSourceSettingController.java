@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -180,7 +182,8 @@ public class DataSourceSettingController {
 		String message="success";
 		DataSourceSetting dataSourceSetting = new DataSourceSetting();
 		dataSourceSetting.setName(request.getParameter("name"));
-		dataSourceSetting.setFileName(request.getParameter("fileName"));
+		dataSourceSetting.setTimeFormat(request.getParameter("timeFormat"));
+		dataSourceSetting.setFileName(request.getParameter("type"));
 		dataSourceSetting.setDirectory(request.getParameter("directory"));
 		dataSourceSetting.setSendUser(request.getParameter("senderUser"));
 		dataSourceSetting.setDataType(request.getParameter("dataType"));
@@ -272,6 +275,48 @@ public class DataSourceSettingController {
 			outData.put("Usercatalog",user_content);
 			return  outData;
 		}
+	}
+	@RequestMapping(value = "/formatchange", method = RequestMethod.POST)
+	@ResponseBody
+	public Object formatchange(HttpServletRequest request){
+		Map<String, Object> outData = new HashMap<String, Object>();
+		String type = "success";
+		String message = "成功";
+		String filenametxt=request.getParameter("filename");
+		String filename=filenametxt;
+		if (filename!=null){
+			String [] array=filename.split("/");
+			filename=array[array.length-1];
+		}
+		String filenametwo=filename;
+		String format=request.getParameter("format");
+		String regEx="[^0-9]";
+		Pattern pattern=Pattern.compile(regEx);
+		Matcher matcher=pattern.matcher(filename);
+		String newfilename=matcher.replaceAll(" ").trim();
+		String[] newFileNameArray = newfilename.split(" ");
+		String timeStr = new String();
+		for (int i = 0; i < newFileNameArray.length; i++) {
+			String group = newFileNameArray[i];
+			if (timeStr == null || timeStr.length() < group.length()){
+				timeStr = group;
+			}
+		}
+		if (timeStr.length()<format.length()){
+			outData.put("type","fail");
+//			outData.put("leng",filenametxt);
+			outData.put("message","你选的时间格式和文件时间格式不匹配");
+			return outData;
+		}
+		else {
+			String mat="\\d{"+format.length()+"}"+timeStr.substring(format.length());
+			filename=filename.replace(timeStr,mat);
+			outData.put("type",type);
+			outData.put("message",message);
+			outData.put("outfilename",filename);
+			return  outData;
+		}
+
 	}
 	
 }

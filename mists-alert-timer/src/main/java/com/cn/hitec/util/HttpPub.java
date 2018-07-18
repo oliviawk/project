@@ -101,7 +101,7 @@ public class HttpPub {
             params.put("username","jiankong");
             params.put("password","jiankong123");
             Map<String,String> alertMessage = new HashMap<>();
-            alertMessage.put("content","测试，使用接口发送");
+            alertMessage.put("content",jsonParam);
             params.put("text",alertMessage);
 
             if (null != jsonParam) {

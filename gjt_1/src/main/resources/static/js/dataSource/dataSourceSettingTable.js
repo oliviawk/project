@@ -10,7 +10,9 @@ $(function() {
 
 });
 var TableInit = function() {
+	var filenametwo;
 	var oTableInit = new Object();
+
 	// 初始化Table
 	oTableInit.Init = function() {
 		$('#dataSourceTable').bootstrapTable({
@@ -52,7 +54,12 @@ var TableInit = function() {
 			}, {
 				title : '文件名称',
 				field : 'fileName'
+
 			}, {
+				title : '时间格式',
+				field : 'timeFormat',
+				visible:false
+                },{
 				title : '发送用户',
 				field : 'sendUser'
 			}, {
@@ -107,7 +114,7 @@ var ButtonInit = function () {
             }
             $("#nameEdit").val(arrselections[0].name);
             $("#directoryEdit").val(arrselections[0].directory);
-            $("#typeEdit").val(arrselections[0].type);
+            $("#typeEdit").val(arrselections[0].fileName);
             $("#senderUserEdit").val(arrselections[0].sendUser);
             $("#ipAddrEdit").val(arrselections[0].ipAddr);
             $("#dataTypeEdit").val(arrselections[0].dataType);
@@ -116,6 +123,7 @@ var ButtonInit = function () {
             $("#useDepartmentEdit").val(arrselections[0].useDepartment);
             $("#moniterTimerEdit").val(arrselections[0].moniterTimer);
             $("#idEdit").val(arrselections[0].pkId);
+            $("#formattime").val(arrselections[0].timeFormat);
             $('#EditDataSource').modal();
         });
 
@@ -123,6 +131,7 @@ var ButtonInit = function () {
     		//获取所有的属性
     		debugger;
     		var deleteId = $("#fileNameSelectEdit").val();
+    		var timeFormat=$("#formattime").val();
     		var name = $("#nameEdit").val();
     		var directory = $("#directoryEdit").val();
     		var type = $("#typeEdit").val();
@@ -135,7 +144,7 @@ var ButtonInit = function () {
     		var moniterTimer = $("#moniterTimerEdit").val();
     		var pkId = $("#idEdit").val();
     		
-    		var data = {"pkId":pkId, "name":name, "directory":directory, "type":type, "senderUser":senderUser,
+    		var data = {"pkId":pkId,"timeFormat":timeFormat, "name":name, "directory":directory, "type":type, "senderUser":senderUser,
     				"ipAddr":ipAddr, "dataType":dataType, "departmentName":departmentName,
     				"phone":phone, "useDepartment":useDepartment, "moniterTimer":moniterTimer};
     		$.ajax({

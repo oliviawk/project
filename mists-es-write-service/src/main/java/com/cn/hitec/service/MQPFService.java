@@ -63,6 +63,7 @@ public class MQPFService {
                     fields = (Map<String, Object>) map.get("fields");
 
                     String subType = map.get("type").toString(); // 数据名称
+                    String name = map.get("name").toString();
                     String subModule = fields.get("module").toString();
                     String subIp = fields.get("ip_addr").toString();
                     String strDataTime = fields.get("data_time").toString();
@@ -89,45 +90,27 @@ public class MQPFService {
                     //开始预生成接下来加工、分发的数据
                     Map<String , Object> prebuilt_220Map = new HashMap<>();
                     Map<String , Object> prebuiltFields_220Map = new HashMap<>();
-                    String subType_220 = "雷达";
-                    String subModule_220 = "";
                     String subIp_220 = "10.30.16.220";
 
-//                    "_type": "FZJC",
-//                    "_id": "7DAE0D87C05BC3CFA98FDBD6EF7ABD61",
-//                    "_score": null,
-//                    "_source": {
-//                        "aging_status": "未处理",
-//                         "fields": {
-//                            "data_time": "2018-07-12 23:54:00.000+0800",
-//                            "file_name": "/mnt/nmic2017/radar/latlon/ACHN.QREF000.20180712.155400.latlon",
-//                            "file_size_define": "10,100000000",
-//                            "ip_addr": "10.30.16.220",
-//                            "module": "采集"
-//                        },
-//                        "last_time": "2018-07-12 23:54:00.000+0800",
-//                        "name": "雷达采集",
-//                        "should_time": "2018-07-12 23:54:00.000+0800",
-//                        "startMoniter": "yes",
-//                        "type": "雷达"
-//                    }
 
                     prebuilt_220Map.put("aging_status","未处理");
                     prebuilt_220Map.put("startMoniter","yes");
-                    prebuilt_220Map.put("name","雷达220");
-                    prebuilt_220Map.put("type","雷达220");
-                    prebuilt_220Map.put("last_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 90000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
-                    prebuilt_220Map.put("should_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 60000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    prebuilt_220Map.put("name",name);
+                    prebuilt_220Map.put("type",subType);
+//                    prebuilt_220Map.put("last_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 90000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+//                    prebuilt_220Map.put("should_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 60000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
 
                     prebuiltFields_220Map.put("data_time",strDataTime);
-                    prebuiltFields_220Map.put("file_name","");
+                    prebuiltFields_220Map.put("file_name",fields.get("file_name").toString());
                     prebuiltFields_220Map.put("file_size_define","");
-                    prebuiltFields_220Map.put("ip_addr","10.30.16.220");
+                    prebuiltFields_220Map.put("ip_addr",subIp_220);
                     prebuiltFields_220Map.put("module","采集");
+                    prebuiltFields_220Map.put("start_time",fields.get("start_time").toString());
+                    prebuiltFields_220Map.put("end_time",fields.get("end_time").toString());
 
                     prebuilt_220Map.put("fields",prebuiltFields_220Map);
 
-                    String str_id_220 = Pub.MD5("MQPF"+","+subType_220+","+subModule_220+","+subIp + "," + strDataTime);
+                    String str_id_220 = Pub.MD5("MQPF"+","+subType+","+subModule+","+subIp_220 + "," + strDataTime);
 
                     // 查询是否预生成过，预生成数据入库
                     GetResponse response = es.client.prepareGet(index, type, str_id_220).get();

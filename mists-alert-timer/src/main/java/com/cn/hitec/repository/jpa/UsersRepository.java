@@ -26,4 +26,7 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
     @Query(value = "SELECT  * FROM  users WHERE parent_id = ?1 ;",nativeQuery = true)
     List<Users> findAllByPid(long id);
 
+    @Query(value = "SELECT  * FROM  users WHERE is_user = 0 ;",nativeQuery = true)
+    List<Users> findAllData();
+
 }

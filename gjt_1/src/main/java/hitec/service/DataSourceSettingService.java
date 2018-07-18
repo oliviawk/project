@@ -93,9 +93,10 @@ public class DataSourceSettingService {
 
 	public DataSourceSetting insertDataSource(HttpServletRequest request) {
 		DataSourceSetting dataSourceSetting = new DataSourceSetting();
-		
+
 		DataSourceSetting backData = null;
 		try {
+			logger.info(JSON.toJSONString(request.getParameterMap()));
 			dataSourceSetting.setName(request.getParameter("name"));
 			dataSourceSetting.setFileName(request.getParameter("fileName"));
 			dataSourceSetting.setTimeFormat(request.getParameter("timeFormat"));
@@ -230,6 +231,12 @@ public class DataSourceSettingService {
 		//1.判断是否存在当前类型数据
 		List<DataInfo> findTypeDatasByParentId = dataInfoRepository.findDatasByParentId(3003);
 		String insertDateType = request.getParameter("dataType");
+		String filename= request.getParameter("fileName");
+		String timeformat=request.getParameter("timeFormat");
+		int leng=timeformat.length();
+		String regx="\\d{"+leng+"}";
+		filename=filename.replace(regx,"{"+timeformat+"}");
+
 		long insertId = -1;
 		long lastId = -1;
 		for (int i = 0; i < findTypeDatasByParentId.size(); i++) {
@@ -268,6 +275,7 @@ public class DataSourceSettingService {
 				insertData.setSubName(name);
 				insertData.setMonitorTimes(request.getParameter("moniterTimer"));
 				insertData.setShouldTime("0");
+                insertData.setFileNameDefine(filename);
 				insertData.setTimeoutThreshold("0");
 				insertData.setRegular(1);
 				insertData.setIp(request.getParameter("ipAddr"));
@@ -319,6 +327,7 @@ public class DataSourceSettingService {
 		insertData.setShouldTime("0");
 		insertData.setTimeoutThreshold("0");
 		insertData.setRegular(1);
+		insertData.setFileNameDefine(filename);
 		insertData.setIp(request.getParameter("ipAddr"));
 		insertData.setFilePath(request.getParameter("directory"));
 		insertData.setModule("DS");

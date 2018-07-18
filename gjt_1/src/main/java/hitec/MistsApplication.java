@@ -34,4 +34,5 @@ public class MistsApplication {
         
         SpringApplication.run(MistsApplication.class, args);
     }
+    
 }

@@ -217,7 +217,6 @@ public class DataSourceSendConsumer extends MsgConsumer{
 		}
 
 		//成功匹配到，入库
-
 		try {
 			String occurTimeStr = "";
 			for (int j = 0; j < 5; j++) {
@@ -265,6 +264,8 @@ public class DataSourceSendConsumer extends MsgConsumer{
 
 			outData.put("type", "dataSource");
 			outData.put("data", data);
+
+			logger.info("成功匹配入库：{}",JSON.toJSONString(outData));
 		} catch (ParseException e) {
 			logger.error("解析日志并组装入库数据出错");
 			e.printStackTrace();
