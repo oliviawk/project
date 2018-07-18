@@ -239,9 +239,9 @@ public class AlertService {
                         }
                         for (Users use : usersList){
                             if ("".equals(strUsers)){
-                                strUsers += use.getWechart();
+                                strUsers += use.getPhone();
                             }else {
-                                strUsers += "|"+use.getWechart();
+                                strUsers += "|"+use.getPhone();
                             }
                         }
 
