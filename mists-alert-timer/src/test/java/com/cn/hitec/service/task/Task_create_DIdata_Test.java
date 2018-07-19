@@ -151,16 +151,13 @@ public class Task_create_DIdata_Test {
 
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
-//                cal.set(Calendar.HOUR_OF_DAY, 5);
+                cal.set(Calendar.HOUR_OF_DAY, 1);
 //                cal.set(Calendar.MINUTE, 0);
 //                cal.set(Calendar.SECOND, 0);
 
-                configService.createAlertDI(Pub.DIMap,0,cal.getTime());
-//                configService.createAlertDI("加工", Pub.DIMap_machining,0,cal.getTime());
-//                configService.createAlertDI("分发", Pub.DIMap_distribute,0,cal.getTime());
-
+//                configService.createAlertDI(Pub.DIMap,0,cal.getTime());
                 configService.createT639DI("FZJC",Pub.DIMap_t639,5);
-                configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,cal.getTime());
+//                configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,cal.getTime());
             } catch (Exception e) {
                 isError = true;
                 e.printStackTrace();
@@ -185,4 +182,15 @@ public class Task_create_DIdata_Test {
         }
     }
 
+
+    @Test
+    public void test222(){
+        boolean bool1 = false;
+        boolean bool2 = false;
+        if(bool1 && ( bool1 == bool2)){
+            System.out.println(true);
+        }else{
+            System.out.println(false);
+        }
+    }
 }

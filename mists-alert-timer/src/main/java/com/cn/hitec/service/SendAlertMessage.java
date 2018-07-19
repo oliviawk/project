@@ -225,7 +225,7 @@ public class SendAlertMessage {
 						//查询发送的用户
 						initWeChart(esWriteBean,strategyMap,weChartContent);
 					}
-					if("1".equals(sms_send_enable  )||1==1){
+					if("1".equals(sms_send_enable  )){
 						initSMS(esWriteBean,strategyMap,smsContent);
 					}
 
