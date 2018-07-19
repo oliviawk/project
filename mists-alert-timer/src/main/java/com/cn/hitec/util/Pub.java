@@ -180,11 +180,19 @@ public class Pub {
 		if(s.length != 3){
 			new Exception("groupid type is error");
 		}
+		String strTime = alertBean.getData_time();
+		try {
+			strTime = transform_DateToString(transform_StringToDate(alertBean.getData_time(),"yyyy-MM-dd HH:mm:ss.SSSZ"),"yyyy-MM-dd HH:MM");
+		} catch (Exception e) {
+			System.err.println("时间格式转换错误！"+e.getMessage());
+
+		}
+
 		str = str.replace("[yyyy-MM-dd HH:mm:ss]",alertBean.getOccur_time() == null ? "时间为空":alertBean.getOccur_time());
 		str = str.replace("[yyyy-MM-dd HH:mm]",alertBean.getOccur_time() == null ? "时间为空":alertBean.getOccur_time());
 		str = str.replace("[数据源]","OP".equals(s[0])? "业务数据":"基础资源");
 		str = str.replace("[资料名]",alertBean.getSubName() == null ? "资料名为空":alertBean.getSubName());
-		str = str.replace("[资料时次]",alertBean.getData_time() == null ? "资料时次为空":alertBean.getData_time());
+		str = str.replace("[资料时次]",strTime == null ? "资料时次为空":strTime);
 		str = str.replace("[IP]",alertBean.getIpAddr() == null ? "IP为空":alertBean.getIpAddr());
 		str = str.replace("[业务名]",s[1]);
 		str = str.replace("[环节]",s[2]);
