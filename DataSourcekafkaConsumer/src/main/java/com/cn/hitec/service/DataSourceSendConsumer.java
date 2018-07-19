@@ -57,7 +57,6 @@ public class DataSourceSendConsumer extends MsgConsumer{
         List<String> localMsgs=Arrays.asList(msgs);//将数组转换为list集合
         if(localMsgs.contains("")){//加入集合中包含这个元素
            //这个时候我们直接移除会报错,所以我们要转换为Arraylist
-           //list.remove("张三");
             List<String> changeMsgs=new ArrayList<String>(localMsgs);//转换为ArrayLsit调用相关的remove方法
             changeMsgs.remove("");
             for (int i = 0; i < changeMsgs.size(); i++) {
@@ -71,17 +70,14 @@ public class DataSourceSendConsumer extends MsgConsumer{
         if ("upload".equals(user)){
         	return null;
         }
-        String file_name = msgs[8];
-		file_name=file_name.replace(".tmp","");
-//        if (file_name.indexOf("?") != -1 || file_name.indexOf("RADA") != -1
-//        		|| file_name.indexOf("radar") != -1 || file_name.indexOf("RADR") != -1){	//去除雷达文件
-//        	return null;
-//        }
+        String file_name_log = msgs[8];
+		file_name_log=file_name_log.replace(".tmp","");
+
 		String file_sizeStr = "";
 		String event_status = "";
 		String ipAddr = "";
 
-        if(file_name.indexOf("/radar-base/bz2") > -1){	//说明是MQPF的雷达日志
+        if(file_name_log.indexOf("/radar-base/bz2") > -1){	//说明是MQPF的雷达日志
 //			Sun Feb 25 03:32:31 2018 1 10.1.72.76 647951 /radar-base/bz2/Z_RADR_I_Z9519_20180224192600_O_DOR_SA_CAP.bin.bz2.tmp b _ i r nmic_provider ftp 0 * c
 			try {
 				file_sizeStr = msgs[7];
@@ -101,7 +97,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				long occur_time = date.getTime();
 				data.put("occur_time", occur_time);
 
-				String[] filePaths = file_name.split("/");
+				String[] filePaths = file_name_log.split("/");
 				if (filePaths.length != 4){
 					return null;
 				}
@@ -122,7 +118,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				data.put("name", fileNames[0]+"_"+fileNames[1]+"_"+fileNames[2]+"_"+fileNames[3]);
 				data.put("type", fileNames[3]);
 
-				field.put("file_name", file_name);
+				field.put("file_name", file_name_log);
 				field.put("file_size", file_size_long);
 				field.put("data_time", data_time);
 				field.put("event_status", event_status);
@@ -141,7 +137,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				return null;
 			}
 			return outData;
-		}else if(file_name.indexOf("?") > -1  || file_name.indexOf("RADA") != -1 || file_name.indexOf("RADR") != -1){
+		}else if(file_name_log.indexOf("?") > -1  || file_name_log.indexOf("RADA") != -1 || file_name_log.indexOf("RADR") != -1){
 			return null;
 		}
 
@@ -161,7 +157,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 		//Pattern是一个正则表达式经编译后的表现模式
 		Pattern p = Pattern.compile(regEx);
 		// 一个Matcher对象是一个状态机器，它依据Pattern对象做为匹配模式对字符串展开匹配检查。
-		Matcher m = p.matcher(file_name);
+		Matcher m = p.matcher(file_name_log);
 		  //将输入的字符串中非数字部分用空格取代并存入一个字符串
 		String newFileName = m.replaceAll(" ").trim();
 		  //以空格为分割符在讲数字存入一个字符串数组中
@@ -174,13 +170,13 @@ public class DataSourceSendConsumer extends MsgConsumer{
 	    	}
 		}
 
-		String dataSourceType = file_name.replace(timeStr, "-");
+		String dataSourceType = file_name_log.replace(timeStr, "-");
 		//通过和配置库比较，查看入数据库还是模板库
 		DataSourceSetting dataSourceSetting = null;
 		if (insertBaseFilter.size() == 0){
 	    	Map<String, Object> possibleNeedData = new HashMap<String, Object>();
             possibleNeedData.put("_id", dataSourceType);
-            possibleNeedData.put("fileName", file_name);
+            possibleNeedData.put("fileName", file_name_log);
             possibleNeedData.put("sendUser", user);
             possibleNeedData.put("ipAddr", ipAddr);
 
@@ -193,10 +189,11 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			dataSourceSetting = insertBaseFilter.get(i);
 			String fileName = dataSourceSetting.getFileName();
 			String filePath=dataSourceSetting.getDirectory();
+//			logger.info("-- fileName:{} , filePath:{} , usercatalogName:{}",fileName,filePath,UserCatalog_username);
 			filePath="/"+filePath.replace(UserCatalog_username,"");
 			fileName=filePath+fileName;
 			Pattern pattern = Pattern.compile(fileName);
-    	    Matcher matcher = pattern.matcher(file_name);
+    	    Matcher matcher = pattern.matcher(file_name_log);
     	    // 查找字符串中是否有匹配正则表达式的字符/字符串
     	    boolean rs = matcher.matches();
     	    if (rs){
@@ -205,7 +202,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
     	    if (i == insertBaseFilter.size() - 1){
     	    	Map<String, Object> possibleNeedData = new HashMap<String, Object>();
                 possibleNeedData.put("_id", dataSourceType);
-                possibleNeedData.put("fileName", file_name);
+                possibleNeedData.put("fileName", file_name_log);
                 possibleNeedData.put("sendUser", user);
                 possibleNeedData.put("ipAddr", ipAddr);
 
@@ -247,7 +244,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			data.put("name", dataSourceSetting.getName());
 			data.put("type", dataSourceSetting.getName());
 
-			field.put("file_name", file_name);
+			field.put("file_name", file_name_log);
 			field.put("file_size", file_size_long);
 			field.put("data_time", data_time);
 			field.put("event_status", event_status);
