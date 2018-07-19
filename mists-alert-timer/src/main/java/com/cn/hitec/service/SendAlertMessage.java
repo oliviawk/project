@@ -6,9 +6,11 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
+import com.cn.hitec.domain.SendTemplate;
 import com.cn.hitec.domain.Users;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
+import com.cn.hitec.repository.jpa.SendTemplateRepository;
 import com.cn.hitec.repository.jpa.UsersRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +42,8 @@ public class SendAlertMessage {
 
 	@Autowired
 	DataInfoRepository dataInfoRepository;
+	@Autowired
+    SendTemplateRepository sendTemplateRepository;
 
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
@@ -211,21 +215,28 @@ public class SendAlertMessage {
 
 
 				if(isAlert){
-					String weChartContent = strategyMap.get("wechart_content").toString();
-					String smsContent = strategyMap.get("sms_content").toString();
-					String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();
-					String sms_send_enable = strategyMap.get("sms_send_enable").toString();
+				    long sendTemplateId = Long.parseLong(strategyMap.get("sendTemplateId").toString());
+
+                    SendTemplate sendTemplate = sendTemplateRepository.findOneById(sendTemplateId);
+                    if (sendTemplate == null){
+                        logger.warn("未查询到相关发送模板信息！");
+                        return ;
+                    }
+					String weChartContent = sendTemplate.getWechart_content_template();
+					String smsContent = sendTemplate.getSms_content_template();
+					int wechart_send_enable = sendTemplate.getWechart_send_enable();
+					int sms_send_enable = sendTemplate.getSms_send_enable();
 					//转换微信格式告警信息
 					weChartContent = Pub.transformTitle(weChartContent,alertBean);
 					smsContent = Pub.transformTitle(smsContent,alertBean);
 						// 推送到前端
 //					kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
 
-					if("1".equals(wechart_send_enable)){
+					if(1 == wechart_send_enable){
 						//查询发送的用户
 						initWeChart(esWriteBean,strategyMap,weChartContent);
 					}
-					if("1".equals(sms_send_enable  )){
+					if(1 == sms_send_enable){
 						initSMS(esWriteBean,strategyMap,smsContent);
 					}
 

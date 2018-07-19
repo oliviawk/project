@@ -147,7 +147,7 @@ public class Pub {
         }
         String strTime = alertBean.getData_time();
         try {
-            strTime = transform_DateToString(transform_StringToDate(alertBean.getData_time(),"yyyy-MM-dd HH:mm:ss.SSSZ"),"yyyy-MM-dd HH:MM");
+            strTime = transform_DateToString(transform_StringToDate(alertBean.getData_time(),"yyyy-MM-dd HH:mm:ss.SSSZ"),"yyyy-MM-dd HH:mm");
         } catch (Exception e) {
             System.err.println("时间格式转换错误！"+e.getMessage());
 

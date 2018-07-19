@@ -90,7 +90,7 @@ public class ConfigService {
 			Map<String ,Object> map = new HashMap<>();
 
 			List list = JSON.parseArray(JSON.toJSONString(di),String.class);
-			if(list.size() == 11 ){
+			if(list.size() == 12 ){
 				map.put("serviceType",list.get(0));
 				map.put("DI_name",list.get(1));
 				map.put("module",list.get(2));
@@ -102,6 +102,7 @@ public class ConfigService {
 				map.put("sms_content",list.get(8));
 				map.put("send_users",list.get(9));
 				map.put("regular",list.get(10));
+				map.put("sendTemplateId",list.get(11));
 
 				Pub.DI_ConfigMap.put(list.get(0)+","+list.get(1)+","+list.get(2)+","+list.get(3), map);
 			}
