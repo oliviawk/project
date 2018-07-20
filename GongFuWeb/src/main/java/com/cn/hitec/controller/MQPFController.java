@@ -25,7 +25,6 @@ public class MQPFController {
     }
     @RequestMapping("/test")
     public String indexTest(){
-
         return "MQPF/produceTest";
     }
 
