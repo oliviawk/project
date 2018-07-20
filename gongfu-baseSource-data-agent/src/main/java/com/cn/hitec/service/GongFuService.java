@@ -4,6 +4,7 @@ import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.domain.EsBean;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.feign.client.GongFuWrite;
+import com.cn.hitec.tools.HttpPub;
 import com.cn.hitec.tools.IpList;
 import com.cn.hitec.tools.Pub;
 import net.sf.json.JSONArray;
@@ -230,18 +231,32 @@ public class GongFuService {
             List<String> listIp = IpList.getIpList(); // 得到需要监控的IP列表
             Map<String, JSONObject> dataMap = new HashMap<>();
 
-            Iterator<String> itIp = listIp.iterator();
-            while (itIp.hasNext()) {
-                String requestStr = "viewType=unaccepted_event_view&resIp=" + itIp.next();
+            //Iterator<String> itIp = listIp.iterator();
+            //String requestStr = "viewType=unaccepted_event_view&resIp=" + itIp.next();
+            int totalPage = 1;
+            int totalCount = 0;
+            int eventCount = 0;
+            int unsentDataCount = 0;
+            int processEventCount = 0;
+            for (int i = 1; i <= totalPage; i++) {
+                //System.out.println("###############" + eventCount);
+                String requestStr = "viewType=unaccepted_event_view&isPageing=1&pageSize=100&pageIndex" + i;
                 String responseParent = getData(url_parent, "POST", requestStr, "form");
                 // 获取完整的json
                 JSONObject jb = JSONObject.fromObject(responseParent);
                 // 获取子eventList,里边是该IP返回的所有事件
+                if (totalPage == 1) {
+                    totalPage = jb.getInt("totalPage");
+                    totalCount = jb.getInt("totalCount");
+                    //System.out.println(jb.getInt("totalPage") + "----------" + jb.getInt("totalCount"));
+                }
                 JSONArray ja = jb.getJSONArray("eventList");
                 for (Object object : ja) {
+                    eventCount++;
                     JSONObject jsb = (JSONObject) object;
                     // 20180326 锐捷现在不监控进程了,跳过
                     if ("进程".equals(jsb.get("resType"))) {
+                        processEventCount++;
                         continue;
                     }
                     String ip = jsb.getString("ip");
@@ -269,6 +284,7 @@ public class GongFuService {
                         logger.info("map:" + map);
                         // 微信告警
                         StringBuffer alertTitle = new StringBuffer();
+                        //alertTitle.append("[这条是测试告警,请忽略]");
                         alertTitle.append("基础设施告警: ");
                         alertTitle.append(jsb.get("ip"));
                         alertTitle.append(" ");
@@ -284,14 +300,23 @@ public class GongFuService {
                         alertTitle.append("资源名称：");
                         alertTitle.append(jsb.get("resName"));
 
-                        logger.info("发送告警:" + alertTitle.toString());
-                        sendMessage.sendAlert(alertTitle.toString(), "@all");
-                        // 自己调用微信接口发送
-                        // HttpPub httpPub = new HttpPub();
-                        // httpPub.httpPost("@all", alertTitle.toString());
+                        //如果是监控流程图中的IP,则额外发送告警到全流程监控组
+                        if (listIp.contains(ip)) {
+                            logger.info("发送告警:" + alertTitle.toString());
+                            sendMessage.sendAlert(alertTitle.toString(), "@all");
+                        }
+                        // 自己调用微信接口和短信接口发送全部告警
+                        unsentDataCount++;
+                        HttpPub httpPub = new HttpPub();
+                        httpPub.httpPost("@all", alertTitle.toString(), "1000009");
+                        httpPub.sendSms("13810933845|18210780238|13810168659|18600063404", alertTitle.toString(), "");
                     }
                 }
             }
+            logger.info("findEventData result: totalCount:" + totalCount +
+                    " eventCount:" + eventCount +
+                    " unsentDataCount:" + unsentDataCount +
+                    " processEventCount:" + processEventCount);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -304,9 +329,11 @@ public class GongFuService {
     }
 
     public static void main(String[] args) throws Exception {
-        Pub.cookie_rill = Pub.login();
-        GongFuService gongFuService = new GongFuService();
-        gongFuService.findDiskData();
+        //Pub.cookie_rill = Pub.login();
+        //GongFuService gongFuService = new GongFuService();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        System.out.println(sdf.format(Long.parseLong("1528176377000")));
+        //gongFuService.findDiskData();
         // String url_parent =
         // "http://10.30.17.182:80/adapter/event/client/getEventList.json";
         // String responseParent = getData(url_parent, "POST",
@@ -494,5 +521,6 @@ public class GongFuService {
 
         return resultBuffer.toString();
     }
+
 
 }
