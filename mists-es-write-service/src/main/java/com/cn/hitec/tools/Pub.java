@@ -140,24 +140,40 @@ public class Pub {
         if(org.apache.commons.lang.StringUtils.isEmpty(str)){
             return str;
         }
+
         String[] s = alertBean.getGroupId().split("_");
         if(s.length != 3){
             new Exception("groupid type is error");
+        }
+        String strTime = alertBean.getData_time();
+        try {
+            strTime = transform_DateToString(transform_StringToDate(alertBean.getData_time(),"yyyy-MM-dd HH:mm:ss.SSSZ"),"yyyy-MM-dd HH:mm");
+        } catch (Exception e) {
+            System.err.println("时间格式转换错误！"+e.getMessage());
+
+        }
+
+
+        if (alertBean.getAlertType().equals(AlertType.NOTE.getValue())){
+            str = ""+alertBean.getOccur_time()+","+alertBean.getSubName()
+                    +" , "+strTime+" 时次数据正常到达 ";
+            return str;
         }
 
         str = str.replace("[yyyy-MM-dd HH:mm:ss]",alertBean.getOccur_time() == null ? "[时间为空]":alertBean.getOccur_time());
         str = str.replace("[yyyy-MM-dd HH:mm]",alertBean.getOccur_time() == null ? "[时间为空]":alertBean.getOccur_time());
         str = str.replace("[数据源]","OP".equals(s[0])? "业务数据":"基础资源");
         str = str.replace("[资料名]",alertBean.getSubName() == null ? "[资料名为空]":alertBean.getSubName());
-        str = str.replace("[资料时次]",alertBean.getData_time() == null ? "资料时次为空":alertBean.getData_time());
+        str = str.replace("[资料时次]",strTime == null ? "资料时次为空":strTime);
         str = str.replace("[IP]",alertBean.getIpAddr() == null ? "IP为空":alertBean.getIpAddr());
+        str = str.replace("[路径]",alertBean.getFileName()== null ? "[路径为空]":alertBean.getFileName());
+        str = str.replace("[提示信息]",alertBean.getDesc() == null ? "[提示信息为空]":alertBean.getDesc());
         str = str.replace("[业务名]",s[1]);
         str = str.replace("[环节]",s[2]);
-        str = str.replace("[路径]",alertBean.getFileName()== null ? "[路径为空]":alertBean.getFileName());
         str = str.replace("[影响的业务]","(影响的业务方法目前还没有实现)");
         str = str.replace("[处理方案]","(目前还没有实现处理方案)");
         str = str.replace("[错误详情]",alertBean.getErrorMessage() == null ? "[错误详情为空]":alertBean.getErrorMessage());
-        str = str.replace("[错误信息]",alertBean.getDesc() == null ? "[错误信息为空]":alertBean.getDesc());
+
         return str;
     }
 

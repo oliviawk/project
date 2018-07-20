@@ -22,7 +22,7 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     List<DataInfo> findAll();
 
 
-    @Query(value = "SELECT  * FROM data_info WHERE  is_data = 1 AND  parent_id > 30000 AND  should_time > 0 ",nativeQuery = true)
+    @Query(value = "SELECT  * FROM data_info WHERE  is_data = 1 AND  parent_id > 30000",nativeQuery = true)
     List<DataInfo> findAll_isData();
 
     @Query( value = "select dt.service_type,dt.`name` ,dt.module,dt.ip,als.strategy_name," +

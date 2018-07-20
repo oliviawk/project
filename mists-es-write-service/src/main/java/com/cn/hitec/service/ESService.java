@@ -283,6 +283,9 @@ public class ESService {
 						continue;
 
 					}
+//					if ("DATASOURCE".equals(type)){
+//						log.info("数据源数据：{}",json);
+//					}
 					//给关键变量赋值
 					map = JSON.parseObject(json);
 					fields = (Map<String, Object>) map.get("fields");
@@ -349,6 +352,7 @@ public class ESService {
 						index = resultMap.get("_index").toString();
 						type = resultMap.get("_type").toString();
 						Map<String, Object> hitsSource_fields = (Map<String, Object>) resultMap.get("fields");
+						map.put("name", resultMap.containsKey("name") ? resultMap.get("name") : "");
 
 						// 过滤掉不应该有的数据
 						if ("21".equals(fields.get("event_status"))) {
@@ -388,8 +392,19 @@ public class ESService {
 							map.put("should_time",
 									resultMap.containsKey("should_time") ? resultMap.get("should_time") : "");
 							map.put("last_time", resultMap.containsKey("last_time") ? resultMap.get("last_time") : "");
-							map.put("name",
-									resultMap.containsKey("name") ? resultMap.get("name") : "");
+
+							/*-------6.19 设置文件名新代码*/
+							if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
+								if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
+									if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
+										String old_fileName = hitsSource_fields.get("file_name").toString();
+										old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
+										fields.put("file_name", old_fileName + fields.get("file_name").toString().replace("/", ""));
+									}
+								} else {
+									fields.put("file_name", hitsSource_fields.get("file_name"));
+								}
+							}
 
 							// 确定是否进行 数据状态 告警
 							if (fields.get("event_status").toString().toUpperCase().equals("OK")
@@ -477,18 +492,6 @@ public class ESService {
 //						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))){
 //							fields.put("file_name", hitsSource_fields.get("file_name"));
 //						}
-						/*-------6.19 设置文件名新代码*/
-						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
-							if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
-								if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
-									String old_fileName = hitsSource_fields.get("file_name").toString();
-									old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
-									fields.put("file_name", old_fileName + fields.get("file_name").toString().replace("/", ""));
-								}
-							} else {
-								fields.put("file_name", hitsSource_fields.get("file_name"));
-							}
-						}
 
 						if (alertBean != null) {
 							/*   需要修改该方法  2018.3.20没有修改   */

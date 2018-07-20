@@ -18,12 +18,13 @@ public class AlertStrategy implements Serializable {
     String sms_content;
     int sms_send_enable;
     long di_id;
+    int template_id;
 
     public AlertStrategy() {
         super();
     }
 
-    public AlertStrategy(String strategy_name, String send_users, String wechart_content, int wechart_send_enable, String sms_content, int sms_send_enable, long di_id) {
+    public AlertStrategy(String strategy_name, String send_users, String wechart_content, int wechart_send_enable, String sms_content, int sms_send_enable, long di_id,int template_id) {
         this.strategy_name = strategy_name;
         this.send_users = send_users;
         this.wechart_content = wechart_content;
@@ -31,6 +32,7 @@ public class AlertStrategy implements Serializable {
         this.sms_content = sms_content;
         this.sms_send_enable = sms_send_enable;
         this.di_id = di_id;
+        this.template_id = template_id;
     }
 
     public long getDi_id() {
@@ -97,5 +99,11 @@ public class AlertStrategy implements Serializable {
         this.sms_send_enable = sms_send_enable;
     }
 
+    public int getTemplate_id() {
+        return template_id;
+    }
 
+    public void setTemplate_id(int template_id) {
+        this.template_id = template_id;
+    }
 }

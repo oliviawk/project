@@ -20,6 +20,8 @@ public class RunnerEsComponent implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
 
     @Autowired
+    MQPF_AC_Consumer mqpf_ac_consumer;
+    @Autowired
     FZJCWorkingConsumer kafkaConsumer;
     @Autowired
     LAPS_WSConsumer lapsConsumer;
@@ -33,6 +35,14 @@ public class RunnerEsComponent implements CommandLineRunner {
     LAPSCollectConsumerEX LAPSCollectConsumerEX;
     @Override
     public void run(String... strings) throws Exception {
+        Thread mqthread = new Thread(){
+            @Override
+            public void run(){
+                mqpf_ac_consumer.consume();
+            }
+        };
+        mqthread.start();
+
         Thread fzjc = new Thread(){
 
 			@Override
@@ -41,14 +51,14 @@ public class RunnerEsComponent implements CommandLineRunner {
 			}
 
         };
-        
+
         Thread laps = new Thread(){
 
 			@Override
 			public void run() {
 				lapsConsumer.consume();
 			}
-        	
+
         };
 
         Thread fzjcSend = new Thread(){
@@ -76,14 +86,6 @@ public class RunnerEsComponent implements CommandLineRunner {
             }
 
         };
-//        Thread lapsEX = new Thread(){
-//
-//            @Override
-//            public void run() {
-//                lapsCollectConsumer.consume();
-//            }
-//
-//        };
 
         fzjc.start();
         laps.start();

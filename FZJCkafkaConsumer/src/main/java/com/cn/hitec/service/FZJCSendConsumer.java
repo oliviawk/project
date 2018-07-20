@@ -140,6 +140,11 @@ public class FZJCSendConsumer extends MsgConsumer {
 							}
 							else if(type.equals("radarlatlon")){
 								//ACHN.QREF000.20170927.160600.latlon
+
+								if(send.contains(target_ip)){
+									continue;
+								}
+
 								String[] arr = matcher.group(1).split("\\.");
 								obj.put("type", "雷达");
 								obj.put("name", arr[0] + "." + arr[1]);
@@ -199,7 +204,10 @@ public class FZJCSendConsumer extends MsgConsumer {
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 								subobj.put("data_time", df.format(d));
 							}
-							else{//lapsSUN,LapsTemperature,dizhizaihai,forestfire,micapsJson,shanhong
+//							else if(type.equals("lapsSUN")){
+//								//MSP3_PMSC_RADARIV_PRCPV_L88_CHN_201806281700_02400-00600.PNG
+//							}
+							else{//,LapsTemperature,dizhizaihai,forestfire,micapsJson,shanhong
 								obj.put("type", type);
 							}
 

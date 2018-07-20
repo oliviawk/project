@@ -5,11 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -82,10 +85,18 @@ public class Tools {
 	}
 
 	public static void main(String argv[]) {
-		String filePath = System.getProperty("user.dir")
-				+ "\\src\\main\\resources\\static\\data\\ProductCompleteMonitor.json";
-		readTxtFile(filePath);
-		System.out.println(filePath);
+//		String filePath = System.getProperty("user.dir")
+//				+ "\\src\\main\\resources\\static\\data\\ProductCompleteMonitor.json";
+//		readTxtFile(filePath);
+//		System.out.println(filePath);
+
+//		String strFormat = "yy-MM-dd";
+//		SimpleDateFormat sdf = new SimpleDateFormat(strFormat);
+//		String strData = sdf.format(new Date());
+//		System.out.println(strData);
+
+
+
 	}
 
 	/**

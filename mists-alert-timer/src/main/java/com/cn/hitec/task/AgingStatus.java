@@ -40,7 +40,7 @@ public class AgingStatus {
 		try {
             configService.initAlertMould();
 			agingStatus.collect_task();
-			agingStatus.collectDataSource_task();
+//			agingStatus.collectDataSource_task();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

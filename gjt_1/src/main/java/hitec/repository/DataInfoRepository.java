@@ -12,4 +12,6 @@ public interface DataInfoRepository extends JpaRepository<DataInfo, Long>{
     @Query(value="from DataInfo where isData=?1 order by id")
     List<DataInfo> findDatasByIsData(int isData);
 
+    @Query(value="from DataInfo where parentId=?1 order by id")
+    List<DataInfo> findDatasByParentId(long parentId);
 }

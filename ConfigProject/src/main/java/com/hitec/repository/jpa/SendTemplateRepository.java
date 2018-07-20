@@ -32,6 +32,7 @@ public interface SendTemplateRepository extends JpaRepository<SendTemplate,Long>
     void updateWhereId(long updId, String a,String b,String c,String d,String e,String f);
 
 
+
     @Query(value="select * from send_template where 1=1 " +
             "AND  " +
             "IF(?1 = '' , 1=1 , `name` = ?1) " +

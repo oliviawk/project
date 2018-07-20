@@ -6,9 +6,11 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.AlertBeanNew;
+import com.cn.hitec.domain.SendTemplate;
 import com.cn.hitec.domain.Users;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
+import com.cn.hitec.repository.jpa.SendTemplateRepository;
 import com.cn.hitec.repository.jpa.UsersRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +42,8 @@ public class SendAlertMessage {
 
 	@Autowired
 	DataInfoRepository dataInfoRepository;
+	@Autowired
+    SendTemplateRepository sendTemplateRepository;
 
 
 	public void sendAlert(String index, String type, Map<String, Object> map) {
@@ -49,14 +53,14 @@ public class SendAlertMessage {
 			Map<String, Object> fields = (Map<String, Object>) map.get("fields");
 
 			String str_type = map.get("_type").toString();
-			if(!"DATASOURCE".equals(str_type)){
-				// 去掉资料时次里的时区
-				fields.put("data_time",
-						Pub.transform_DateToString(
-								Pub.transform_StringToDate(fields.get("data_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-								"yyyy-MM-dd HH:mm:ss"));
-
-			}
+//			if(!"DATASOURCE".equals(str_type)){
+//				// 去掉资料时次里的时区
+//				fields.put("data_time",
+//						Pub.transform_DateToString(
+//								Pub.transform_StringToDate(fields.get("data_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//								"yyyy-MM-dd HH:mm:ss"));
+//
+//			}
 
 			String module = fields.get("module").toString();
 			String ipAddr = fields.containsKey("ip_addr") ? fields.get("ip_addr").toString() : "-";
@@ -158,10 +162,8 @@ public class SendAlertMessage {
 					jsonArray = (JSONArray)jsonArray.get(0);
 				}
 				if(jsonArray.size() > 0 && jsonArray.getString(0) != null){
-					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
-
+//					logger.info(jsonArray.getString(0)+"当前告警数:"+jsonArray.getInteger(3)+",最大告警数:"+jsonArray.getInteger(2));
 					if(jsonArray.getInteger(2) != null ){
-						//有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
 						if(jsonArray.getInteger(3) >= jsonArray.getInteger(2)){
 							isAlert = false;
 						}
@@ -188,6 +190,9 @@ public class SendAlertMessage {
 							}
 						}
 					}
+
+					dataInfoRepository.addAlertCnt(jsonArray.getLongValue(0));
+//					logger.info("isAlert:"+isAlert);
 				}
 				if(isAlert){
 					List<Object> pres = dataInfoRepository.findPreModules(module_key);
@@ -210,19 +215,29 @@ public class SendAlertMessage {
 
 
 				if(isAlert){
-					String weChartContent = strategyMap.get("wechart_content").toString();
-					String smsContent = strategyMap.get("wechart_content").toString();
-					String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();
-					String sms_send_enable = strategyMap.get("sms_send_enable").toString();
+				    long sendTemplateId = Long.parseLong(strategyMap.get("sendTemplateId").toString());
+
+                    SendTemplate sendTemplate = sendTemplateRepository.findOneById(sendTemplateId);
+                    if (sendTemplate == null){
+                        logger.warn("未查询到相关发送模板信息！");
+                        return ;
+                    }
+					String weChartContent = sendTemplate.getWechart_content_template();
+					String smsContent = sendTemplate.getSms_content_template();
+					int wechart_send_enable = sendTemplate.getWechart_send_enable();
+					int sms_send_enable = sendTemplate.getSms_send_enable();
 					//转换微信格式告警信息
 					weChartContent = Pub.transformTitle(weChartContent,alertBean);
-
+					smsContent = Pub.transformTitle(smsContent,alertBean);
 						// 推送到前端
 //					kafkaProducer.sendMessage("ALERT", null, JSON.toJSONString(alertBean));
 
-					if("1".equals(wechart_send_enable)){
+					if(1 == wechart_send_enable){
 						//查询发送的用户
 						initWeChart(esWriteBean,strategyMap,weChartContent);
+					}
+					if(1 == sms_send_enable){
+						initSMS(esWriteBean,strategyMap,smsContent);
 					}
 
 				}
@@ -267,5 +282,39 @@ public class SendAlertMessage {
 		paramWeichart.add(JSON.toJSONString(weichartMap));
 		esWriteBean.setData(paramWeichart);
 		esWriteService.add(esWriteBean); // 存入微信待发送消息
+	}
+
+	public void initSMS(EsWriteBean esWriteBean,Map<String,Object> strategyMap,String SMSContent){
+		//查询发送的用户
+		String strParentId = strategyMap.get("send_users").toString();
+		long parentId = Long.parseLong(strParentId);
+		String strUsers = "";
+		List<Users> usersList = null;
+		//如果选择的用户组是 全部（id是1）,则表示发送所有人
+		if (parentId == 1){
+			usersList = usersRepository.findAllData();
+		}else{
+			usersList = usersRepository.findAllByPid(parentId);
+		}
+		for (Users use : usersList){
+			if ("".equals(strUsers)){
+				strUsers += use.getPhone();
+			}else {
+				strUsers += "|"+use.getPhone();
+			}
+		}
+
+		esWriteBean.setType("sendSMS");
+		Map<String,Object> SMSMap = new HashMap<>();
+		SMSMap.put("sendUser", strUsers);
+		SMSMap.put("alertTitle",SMSContent);
+		SMSMap.put("isSend","false");
+		SMSMap.put("send_time",0);
+		SMSMap.put("create_time",System.currentTimeMillis());
+
+		List<String> paramWeichart = new ArrayList<>();
+		paramWeichart.add(JSON.toJSONString(SMSMap));
+		esWriteBean.setData(paramWeichart);
+		esWriteService.add(esWriteBean); // 存入短信待发送消息
 	}
 }

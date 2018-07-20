@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.feign.client.EsService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.ParseException;
 import java.util.*;
 
 public class MsgConsumer {
@@ -75,6 +77,9 @@ public class MsgConsumer {
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
+//                    if(msg.indexOf("1h") > -1 ){
+//                        break;
+//                    }
                     List<String> msgs = processing(msg);
 
                     if(msgs != null && msgs.size() > 0) {
@@ -87,7 +92,8 @@ public class MsgConsumer {
                 if (list.size() > 1000 || (list.size() > 0 && useaTime > 5000)) {
                     esBean.setData(list);
                     String responst = esService.add(esBean);
-                    System.out.println(responst);
+                    logger.info("mqpf数据入库信息："+responst);
+
                     startTime = System.currentTimeMillis();
                     list.clear();
                 }
@@ -102,7 +108,8 @@ public class MsgConsumer {
 
     }
 
-    public List<String> processing (String msg) {
+    public List<String> processing (String msg) throws ParseException {
+
         return null;
     }
 

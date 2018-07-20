@@ -2,52 +2,51 @@ $(document)
     .ready(
         function() {
             // 发送模板显示
-            $
-                .ajax({
-                    type : "POST",
-                    url : "/pjpz/sen_list",
-                    async : false,
-                    headers : {
-                        "Content-Type" : "application/json; charset=utf-8"
-                    },
-                    success : function(r) {
-                        var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
-                        var m = "";
-                        for (var i = 0; i < r.length; i++) {
-                            var sendT = r[i];
-                            s += "<tr><td>"
-                                + sendT.id
-                                + "</td><td>"
-                                + sendT.name
-                                + "</td><td>"
-                                + sendT.type
-                                + "</td><td>"
-                                + sendT.wechartContentTemplate
-                                + "</td><td>"
-                                + sendT.wechartSendEnable
-                                + "</td><td>"
-                                + sendT.smsContentTemplate
-                                + "</td><td>"
-                                + sendT.smsSendEnable
-                                + "</td><td><button class='btn btn-primary' onclick='temptodelet("
-                                + sendT.id
-                                + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
-                                + sendT.id
-                                + ")'>修改</button></td></tr>"
-                            m += "<option value='" + sendT.id
-                                + "'>" + sendT.name
-                                + "</option>";
-                        }
-                        // console.log(sendT.wechartContentTemplate);
-                        $("#table_send").html(s);
-                        $("#selectTemp").html(m);
-                        changeContent();
-                    },
-                    error : function(err) {
-                        alert(err);
-                        console.log(err.message)
+            $.ajax({
+                type : "POST",
+                url : "/pjpz/sen_list",
+                async : false,
+                headers : {
+                    "Content-Type" : "application/json; charset=utf-8"
+                },
+                success : function(r) {
+                    var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
+                    var m = "";
+                    for (var i = 0; i < r.length; i++) {
+                        var sendT = r[i];
+                        s += "<tr><td>"
+                            + sendT.id
+                            + "</td><td>"
+                            + sendT.name
+                            + "</td><td>"
+                            + sendT.type
+                            + "</td><td>"
+                            + sendT.wechartContentTemplate
+                            + "</td><td>"
+                            + sendT.wechartSendEnable
+                            + "</td><td>"
+                            + sendT.smsContentTemplate
+                            + "</td><td>"
+                            + sendT.smsSendEnable
+                            + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                            + sendT.id
+                            + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                            + sendT.id
+                            + ")'>修改</button></td></tr>"
+                        m += "<option value='" + sendT.id
+                            + "'>" + sendT.name
+                            + "</option>";
                     }
-                });
+                    // console.log(sendT.wechartContentTemplate);
+                    $("#table_send").html(s);
+                    $("#selectTemp").html(m);
+                    changeContent();
+                },
+                error : function(err) {
+                    alert(err);
+                    console.log(err.message)
+                }
+            });
 
             // 用户表显示
             $.ajax({
@@ -76,50 +75,8 @@ $(document)
             });
             searchUser();
 
-            // 决策配置表显示
-            /*
-            $.ajax({
-                    type : "POST",
-                    url : "/pjpz/pz_list",
-                    async : false,
-                    headers : {
-                        "Content-Type" : "application/json; charset=utf-8"
-                    },
-                    success : function(r) {
-                        var s = "<tr><td>业务名/IP</td><td>环节名</td><td>资料名</td><td>操作</td></tr>"
-                        for (var i = 0; i < r.length; i++) {
-                            var pzList = r[i];
-                            s += "<tr><td height='20px'>"
-                                + pzList.service_type
-                                + "</td><td>"
-                                + pzList.module
-                                + "</td><td>"
-                                + pzList.sub_name
-                                + "</td>"
-                                + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(+"
-                                + pzList.id
-                                + ")'>查看</button>&nbsp;&nbsp;" +
-                                // "<button type='button'
-                                // class='btn
-                                // btn-info'>修改</button>&nbsp;&nbsp;"
-                                // +
-                                "<button type='button' class='btn btn-info' onclick='pztodelet("
-                                + pzList.id + ")'>删除</button>"
-                                + "</td></tr>"
-                        }
-                        // console.log(s);
-                        $("#dataTable").html(s);
-                    },
-                    error : function(err) {
-                        alert(err);
-                        console.log(err.message)
-                    }
-                });
-            */
-
             // 决策配置查询选择框
-            $
-                .ajax({
+            $.ajax({
                     type : "POST",
                     url : "/pjpz/basic_ifo",
                     datatype : "json",
@@ -218,8 +175,7 @@ function usertodelet(id) {
         });
 }
 function temptodelet(id) {
-    $
-        .ajax({
+    $.ajax({
             type : "POST",
             url : "/pjpz/temptodelet",
             datatype : "json",
@@ -575,10 +531,11 @@ function pzsave() {
         var userId = $("#selectUser").val();
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
-
+        var selectTemp = $("#selectTemp").val();
         // console.log({"pznameid":pznameid,"alertLevel":alertLevel,"pzAddtimeyz":pzAddtimeyz,"userId":userId,"weChartContent":weChartContent,"weChart":weChart,"smsContent":smsContent,"sms":sms})
         var strategyParams = {
             "userId" : userId,
+            "selectTemp" : selectTemp,
             "weChartContent" : weChartContent,
             "weChart" : weChart,
             "smsContent" : smsContent,
@@ -634,10 +591,12 @@ function pzsave() {
         var userId = $("#selectUser").val();
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
+        var selectTemp = $("#selectTemp").val();
 
         // console.log({"pznameid":pznameid,"alertLevel":alertLevel,"pzAddtimeyz":pzAddtimeyz,"userId":userId,"weChartContent":weChartContent,"weChart":weChart,"smsContent":smsContent,"sms":sms})
         var strategyParams = {
             "userId" : userId,
+            "selectTemp" : selectTemp,
             "weChartContent" : weChartContent,
             "weChart" : weChart,
             "smsContent" : smsContent,
@@ -682,8 +641,9 @@ function pzsave() {
         }
 
         console.log(params)
-        // console.log("提交代码被注释")
         // 发送ajax ，保存操作
+        // console.log(selectTemp);
+        // alert("测试，未保存")
         $.ajax({
             type : "POST",
             url : "/pjpz/addstrategy",
@@ -707,7 +667,11 @@ function pzsave() {
 
 }
 
+/**
+ * 发布模板初始化
+ */
 function changeContent() {
+    console.info("执行changeContent方法")
     var id = $("#selectTemp").val();
     $.ajax({
         type : "POST",
@@ -814,7 +778,7 @@ function onchangeSelect(m) {
 function onchangeSelect2(m) {
     var id = $(m).context.id;
     var value = $("#" + id).val();
-    console.log($(m))
+    // console.log($(m))
 
     if (id == "pzAddSelect1" && value == -1) {
         document.getElementById("baseSourceIp").style.display = 'none';
@@ -826,6 +790,8 @@ function onchangeSelect2(m) {
         $("#pzAddSelect3").hide();
         $("#hjName2").hide();
         $("#pzAddSelect2").hide();
+        $("#baseSourceIp").show();
+        $("#tip_cjf").hide();
     }
     if (id == "pzAddSelect1" && value == 3) {
         $("#selectTypeHidden").val("3");
@@ -833,6 +799,8 @@ function onchangeSelect2(m) {
         $("#pzAddSelect3").show();
         $("#hjName2").show();
         $("#pzAddSelect2").show();
+        $("#tip_cjf").show();
+        $("#baseSourceIp").hide();
     }
 
     var data = {
@@ -870,114 +838,96 @@ function onchangeSelect2(m) {
                 }
                 var selectType = $("#selectTypeHidden").val();
                 $("#table_cjf").html("");
-                $("#tip_cjf").html("");
-                if ($("#pzAddSelect1").val() == 3) {
-                    $("#tip_cjf").html(
-                        " (有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开,报警时间段格式'00:00:00-23:59:59') ");
-                }
+                // if ($("#pzAddSelect1").val() == 3) {
+                //     $("#tip_cjf").style("display","black");
+                // }else{
+                //     $("#tip_cjf").style("display","none");
+                // }
                 for (var i = 0; i < r.length; i++) {
                     var dio = r[i];
-                    console.log(dio)
                     if (putId == "pzAddSelect4") {
+                        if (i == 0){
+                            initSendTemplate(dio[0]);
+                        }
+                        console.info(dio)
                         // document.getElementById("baseSourceIp").style="visibility:hidden";
-                        m = "<tr>" + "<td height='105px'>";
-                        var spanHtml = dio[2];
+                        m = "<tr><td >";
+                        var spanHtml = dio[1]+" "+dio[2];
                         if (spanHtml == "DS") {
                             spanHtml = dio[5];
                         }
                         var ips = dio[11].split("\.");
-                        m += "   <span >"
-                            + spanHtml+"<br/>"+ips[2]+"."+ips[3]
-                            + "</span>"
-                            + "   <input type='hidden' name='moduleSpan' value='"
-                            + dio[0]
-                            + "' />"
-                            + "</td>"
-                            + "<td><div id='tr_div"
-                            + i
-                            + "'>";
-                        if(dio[3] == 1){
-                            m+= "                       <div class='row'>"
-                           + "                                    <div class='form-control'>时次表达式</div>"
-                           + "                                    <div class='form-group'>"
-                           + "                                        <input type='text' class='form-control'  placeholder='' id='dataTimeCron_"
-                           + i
-                           + "'/>"
-                           + "                                    </div>"
-                           + "                                    <div class='form-control'>间隔规律</div>"
-                           + "                                    <div class='radio'>"
-                           + "                                        <label>"
-                           + "                                            <input type='radio' name='regular_"
-                           + i
-                           + "' value='1' /> 有规律"
-                           + "                                        </label>"
-                           + "                                    </div>"
-                           + "                                    <div class='radio'>"
-                           + "                                        <label>"
-                           + "                                            <input type='radio' name='regular_"
-                           + i
-                           + "' value='2' /> 无规律"
-                           + "                                        </label>"
-                           + "                                    </div>"
-                           + "                               </div>"
-                           + "                           <div class='row'>"
 
-                           + "                                    <div class='form-control'>文件名</div>"
-                           + "                                    <div class='form-group'>"
-                           + "                                        <input type='text' class='form-control'  placeholder='' id='fileNameDefine_" + i + "'/>"
-                           + "                                    </div>"
-                           + "                                    <div class='form-control'>文件大小</div>"
-                           + "                                    <div class='form-group'>"
-                           + "                                        <input type='text' class='form-control'  placeholder='' id='fileSizeDefine_" + i + "'/>"
-                           + "                                    </div>"
-                            + "                                    <div class='form-group'>"
-                           + "                                        <select id='unit_"+i+ "' class='unit'>"
-                           + "                                        <option value='1'>B</option><option value='1024'>KB</option><option value='1024*1024'>MB</option><option value='1024*1024*1024'>GB</option>"
-                           + "                                        </select>"
-                            + "                                    </div>"
-                           + "                       </div>"
-                           + "                       <div class='row'>"
-                           + "                                    <div class='form-control'>应到时间</div>"
-                           + "                                    <div class='form-group'>"
-                           + "                                        <input type='text' class='form-control'  placeholder='' id='pzShouleTimeyz"
-                           + i
-                           + "'/>"
-                           + "                                    </div>"
-                           + "                                        <span>分</span>"
-                           + "                                    <div class='form-control'>超时阈值</div>"
-                           + "                                    <div class='form-group'>"
-                           + "                                        <input type='text' class='form-control'  placeholder='' id='pzAddtimeyz"
-                           + i
-                           + "'/>"
-                           + "                                    </div>"
-                           + "                                        <span>分</span>"
-                           + "                       </div>"
-                           + "                       <div class='row'>"
-                            + "                                    <div class='form-control' >报警提示</div>"
-                            + "                                    <div class='checkbox'>"
-                            + "                                        <label>"
-                            + "                                            <input type='checkbox' id='before_alert_"+i+"' name='alertType_" + i + "' /> 正常到达"
-                            + "                                        </label>"
-                            + "                                    </div>"
-                            + "                                    <div class='checkbox'>"
-                            + "                                        <label>"
-                            + "                                            <input type='checkbox' id='after_alert_"+i+"' name='alertType_" + i + "' /> 延迟到达"
-                            + "                                        </label>"
-                            + "                                    </div>"
-                           + "                               </div>"
+                        m += "  <span class='little-title'>"+spanHtml+"&nbsp;&nbsp;"+ips[2]+"."+ips[3]+"</span>";
+                        m += "  <input type='hidden' name='moduleSpan' value='"+dio[0]+"'>";
+                        m += "  <div id=\"tr_div"+i+"\" class=\"area\" >";
+                        if (dio[3] == 1){
+                            m += "      <div class=\"row\">";
+                            m += "          <div class=\"form-control form-attribute\">时次表达式</div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <input type='text' class='form-control'  placeholder='' id='dataTimeCron_"+i+"'/>";
+                            m += "          </div>";
+                            m += "          <div class=\"form-control form-attribute\">间隔规律</div>";
+                            m += "          <div class=\"radio\">";
+                            m += "              <label><input type='radio' name='regular_"+i+"' value='1' /> 有规律 </label>";
+                            m += "          </div>";
+                            m += "          <div class=\"radio\">";
+                            m += "              <label><input type='radio' name='regular_"+i+"' value='2' /> 无规律 </label>";
+                            m += "          </div></div>";
+
+                            m += "      <div class=\"row\">";
+                            m += "          <div class='form-control form-attribute'>文件名</div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <input type='text' class='form-control' style='width:475px;'  placeholder='' id='fileNameDefine_" + i + "'/>";
+                            m += "          </div>";
+                            m += "       </div>";
+
+
+                            m += "      <div class='row'>";
+                            m += "          <div class='form-control  form-attribute'>报警提示</div>";
+                            m += "          <div class='checkbox'>";
+                            m += "              <label><input type='checkbox' id='before_alert_"+ i + "' name='alertType_"+i+"'/>正常到达 </label>";
+                            m += "          </div>";
+                            m += "          <div class='checkbox' style='margin-right: 27px;'>";
+                            m += "              <label><input type='checkbox' id='after_alert_"+ i + "' name='alertType_"+i+"'/>延迟到达 </label>";
+                            m += "          </div>";
+                            m += "          <div class='form-control form-attribute'>文件大小</div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <input type='text' class='form-control'  placeholder='' id='fileSizeDefine_" + i + "'/>";
+                            m += "          </div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <select id='unit_"+i+ "' class='unit'>";
+                            m += "                  <option value='1'>B</option><option value='1024'>KB</option><option value='1024*1024'>MB</option><option value='1024*1024*1024'>GB</option>";
+                            m += "              </select>";
+                            m += "          </div>";
+                            m += "      </div>";
+
+                            m += "      <div class='row'>";
+                            m += "          <div class='form-control  form-attribute'>应到时间</div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <input type='text' class='form-control'  placeholder='' id='pzShouleTimeyz"+ i + "'/>";
+                            m += "          </div><span>分</span>";
+                            m += "          <div class='form-control form-attribute'>超时阈值</div>";
+                            m += "          <div class='form-group'>";
+                            m += "              <input type='text' class='form-control'  placeholder='' id='pzAddtimeyz"+ i + "'/>";
+                            m += "          </div><span>分</span>";
+                            m += "      </div>";
+
+
                         }
+                        m += "      <div class='row'>";
+                        m += "          <div class='form-control  form-attribute'>报警时间段</div>";
+                        m += "          <div class='form-group'>";
+                        m += "              <input type='text' class='form-control'  placeholder='' id='alertTimeRange_"+ i + "'/>";
+                        m += "          </div>";
+                        m += "          <div class='form-control form-attribute'>连续报警数</div>";
+                        m += "          <div class='form-group'>";
+                        m += "              <input type='text' class='form-control'  placeholder='' id='maxAlerts_"+ i + "'/>";
+                        m += "          </div>";
+                        m += "      </div>";
 
-                            m+= "                           <div class='row'>"
-                            + "                                    <div class='form-control'>报警时间段</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control' id='alertTimeRange_" + i + "'/>"
-                            + "                                    </div>"
-                            + "                                    <div class='form-control'>连续报警数</div>"
-                            + "                                    <div class='form-group'>"
-                            + "                                        <input type='text' class='form-control' id='maxAlerts_" + i + "'/>"
-                            + "                                    </div>"
-                            + "                       </div>"
-                            + "          </div></td></tr>";
+                        m += "  </div>";
+
                         $("#table_cjf").append(m);
                         $("#pzAddtimeyz" + i + "").val(dio[4]);
                         $("#pzShouleTimeyz" + i + "").val(dio[6]);
@@ -996,26 +946,6 @@ function onchangeSelect2(m) {
 
 
                     } else if (putId == "pzAddSelect2" && selectType == 1) {
-                        // console.log(dio)
-                        // m="<tr><td width='100px' height='30px'></td>" +
-                        // "<td> " +
-                        // "<div style=\"\"> " +
-                        // " <label class=\"checkbox-inline\">" +
-                        // " <input type=\"checkbox\"
-                        // name=\"isSendCheckbox\"/> " + dio[1]
-                        // " </label>" +
-                        // "</div>" +
-                        // "</td></tr>";
-                        //
-                        // console.log(i+","+ r.length)
-                        // if(i == r.length-1){
-                        // m+="<tr><td width='100px' height='30px'></td>" +
-                        // "<td> " +
-                        // "<span > 连续告警次数:</span>" +
-                        // "<input type='text' id='allDatasourceAlertNumber'
-                        // value='5'/> " +
-                        // "</td></tr>";
-                        // }
                         document.getElementById("baseSourceIp").style.display = 'block';
                         m = "<tr><td width='100px' height='30px'></td>"
                             + "<td>"
@@ -1109,12 +1039,10 @@ function alertStrategy_Search() {
                     + "</td><td>"
                     + modules
                     + "</td>"
-                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy("
-                    + k + ")'>查看</button>&nbsp;&nbsp;" +
+                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(" + k + ")'>查看</button>&nbsp;&nbsp;" +
                         // "<button type='button' class='btn
                         // btn-info'>修改</button>&nbsp;&nbsp;" +
-                    "<button type='button' class='btn btn-info' disabled='disabled' onclick='pztodelet("
-                    + k + ")'>删除</button>" + "</td></tr>";
+                    "<button type='button' class='btn btn-info' onclick='pztodelet(" + k + ")'>删除</button>" + "</td></tr>";
             });
 
             $("#dataTable").html(s);
@@ -1171,4 +1099,51 @@ function lookAlertStrategy(strid) {
 function addalertStrategy() {
     $("#ip").val("");
     $("[name='baseSource']").removeAttr("checked");
+}
+
+function initSendTemplate(data_id){
+    if (data_id > 0){
+        $.ajax({
+            type : "POST",
+            url : "/pjpz/findstrategy",
+            datatype : "json",
+            async : false,
+            data : JSON.stringify({
+                "data_id" : data_id
+            }),
+            headers : {
+                "Content-Type" : "application/json; charset=utf-8"
+            },
+            success : function(r) {
+                if (r == null || r == "null" || r == ""){
+                    $("#tempWc").html(" ");
+                    $("#tempSm").html(" ");
+                    document.getElementById('inlineCheckbox1').checked = false;
+                    document.getElementById('inlineCheckbox2').checked = false;
+                }else{
+                    $("#selectUser").val(r.send_users);
+                    $("#selectTemp").val(r.template_id);
+
+                    $("#tempWc").html(r.wechart_content);
+                    $("#tempSm").html(r.sms_content);
+                    if (r.wechart_send_enable == 1) {
+                        document.getElementById('inlineCheckbox1').checked = true;
+                    } else {
+                        document.getElementById('inlineCheckbox1').checked = false;
+                    }
+                    if (r.sms_send_enable == 1) {
+                        document.getElementById('inlineCheckbox2').checked = true;
+                    } else {
+                        document.getElementById('inlineCheckbox2').checked = false;
+                    }
+
+                }
+
+            },
+            error : function(err) {
+                alert(err);
+                console.log(err.message)
+            }
+        });
+    }
 }

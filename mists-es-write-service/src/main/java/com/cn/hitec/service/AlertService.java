@@ -85,14 +85,9 @@ public class AlertService {
             if(documentId != null){ //如果有ID
                 //如果是超时、异常的告警，说明是重复，过滤掉。 如果是迟到的数据，修改告警信息（取消告警）
                 if(AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
-                    //保存告警信息
-                    es.bulkProcessor.add(new IndexRequest(index,type,documentId)
-                            .source(JSON.toJSONString(alertBean), XContentType.JSON));
+                    //保存告警信息 用该方法能够立刻入库
+                    es.client.prepareIndex(index, type,documentId).setSource(JSON.toJSONString(alertBean), XContentType.JSON).get();
 
-                    //是否迟到提示
-                    if(rulesArray.size() > 0 && rulesArray.getInteger(5) == 0){
-                        return;
-                    }
                 }
                 else{
                     return;
@@ -107,10 +102,6 @@ public class AlertService {
 
                 if(StringUtils.isEmpty(documentId)){
                     throw new Exception("插入数据失败");
-                }
-                //对非提示类告警数+1
-                if(rulesArray.size() > 0 && rulesArray.getString(0) != null && !AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
-                    dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
                 }
             }
 
@@ -141,10 +132,18 @@ public class AlertService {
             }*/
 
             /*====================modified by czt 2018.6.11=======================*/
+
+            //提示类(超时到达提示)
+            if(AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
+                if(rulesArray.size() == 0 || rulesArray.getInteger(5) != 1){
+                    return;
+                }
+            }
+
             boolean isAlert = true;
 
             //如果不是提示类告警，要判断各种告警规则
-            if(!AlertType.NOTE.getValue().equals(alertBean.getAlertType())){
+            if(!AlertType.NOTE.getValue().equals(alertBean.getAlertType()) && !AlertType.DELAY.getValue().equals(alertBean.getAlertType())){
                 //先比较当前的告警时间范围和最大告警数
                 isAlert = isAlert(rulesArray);
                 //告警溯源
@@ -164,7 +163,7 @@ public class AlertService {
                 }
             }
 
-
+            log.info(rulesArray.getString(0)+"当前告警数:"+rulesArray.getInteger(3)+",最大告警数:"+rulesArray.getInteger(2)+",before:"+rulesArray.getInteger(4)+",after:"+rulesArray.getInteger(5)+",告警类型:"+alertBean.getAlertType());
             if(isAlert){
                 log.warn("生成微信、短信告警："+JSON.toJSONString(alertBean));
 
@@ -194,12 +193,10 @@ public class AlertService {
                     String wechart_send_enable = strategyMap.get("wechart_send_enable").toString();
                     String sms_send_enable = strategyMap.get("sms_send_enable").toString();
 
-                    //转换微信格式告警信息
-                    weChartContent = Pub.transformTitle(weChartContent,alertBean);
-
                     if("1".equals(wechart_send_enable)){
+                        //转换微信格式告警信息
+                        weChartContent = Pub.transformTitle(weChartContent,alertBean);
                         //查询发送的用户
-
                         String strParentId = strategyMap.get("send_users").toString();
                         long parentId = Long.parseLong(strParentId);
                         List<Users> usersList = usersRepository.findAllByPid(parentId);
@@ -225,6 +222,41 @@ public class AlertService {
 
                         System.out.println("------生成微信");
                     }
+                    if("1".equals(sms_send_enable)){
+                        //转换短信格式告警信息
+                        smsContent = Pub.transformTitle(smsContent,alertBean);
+
+                        String strParentId = strategyMap.get("send_users").toString();
+                        long parentId = Long.parseLong(strParentId);
+
+                        String strUsers = "";
+                        List<Users> usersList = null;
+                        //如果选择的用户组是 全部（id是1）,则表示发送所有人
+                        if (parentId == 1){
+                            usersList = usersRepository.findAllData();
+                        }else{
+                            usersList = usersRepository.findAllByPid(parentId);
+                        }
+                        for (Users use : usersList){
+                            if ("".equals(strUsers)){
+                                strUsers += use.getPhone();
+                            }else {
+                                strUsers += "|"+use.getPhone();
+                            }
+                        }
+
+                        // 存入微信待发送消息
+                        Map<String,Object> SMSMap = new HashMap<>();
+                        SMSMap.put("sendUser", strUsers);         //正式
+                        SMSMap.put("alertTitle",smsContent);
+                        SMSMap.put("isSend","false");
+                        SMSMap.put("send_time",0);
+                        SMSMap.put("create_time",System.currentTimeMillis());
+                        es.bulkProcessor.add(new IndexRequest(index,"sendSMS")
+                                .source(JSON.toJSONString(SMSMap), XContentType.JSON));
+
+                        System.out.println("------生成短信");
+                    }
 
                 }
 
@@ -240,7 +272,7 @@ public class AlertService {
         boolean isAlert = true;
         if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
             if(rulesArray.getInteger(2) != null ){
-                //有告警时告警数已经自加1，但当前数据是告警前查询出的,所以包含==
+                //当前告警数从0开始
                 if(rulesArray.getInteger(3) >= rulesArray.getInteger(2)){
                     isAlert = false;
                 }
@@ -267,6 +299,8 @@ public class AlertService {
                     }
                 }
             }
+
+            dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
         }
 
         return isAlert;
@@ -297,7 +331,7 @@ public class AlertService {
             alertBean.setEventType("OP_"+str_type +"_"+ module+"-1-"+alertType+"-01");
             alertBean.setEventTitle(alertTitle);
             alertBean.setLevel(fields.containsKey("event_status") ? fields.get("event_status").toString() : "1");
-            alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : alertTitle);
+            alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : "-");
             alertBean.setCause("-");
 
             alertBean.setModule(module);
@@ -305,21 +339,24 @@ public class AlertService {
             alertBean.setSubName(map.get("name").toString());
             alertBean.setData_time(fields.get("data_time").toString());
             alertBean.setIpAddr(fields.containsKey("ip_addr") ? fields.get("ip_addr").toString() : "-");
-            if(!"DATASOURCE".equals(str_type)){
-                alertBean.setShould_time(map.containsKey("should_time") ?
-                        Pub.transform_DateToString(
-                                Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-                                "yyyy-MM-dd HH:mm:ss")
-                        : "0");
-                alertBean.setLast_time(map.containsKey("last_time") ?
-                        Pub.transform_DateToString(
-                                Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-                                "yyyy-MM-dd HH:mm:ss")
-                        : "0");
-            }else{
-                alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
-                alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
-            }
+//            if(!"DATASOURCE".equals(str_type)){
+//                alertBean.setShould_time(map.containsKey("should_time") ?
+//                        Pub.transform_DateToString(
+//                                Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//                                "yyyy-MM-dd HH:mm:ss")
+//                        : "0");
+//                alertBean.setLast_time(map.containsKey("last_time") ?
+//                        Pub.transform_DateToString(
+//                                Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//                                "yyyy-MM-dd HH:mm:ss")
+//                        : "0");
+//            }else{
+//                alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
+//                alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
+//            }
+
+            alertBean.setShould_time(map.containsKey("should_time")? map.get("should_time").toString():"0");
+            alertBean.setLast_time(map.containsKey("last_time")? map.get("last_time").toString():"0");
 
             alertBean.setReceive_time("0");
             alertBean.setPath(fields.containsKey("path") ? fields.get("path").toString() : "-");
@@ -332,9 +369,11 @@ public class AlertService {
             }else if(AlertType.DELAY.getValue().equals(alertType)){
                 String  temp = alertTitle.substring(alertTitle.indexOf(",延迟")+1,alertTitle.length());
                 alertBean.setDesc(temp);
-            }else /*if(AlertType.FILEEX.getValue().equals(alertType))*/{
-                //文件错误或提前到达
-                alertBean.setDesc(alertBean.getErrorMessage());
+            }else if(AlertType.FILEEX.getValue().equals(alertType)){
+                //文件错误
+                alertBean.setDesc("文件大小异常");
+            }else if (AlertType.NOTE.getValue().equals(alertType)){
+                alertBean.setDesc("正常到达");
             }
         } catch (Exception e) {
             e.printStackTrace();

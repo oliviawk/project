@@ -25,7 +25,7 @@ $(function(){
 
 // 数据加载后才能绑定的事件
 function bindEvent(){
-	//告警流量伸缩
+	//告警类型伸缩
 	$(".alarmType").click(function(){
 		debugger;
 		var display = $(this).parent().parent().find("ul").css("display");

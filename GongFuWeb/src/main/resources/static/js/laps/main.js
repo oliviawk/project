@@ -25,6 +25,7 @@ $(function () {
         $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
         getLapsHistory(arr[0], arr[1], pageSize, arr[2]);
 
+        console.log(arr[0],arr[1],arr[2])
     });
 
     // 历史分页数改变事件
@@ -119,7 +120,7 @@ function getLapsHistory(type, module, size, ip) {
     var r = Math.ceil(Math.random() * 100);
 
     var req = {
-        "types": ["LAPS"],
+        "types": ["MQPF"],
         "subType": type,
         "module": module,
         "size": size,
@@ -127,7 +128,6 @@ function getLapsHistory(type, module, size, ip) {
         "rand": r
     };
     console.log(r + " request:  " + req.subType);
-
 
     $.ajax({
         type: "POST",

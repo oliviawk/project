@@ -27,7 +27,7 @@ import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({ "fu" })
+@ActiveProfiles({ "dev" })
 public class Task_AgingStatus_Test {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AgingStatusService.class);

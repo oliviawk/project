@@ -30,12 +30,11 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
 
 
     @Query( value = "select dt.service_type,dt.`name` ,dt.module,dt.ip,als.strategy_name," +
-                            "als.wechart_send_enable,als.wechart_content,als.sms_send_enable,als.sms_content ,als.send_users,dt.regular " +
+                            "als.wechart_send_enable,als.wechart_content,als.sms_send_enable,als.sms_content ,als.send_users,dt.regular,als.template_id " +
                         "from data_info dt , alert_strategy als " +
                         "where dt.id = als.di_id "
             ,nativeQuery = true)
     List<Object> findDataStrategyAll();
-
 
 
     @Query(value="select * from DataInfo where parentId=?1 order by id", nativeQuery = true)

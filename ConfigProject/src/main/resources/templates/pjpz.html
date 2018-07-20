@@ -13,6 +13,20 @@
 		color: rgba(54, 159, 255, 0.97);
 		margin-left: 5px;
 	}
+
+
+	.form-control {
+		border: none;
+		-webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.0);
+		box-shadow: inset 0 0px 0px rgba(0,0,0,.0);
+	}
+	.form-attribute{ border:none; background-color:#edf8fa; color:#007d98;}
+	.modal-content,.modal-body{ /*background-color:#fff;*/ width:710px;}
+	.form-group input{ /*border:solid 1px #007d98;*/}
+	.little-title{ display:block; width:848px;color:#007d98; font-size:14px; font-weight:bolder; margin-left:15px; padding-top:10px; /*border-top: dashed 1px #CCCCCC;*/ margin-top:10px;}
+	.area{background-color:#edf8fa; width:680px; padding-top:10px; padding-bottom:10px;}
+	.top-option-border{ border:solid 1px #ccc;}
+
 </style>
 </head>
 <body style="background-color: #fffacd;">
@@ -35,21 +49,21 @@
 		<div style="margin: 10px 40px">
 			<div
 					style="width: 150px;float: left;margin: 5px 20px;">
-				数据类型 <select class="form-control" id="basic_ifo" title="数据资源"
+				数据类型 <select class="form-control top-option-border" id="basic_ifo" title="数据资源"
 							 onchange="onchangeSelect(this)">
 
 			</select>
 			</div>
 			<div
 					style="width: 150px;float: left;margin: 5px 20px;">
-				业务名/IP <select class="form-control" id="basic_ifo1" title="业务名/IP"
+				业务名/IP <select class="form-control top-option-border" id="basic_ifo1" title="业务名/IP"
 							   onchange="onchangeSelect(this)">
 
 			</select>
 			</div>
 			<div
 					style="width: 150px;float: left;margin: 5px 20px;">
-				<span id="hjName">资料名</span> <select class="form-control"
+				<span id="hjName">资料名</span> <select class="form-control top-option-border"
 													 id="basic_ifo2" title="资料名" onchange="onchangeSelect(this)">
 			</select>
 			</div>
@@ -85,17 +99,17 @@
 		 style="height: 700px; width: 90%; background-color: white">
 		<div class="userDiv">
 			组名:
-			<select class="form-control"  name="user_group" id="user_group" style=""></select>
+			<select class="form-control top-option-border"  name="user_group" id="user_group" style=""></select>
 			<br />
 		</div>
 		<div class="userDiv">
-			用户名:<input class="form-control" type="text" id="user_name" /><br />
+			用户名:<input class="form-control top-option-border" type="text" id="user_name" /><br />
 		</div>
 		<div class="userDiv">
-			手机号:<input class="form-control" type="text" id="user_phone" /><br />
+			手机号:<input class="form-control top-option-border" type="text" id="user_phone" /><br />
 		</div>
 		<div class="userDiv">
-			公众号:<input class="form-control" type="text" id="user_wechart" /><br />
+			公众号:<input class="form-control top-option-border" type="text" id="user_wechart" /><br />
 		</div>
 		<div class="userDiv" style="margin-top: 40px;">
 			<button type="button" class="btn btn-success"
@@ -121,19 +135,19 @@
 	<div class="tab-pane fade" id="ad"
 		 style="height: 700px; width: 90%; background-color: white">
 		<div style="width: 200px; position: relative; left: 25px; top: 20px">
-			模板名:<input class="form-control" type="text" id="tempName" /><br />
+			模板名:<input class="form-control top-option-border" type="text" id="tempName" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 236px; top: -54px">
-			模板种类:<input class="form-control" type="text" id="tempType" /><br />
+			模板种类:<input class="form-control top-option-border" type="text" id="tempType" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 448px; top: -128px">
-			微信号:<input class="form-control" type="text" id="tempWechart" /><br />
+			微信号:<input class="form-control top-option-border" type="text" id="tempWechart" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 660px; top: -202px">
-			手机号:<input class="form-control" type="text" id="tempSms" /><br />
+			手机号:<input class="form-control top-option-border" type="text" id="tempSms" /><br />
 		</div>
 		<div style="position: relative; left: 30px; top: -190px;">
 			<button type="button" class="btn btn-success"
@@ -172,90 +186,85 @@
 	<div class="modal-content">
 		<div class="modal-body">
 			<div style="width: 150px; float: left; margin-left: 50px;">
-				数据种类 <select class="form-control" title="数据源" id="pzAddSelect1"
+				数据种类 <select class="form-control top-option-border" title="数据源" id="pzAddSelect1"
 							 onchange="onchangeSelect2(this)">
 				<option></option>
 			</select> <input type="hidden" id="selectTypeHidden" value="" />
 			</div>
 			<div style="width: 150px; float: left; margin-left: 50px;">
-				<span id="hjName2">业务名/IP</span> <select class="form-control"
+				<span id="hjName2">业务名/IP</span> <select class="form-control top-option-border"
 														 title="业务名/IP" id="pzAddSelect2" onchange="onchangeSelect2(this)">
 				<option></option>
 			</select>
 			</div>
-			<div
-					style="width: 150px; float: left; margin-left: 50px; margin-bottom: 10px;">
-				<span id="hjName3">资料名</span> <select class="form-control"
+			<div style="width: 150px; float: left; margin-left: 50px; margin-bottom: 10px;">
+				<span id="hjName3">资料名</span> <select class="form-control top-option-border"
 													  title="资料名" id="pzAddSelect3" onchange="onchangeSelect2(this)">
 				<option></option>
 			</select>
 			</div>
-			<div style="width: 90%; float: left; margin-left: 50px;">
-				<span id="tip_cjf"></span>
-			</div>
 
-			<div
-					style="margin-right: 419px; margin-top: -50px; float: right; width: 177px;display: none;"
-					id='baseSourceIp'>
+			<div style="float: left; width: 177px;display: none; margin-top: 23px;margin-left: -150px;" id='baseSourceIp'>
 				ip:<input type="text" id="ip" />
 			</div>
+			<div class="alert alert-warning" style="display: none;  margin-top: 57px; margin-bottom: -15px;font-size: 11px;height: 57px;" id="tip_cjf" role="alert">
+				<img src="../imsg/warning.png" style="display:block; float:left; margin-top:3px;margin-right: 10px;" />
+				<span style="margin-left: 10px;">(有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开,报警时间段格式'00:00:00-23:59:59')</span>
+			</div>
 
-			<table id="table_cjf" style="width: 90%; overflow: auto;">
+
+			<table id="table_cjf" style="width: 97%; overflow: auto;">
 
 			</table>
-			<div id="startegysDiv"
-				 style="height: 330px; width: 790px; background-color: #def2f5; margin-top: 15px;">
-				<span>发布策略</span><br />
-				<div class="row" style="margin-left: 10px;">
-					<div class="form-control"
-						 style="background-color: #2aabd2; width: 100px; float: left;">用户:</div>
-					<div style="width: 300px; float: left;">
-						<select class=" form-control " title="用户" width="400px"
-								id="selectUser">
-							<option>用户A</option>
-							<option>用户B</option>
-						</select>
-					</div>
-				</div>
-				<div class="row" style="margin-left: 10px;">
-					<div class="form-control"
-						 style="background-color: #2aabd2; width: 100px; float: left;">发布模板:</div>
-					<div style="width: 300px; float: left;">
-						<select class=" form-control" title="模板" width="400px"
-								id="selectTemp" onchange="changeContent()">
-							<option>模板1</option>
-							<option>模板2</option>
-						</select>
-					</div>
-				</div>
+			<div id="startegysDiv">
+				<span class="little-title">发布策略</span>
+				<div class="area" >
+					<div class="row" style="margin-left: 10px;">
+						<div class="form-control form-attribute"
+							 style=" width: 100px; float: left;">用   户:</div>
+						<div style="width: 170px; float: left;">
+							<select class=" form-control " title="用户" width="400px"
+									id="selectUser">
+								<option>用户A</option>
+								<option>用户B</option>
+							</select>
+						</div>
 
-				<div class="row" style="margin-left: 10px;">
-					<div class="form-control"
-						 style="background-color: #2aabd2; width: 100px">发布内容:</div>
-					<div style="position: relative; left: 1%; top: 10px">
-						<label class="checkbox-inline"> <input type="checkbox"
-															   id="inlineCheckbox1" value="option1" name="inlineCheckbox" />
-							微信
-						</label>
+						<div class="form-control form-attribute"
+							 style="width: 100px; float: left;margin-left: 20px;">发布模板:</div>
+						<div style="width: 170px; float: left;">
+							<select class=" form-control" title="模板" width="400px"
+									id="selectTemp" onchange="changeContent()">
+								<option>模板1</option>
+								<option>模板2</option>
+							</select>
+						</div>
+
 					</div>
-					<div style="position: relative; left: 51.5%; top: -10px">
-						<label class="checkbox-inline"> <input type="checkbox"
-															   id="inlineCheckbox2" value="option2" name="inlineCheckbox" />
-							短信
-						</label>
-					</div>
-					<div style="position: relative; left: 1%; top: -5px; width: 45%;">
+
+					<div class="row" style="margin-left: 10px; margin-top:10px;">
+						<div class="form-control form-attribute"
+							 style="width: 100px;float:left; margin-top:20px;">发布内容:</div>
+						<div style="float:left; width:530px;  margin-top:20px;">
+							<label class="checkbox-inline"> <input type="checkbox"
+																   id="inlineCheckbox1" value="option1" name="inlineCheckbox" />
+								微信
+							</label>
+
 							<textarea class="form-control" rows="7" name="usersm"
 									  id="tempWc"></textarea>
-					</div>
-					<div
-							style="position: relative; left: 51.5%; top: -160px; width: 45%;">
+						</div>
+						<div style="float:left; width:530px;  margin-top:10px; margin-left:100px;">
+							<label class="checkbox-inline"> <input type="checkbox"
+																   id="inlineCheckbox2" value="option2" name="inlineCheckbox" />
+								短信
+							</label>
 							<textarea class="form-control" rows="7" name="usersm"
 									  id="tempSm"></textarea>
+						</div>
+
 					</div>
-
 				</div>
-
 			</div>
 
 		</div>
@@ -278,12 +287,12 @@
 			<input type="hidden" value="id" name="id" id="id_v" />
 			<div
 					style="position: absolute; left: 20px; top: 20px; width: 200px">
-				模板名：<input id="name_upd" class="form-control" type="text"
+				模板名：<input id="name_upd" class="form-control top-option-border" type="text"
 						   name="name" />
 			</div>
 			<div
 					style="position: absolute; left: 250px; top: 20px; width: 200px">
-				<span>数据源</span> <select class="form-control" title="资源类型"
+				<span>数据源</span> <select class="form-control top-option-border" title="资源类型"
 										 id="type_upd" name="type" width="50px">
 				<option value="业务数据">业务数据</option>
 				<option value="测试数据">测试数据</option>
@@ -292,12 +301,12 @@
 			<div
 					style="position: absolute; left: 20px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control" rows="3" name="wechart_content"
+				<textarea class="form-control top-option-border" rows="3" name="wechart_content"
 						  id="wechart_content_upd"></textarea>
 			</div>
 			<div
 					style="position: absolute; left: 20px; top: 100px; width: 200px">
-				是否发送微信 <select class="form-control" title="是否发送" id="weixin_upd"
+				是否发送微信 <select class="form-control top-option-border" title="是否发送" id="weixin_upd"
 							   name="wei_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
@@ -306,12 +315,12 @@
 			<div
 					style="position: absolute; left: 250px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control" rows="3" name="sns_content"
+				<textarea class="form-control top-option-border" rows="3" name="sns_content"
 						  id="sns_content_upd"></textarea>
 			</div>
 			<div
 					style="position: absolute; left: 250px; top: 100px; width: 200px">
-				是否发送短信 <select class="form-control" title="是否发送" id="sms_upd"
+				是否发送短信 <select class="form-control top-option-border" title="是否发送" id="sms_upd"
 							   name="sms_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
@@ -334,7 +343,7 @@
 		 style="height: 380px; width: 500px; position: absolute; left: 20%; top: 50%;">
 
 		<div style="width: 200px; position: relative; left: 25px; top: 20px">
-			用户名:<input class="form-control" type="text" name="username"
+			用户名:<input class="form-control top-option-border" type="text" name="username"
 					   id="username" /><br />
 		</div>
 		<div
@@ -345,23 +354,23 @@
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 25px; top: -50px">
-			手机号:<input class="form-control" type="text" name="userphone"
+			手机号:<input class="form-control top-option-border" type="text" name="userphone"
 					   id="userphone" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 237px; top: -124px">
-			邮箱:<input class="form-control" type="text" name="useremail"
+			邮箱:<input class="form-control top-option-border" type="text" name="useremail"
 					  id="useremail" /><br />
 		</div>
 		<div
 				style="width: 200px; position: relative; left: 25px; top: -140px">
-			公众号:<input class="form-control" type="text" name="usergzh"
+			公众号:<input class="form-control top-option-border" type="text" name="usergzh"
 					   id="usergzh" /><br />
 		</div>
 		<div class="form-group"
 			 style="position: relative; left: 25px; top: -140px; height: 300px; width: 250px">
 			<label for="name">说明:</label>
-			<textarea class="form-control" rows="3" name="usersm" id="usersm"></textarea>
+			<textarea class="form-control top-option-border" rows="3" name="usersm" id="usersm"></textarea>
 		</div>
 		<div style="position: absolute; left: 350px; top: 275px;">
 			<button type="button" class="btn btn-success" onclick="addUser()">确认提交</button>
@@ -381,12 +390,12 @@
 		<div style="width: 200px">
 			<span style="position: relative; left: 10px; top: 13px">模板名:</span><input
 				style="position: relative; left: 69px; top: -13px"
-				class="form-control" type="text" id="name" name="name" />
+				class="form-control top-option-border" type="text" id="name" name="name" />
 		</div>
 		<div style="position: relative; left: 10px; top: 7px; width: 300px">
 				<span
 						style="position: relative; float: left; top: 5px; margin-right: 12px;">数据源:</span>
-			<select class="form-control" title="资源类型" id="type" name="type"
+			<select class="form-control top-option-border" title="资源类型" id="type" name="type"
 					style="width: 200px;">
 				<option value="业务数据">业务数据</option>
 				<option value="基础资源">基础资源</option>
@@ -409,14 +418,14 @@
 			<input type="checkbox" id="wechart_send_c"
 				   onclick="checkClick('wechart_send_c')" />微信 <input type="hidden"
 																	  name="wechart_send" id="wechart_send" value="0" />
-			<textarea class="form-control" rows="5" name="wechart_content"
+			<textarea class="form-control top-option-border" rows="5" name="wechart_content"
 					  id="wechart_content"></textarea>
 		</div>
 		<div style="width: 400px; position: relative; left: 10px; top: 22px">
 			<input type="checkbox" id="sms_send_c"
 				   onclick="checkClick('sms_send_c')" />短信 <input type="hidden"
 																  name="sms_send" id="sms_send" value="0" />
-			<textarea class="form-control" rows="5" name="sns_content"
+			<textarea class="form-control top-option-border" rows="5" name="sns_content"
 					  id="sns_content"></textarea>
 		</div>
 		<div style="position: absolute; left: 380px; top: 453px;">
@@ -491,13 +500,13 @@
 				<tr>
 					<td colspan="2">
 						微信模板：
-						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
+						<textarea class="form-control top-option-border" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
 						短信模板：
-						<textarea class="form-control" rows="5" readonly="readonly"></textarea>
+						<textarea class="form-control top-option-border" rows="5" readonly="readonly"></textarea>
 					</td>
 				</tr>
 			</table>
