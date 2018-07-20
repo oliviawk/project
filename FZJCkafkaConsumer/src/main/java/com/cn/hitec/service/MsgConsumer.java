@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.feign.client.EsService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -91,7 +92,8 @@ public class MsgConsumer {
                 if (list.size() > 1000 || (list.size() > 0 && useaTime > 5000)) {
                     esBean.setData(list);
                     String responst = esService.add(esBean);
-                    System.out.println(responst);
+                    logger.info("mqpf数据入库信息："+responst);
+
                     startTime = System.currentTimeMillis();
                     list.clear();
                 }

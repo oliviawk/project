@@ -2,7 +2,6 @@ package com.cn.hitec.feign.client;
 
 
 import com.cn.hitec.bean.*;
-import com.sun.javafx.collections.MappingChange;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

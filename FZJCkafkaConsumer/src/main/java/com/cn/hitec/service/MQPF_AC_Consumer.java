@@ -1,5 +1,6 @@
 package com.cn.hitec.service;
 
+import com.alibaba.fastjson.JSON;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,18 +23,9 @@ public class MQPF_AC_Consumer extends MsgConsumer{
     private static String type = "MQPF";
     private static String groupid = "mqpf_ac1";
 
-//    @Value("${FZJC.send.target.ips}")
-//    private String ips;
-//    @Value("${FZJC.datatype}")
-//    private String datatypes;
-//    @Value("${collect}")
-//    private String collect;
-//    @Value("${send}")
-//    private String send;
 
-
-    public MQPF_AC_Consumer() {
-        super(topic, groupid, type);
+    public MQPF_AC_Consumer(@Value("${MQPF.group.id}")String group) {
+        super(topic, group, type);
     }
 
 
@@ -82,15 +74,11 @@ public class MQPF_AC_Consumer extends MsgConsumer{
                     map.put("type","MQPF_NC5M");
                     map.put("occur_time",occTimeD.getTime());
                     map.put("fields",file);
-                    JSONObject jsonObject = JSONObject.fromObject(map);
-//                    System.out.println(jsonObject.toString());
-                    String json = jsonObject.toString();
-                    list.add(json);
+                    list.add(JSON.toJSONString(map));
                 }
 
             }
-        }
-        if(m1.find()){
+        }else if(m1.find()){
             String[] lines = msg.split("※");
             if (lines.length < 1){
                 return list;
@@ -127,10 +115,7 @@ public class MQPF_AC_Consumer extends MsgConsumer{
                     map.put("type","MQPF_PNG5M");
                     map.put("occur_time",occTimeD.getTime());
                     map.put("fields",file);
-                    JSONObject jsonObject = JSONObject.fromObject(map);
-//                    System.out.println(jsonObject.toString());
-                    String json = jsonObject.toString();
-                    list.add(json);
+                    list.add(JSON.toJSONString(map));
                 }
             }
         }
