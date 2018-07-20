@@ -1,8 +1,3 @@
-$(document).ready(function () {
-    getMQPFdataAggQuery();
-});
-
-
 $(function () {
 
     // 弹出框点击事件
@@ -71,9 +66,9 @@ function getMQPFdataAggQuery() {
                 var recv = d.resultData;
                 $.each(recv, function (key, dmap) {
                     key = key.replace(/\./g, "-");
-                    console.log(key)
-                    console.log(dmap)
-                    console.log("------")
+                    // console.log(key)
+                    // console.log(dmap)
+                    // console.log("------")
 
                     // 如果第1条是未处理判断第2条如果是正常外报警
                     if (dmap.aging_status != '正常') {
@@ -91,8 +86,6 @@ function getMQPFdataAggQuery() {
 
             } else {
                 // 查询失败
-                //alert("失败！" + d.message);
-                console.log("%c失败！" + d.message, "color:#c7254e");
                 $("div[data-target='#pubModal']").each(function () {
                     $(this).attr("class", "list-red");
                 })
