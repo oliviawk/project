@@ -2,12 +2,16 @@ package com.cn.hitec.repository;
 
 import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHost;
+import org.apache.http.client.methods.HttpPost;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.bulk.BackoffPolicy;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -19,6 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: ESRepository
@@ -30,6 +36,7 @@ import java.net.InetAddress;
 @Service
 public class ESRepository {
     public TransportClient client = null;               //客户端
+//    public RestClientBuilder restClient = null;
     public BulkProcessor bulkProcessor = null;
 
     @Value("${es.strClusterName}")
@@ -58,11 +65,17 @@ public class ESRepository {
                 .build();
         Iterable<String> itTransportHostName = splitter.split(strTransportHostNames);
         client = new PreBuiltTransportClient(settings);
+//        List<HttpHost> httpHostList = new ArrayList<>();
         for (String strTransportHostName : itTransportHostName) {
 
             client.addTransportAddress(
                     new InetSocketTransportAddress(InetAddress.getByName(strTransportHostName), strPort));
+//            HttpHost httpHost = new HttpHost(strTransportHostName,strPort,"http");
+//            httpHostList.add(httpHost);
         }
+//        HttpHost[] httpHosts = httpHostList.toArray(new HttpHost[httpHostList.size()]);
+//        restClient =  RestClient.builder(httpHosts);
+
         log.info("init client: OK , 耗时:"+(System.currentTimeMillis() - st));
     }
 

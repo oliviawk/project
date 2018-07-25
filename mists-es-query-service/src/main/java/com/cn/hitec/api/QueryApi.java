@@ -363,4 +363,35 @@ public class QueryApi extends BaseController {
 		}
 	}
 
+
+	@RequestMapping(value = "/findDataByQuery", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> findDataByQuery(@RequestBody EsQueryBean esQueryBean){
+		long start = System.currentTimeMillis();
+		List<Map> list = new ArrayList<>();
+		try {
+			if (esQueryBean == null) {
+				outMap.put(KEY_RESULT, VAL_ERROR);
+				outMap.put(KEY_RESULTDATA, null);
+				outMap.put(KEY_MESSAGE, "参数错误！");
+			}else{
+				list = esWebService.findDataByQuery(esQueryBean.getIndices(),esQueryBean.getTypes(),esQueryBean.getParameters());
+				outMap.put(KEY_RESULT, VAL_SUCCESS);
+				outMap.put(KEY_RESULTDATA, list);
+				outMap.put(KEY_MESSAGE, "获取数据成功");
+			}
+
+		} catch (Exception e) {
+			list = new ArrayList<>();
+			outMap.put(KEY_RESULT, VAL_ERROR);
+			outMap.put(KEY_RESULTDATA, null);
+			outMap.put(KEY_MESSAGE, e.getMessage());
+		} finally {
+			long spend = System.currentTimeMillis() - start;
+			outMap.put(KEY_SPEND, spend + "ms");
+			return outMap;
+		}
+	}
+
+
+
 }
