@@ -120,7 +120,7 @@ function getLapsHistory(type, module, size, ip) {
     var r = Math.ceil(Math.random() * 100);
 
     var req = {
-        "types": ["MQPF"],
+        "types": ["LAPS"],
         "subType": type,
         "module": module,
         "size": size,
