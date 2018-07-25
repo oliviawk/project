@@ -74,11 +74,13 @@ public class MQPFService {
                     index = Pub.Index_Head + Pub.transform_DateToString(dataTime, Pub.Index_Food_Simpledataformat);
 
                     map.put("aging_status", "正常");
+                    fields.put("event_info", "正常");
                     if(fields.containsKey("event_status")){
                         // 判断数据状态
                         if (!fields.get("event_status").toString().toUpperCase().equals("OK")
                                 && !fields.get("event_status").toString().equals("0")) {
                             map.put("aging_status", "异常");
+                            fields.put("event_info", "数据异常");
                         }
                     }
 
