@@ -67,4 +67,8 @@ public interface EsQueryService {
     @RequestMapping(value = "/query/lctAggQuery", method = RequestMethod.POST, consumes = "application/json")
     public Map<String, Object> lctAggQuery(@RequestBody EsQueryBean_web  esQueryBean);
 
+
+    @RequestMapping(value = "/query/findDataByQuery", method = RequestMethod.POST, consumes = "application/json")
+    public Map<String, Object> findDataByQuery(@RequestBody EsQueryBean esQueryBean);
+
 }

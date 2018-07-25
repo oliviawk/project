@@ -250,7 +250,8 @@
             <td>
             </td>
             <td>
-                <div class="list-green" id="CIMISS_采集_10-30-16-242" data-toggle="modal" data-target="#pubModal"><span>雷达基数据</span>
+                <div class="list-green" id="CIMISS_采集_10-30-16-111" data-toggle="modal" data-target="#pubModal">
+                    <span>雷达基数据</span>
                 </div>
             </td>
             <td>&nbsp;</td>
@@ -523,6 +524,20 @@
                 <h4 class="modal-title" id="modalHeader">Modal title</h4>
             </div>
             <div id="modalBody" class="modal-body modal-body-h500" style="color: #fff">
+
+                <div class="row">
+                    <div class="col-lg-12" id="queryButtonDiv">
+                        <div class="form-inline" style="margin-left: 10px;">
+                            <div class="form-group">
+                                <label for="znameQuery">站点名称:</label>
+                                <input type="text" class="form-control" id="znameQuery" placeholder="站点"/>
+                            </div>
+
+                            <button type="button" class="btn btn-default" style="width: 50px;margin-left: 30px;" id="queryButton">查询</button>
+                        </div>
+                    </div>
+                </div>
+
                 <table class="table table-bordered navbar-fixed-to">
                     <thead style="color: #17c4df;" id="history_thead">
                     <tr>
@@ -561,7 +576,6 @@
     </div>
 </div>
 <!-- Modal end -->
-
 
 <!-- Modal2 -->
 <div class="modal fade bs-example-modal-lg" id="baseSourceModal" tabindex="-1"

@@ -44,4 +44,12 @@ public class MQPFController {
         return map;
     }
 
+    @RequestMapping(value = "/findData", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public Map findDataByQuery(@RequestBody EsQueryBean_web esQueryBean) {
+        Map<String, Object> map = mqpfService.findDataByQuery(esQueryBean);
+        return map;
+    }
+
+
 }

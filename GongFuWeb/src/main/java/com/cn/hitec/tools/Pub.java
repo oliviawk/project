@@ -6,6 +6,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Pub {
+
+    public final static String KEY_RESULT = "result";
+    public final static String KEY_RESULTDATA = "resultData";
+    public final static String KEY_MESSAGE = "message";
+    public final static String KEY_SPEND = "spend";
+    public final static String KEY_TOTAL= "total";
+    public final static String KEY_ROWS= "rows";
+
+    public final static String VAL_SUCCESS = "success";
+    public final static String VAL_ERROR = "error";
+    public final static String VAL_FAIL = "fail";
+
+
     public static Map<String,String> machingMap = new HashMap<>();
     static {
         machingMap.put("ReadFY2NCVIS","卫星云图");
