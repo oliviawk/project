@@ -153,7 +153,7 @@ public class MQPFService extends BaseController {
 
                 if (!StringUtils.isEmpty(esQueryBean.getSubType())){
                     Map<String,Object> wildcardMap = new HashMap<>();
-                    wildcardMap.put("type","*"+esQueryBean.getSubType()+"*");
+                    wildcardMap.put("type","*"+esQueryBean.getSubType().toUpperCase()+"*");
                     params.put("wildcard",wildcardMap);
                 }
 
