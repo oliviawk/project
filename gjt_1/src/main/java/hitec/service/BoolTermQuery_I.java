@@ -44,9 +44,9 @@ public interface BoolTermQuery_I {
      * @return
      * @throws Exception
      */
-    public List<Map> query_new(String[] indices, String[] types, Map<String, Object> params) throws Exception;
+    public List<Map> query_new(String[] indices, String[] types , Map<String,Object> params) throws Exception;
 
-    public List<Map> query(String[] indices, String[] types, Map<String, Object> params) throws Exception;
+    public List<Map> query(String[] indices, String[] types , Map<String,Object> params) throws Exception;
 
     public Map query_resultId(String[] indices, String[] types, Map<String, Object> params) throws Exception;
 }

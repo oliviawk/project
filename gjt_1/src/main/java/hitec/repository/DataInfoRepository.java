@@ -4,8 +4,12 @@ import java.util.List;
 
 import hitec.domain.DataInfo;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import javax.transaction.Transactional;
 
 public interface DataInfoRepository extends JpaRepository<DataInfo, Long>{
     
@@ -14,4 +18,9 @@ public interface DataInfoRepository extends JpaRepository<DataInfo, Long>{
 
     @Query(value="from DataInfo where parentId=?1 order by id")
     List<DataInfo> findDatasByParentId(long parentId);
+
+    @Modifying
+    @Transactional
+    @Query(value=" DELETE from data_info  WHERE   name=?  AND  ip=?  AND  file_name_define=?  AND file_path=? ",nativeQuery = true)
+    int deletedatainfo(String name,String ip,String file_name_define,String file_path);
 }

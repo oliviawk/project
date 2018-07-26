@@ -59,20 +59,21 @@
 					</div>
 					<div class="form-group">
 						<span>数据名称</span>
-						<input type="text" id="name" class="form-control" /> 
+						<input type="text" id="name" class="form-control" required="required" />
 						<span>目录(涉及时间或变化请使用正则，如：/forme/2018/06/-->/forme/\\d{4}/\\d{2}/)</span>
-						<input typ时间格式e="text" id="directory" class="form-control" />
+						<input type="text" id="directory" class="form-control" required="required" />
 						<span>文件名(涉及时间或变化请使用正则，如：/forme/2018/06/-->/forme/\\d{4}/\\d{2}/)</span>
-						<input type="text" id="fileName" class="form-control" />
+						<input type="text" id="fileName" class="form-control" required="required" />
 
 						<span>时间格式: </span>
-						<select id="timeFormat" class="selectpicker"
-								data-live-search="true" data-hide-disabled="true" data-size="6"
-								title="时间格式" style="margin-right: 20px">
-							<option>yyyyMMddHHmm</option>
-							<option>yyyyMMddHHmmss</option>
-							<option>yyyyMMddHHmmssSSS</option>
-						</select>
+						<select id="timeFormat" class="selectpicnew"
+								style="margin-right: 10px;height: 27px;width: 120px">
+							<option value="1"></option>
+						<option>yyyyMMddHH</option>
+						<option>yyyyMMddHHmm</option>
+						<option>yyyyMMddHHmmss</option>
+						<option>yyyyMMddHHmmssSSS</option>
+					</select>
 						<span>数据类型: </span>
 						<select id="dataType" class="selectpicker"
 								data-live-search="true" data-hide-disabled="true" data-size="6"
@@ -104,11 +105,11 @@
 						</select>
 						<p></p>
 						<span>电话</span>
-						<input type="text" id="phone" class="form-control" /> 
+						<input type="text" id="phone" class="form-control" required="required" />
 						<span>影响业务</span>
-						<input type="text" id="useDepartment" class="form-control" /> 
+						<input type="text" id="useDepartment" class="form-control" required="required" />
 						<span>时次</span>
-						<input type="text" id="moniterTimer" class="form-control" />
+						<input type="text" id="moniterTimer" class="form-control" required="required" />
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -121,21 +122,21 @@
 	
 <!-- 	编辑 -->
 	<div class="modal fade" id="EditDataSource" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabelU" aria-hidden="true">
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width: 800px">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabelU">编辑元数据</h4>
+					<h4 class="modal-title" id="myModalLabel">编辑元数据</h4>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
 
 						<span>数据名称</span> <input type="text" id="nameEdit"
 							class="form-control" /> <span>目录</span> <input type="text"
-							id="directoryEdit" class="form-control" /> <span>文件名(日期部分使用
-							yyyMMddHH)</span> <input type="text" id="typeEdit" class="form-control" />
+							id="directoryEdit" class="form-control" /> <span>文件名
+							</span> <input type="text" id="typeEdit" class="form-control" readOnly="true" />
 						<span>FTP上传用户</span> <input type="text" id="senderUserEdit"
 							class="form-control" /> <span>IP地址</span> <input type="text"
 							id="ipAddrEdit" class="form-control" /> <span>数据类型</span> <input
@@ -145,6 +146,7 @@
 						<input type="text" id="useDepartmentEdit" class="form-control" /> <span>时次</span>
 						<input type="text" id="moniterTimerEdit" class="form-control" />
 						<input type="hidden" id="idEdit" class="form-control" />
+						<input type="hidden" id="formattime" class="form-control" />
 					</div>
 				</div>
 				<div class="modal-footer">

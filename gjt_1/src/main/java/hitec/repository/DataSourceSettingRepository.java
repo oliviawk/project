@@ -10,7 +10,5 @@ import hitec.domain.DataSourceSetting;
 public interface DataSourceSettingRepository extends JpaRepository<DataSourceSetting, Long>{
 
 	@Query(value="select * from data_source_setting limit ?1 , ?2", nativeQuery=true)
-	List<DataSourceSetting> findAll(int offset, int limit);
-	
-	
+	List<DataSourceSetting> findAll(int offset,int limit);
 }

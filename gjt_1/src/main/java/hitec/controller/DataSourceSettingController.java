@@ -89,6 +89,11 @@ public class DataSourceSettingController {
 			outData.put("message", "添加元数据返回为空");
 			return outData;
 		}
+		if (insertResult.getSendUser().equals("DataSourceSetting数据重复")){
+			outData.put("type", "fail");
+			outData.put("message", "添加的元数据已存在不能重复添加！！！");
+			return outData;
+		}
 		String deleteResult = dataSourceSettingService.deleteImpossibleData(deleteId);// 删除模板库中的对应记录
 		if (!"success".equals(deleteResult)) {
 			message = deleteResult;
@@ -304,7 +309,7 @@ public class DataSourceSettingController {
 		}
 		if (timeStr.length()<format.length()){
 			outData.put("type","fail");
-//			outData.put("leng",filenametxt);
+			outData.put("leng",filenametxt);
 			outData.put("message","你选的时间格式和文件时间格式不匹配");
 			return outData;
 		}

@@ -25,7 +25,7 @@ $(function(){
 				$("#IpAddrSelect").html(options);
 	            $("#IpAddrSelect" ).selectpicker('refresh');
 	            
-			}, 
+			},
 			error: function(error){
 				
 			}
@@ -34,6 +34,7 @@ $(function(){
 	
 	//选择ip后给获取该ip下的用户
 	$("#IpAddrSelect").change(function(){
+        $("#timeformat").val("");
 		$.ajax({
 			url: "/dataSourceSetting/getPossibleNeedDataSendUserByIpAddr",
 			data:{"ipAddr":$(this).find("option:selected").text()},
@@ -99,6 +100,7 @@ $(function(){
 
 	//选择文件名后给其他输入框添加文件名
 	$("#fileNameSelect").change(function(){
+        $("#timeFormat")[0].selectedIndex = 0;
 		debugger;
 		var selected = $(this).find("option:selected").text();
 		var  result=selected.split("/");
@@ -130,9 +132,20 @@ $(function(){
         });
 	});
 	$("#timeFormat").change(function () {
-		var filename=$("#fileNameSelect").find("option:selected").text();
-		var format=$(this).val();
-		if(filename!=null){
+	    debugger
+		// var filename=$("#fileNameSelect").val();
+	    var filename = $("#fileNameSelect").find("option:selected").text();
+	    var formatone=$(this).val();
+		var format=$(this).find("option:selected").text();
+		if(format==null||format==""){
+		    alert("日期格式为"+format+"格式"+formatone)
+		    return ;
+        }
+        if(filename==null || filename == ""){
+            $(this).val("");
+            alert("请选择文件名！！！")
+            return ;
+        }else{
             $.ajax({
                 url: "/dataSourceSetting/formatchange",
                 data:{"filename":filename,
@@ -140,10 +153,8 @@ $(function(){
                 type: "post",
                 success: function(result){
                     if (result.type == 'fail'){
-                        alert("格式有误！"+ result.message);
-                       $("#timeFormat").options.selectedIndex = 0; //回到初始状态
-                        $("#timeFormat").selectpicker('refresh');
-
+                        alert("格式有误！"+ result.message+result.leng);
+                        $("#timeFormat")[0].selectedIndex = 0;
                     }
                     if(result.type=='success'){
                         debugger;
@@ -161,8 +172,8 @@ $(function(){
 	
 	//点击提交元数据
 	$("#submitBtn").click(function(){
-
-		var bool=true;
+        $("#submitBtn").attr("disabled",true);
+        var bool=true;
 
             //获取所有的属
             var deleteId = $("#fileNameSelect").val();
@@ -191,10 +202,6 @@ $(function(){
             bool=false;
 
            }
-           if(timeFormat==null || timeFormat==""){
-            bool=false;
-
-          }
            if(dataType==null|| dataType==""){
             bool=false;
 
@@ -203,8 +210,6 @@ $(function(){
             bool=false;
 
           }
-
-
         if(name==null || name==""){
             bool=false;
 
@@ -251,8 +256,10 @@ $(function(){
                 success: function(result){
                     if (result.type == 'fail'){
                         alert("添加失败！  "+ result.message);
+                        $("#submitBtn").attr("disabled",false);
                     }else{
                         alert("添加成功!!"+ result.message);
+                        $("#submitBtn").attr("disabled",false);
                         //关闭模态框
                         $('#insertDataSource').modal('hide');
                     }

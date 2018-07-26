@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
-
 import hitec.domain.User_Catalog;
 import hitec.repository.User_Catalog_Repository;
 import org.apache.commons.lang.StringUtils;
@@ -97,6 +94,7 @@ public class DataSourceSettingService {
 		DataSourceSetting backData = null;
 		try {
 			logger.info(JSON.toJSONString(request.getParameterMap()));
+
 			dataSourceSetting.setName(request.getParameter("name"));
 			dataSourceSetting.setFileName(request.getParameter("fileName"));
 			dataSourceSetting.setTimeFormat(request.getParameter("timeFormat"));
@@ -108,7 +106,21 @@ public class DataSourceSettingService {
 			dataSourceSetting.setDepartmentName(request.getParameter("departmentName"));
 			dataSourceSetting.setUseDepartment(request.getParameter("useDepartment"));
 			dataSourceSetting.setMoniterTimer(request.getParameter("moniterTimer"));
-			
+			//取出所有的DataSourcesSetting和添加的数据对比查看是否存在，如果存在则直接返回并提示数据已存在！
+			List<DataSourceSetting> dataSourceSettingList=dataSourceSettingRepository.findAll();
+			for (DataSourceSetting dataSourceSettingone :dataSourceSettingList){
+				//根据用户ip，用户名，文件名和文件路径判断是否相同，如果四个条件同时满足那就是同一条数据
+				if (dataSourceSetting.getFileName().equals(dataSourceSettingone.getFileName())&&
+						dataSourceSetting.getDirectory().equals(dataSourceSettingone.getDirectory())&&
+						dataSourceSetting.getIpAddr().equals(dataSourceSettingone.getIpAddr())&&
+						dataSourceSetting.getSendUser().equals(dataSourceSettingone.getSendUser())&&
+						dataSourceSetting.getName().equals(dataSourceSettingone.getName())){
+					logger.error("添加的元数据已存在，不能重复添加！！！");
+					DataSourceSetting dataSourceSettinghuaxin= new DataSourceSetting();
+					dataSourceSettinghuaxin.setSendUser("DataSourceSetting数据重复");
+					return dataSourceSettinghuaxin;
+				}
+			}
 			backData = dataSourceSettingRepository.save(dataSourceSetting);
 		} catch (Exception e) {
 			StringWriter sw = new StringWriter();
@@ -233,9 +245,11 @@ public class DataSourceSettingService {
 		String insertDateType = request.getParameter("dataType");
 		String filename= request.getParameter("fileName");
 		String timeformat=request.getParameter("timeFormat");
-		int leng=timeformat.length();
-		String regx="\\d{"+leng+"}";
-		filename=filename.replace(regx,"{"+timeformat+"}");
+		if(timeformat!=null){
+			int leng=timeformat.length();
+			String regx="\\d{"+leng+"}";
+			filename=filename.replace(regx,"{"+timeformat+"}");
+		}
 
 		long insertId = -1;
 		long lastId = -1;
@@ -301,13 +315,12 @@ public class DataSourceSettingService {
 		
 		//2.判断是否存在当前这条数据，根据识别类型、ip、环节判断
 		List<DataInfo> datasByParentId = dataInfoRepository.findDatasByParentId(insertId);
-		String key = request.getParameter("type") +":"+ request.getParameter("ipAddr") 
-				+":DS";
+		String key = request.getParameter("name");
+
 		long lastInsertId = insertId * 1000 + 1;
 		for (int i = 0; i < datasByParentId.size(); i++) {
 			DataInfo baseDataInfo = datasByParentId.get(i);
-			String baseKey = baseDataInfo.getName() +":"+ baseDataInfo.getIp() 
-					+":"+ baseDataInfo.getModule();
+			String baseKey = baseDataInfo.getName() ;
 			if (StringUtils.isNotEmpty(key) && key.equals(baseKey)){//数据已经存在  不用再次插入
 				return baseDataInfo;
 			}
@@ -371,6 +384,28 @@ public class DataSourceSettingService {
 
 	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) {
 		dataSourceSettingRepository.delete(arrayList);
+		int shu=100;
+		    for (DataSourceSetting dataSourceSetting: arrayList){
+		    	logger.info("开始删除datainfo数据");
+		    	logger.info(dataSourceSetting.getName());
+		    	logger.info(dataSourceSetting.getIpAddr());
+		    	logger.info(dataSourceSetting.getDirectory());
+		    	String filename=dataSourceSetting.getFileName();
+		    	String timeformat=dataSourceSetting.getTimeFormat();
+		    	if (timeformat!=null && !timeformat.equals("")){
+					String regx="\\d{"+dataSourceSetting.getTimeFormat().length()+"}";
+					if (filename.indexOf(regx)!=-1){
+						filename=filename.replace(regx,"{"+timeformat+"}");
+					}
+				}
+				else {
+		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
+				}
+				logger.info(filename);
+		      shu =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+				logger.info(filename+"个数："+shu);
+		    }
+
 	}
 
 	public User_Catalog findAll_User_catalog(String user_name){
