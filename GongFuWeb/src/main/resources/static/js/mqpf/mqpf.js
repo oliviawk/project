@@ -72,6 +72,24 @@ $(function () {
     var timerId = setInterval(func, delay);
 
     func();
+
+    $('#baseSourceModal').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var ip = button.data('ip');
+            var modal = $(this);
+            modal.find('#baseSourceModalHeader').text("基础资源实时运行情况(" + ip + ")");
+
+            var params = {
+                "host": ip,
+                "minute": 120
+            };
+
+            displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
+            displayMemoryUsed("../laps/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+            displayNetUsed("../laps/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
+            directorUsage("../laps/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+
+        });
 });
 
 
@@ -185,6 +203,7 @@ function getMQPFHistory(type, module, size, ip) {
             alert(err);
         }
     });
+
 }
 
 
