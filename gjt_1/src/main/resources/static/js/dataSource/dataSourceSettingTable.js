@@ -129,7 +129,9 @@ var ButtonInit = function () {
 
         $("#submitEdit").click(function(){
     		//获取所有的属性
+            $("#submitEdit").attr("disabled",true);
     		debugger;
+
     		var deleteId = $("#fileNameSelectEdit").val();
     		var timeFormat=$("#formattime").val();
     		var name = $("#nameEdit").val();
@@ -155,17 +157,23 @@ var ButtonInit = function () {
     				debugger;
                     if (result.message == 'success'){
                         alert("更新数据库对比内容成功！!");
+                        $("#submitEdit").attr("disabled",false);
                     }else{
                         alert("更新数据库对比内容失败!!");
+                        $("#submitEdit").attr("disabled",false);
 
                     }
     				if (result.result == 'fail'){
+
     					alert("修改失败！!");
+                        $("#submitEdit").attr("disabled",false);
     				}else{
     					alert("修改成功!!");
     					//关闭模态框
+                        $("#submitEdit").attr("disabled",false);
     					$('#EditDataSource').modal('hide');
     					$("#dataSourceTable").bootstrapTable('refresh');
+
     				}
 
 

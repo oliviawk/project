@@ -261,7 +261,8 @@ $(function(){
                         alert("添加成功!!"+ result.message);
                         $("#submitBtn").attr("disabled",false);
                         //关闭模态框
-                        $('#insertDataSource').modal('hide');
+                           $('#insertDataSource').modal('hide');
+                        $("#dataSourceTable").bootstrapTable('refresh');
                     }
                 },
                 error: function(error){
