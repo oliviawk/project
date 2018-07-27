@@ -110,11 +110,12 @@ public class DataSourceSettingService {
 			List<DataSourceSetting> dataSourceSettingList=dataSourceSettingRepository.findAll();
 			for (DataSourceSetting dataSourceSettingone :dataSourceSettingList){
 				//根据用户ip，用户名，文件名和文件路径判断是否相同，如果四个条件同时满足那就是同一条数据
-				if (dataSourceSetting.getFileName().equals(dataSourceSettingone.getFileName())&&
+				if (dataSourceSetting.getName().equals(dataSourceSettingone.getName()) ||
+						(dataSourceSetting.getFileName().equals(dataSourceSettingone.getFileName())&&
 						dataSourceSetting.getDirectory().equals(dataSourceSettingone.getDirectory())&&
 						dataSourceSetting.getIpAddr().equals(dataSourceSettingone.getIpAddr())&&
-						dataSourceSetting.getSendUser().equals(dataSourceSettingone.getSendUser())&&
-						dataSourceSetting.getName().equals(dataSourceSettingone.getName())){
+						dataSourceSetting.getSendUser().equals(dataSourceSettingone.getSendUser()))
+						){
 					logger.error("添加的元数据已存在，不能重复添加！！！");
 					DataSourceSetting dataSourceSettinghuaxin= new DataSourceSetting();
 					dataSourceSettinghuaxin.setSendUser("DataSourceSetting数据重复");
