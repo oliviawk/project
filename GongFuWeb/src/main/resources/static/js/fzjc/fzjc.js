@@ -1,22 +1,4 @@
-// function baseSourceClick(id) {
-// 	$(id).click(function() {
-// 		var ip;
-// 		if (id == "#collect") {
-// 			ip = "10.30.16.220";
-// 		}
-// 		directorUsage("../fzjc/getDirectoryUsedData?ip=" + ip, "#directoryUsed");
-// 		displayNetUsed("../fzjc/getNetData?ip=" + ip, "#netUsed", 1000*60*10);
-// 		//displayCpuUsed("../fzjc/getCpuData?ip=" + ip, "#cpuUsed", 1000*60*10);
-// 		displayCpuUsed("../fzjc/test", "#cpuUsed", 1000*60*10);
-// 		displayMemoryUsed("../fzjc/getMemoryData?ip=" + ip, "#memoryUsed",1000*60*10);
-// 	})
-//
-// }
-// $(function() {
-//
-// 	baseSourceClick("#collect");
-//
-// })
+
 
 /**
  * 资源详情
@@ -32,11 +14,11 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
         "minute": 240
     }
 
-    displayCpuUsed("../fzjc/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
-    displayMemoryUsed("../fzjc/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayCpuUsed("../basicresource/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayMemoryUsed("../basicresource/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
 
-    displayNetUsed("../fzjc/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
-    directorUsage("../fzjc/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayNetUsed("../basicresource/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
+    directorUsage("../basicresource/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
 
 
 })
@@ -46,7 +28,7 @@ $(document).ready(function () {
     setInterval(getBase, 60 * 1000);
 
     function getBase() {
-        var url = "../fzjc/getBaseEventData";
+        var url = "../basicresource/getBaseEventData";
         var params = {
             "listIp": [
                 "10.30.16.223",

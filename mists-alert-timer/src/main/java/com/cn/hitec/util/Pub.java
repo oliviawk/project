@@ -253,5 +253,13 @@ public class Pub {
 		}else{
 			System.out.println(false);
 		}
+
+		try {
+			String strTime = transform_DateToString(transform_StringToDate("2018-07-20 20:00:00.000+0800","yyyy-MM-dd HH:mm:ss.SSSZ"),"yyyy-MM-dd HH:mm");
+			System.out.println(strTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

@@ -74,22 +74,75 @@ $(function () {
     func();
 
     $('#baseSourceModal').on('shown.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var ip = button.data('ip');
-            var modal = $(this);
-            modal.find('#baseSourceModalHeader').text("基础资源实时运行情况(" + ip + ")");
+        var button = $(event.relatedTarget);
+        var ip = button.data('ip');
+        var modal = $(this);
+        modal.find('#baseSourceModalHeader').text("基础资源实时运行情况(" + ip + ")");
 
-            var params = {
-                "host": ip,
-                "minute": 120
-            };
+        var params = {
+            "host": ip,
+            "minute": 120
+        };
 
-            displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
-            displayMemoryUsed("../laps/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
-            displayNetUsed("../laps/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
-            directorUsage("../laps/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+        displayCpuUsed("../basicresource/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
+        displayMemoryUsed("../basicresource/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+        displayNetUsed("../basicresource/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
+        directorUsage("../basicresource/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
 
+    });
+
+    setInterval(getBase, 60 * 1000);
+
+    function getBase() {
+        var url = "../basicresource/getBaseEventData";
+        var params = {
+            "listIp": [
+                "10.30.16.111",
+                "10.30.16.249",
+                "10.30.16.220",
+                "10.30.16.231",
+                "10.30.16.232",
+                "10.30.16.233",
+                "10.30.16.225",
+                "10.0.122.155"
+            ],
+            "minute": -240
+        }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(params),
+            dataType: "json",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            success: function (data2) {
+                if ("fail" == data2["result"]) {
+                    console.log("获取基础设施告警信息数据失败,失败原因："
+                        + data2["message"]);
+                } else {
+                    var resultdata = data2["resultData"];
+                    for (var i in resultdata) {
+                        var ary = resultdata[i];
+                        var div_ip = $('div[data-ip="' + i + '"]');
+                        if (div_ip.length > 0) {
+                            div_ip.each(function () {
+                                $(this).find('li').removeClass();
+                                for (var j in ary) {
+                                    var num = ary[j];
+                                    var class_name = num == 0 ? "green" : "red";
+                                    $(this).find('li').eq(j).addClass(class_name);
+                                }
+                            })
+                        }
+                    }
+                }
+            },
+            error: function (e2) {
+                console.error(e2)
+            }
         });
+    }
 });
 
 

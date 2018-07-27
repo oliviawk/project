@@ -134,7 +134,7 @@ public class SendWechartMessage {
             List dataList = (List) SMStMap.get("resultData");
             num1 = dataList.size();
             if (dataList != null && dataList.size() > 0){
-                String sendMessage = "";
+                String sendMessage = "业务告警:";
                 String sendUser = "";
                 //拼接发送消息
                 for (int i = 0 ; i < dataList.size() ; i++){
