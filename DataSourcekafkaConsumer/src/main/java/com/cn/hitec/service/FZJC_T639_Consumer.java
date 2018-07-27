@@ -1,7 +1,6 @@
 //package com.cn.hitec.service;
 //
 //import com.alibaba.fastjson.JSON;
-//import com.cn.hitec.bean.DataSourceSetting;
 //import com.cn.hitec.bean.EsBean;
 //import com.cn.hitec.feign.client.DataSourceEsInterface;
 //import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -13,30 +12,22 @@
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.stereotype.Service;
 //
+//import java.security.acl.Group;
 //import java.text.ParseException;
 //import java.text.SimpleDateFormat;
 //import java.util.*;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
 //
 //@Service
 //public class FZJC_T639_Consumer {
 //    private static final Logger logger = LoggerFactory.getLogger(FZJC_T639_Consumer.class);
-//
-//    @Autowired
-//    DataSourceEsInterface dataSourceEsInterface;
-//    @Value("${es.indexHeader}")
-//	public String indexHeader;
-//
 //
 //    private final KafkaConsumer<String, String> consumer;
 //  // private List<Map<String, Object>> msgs = new ArrayList<Map<String,Object>>();
 //    private List<String> msgs = new ArrayList<String>();
 //    private final String topic = "XFERLOG_T639";
 //    private final String type ="";
-//    private final String group = "xferlog_t639_1";
 //
-//    public FZJC_T639_Consumer() {
+//    public FZJC_T639_Consumer(@Value("${groupid.xferT639log}") String group) {
 //        //*******************bootstrap.servers方式******************//
 //        Properties props = new Properties();
 //        // 设置brokerServer(kafka)ip地址
@@ -81,7 +72,7 @@
 //                    if (data == null){
 //                        continue;
 //                    }
-//                    msgs.add(JSON.toJSONString(data);
+//                    msgs.add(JSON.toJSONString(data));
 //                }
 //                useaTime1 = System.currentTimeMillis() - startTime1;
 //
@@ -96,12 +87,13 @@
 //                    msgs.clear();
 //                    startTime1 = System.currentTimeMillis();
 //                }
-//                consumer.commitSync();
 //
 //            }catch (Exception e){
 //                logger.error("!!!!!!error");
 //                logger.debug("",e);
 //                e.printStackTrace();
+//            }finally {
+//                consumer.commitSync();
 //            }
 //        }
 //
@@ -120,9 +112,8 @@
 //        String[] msgs = msg.split(" ");
 //        //按空格划分, 会有多余空格项, 要去除
 //        List<String> localMsgs=Arrays.asList(msgs);//将数组转换为list集合
-//        if(localMsgs.contains("")){//加入集合中包含这个元素
+//        if(localMsgs.contains("")){//假如集合中包含这个元素
 //            //这个时候我们直接移除会报错,所以我们要转换为Arraylist
-//            //list.remove("张三");
 //            List<String> changeMsgs=new ArrayList<String>(localMsgs);//转换为ArrayLsit调用相关的remove方法
 //            changeMsgs.remove("");
 //            for (int i = 0; i < changeMsgs.size(); i++) {
@@ -138,11 +129,13 @@
 //        if (file_name.indexOf("T639-GMFS-HNEHE") == -1){
 //            return null;
 //        }
-//        logger.info("筛选后："+msg);
+////        logger.info("筛选后："+msg);
 ////        msg = "Tue Jul  3 00:15:55 2018 1 10.20.49.131 53313806 /2018070212/Z_NAFP_C_BABJ_20180702120000_P_CNPC-T639-GMFS-HNEHE-00600.grib2 b _ i r cwfs ftp 0 * c 10.14.83.63";
 //        String file_sizeStr = msgs[7];
 //        String event_status = msgs[15];
 //        String ipAddr = msgs[18];
+//
+//        String[] filePaths = file_name.split("/");
 //
 //        //成功匹配到，入库
 //        try {
@@ -160,18 +153,23 @@
 ////			String occur_time = sdf.format(date);
 //            data.put("occur_time", occur_time);
 //
-////            String timeFormat = dataSourceSetting.getTimeFormat();
-////            String dataTimeStr = timeStr.substring(0, timeFormat.length());
-////            sdf.applyPattern(timeFormat);
-////            Date dataTime = sdf.parse(dataTimeStr);
-////            sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-////            String data_time = sdf.format(dataTime);
+//            sdf.applyPattern("yyyyMMddHH");
+//            String strTime = filePaths[1];
+//
+//            Date dataTime_H = sdf.parse(strTime);
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(dataTime_H);
+//
+//            String strHour = filePaths[2].replace(".grib2","").split("-")[4];
+//            strHour = strHour.substring(0,3);
+//            calendar.add(Calendar.HOUR_OF_DAY,Integer.parseInt(strHour));
+//
+//            sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+//            String data_time = sdf.format(calendar.getTime());
 //
 //            long file_size_long = Long.parseLong(file_sizeStr);
 //
 //            // 采集数据中不包含的数据，后期从配置库中获取
-//            data.put("should_time", 0);
-//            data.put("last_time", 0);
 //            data.put("name", "T639采集");
 //            data.put("type", "T639");
 //
@@ -179,7 +177,7 @@
 //            field.put("file_size", file_size_long);
 //            field.put("data_time", data_time);
 //            field.put("event_status", event_status);
-//            field.put("ip_addr", ipAddr);
+//            field.put("ip_addr", "10.30.16.220");
 //            field.put("module", "采集");
 //            data.put("fields", field);
 //        } catch (ParseException e) {
