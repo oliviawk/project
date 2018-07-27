@@ -254,10 +254,10 @@ $('#baseSourceModal').on('shown.bs.modal', function (event) {
         "minute": 120
     };
 
-    displayCpuUsed("../laps/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
-    displayMemoryUsed("../laps/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
-    displayNetUsed("../laps/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
-    directorUsage("../laps/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayCpuUsed("../basicresource/getCpuData", "#cpuUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayMemoryUsed("../basicresource/getMemoryData", "#memoryUsed", 1000 * 60 * 10, JSON.stringify(params));
+    displayNetUsed("../basicresource/getNetData", "#netUsed", 1000 * 60 * 10, JSON.stringify(params));
+    directorUsage("../basicresource/getDirectoryUsedData", "#directoryUsed", 1000 * 60 * 10, JSON.stringify(params));
 
 });
 
@@ -267,7 +267,7 @@ $(document).ready(function () {
     setInterval(getBase, 60 * 1000);
 
     function getBase() {
-        var url = "../laps/getBaseEventData";
+        var url = "../basicresource/getBaseEventData";
         var params = {
             "listIp": [
                 "10.30.16.242",
