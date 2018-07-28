@@ -197,7 +197,7 @@ public class MQPFService {
                         // 当 数据库里的数据 和 当前数据 一样时（目前是按照数据状态来判断），放弃掉该条数据
                         if (hitsSource_fields.containsKey("event_status") && fields.get("event_status").toString()
                                 .equals(hitsSource_fields.get("event_status"))) {
-                            log.warn("MQPF:--舍弃掉 相同的数据：" + json);
+//                            log.warn("MQPF:--舍弃掉 相同的数据：" + json);
                             continue;
                         }
 
@@ -246,7 +246,7 @@ public class MQPFService {
                             if (hitsSource_fields.containsKey("event_status")
                                     && (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK")
                                     || hitsSource_fields.get("event_status").toString().equals("0"))) {
-                                log.warn("MQPF:--舍弃掉 预修改错误的数据：" + json);
+//                                log.warn("MQPF:--舍弃掉 预修改错误的数据：" + json);
                                 continue;
                             }
                             map.put("aging_status", "异常");

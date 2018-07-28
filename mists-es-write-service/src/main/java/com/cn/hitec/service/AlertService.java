@@ -220,7 +220,7 @@ public class AlertService {
                         es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
                                 .source(JSON.toJSONString(weichartMap), XContentType.JSON));
 
-                        System.out.println("------生成微信");
+                        System.out.println(service_type+"->> --生成微信");
                     }
                     if("1".equals(sms_send_enable)){
                         //转换短信格式告警信息
@@ -255,7 +255,7 @@ public class AlertService {
                         es.bulkProcessor.add(new IndexRequest(index,"sendSMS")
                                 .source(JSON.toJSONString(SMSMap), XContentType.JSON));
 
-                        System.out.println("------生成短信");
+                        System.out.println(service_type+"->> --生成短信");
                     }
 
                 }
@@ -449,7 +449,7 @@ public class AlertService {
                     es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
                             .source(JSON.toJSONString(weichartMap), XContentType.JSON));
 
-                    System.out.println(type+"->> -生成微信");
+                    System.out.println(service_type+"->> -生成微信");
 
                 }
 
