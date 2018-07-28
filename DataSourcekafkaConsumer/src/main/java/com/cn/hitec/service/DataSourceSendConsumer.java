@@ -113,7 +113,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				// 采集数据中不包含的数据，后期从配置库中获取
 //				data.put("should_time", 0);
 //				data.put("last_time", 0);
-				data.put("name", "分钟降水-雷达基数据");
+				data.put("name", "雷达基数据");
 				data.put("type", fileNames[0]+"_"+fileNames[1]+"_"+fileNames[2]+"_"+fileNames[3]);
 
 				field.put("file_name", file_name_log);
