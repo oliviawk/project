@@ -201,7 +201,7 @@ public class Pub {
 		str = str.replace("[处理方案]","(目前还没有实现处理方案)");
 //		str = str.replace("[错误信息]",alertBean.getDesc() == null ? "错误信息为空":alertBean.getDesc());
         str = str.replace("[提示信息]",alertBean.getDesc() == null ? "[提示信息为空]":alertBean.getDesc());
-		str = str.replace("[错误详情]",alertBean.getDesc() == null ? "错误详情为空":alertBean.getErrorMessage());
+		str = str.replace("[错误详情]",alertBean.getErrorMessage() == null ? "错误详情为空":alertBean.getErrorMessage());
 		return str;
 	}
 
