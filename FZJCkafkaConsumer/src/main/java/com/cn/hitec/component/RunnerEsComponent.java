@@ -33,6 +33,7 @@ public class RunnerEsComponent implements CommandLineRunner {
     LAPSCollectConsumer lapsCollectConsumer;
     @Autowired
     LAPSCollectConsumerEX LAPSCollectConsumerEX;
+
     @Override
     public void run(String... strings) throws Exception {
         Thread mqthread = new Thread(){
