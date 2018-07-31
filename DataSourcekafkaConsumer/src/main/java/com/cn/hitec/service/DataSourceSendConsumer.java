@@ -67,9 +67,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
         // 不是这个用户发的不需要
         String user = msgs[13];
 
-        if ("upload".equals(user)){
-        	return null;
-        }
+
         String file_name_log = msgs[8];
 		file_name_log=file_name_log.replace(".tmp","");
 
@@ -80,6 +78,10 @@ public class DataSourceSendConsumer extends MsgConsumer{
         if(file_name_log.indexOf("/radar-base/bz2") > -1){	//说明是MQPF的雷达日志
 //			Sun Feb 25 03:32:31 2018 1 10.1.72.76 647951 /radar-base/bz2/Z_RADR_I_Z9519_20180224192600_O_DOR_SA_CAP.bin.bz2.tmp b _ i r nmic_provider ftp 0 * c
 			try {
+				String sourceIp = msgs[6];	//消息来源
+				if(!("10.1.72.77".equals(sourceIp) || "10.1.72.76".equals(sourceIp) || "10.1.72.75".equals(sourceIp) || "10.1.72.74".equals(sourceIp))){
+					return null;
+				}
 				file_sizeStr = msgs[7];
 				event_status = msgs[15];
 				ipAddr = msgs[18];
@@ -98,13 +100,9 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				data.put("occur_time", occur_time);
 
 				String[] filePaths = file_name_log.split("/");
-				if (filePaths.length != 4){
-					return null;
-				}
+
 				String[] fileNames = filePaths[3].split("_");
-				if (fileNames.length != 9){
-					return null;
-				}
+
 				sdf.applyPattern("yyyyMMddHHmmss");
 				Date dataTime = sdf.parse(fileNames[4]);
 				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
@@ -115,7 +113,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				// 采集数据中不包含的数据，后期从配置库中获取
 //				data.put("should_time", 0);
 //				data.put("last_time", 0);
-				data.put("name", "分钟降水-雷达基数据");
+				data.put("name", "雷达基数据");
 				data.put("type", fileNames[0]+"_"+fileNames[1]+"_"+fileNames[2]+"_"+fileNames[3]);
 
 				field.put("file_name", file_name_log);
@@ -132,8 +130,9 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				outData.put("type", "MQPF_DataSource");
 				outData.put("data", data);
 			} catch (ParseException e) {
-				logger.error("解析 雷达基数据 日志并组装入库数据出错");
-				e.printStackTrace();
+				logger.error("解析 雷达基数据 日志并组装入库数据出错:"+e.getMessage());
+				logger.warn(msg);
+//				e.printStackTrace();
 				return null;
 			}
 			return outData;
@@ -146,8 +145,6 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			return  null;
 		}
 		String UserCatalog_username=user_catalog.getUser_catalog_content();
-
-//        logger.info(msg);
 
 		file_sizeStr = msgs[7];
 		event_status = msgs[15];
@@ -264,8 +261,9 @@ public class DataSourceSendConsumer extends MsgConsumer{
 
 			logger.info("成功匹配入库：{}",JSON.toJSONString(outData));
 		} catch (ParseException e) {
-			logger.error("解析日志并组装入库数据出错");
-			e.printStackTrace();
+			logger.error("解析日志并组装入库数据出错:"+e.getMessage());
+			logger.warn(msg);
+//			e.printStackTrace();
 		}
 		return outData;
     }

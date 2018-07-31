@@ -89,9 +89,9 @@ public class MsgConsumer {
         esBean.setType("DATASOURCE");
         esBean.setIndex("");
 
-        EsBean esBean_t639 = new EsBean();
-        esBean_t639.setType("MQPF");
-        esBean_t639.setIndex("");
+        EsBean esBean_mqpf = new EsBean();
+        esBean_mqpf.setType("MQPF");
+        esBean_mqpf.setIndex("");
 
         long startTime1 = System.currentTimeMillis();
         long startTime2 = System.currentTimeMillis();
@@ -100,7 +100,7 @@ public class MsgConsumer {
         long useaTime2 = 0;
         long useaTime3 = 0;
         List<Object> possibleNeedDataList = new ArrayList<Object>();
-        List<String> T639List = new ArrayList<String>();
+        List<String> mqpfList = new ArrayList<String>();
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(1000);
@@ -118,7 +118,7 @@ public class MsgConsumer {
                     }else if ("noDataSource".equals(data.get("type"))){
                         possibleNeedDataList.add(data.get("data"));
                     }else if ("MQPF_DataSource".equals(data.get("type"))){
-                        T639List.add(JSON.toJSONString(data.get("data")));
+                        mqpfList.add(JSON.toJSONString(data.get("data")));
                     }
                 }
                 useaTime1 = System.currentTimeMillis() - startTime1;
@@ -150,15 +150,14 @@ public class MsgConsumer {
                     possibleNeedDataList.clear();
                     startTime2 = System.currentTimeMillis();
                 }
-                if(T639List.size() > 3000 || (T639List.size() > 0 && useaTime3 > 5000)){
-                    esBean_t639.setData(T639List);
+                if(mqpfList.size() > 3000 || (mqpfList.size() > 0 && useaTime3 > 5000)){
+                    esBean_mqpf.setData(mqpfList);
                     //执行入库
                     //
-//                    logger.info("入T639数据："+T639List.toString());
-                    Map<String, Object> insertDataSource = dataSourceEsInterface.insertMQPFData(esBean_t639);
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.insertMQPFData(esBean_mqpf);
 //                	System.out.println(JSON.toJSONString(insertDataSource));
-                    logger.info("入库T639数据返回结果："+ JSON.toJSONString(insertDataSource));
-                    T639List.clear();
+                    logger.info("入库MQPF数据返回结果："+ JSON.toJSONString(insertDataSource));
+                    mqpfList.clear();
                     startTime3 = System.currentTimeMillis();
                 }
                 consumer.commitSync();

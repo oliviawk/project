@@ -442,10 +442,6 @@ public class ESService {
 										}
 									}
 
-									/*if (alertBean != null) {
-										alertService.alert(es,index, alertType, alertBean); // 生成告警
-										alertBean = null;
-									}*/
 								}
 								//用文件本身的到达时间和最晚到达时间做比较，判断是否超时到达
 								long occurTime = Long.valueOf(map.get("occur_time").toString());
@@ -482,7 +478,7 @@ public class ESService {
 								String alertTitle = subType + "--" + fields.get("module") + "--"
 										+ fields.get("data_time") + " 时次产品 ，发生错误："
 										+ fields.get("event_info").toString();
-								fields.put("event_info", "数据异常");
+								fields.put("event_info", "数据状态码错误："+ fields.get("event_status"));
 								// 初始化告警实体类
 								alertBean = alertService.getAlertBean(AlertType.ABNORMAL.getValue(), alertTitle, type,map);
 							}
@@ -508,7 +504,7 @@ public class ESService {
 								if(rulesArray.getInteger(4) == 1){
 									String alertTitle = subType + "--" + fields.get("module") + "--"
 											+ fields.get("data_time") + " 时次产品到达";
-									fields.put("event_info", "数据到达");
+									fields.put("event_info", "数据按时正常到达");
 									alertBean = alertService.getAlertBean(AlertType.NOTE.getValue(), alertTitle, type,map);
 									alertService.alert(es,index, alertType, alertBean,rulesArray);
 								}

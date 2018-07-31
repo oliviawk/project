@@ -220,7 +220,7 @@ public class AlertService {
                         es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
                                 .source(JSON.toJSONString(weichartMap), XContentType.JSON));
 
-                        System.out.println("------生成微信");
+                        System.out.println(service_type+"->> --生成微信");
                     }
                     if("1".equals(sms_send_enable)){
                         //转换短信格式告警信息
@@ -255,7 +255,7 @@ public class AlertService {
                         es.bulkProcessor.add(new IndexRequest(index,"sendSMS")
                                 .source(JSON.toJSONString(SMSMap), XContentType.JSON));
 
-                        System.out.println("------生成短信");
+                        System.out.println(service_type+"->> --生成短信");
                     }
 
                 }
@@ -367,8 +367,8 @@ public class AlertService {
             }else if(AlertType.ABNORMAL.getValue().equals(alertType)){
                 alertBean.setDesc("数据异常");
             }else if(AlertType.DELAY.getValue().equals(alertType)){
-                String  temp = alertTitle.substring(alertTitle.indexOf(",延迟")+1,alertTitle.length());
-                alertBean.setDesc(temp);
+//                String  temp = alertTitle.substring(alertTitle.indexOf(",延迟")+1,alertTitle.length());
+                alertBean.setDesc("延迟到达");
             }else if(AlertType.FILEEX.getValue().equals(alertType)){
                 //文件错误
                 alertBean.setDesc("文件大小异常");
@@ -382,5 +382,82 @@ public class AlertService {
         return alertBean;
     }
 
+
+
+    /**
+     * 告警信息生成(MQPF雷达基数据告警样例) 参数必填
+     * @param index
+     * @param type
+     * @param alertBean
+     * @throws Exception
+     */
+    public void alert_MQPF(ESRepository es,String index , String type , AlertBeanNew alertBean){
+
+        try {
+
+            //判断是否重复告警
+            String module_key = alertBean.getGroupId()+","+alertBean.getDataName()+","+alertBean.getIpAddr();
+            String str_id = Pub.MD5(module_key+","+alertBean.getData_time());
+
+            String documentId = getDocumentById(es,index,type,str_id);
+
+            if(documentId != null){ //如果有ID
+                return;
+            }else{
+                //保存告警信息
+                IndexResponse response = es.client.prepareIndex(index,type,str_id)
+                        .setSource(JSON.toJSONString(alertBean),XContentType.JSON).get();
+
+                documentId = response.getId();
+
+                if(StringUtils.isEmpty(documentId)){
+                    throw new Exception("插入数据失败");
+                }
+            }
+
+            boolean isAlert = true;
+
+            if(isAlert){
+                /* 生成 微信告警信息*/
+                String[] s = alertBean.getGroupId().split("_");
+                if(s.length != 3){
+                    System.err.println(JSON.toJSONString(s));
+                    return ;
+                }
+                String service_type = s[1];
+                String subName = alertBean.getDataName();
+                String module = s[2];
+                String ipAddr = alertBean.getIpAddr();
+
+
+                String strKey = service_type+","+subName+","+module+","+ipAddr;
+//                log.info("配置map:"+Pub.DI_ConfigMap.size()+",--"+strKey);
+                    String weChartContent = alertBean.getOccur_time()+" \n"+service_type+"业务" +alertBean.getIpAddr()+alertBean.getModule()
+                            +"端，雷达基数据"+"-"+ alertBean.getDataName() + " "+alertBean.getDesc() +" ," +alertBean.getErrorMessage();
+
+                    //转换微信格式告警信息
+                    //查询发送的用户
+                    String strUsers = "";
+                    // 存入微信待发送消息
+                    Map<String,Object> weichartMap = new HashMap<>();
+//                        weichartMap.put("sendUser","QQ670779441|FuTieQiang");      //测试
+                    weichartMap.put("sendUser", StringUtils.isEmpty(strUsers) ? "@all":strUsers);         //正式
+                    weichartMap.put("alertTitle",weChartContent);
+                    weichartMap.put("isSend","false");
+                    weichartMap.put("send_time",0);
+                    weichartMap.put("create_time",System.currentTimeMillis());
+                    es.bulkProcessor.add(new IndexRequest(index,"sendWeichart")
+                            .source(JSON.toJSONString(weichartMap), XContentType.JSON));
+
+                    System.out.println(service_type+"->> -生成微信");
+
+                }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+
+    }
 
 }

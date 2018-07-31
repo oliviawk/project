@@ -85,4 +85,31 @@ public class MQPFWriteApi extends BaseController {
 		return outMap;
 	}
 
+	@RequestMapping(value = "/update", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> update(@RequestBody EsBean esBean) {
+		if (esBean == null || esBean.getData() == null || esBean.getData().size() <= 0) {
+			outMap.put(KEY_RESULT, VAL_ERROR);
+			outMap.put(KEY_RESULTDATA, null);
+			outMap.put(KEY_MESSAGE, "MQPF修改数据失败！数据为 null");
+			return outMap;
+		}
+		long start = System.currentTimeMillis();
+		Map<String, Object> map = new HashMap<>();
+
+		int num = mqpfService.insertMQPFCollectionData_220(esBean.getType(), esBean.getData());
+		if (num == 0 || esBean.getData().size() > num) {
+			outMap.put(KEY_MESSAGE, "数据修改失败");
+		} else {
+			outMap.put(KEY_MESSAGE, "数据修改成功");
+		}
+		map.put("update_number", num);
+		long spend = System.currentTimeMillis() - start;
+		outMap.put(KEY_RESULT, VAL_SUCCESS);
+		outMap.put(KEY_RESULTDATA, map);
+
+		outMap.put(KEY_SPEND, spend + "mm");
+		return outMap;
+	}
+
+
 }

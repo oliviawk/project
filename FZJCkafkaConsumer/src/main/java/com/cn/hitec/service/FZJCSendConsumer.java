@@ -47,11 +47,12 @@ public class FZJCSendConsumer extends MsgConsumer {
 			String date = "";
 			String beginTime = "";
 			String endTime = "";
-			String ip = lines[0];
+			String ip = "";
 			String target_ip = "";
 			String type = "";
 			boolean add = false;
 
+			Pattern ippattern = Pattern.compile("^(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})$");
 			Pattern typepattern = Pattern.compile("log_tran_(.+)_(\\d{8})");
 			Pattern timepattern1 = Pattern
 					.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}).+(\\d{2}:\\d{2}:\\d{2})");
@@ -65,7 +66,17 @@ public class FZJCSendConsumer extends MsgConsumer {
 					"yyyy-MM-dd HH:mm:ss.SSSZ");
 			List<JSONObject> list = new ArrayList<JSONObject>();
 			long receive_time = new Date().getTime();
-			for (int i = 1; i < lines.length; i++) {
+			for (int i = 0; i < lines.length; i++) {
+				if("".equals(ip)){
+					matcher = ippattern.matcher(lines[i]);
+					if (matcher.find()) {
+						ip = matcher.group(1);
+					}
+					continue;
+				}
+
+
+
 				matcher = typepattern.matcher(lines[i]);
 				if (matcher.find()) {
 					type = matcher.group(1);

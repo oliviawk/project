@@ -71,8 +71,14 @@ public class MsgConsumer {
         esBean.setType(type);
         long startTime = System.currentTimeMillis();
         long useaTime = 0;
+
+        List<String> list_mqpf_220  = new ArrayList<>();
+        long startTime_mqpf220 = System.currentTimeMillis();
+        long useaTime_mqpf220 = 0;
+
         while (true) {
             try {
+
                 ConsumerRecords<String, String> records = consumer.poll(1000);
                 for (ConsumerRecord<String, String> record : records) {
 
@@ -81,9 +87,22 @@ public class MsgConsumer {
 //                        break;
 //                    }
                     List<String> msgs = processing(msg);
-
                     if(msgs != null && msgs.size() > 0) {
-                        list.addAll(msgs);
+                        if ("MQPF_AC".equals(topic)){
+                            if (msgs.size() <= 1){
+                                continue;
+                            }
+                            if ("采集".equals(msgs.get(msgs.size() -1 ))){
+                                msgs.remove(msgs.size() - 1 );
+                                list_mqpf_220.addAll(msgs);
+
+                            }else if ("分发".equals(msgs.get(msgs.size() -1 ))){
+                                msgs.remove(msgs.size() - 1 );
+                                list.addAll(msgs);
+                            }
+                        }else{
+                            list.addAll(msgs);
+                        }
                     }
 
                 }
@@ -92,17 +111,29 @@ public class MsgConsumer {
                 if (list.size() > 1000 || (list.size() > 0 && useaTime > 5000)) {
                     esBean.setData(list);
                     String responst = esService.add(esBean);
-                    logger.info("mqpf数据入库信息："+responst);
+                    logger.info(type+"数据入库信息1："+responst);
 
                     startTime = System.currentTimeMillis();
                     list.clear();
                 }
-                consumer.commitSync();
+                useaTime_mqpf220 = System.currentTimeMillis() - startTime_mqpf220;
+                if (list_mqpf_220.size() > 1000 || (list_mqpf_220.size() > 0 && useaTime_mqpf220 > 5000)) {
+                    EsBean esBean_mqpf220 = new EsBean();
+                    esBean_mqpf220.setType(type);
+                    esBean_mqpf220.setData(list_mqpf_220);
+                    String responst = esService.update_mqpf220(esBean_mqpf220);
+                    logger.info(type+"数据入库信息2："+responst);
+
+                    startTime_mqpf220 = System.currentTimeMillis();
+                    list_mqpf_220.clear();
+                }
 
             }catch (Exception e){
                 logger.error("!!!!!!error");
                 logger.debug("",e);
                 e.printStackTrace();
+            }finally {
+                consumer.commitSync();
             }
         }
 

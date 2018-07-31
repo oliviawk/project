@@ -92,21 +92,23 @@ public class SendAlertMessage {
 				alertBean.setSubName(map.get("name").toString());
 				alertBean.setData_time(fields.get("data_time").toString());
 				alertBean.setIpAddr(ipAddr);
-				if("DATASOURCE".equals(str_type)){
-					alertBean.setShould_time(map.containsKey("should_time") ? map.get("should_time").toString():"0");
-					alertBean.setLast_time(map.containsKey("last_time") ? map.get("last_time").toString():"0");
-				}else{
-					alertBean.setShould_time(map.containsKey("should_time") ?
-							Pub.transform_DateToString(
-									Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-									"yyyy-MM-dd HH:mm:ss")
-							: "0");
-					alertBean.setLast_time(map.containsKey("last_time") ?
-							Pub.transform_DateToString(
-									Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
-									"yyyy-MM-dd HH:mm:ss")
-							: "0");
-				}
+//				if("DATASOURCE".equals(str_type)){
+//					alertBean.setShould_time(map.containsKey("should_time") ? map.get("should_time").toString():"0");
+//					alertBean.setLast_time(map.containsKey("last_time") ? map.get("last_time").toString():"0");
+//				}else{
+//					alertBean.setShould_time(map.containsKey("should_time") ?
+//							Pub.transform_DateToString(
+//									Pub.transform_StringToDate(map.get("should_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//									"yyyy-MM-dd HH:mm:ss")
+//							: "0");
+//					alertBean.setLast_time(map.containsKey("last_time") ?
+//							Pub.transform_DateToString(
+//									Pub.transform_StringToDate(map.get("last_time").toString(), "yyyy-MM-dd HH:mm:ss.SSSZ"),
+//									"yyyy-MM-dd HH:mm:ss")
+//							: "0");
+//				}
+				alertBean.setShould_time(map.containsKey("should_time") ? map.get("should_time").toString():"0");
+				alertBean.setLast_time(map.containsKey("last_time") ? map.get("last_time").toString():"0");
 
 				alertBean.setReceive_time("0");
 				alertBean.setEventTitle(alertTitle);

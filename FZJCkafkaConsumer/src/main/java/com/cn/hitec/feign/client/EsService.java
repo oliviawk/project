@@ -40,4 +40,7 @@ public interface EsService {
 	@RequestMapping(value="/write/updatebyid",method=RequestMethod.POST,consumes="application/json")
 	public Map<String,Object> updatebyid(UpdatebyIdBean esbean );
 
+
+	@RequestMapping(value = "/mqpfsource/update", method = RequestMethod.POST, consumes = "application/json")
+	public String update_mqpf220(@RequestBody EsBean esBean);
 }
