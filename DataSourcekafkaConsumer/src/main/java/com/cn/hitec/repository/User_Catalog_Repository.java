@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface User_Catalog_Repository extends JpaRepository<User_Catalog,String> {
 
-    @Query(value="select * from User_Catalog WHERE user_name=?", nativeQuery=true )
-     User_Catalog   findAll_User_catalog(String user_name);
+    @Query(value="select * from User_Catalog WHERE user_name=?1 and user_catalog_ip=?2", nativeQuery=true )
+     User_Catalog   findAll_User_catalog(String user_name,String user_catalog_ip);
 }

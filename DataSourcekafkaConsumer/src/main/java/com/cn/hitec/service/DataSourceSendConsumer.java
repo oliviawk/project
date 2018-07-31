@@ -139,16 +139,16 @@ public class DataSourceSendConsumer extends MsgConsumer{
 		}else if(file_name_log.indexOf("?") > -1  || file_name_log.indexOf("RADA") != -1 || file_name_log.indexOf("RADR") != -1){
 			return null;
 		}
-
-		User_Catalog user_catalog=user_catalog_repository.findAll_User_catalog(user);
+		file_sizeStr = msgs[7];
+		event_status = msgs[15];
+		ipAddr = msgs[18];
+		User_Catalog user_catalog=user_catalog_repository.findAll_User_catalog(user,ipAddr);
 		if (user_catalog == null || StringUtils.isEmpty(user_catalog.getUser_catalog_content())){
 			return  null;
 		}
 		String UserCatalog_username=user_catalog.getUser_catalog_content();
 
-		file_sizeStr = msgs[7];
-		event_status = msgs[15];
-		ipAddr = msgs[18];
+
 
 		String regEx = "[^0-9]";//匹配指定范围内的数字
 		//Pattern是一个正则表达式经编译后的表现模式
