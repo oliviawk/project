@@ -247,12 +247,13 @@ public class DataSourceSettingController {
 		String message = "成功";
 		String user_catalog_name=request.getParameter("User_catalog_name");
 		String userfile=request.getParameter("Userfile");
+		String user_ip=request.getParameter("User_ip");
 		userfile=userfile.trim();
 		user_catalog_name=user_catalog_name.trim();
-		User_Catalog user_catalog=dataSourceSettingService.findAll_User_catalog(user_catalog_name);
+		User_Catalog user_catalog=dataSourceSettingService.findAll_User_catalog(user_catalog_name,user_ip);
 		if (null==user_catalog){
 			outData.put("type", "fail");
-			outData.put("message", "根据用户名查询数据返回user_catalog为空");
+			outData.put("message", "用户目录不存在");
 			return outData;
 		}
 		String [] userfilearrray=userfile.split("/");

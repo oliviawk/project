@@ -23,4 +23,8 @@ public interface DataInfoRepository extends JpaRepository<DataInfo, Long>{
     @Transactional
     @Query(value=" DELETE from data_info  WHERE   name=?  AND  ip=?  AND  file_name_define=?  AND file_path=? ",nativeQuery = true)
     int deletedatainfo(String name,String ip,String file_name_define,String file_path);
+
+    @Query(value="select id from data_info  WHERE  name=?1  AND  ip=?2  AND  file_name_define=?3  AND file_path=?4 ",nativeQuery = true)
+    long  findDatainfoID(String name,String ip,String file_name_define,String file_path);
+
 }

@@ -104,16 +104,12 @@ $(function(){
 		debugger;
 		var selected = $(this).find("option:selected").text();
 		var  result=selected.split("/");
-		// var siteNum = selected.lastIndexOf("/");
-		// var directory = selected.substring(0, siteNum + 1);
-		// $("#directory").val(directory);
-		// var fileName = selected.replace(directory, "");
 		$("#fileName").val(result[result.length-1]);
 
         $.ajax({
             url: "/dataSourceSetting/finAllUsercatalog",
             data:{"User_catalog_name":$("#SendUserNameSelect").find("option:selected").text(),
-			"Userfile":$(this).find("option:selected").text()},
+			"Userfile":$(this).find("option:selected").text(),"User_ip":$("#IpAddrSelect").find("option:selected").text()},
             type: "post",
             success: function(result){
                 if (result.type == 'fail'){
@@ -236,6 +232,7 @@ $(function(){
         }
           if (!bool){
          	alert("你有选项未选择，或有栏目未填写！！！")
+              $("#submitBtn").attr("disabled",false);
 			  return ;
 		  }
 

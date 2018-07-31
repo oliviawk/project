@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import hitec.domain.Alert_strategy;
 import hitec.domain.User_Catalog;
-import hitec.repository.User_Catalog_Repository;
+import hitec.repository.*;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -33,9 +35,6 @@ import com.alibaba.fastjson.JSONObject;
 import hitec.domain.DataInfo;
 import hitec.domain.DataSourceSetting;
 import hitec.feign.client.DataSourceEsInterface;
-import hitec.repository.DataInfoRepository;
-import hitec.repository.DataSourceSettingRepository;
-import hitec.repository.ESRepository;
 
 @Service("DataSourceSettingService")
 public class DataSourceSettingService {
@@ -52,7 +51,8 @@ public class DataSourceSettingService {
 	DataInfoRepository dataInfoRepository;
 	@Autowired
 	User_Catalog_Repository user_catalog_repository;
-
+    @Autowired
+	Alert_strategy_Repository alert_strategy_repository;
 	@Value("${es.indexHeader}")
 	public String indexHeader;
 	
@@ -106,10 +106,10 @@ public class DataSourceSettingService {
 			dataSourceSetting.setDepartmentName(request.getParameter("departmentName"));
 			dataSourceSetting.setUseDepartment(request.getParameter("useDepartment"));
 			dataSourceSetting.setMoniterTimer(request.getParameter("moniterTimer"));
-			//取出所有的DataSourcesSetting和添加的数据对比查看是否存在，如果存在则直接返回并提示数据已存在！
+			/**取出所有的DataSourcesSetting和添加的数据对比查看是否存在,如果存在则直接返回并提示数据已存在！**/
 			List<DataSourceSetting> dataSourceSettingList=dataSourceSettingRepository.findAll();
 			for (DataSourceSetting dataSourceSettingone :dataSourceSettingList){
-				//根据用户ip，用户名，文件名和文件路径判断是否相同，如果四个条件同时满足那就是同一条数据
+				//根据用户ip，用户名，文件名和文件路径判断是否相同，如果四个条件同时满足那就是同一条数据， 同时数据名字不能相同，只要名字相同即视为同一条数据.
 				if (dataSourceSetting.getName().equals(dataSourceSettingone.getName()) ||
 						(dataSourceSetting.getFileName().equals(dataSourceSettingone.getFileName())&&
 						dataSourceSetting.getDirectory().equals(dataSourceSettingone.getDirectory())&&
@@ -385,12 +385,11 @@ public class DataSourceSettingService {
 
 	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) {
 		dataSourceSettingRepository.delete(arrayList);
-		int shu=100;
+		int shu=0;
+		int shutwo=0;
+		long pk_id=-1;
 		    for (DataSourceSetting dataSourceSetting: arrayList){
 		    	logger.info("开始删除datainfo数据");
-		    	logger.info(dataSourceSetting.getName());
-		    	logger.info(dataSourceSetting.getIpAddr());
-		    	logger.info(dataSourceSetting.getDirectory());
 		    	String filename=dataSourceSetting.getFileName();
 		    	String timeformat=dataSourceSetting.getTimeFormat();
 		    	if (timeformat!=null && !timeformat.equals("")){
@@ -402,15 +401,23 @@ public class DataSourceSettingService {
 				else {
 		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
 				}
-				logger.info(filename);
-		      shu =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
-				logger.info(filename+"个数："+shu);
+
+		    	pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+			   if(pk_id!=-1){
+				   shu=alert_strategy_repository.delectAlert_strategy(pk_id);
+			   }
+			   else {
+			   	logger.info("删除Alert_stratergy_Repository失败未查询到对应的pk_id");
+			   }
+				logger.info("删除Alert_stratergy_Repository个数："+shu);
+		        shutwo =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+				logger.info(filename+"个数："+shutwo);
 		    }
 
 	}
 
-	public User_Catalog findAll_User_catalog(String user_name){
+	public User_Catalog findAll_User_catalog(String user_name,String user_ip){
 		User_Catalog user_catalog=null;
-		return user_catalog=user_catalog_repository.findAll_User_catalog(user_name);
+		return user_catalog=user_catalog_repository.findAll_User_catalog(user_name,user_ip);
 	}
 }
