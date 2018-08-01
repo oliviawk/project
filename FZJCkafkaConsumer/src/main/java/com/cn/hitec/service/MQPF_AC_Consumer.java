@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class MQPF_AC_Consumer extends MsgConsumer{
-    private static final Logger logger = LoggerFactory.getLogger(FZJCSendConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(MQPF_AC_Consumer.class);
     private static String topic = "MQPF_AC";
     private static String type = "MQPF";
 
