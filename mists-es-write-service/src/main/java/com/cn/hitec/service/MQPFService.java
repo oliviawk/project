@@ -223,7 +223,7 @@ public class MQPFService {
                         if (fields.get("event_status").toString().toUpperCase().equals("OK")
                                 || fields.get("event_status").toString().equals("0")) {
                             map.put("aging_status", "正常");
-
+                            fields.put("event_info", "正常");
                             //判断文件大小是否正常
                             String strSizeDefine = hitsSource_fields.containsKey("file_size_define") ? hitsSource_fields.get("file_size_define").toString():"";
                             if (!StringUtils.isEmpty(strSizeDefine)){
@@ -278,9 +278,10 @@ public class MQPFService {
                             if (fields.get("event_status").toString().toUpperCase().equals("OK")
                                     || fields.get("event_status").toString().equals("0")) {
                                 map.put("aging_status", "正常");
-                                // fields.put("event_info","正常");
+                                fields.put("event_info","正常");
                             } else {
                                 map.put("aging_status", "异常");
+                                fields.put("event_info","数据状态码："+fields.get("event_status"));
                             }
                         }
 
