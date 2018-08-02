@@ -134,16 +134,31 @@ public class FZJCSendConsumer extends MsgConsumer {
 							}
 
 							if(type.equals("satellite") || type.equals("cloudmap_Guowuyuan") || type.equals("cloudProduct")){
+								String time = "";
+								String[] arr = matcher.group(1).split("_");
 								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20171018060000000.png
 								//SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_20170904190000000.HDF
-								String[] arr = matcher.group(1).split("_");
-								obj.put("type", "云图");
-								obj.put("name", arr[3]);
-								String time = arr[8].substring(0,arr[8].indexOf("."));
+								//FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_20180802050000_20180802051459_4000M_V0001.HDF
+								//FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_4000M_V0001_20180802120000000.png
+								if(matcher.group(1).startsWith("FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_4000M_V0001_")){
+									obj.put("type", "FY4A云图");
+									obj.put("name", "FY4A");
+									time = arr[11].substring(0,arr[11].indexOf("."));
+								}
+								else if(matcher.group(1).startsWith("FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_")){
+									obj.put("type", "FY4A云图");
+									obj.put("name", "FY4A");
+									time = arr[9];
+								}
+								else{
+									obj.put("type", "云图");
+									obj.put("name", arr[3]);
+									time = arr[8].substring(0,arr[8].indexOf("."));
+								}
 
 								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 								Date d = df.parse(time);
-								if(arr[8].endsWith(".HDF")){
+								if(matcher.group(1).endsWith(".HDF")){
 									d.setHours(d.getHours()+8);
 								}
 								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");

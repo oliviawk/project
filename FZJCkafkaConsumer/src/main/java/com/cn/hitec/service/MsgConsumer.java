@@ -83,9 +83,9 @@ public class MsgConsumer {
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
-//                    if(msg.indexOf("1h") > -1 ){
-//                        break;
-//                    }
+
+                    System.out.println(msg);
+
                     List<String> msgs = processing(msg);
                     if(msgs != null && msgs.size() > 0) {
                         if ("MQPF_AC".equals(topic)){
