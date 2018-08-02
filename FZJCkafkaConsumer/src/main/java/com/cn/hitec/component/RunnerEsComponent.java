@@ -22,6 +22,8 @@ public class RunnerEsComponent implements CommandLineRunner {
     @Autowired
     MQPF_AC_Consumer mqpf_ac_consumer;
     @Autowired
+    RGF_Consumer rgf_consumer;
+    @Autowired
     FZJCWorkingConsumer kafkaConsumer;
     @Autowired
     LAPS_WSConsumer lapsConsumer;
@@ -43,6 +45,14 @@ public class RunnerEsComponent implements CommandLineRunner {
             }
         };
         mqthread.start();
+
+        Thread rgfThread = new Thread(){
+            @Override
+            public void run(){
+                rgf_consumer.consume();
+            }
+        };
+        rgfThread.start();
 
         Thread fzjc = new Thread(){
 

@@ -22,16 +22,14 @@ public class MQPF_AC_Consumer extends MsgConsumer{
     private static String topic = "MQPF_AC";
     private static String type = "MQPF";
 
-
-    private static String INFO = "!!!Info";
-    @Value("${MQPF.NC5M.PATH}")
-    private String MQPF_NC5M_PATH;
-    @Value("${MQPF.NC1H.PATH}")
-    private String MQPF_NC1H_PATH;
-    @Value("${MQPF.PNG5M.PATH}")
-    private String MQPF_PNG5M_PATH;
-    @Value("${MQPF.DISTRIBUTE.220.PATH}")
-    private String MQPF_DISTRIBUTE_220_PATH;
+    @Value("${MQPF.send.target.ips}")
+    private String ips;
+    @Value("${MQPF.datatype}")
+    private String datatypes;
+    @Value("${MQPF.collect}")
+    private String collect;
+    @Value("${MQPF.send}")
+    private String send;
 
     public MQPF_AC_Consumer(@Value("${MQPF.group.id}")String group) {
         super(topic, group, type);
@@ -40,179 +38,197 @@ public class MQPF_AC_Consumer extends MsgConsumer{
 
     @Override
     public List<String> processing(String msg) throws ParseException {
-        List<String> list = new ArrayList<>();
+        List<String> toEsJsons = new ArrayList<>();
 
-        SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmm");
-        if(msg.indexOf(MQPF_NC5M_PATH) > -1){
-            String[] lines = msg.split("※");
-            if (lines.length < 1){
-                return null;
-            }
-
-            boolean isOk = false;
-            String ip_addr = lines[0];
-            String[] fileNames = lines[1].split("_");
-            String strName = fileNames[3].replace(".log","");
-            Date occTimeD = null;
-            for(int i=0;i < lines.length;i++){
-                if (lines[i].indexOf(INFO) > -1){
-                    if (lines[i].indexOf(MQPF_NC5M_PATH) > -1){
-                        isOk = true;
-                    }else {
-                        isOk = false;
-                    }
-                    continue;
-                }
-                if (!isOk){
-                    continue;
-                }
-                if(lines[i].indexOf("mqpf_") > -1 ){
-                    HashMap<String,Object> file =new HashMap();
-                    HashMap map = new HashMap();
-                    String[] line = lines[i].split( " ");
-
-                    String[] str1 = line[0].split("_");
-                    String Dt = str1[1]+str1[2].replace(".nc","");
-                    dt.applyPattern("yyyyMMddHHmm");
-                    Date oldDt = dt.parse(Dt);
-                    dt.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-                    file.put("data_time",dt.format(oldDt));
-
-                    file.put("event_status",line[5].replace(".",""));
-                    file.put("totalTime",line[7].replace("time:",""));
-                    Long size = Long.parseLong(line[10].replace("size:",""));
-                    file.put("file_size",size);
-                    String mtime = line[13].replace("mtime:","").replace(".","");
-                    file.put("mtime",mtime);
-                    dt.applyPattern("yyyyMMddHH:mm:ss");
-                    occTimeD = dt.parse(strName + mtime);
-
-                    file.put("module","分发");
-                    file.put("ip_addr",ip_addr);
-                    map.put("name","MQPF_NC5M");
-                    map.put("type","MQPF_NC5M");
-                    map.put("occur_time",occTimeD.getTime());
-                    map.put("fields",file);
-                    list.add(JSON.toJSONString(map));
-                }
-
-
-            }
-            list.add("分发");
-        }else if(msg.indexOf(MQPF_PNG5M_PATH) > -1){
-            String[] lines = msg.split("※");
-            if (lines.length < 1){
-                return null;
-            }
-            boolean isOk = false;
-            String ip_addr = lines[0];
-            String[] fileNames = lines[1].split("_");
-            String strName = fileNames[3].replace(".log","");
-            Date occTimeD = null;
-            for(int i=0;i < lines.length;i++){
-                if (lines[i].indexOf(INFO) > -1){
-                    if (lines[i].indexOf(MQPF_PNG5M_PATH) > -1){
-                        isOk = true;
-                    }else {
-                        isOk = false;
-                    }
-                    continue;
-                }
-                if (!isOk){
-                    continue;
-                }
-
-                if(lines[i].indexOf("QPFRef") > -1 ){
-                    HashMap<String,Object> file =new HashMap();
-                    HashMap map = new HashMap();
-                    String[] line = lines[i].split( " ");
-
-                    String[] str1 = line[0].split("_");
-
-                    String Dt = str1[1].replace(".png","");
-                    dt.applyPattern("yyyyMMddHHmm");
-                    Date oldDt = dt.parse(Dt);
-                    dt.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-                    file.put("data_time",dt.format(oldDt));
-                    file.put("event_status",line[5].replace(".",""));
-                    file.put("totalTime",line[7].replace("time:",""));
-                    Long size = Long.parseLong(line[10].replace("size:",""));
-                    file.put("file_size",size);
-                    String mtime = line[13].replace("mtime:","").replace(".","");
-                    file.put("mtime",mtime);
-                    dt.applyPattern("yyyyMMddHH:mm:ss");
-                    occTimeD = dt.parse(strName + mtime);
-
-                    file.put("module","分发");
-                    file.put("ip_addr",ip_addr);
-                    map.put("name","MQPF_PNG5M");
-                    map.put("type","MQPF_PNG5M");
-                    map.put("occur_time",occTimeD.getTime());
-                    map.put("fields",file);
-                    list.add(JSON.toJSONString(map));
-                }
-            }
-            list.add("分发");
-        }else if(msg.indexOf(MQPF_NC1H_PATH) > -1){
-            //当前没有该类型日志，先返回空
-            logger.info(msg);
-            return null;
-        }else if(msg.indexOf(MQPF_DISTRIBUTE_220_PATH) > -1){
-            String[] lines = msg.split("※");
-            if (lines.length < 1){
-                return null;
-            }
-            boolean isOk = false;
-            String ip_addr = lines[0];
-            String[] fileNames = lines[1].split("_");
-            String strTime = fileNames[3].replace(".log","");
-            Date occTimeD = null;
-            for(int i=0;i < lines.length;i++){
-                if (lines[i].indexOf(INFO) > -1){
-                    if (lines[i].indexOf(MQPF_DISTRIBUTE_220_PATH) > -1){
-                        isOk = true;
-                    }else {
-                        isOk = false;
-                    }
-                    continue;
-                }
-                if (!isOk){
-                    continue;
-                }
-
-//                Z_RADR_I_Z9240_20180727033525_O_DOR_SC_CAP.bin.bz2 transfer completed with status 0. Total time:0.045687 sec. File size:645867 bytes. File mtime:11:36:22.
-                if(lines[i].indexOf("Z_RADR_I") > -1 ){
-                    HashMap<String,Object> file =new HashMap();
-                    HashMap map = new HashMap();
-                    String[] line = lines[i].split( " ");
-
-                    String[] str1 = line[0].split("_");
-                    String Dt = str1[4];
-                    String strType = str1[0]+"_"+str1[1]+"_"+str1[2]+"_"+str1[3];
-                    dt.applyPattern("yyyyMMddHHmmss");
-                    Date oldDt = dt.parse(Dt);
-                    dt.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-                    file.put("data_time",dt.format(oldDt));
-                    file.put("event_status",line[5].replace(".",""));
-                    file.put("totalTime",line[7].replace("time:",""));
-                    Long size = Long.parseLong(line[10].replace("size:",""));
-                    file.put("file_size",size);
-                    String mtime = line[13].replace("mtime:","").replace(".","");
-                    file.put("mtime",mtime);
-                    dt.applyPattern("yyyyMMddHH:mm:ss");
-                    occTimeD = dt.parse(strTime + mtime);
-
-                    file.put("module","采集");
-                    file.put("ip_addr",ip_addr);
-                    map.put("name","雷达基数据");
-                    map.put("type",strType);
-                    map.put("occur_time",occTimeD.getTime());
-                    map.put("fields",file);
-                    list.add(JSON.toJSONString(map));
-                }
-            }
-            list.add("采集");
+        Pattern ipspattern = Pattern.compile(ips);
+        Matcher matcher = ipspattern.matcher(msg);
+        if(!matcher.find()){
+            return toEsJsons;
         }
-        return list;
+
+        try{
+
+            String[] lines = msg.split("\\※|\\?");
+            String date = "";
+            String beginTime = "";
+            String endTime = "";
+            String ip = "";
+            String target_ip = "";
+            String type = "";
+            boolean add = false;
+
+            Pattern ippattern = Pattern.compile("^(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})$");
+            Pattern typepattern = Pattern.compile("log_tran_(.+)_(\\d{8})");
+            Pattern timepattern1 = Pattern
+                    .compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}).+(\\d{2}:\\d{2}:\\d{2})");
+            Pattern timepattern2 = Pattern
+                    .compile("(\\d{2}:\\d{2}:\\d{2})");
+            Pattern contextpattern = Pattern
+                    .compile("(.+) transfer completed with status (\\d+)\\. Total time:([0-9|\\.]+) sec\\. File size:(\\d+) bytes\\. File mtime:([0-9|:]+)");
+
+            SimpleDateFormat df1 = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+            SimpleDateFormat df2 = new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSSZ");
+            List<JSONObject> list = new ArrayList<JSONObject>();
+            long receive_time = new Date().getTime();
+            for (int i = 0; i < lines.length; i++) {
+                if("".equals(ip)){
+                    matcher = ippattern.matcher(lines[i]);
+                    if (matcher.find()) {
+                        ip = matcher.group(1);
+                    }
+                    continue;
+                }
+
+
+
+                matcher = typepattern.matcher(lines[i]);
+                if (matcher.find()) {
+                    type = matcher.group(1);
+                    date = matcher.group(2);
+
+                    if(!datatypes.contains(type)){
+                        return toEsJsons;
+                    }
+                } else {
+                    matcher = timepattern1.matcher(lines[i]);
+                    if (matcher.find()) {
+                        target_ip = matcher.group(1);
+                        if(ips.contains(target_ip)){
+                            add = true;
+                            beginTime = endTime = matcher.group(2);
+
+                            Date end = df1.parse(date + endTime);
+
+                            if(list.size() > 0){
+                                for (JSONObject obj : list) {
+
+                                    obj.getJSONObject("fields").element("end_time", df2.format(end));
+                                    obj.put("occur_time", end.getTime());
+
+                                    toEsJsons.add(obj.toString());
+
+//                                    System.out.println(obj.toString());
+                                }
+
+                                list.clear();
+
+                            }
+                        }
+                        else{
+                            add = false;
+                        }
+
+                    } else {
+                        matcher = contextpattern.matcher(lines[i]);
+                        if (matcher.find() && add) {
+
+                            JSONObject obj = new JSONObject();
+                            JSONObject subobj = new JSONObject();
+                            obj.put("receive_time", receive_time);
+
+                            subobj.put("start_time", df2.format(df1.parse(date + beginTime)));
+
+                            subobj.put("ip_addr", ip);
+                            subobj.put("ip_addr_target", target_ip);
+                            if(collect.contains(target_ip)){
+                                subobj.put("module", "采集");
+                            }
+                            else if(send.contains(target_ip)){
+                                subobj.put("module", "分发");
+                            }
+
+//                            radarbasebin,mqpfPngref5m,mqpfNc5m
+
+                            if(type.equals("radarbasebin")){
+                                String time = "";
+                                String[] arr = matcher.group(1).split("_");
+                                //Z_RADR_I_Z9240_20180727033525_O_DOR_SC_CAP.bin.bz2
+
+                                obj.put("type", arr[0]+"_"+arr[1]+"_"+arr[2]+"_"+arr[3]);
+                                obj.put("name", "雷达基数据");
+                                time = arr[4];
+
+
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+                                Date d = df.parse(time);
+                                df.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+                                subobj.put("data_time", df.format(d));
+                            }
+                            else if(type.equals("mqpfPngref5m")){
+                                //QPFRef_201807031710.png
+                                String[] arr = matcher.group(1).split("_");
+                                obj.put("type", "MQPF_PNG5M");
+                                obj.put("name", "MQPF_PNG5M");
+                                String time = arr[1].replace(".png","");
+
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+                                Date d = df.parse(time);
+                                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+                                subobj.put("data_time", df.format(d));
+                            }
+                            else if(type.equals("mqpfNc5m")) {
+                                //mqpf_20180703_2320.nc
+                                String[] arr = matcher.group(1).split("_");
+                                obj.put("type", "MQPF_NC5M");
+                                obj.put("name", "MQPF_NC5M");
+                                String time = arr[1]+arr[2].replace(".nc","");
+
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+                                Date d = df.parse(time);
+                                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+                                subobj.put("data_time", df.format(d));
+                            }else{
+                                obj.put("type", type);
+                            }
+
+                            subobj.put("file_name", matcher.group(1));
+                            subobj.put("event_status", matcher.group(2));
+                            subobj.put("totalTime", matcher.group(3));
+                            subobj.put("file_size", matcher.group(4));
+                            subobj.put("mtime", matcher.group(5));
+                            if (!matcher.group(2).equals("0")) {
+                                i++;
+                                subobj.put("event_info", lines[i]);
+                            }
+
+                            obj.put("fields", subobj);
+
+                            list.add(obj);
+                        }
+                        else if(lines[i].contains("process end")){
+                            matcher = timepattern2.matcher(lines[i]);
+                            if(matcher.find()){
+                                endTime = matcher.group(1);
+
+                                Date end = df1.parse(date + endTime);
+
+                                if(list.size() > 0){
+                                    for (JSONObject obj : list) {
+
+                                        obj.getJSONObject("fields").element("end_time", df2.format(end));
+                                        obj.put("occur_time", end.getTime());
+
+                                        toEsJsons.add(obj.toString());
+
+//                                        System.out.println(obj.toString());
+                                    }
+
+                                    list.clear();
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e){
+            logger.warn("!!!!!!error");
+            logger.error(""+e);
+            logger.error(msg);
+            e.printStackTrace();
+        }
+
+        return toEsJsons;
     }
 }
