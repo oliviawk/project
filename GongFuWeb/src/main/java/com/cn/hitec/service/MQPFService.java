@@ -92,7 +92,7 @@ public class MQPFService extends BaseController {
                 rangeList.add(map);
                 params.put("range",rangeList);
 
-//                params.put("size",esQueryBean.getSize());
+                params.put("size",esQueryBean.getSize());
                 params.put("sort","fields.data_time");
 
 
