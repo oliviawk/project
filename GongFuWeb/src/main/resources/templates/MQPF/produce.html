@@ -254,7 +254,7 @@
             </td>
             <td>&nbsp;</td>
             <td>
-                <div class="list-grey"  data-toggle="modal" data-target="#pubModal"><span>转发至前处理</span>
+                <div class="list-green" id="MQPF_采集_10-30-16-220"  data-toggle="modal" data-target="#pubModal"><span>转发至前处理</span>
                 </div>
             </td>
             <td>&nbsp;</td>
@@ -390,8 +390,16 @@
                                 <label for="znameQuery">站点名称:</label>
                                 <input type="text" class="form-control" id="znameQuery" placeholder="站点"/>
                             </div>
+                            <div class="form-group" style="margin-left: 30px;">
+                                <label for="zstatusQuery">数据状态:</label>
+                                <select id="zstatusQuery" class="form-control" style="width: 100px;">
+                                    <option value="">全部</option>
+                                    <option value="正常">正常</option>
+                                    <option value="异常" selected="selected">异常</option>
+                                </select>
+                            </div>
 
-                            <button type="button" class="btn btn-default" style="width: 50px;margin-left: 30px;" id="queryButton">查询</button>
+                            <button type="button" class="btn btn-default" style="width: 50px;margin-left: 40px;" id="queryButton">查询</button>
                         </div>
                     </div>
                 </div>

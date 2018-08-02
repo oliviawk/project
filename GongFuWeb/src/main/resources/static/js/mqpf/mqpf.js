@@ -17,10 +17,11 @@ $(function () {
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
         $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
-        if (arr[2] == "10.30.16.111"){
+        if ((arr[2] == "10.30.16.111" || arr[2] == "10.30.16.220") && arr[1] == "采集"){
             $("#queryButtonDiv").show();
             var zname = $("#znameQuery").val();
-            getMQPFHistory_111( zname,arr[1], pageSize, arr[2]);
+            var zstatus = $("#zstatusQuery").val();
+            getMQPFHistory_111( zname,arr[1], pageSize, arr[2],zstatus);
         }else{
             $("#queryButtonDiv").hide();
             getMQPFHistory(arr[0], arr[1], pageSize, arr[2]);
@@ -38,10 +39,11 @@ $(function () {
         var subType = $('#subTypeHidden').val();
         var module = $('#moduleHidden').val();
         var ip = $('#ipHidden').val();
-        if (ip == "10.30.16.111"){
+        if ((ip == "10.30.16.111" || ip == "10.30.16.220" ) && module == "采集"){
             $("#queryButtonDiv").show();
             var zname = $("#znameQuery").val();
-            getMQPFHistory_111(zname,module, pageSize, ip);
+            var zstatus = $("#zstatusQuery").val();
+            getMQPFHistory_111(zname,module, pageSize, ip,zstatus);
         }else{
             $("#queryButtonDiv").hide();
             getMQPFHistory(subType, module, pageSize, ip);
@@ -58,7 +60,8 @@ $(function () {
         var ip = $('#ipHidden').val();
 
         var zname = $("#znameQuery").val();
-        getMQPFHistory_111(zname,module, pageSize, ip);
+        var zstatus = $("#zstatusQuery").val();
+        getMQPFHistory_111(zname,module, pageSize, ip ,zstatus);
 
 
     });
@@ -171,7 +174,6 @@ function getMQPFdataAggQuery() {
                     // console.log(dmap)
                     // console.log("------")
 
-                    // 如果第1条是未处理判断第2条如果是正常外报警
                     if (dmap.aging_status != '正常') {
                         // 界面报警
                         //list-red
@@ -261,7 +263,7 @@ function getMQPFHistory(type, module, size, ip) {
 
 
 
-function getMQPFHistory_111(type,module, size, ip) {
+function getMQPFHistory_111(type,module, size, ip , status) {
     var r = Math.ceil(Math.random() * 100);
 
     var req = {
@@ -270,6 +272,7 @@ function getMQPFHistory_111(type,module, size, ip) {
         "module": module,
         "size": size,
         "strIp": ip,
+        "status":status,
         "rand": r
     };
     console.log(r + " request:  " + req.subType);
@@ -288,7 +291,7 @@ function getMQPFHistory_111(type,module, size, ip) {
         complete: function () {
         },
         success: function (d) {
-            //console.log(d);
+            console.log(d);
             if (d.result == 'success') {
                 if (d.resultData.length > 0) {
                     setHistoryTable(d.resultData);
