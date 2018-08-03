@@ -113,7 +113,7 @@ public class SendAlertMessage {
 				alertBean.setReceive_time("0");
 				alertBean.setEventTitle(alertTitle);
 				alertBean.setDesc("超时未到达");
-				alertBean.setErrorMessage(fields.containsKey("event_info") ? fields.get("event_info").toString() : "-");
+				alertBean.setErrorMessage("超时未到达");
 				alertBean.setPath(fields.containsKey("path") ? fields.get("path").toString() : "-");
 				alertBean.setFileName(fields.containsKey("file_name") ? fields.get("file_name").toString() : "-");
 

@@ -1,43 +1,33 @@
 package com.cn.hitec.service;
 
-import com.alibaba.fastjson.JSON;
 import net.sf.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
-public class MQPF_AC_Consumer extends MsgConsumer{
-    private static final Logger logger = LoggerFactory.getLogger(MQPF_AC_Consumer.class);
-    private static String topic = "MQPF_AC";
-    private static String type = "MQPF";
+public class RGF_test2 {
 
-    @Value("${MQPF.send.target.ips}")
-    private String ips;
-    @Value("${MQPF.datatype}")
-    private String datatypes;
-    @Value("${MQPF.collect}")
-    private String collect;
-    @Value("${MQPF.send}")
-    private String send;
 
-    public MQPF_AC_Consumer(@Value("${MQPF.group.id}")String group) {
-        super(topic, group, type);
+    public static void main(String[] args){
+        test();
     }
 
 
-    @Override
-    public List<String> processing(String msg) throws ParseException {
+    public static void test(){
+        String msg = "10.30.16.220※log_tran_h8_nc_20180722.log※!!!Info:proc tran ftp://10.14.83.137/h8_nc/ at 02:20:18......※10.30.16.220※log_tran_h8_nc_20180722.log※!!!Info:proc tran ftp://10.14.83.137/h8_nc/ at 02:20:34......※HS_H08_20180721_1800_B01_FLDK_R10_S0110.nc transfer completed with status 0. Total time:16.303320 sec. File size:69944612 bytes. File mtime:02:20:14.※!!!Info:proc tran ftp://10.0.74.170///home/docker/TDS/data/h8_nc/ at 02:20:35......※HS_H08_20180721_1800_B01_FLDK_R10_S0110.nc transfer completed with status 0. Total time:1.788716 sec. File size:69944612 bytes. File mtime:02:20:14.※!!!Info:proc tran ftp://10.0.74.170///home/docker/TDS/data/h8_nc/ at 02:20:37......※HS_H08_20180721_1800_B01_FLDK_R10_S0110.nc transfer completed with status 0. Total time:1.808796 sec. File size:69944612 bytes. File mtime:02:20:14.※HS_H08_20180721_1800_B01_FLDK_R10_S0110.nc transfer completed with status 0. Total time:0.770028 sec. File size:69944612 bytes. File mtime:02:20:14.※###############################  process end at 02:20:38  ###############################※";
+        System.out.println(processing(msg));
+    }
+
+    public static List<String> processing(String msg){
+
+        String ips = "(10.30.16.220|10.0.74.170)";
+        String datatypes = "h8_nc,eleh";
+
         List<String> toEsJsons = new ArrayList<>();
 
         Pattern ipspattern = Pattern.compile(ips);
@@ -108,7 +98,7 @@ public class MQPF_AC_Consumer extends MsgConsumer{
 
                                     toEsJsons.add(obj.toString());
 
-//                                    System.out.println(obj.toString());
+                                    System.out.println(obj.toString());
                                 }
 
                                 list.clear();
@@ -131,54 +121,46 @@ public class MQPF_AC_Consumer extends MsgConsumer{
 
                             subobj.put("ip_addr", ip);
                             subobj.put("ip_addr_target", target_ip);
-                            if(collect.contains(target_ip)){
-                                subobj.put("module", "采集");
-                            }
-                            else if(send.contains(target_ip)){
-                                subobj.put("module", "分发");
-                            }
 
-//                            radarbasebin,mqpfPngref5m,mqpfNc5m
+                            subobj.put("module", "分发");
 
-                            if(type.equals("radarbasebin")){
-                                String time = "";
+//                            h8_nc,eleh
+
+                            if(type.equals("h8_nc")){
                                 String[] arr = matcher.group(1).split("_");
-                                //Z_RADR_I_Z9240_20180727033525_O_DOR_SC_CAP.bin.bz2
+                                //HS_H08_20180728_1540_B01_FLDK_R10_S0110.nc
 
-                                obj.put("type", arr[0]+"_"+arr[1]+"_"+arr[2]+"_"+arr[3]);
-                                obj.put("name", "雷达基数据");
-                                time = arr[4];
+                                obj.put("type", "h8_nc");
+                                obj.put("name", "h8_nc");
+                                String time  = arr[2]+arr[3];
 
-
-                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
                                 Date d = df.parse(time);
                                 df.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
                                 subobj.put("data_time", df.format(d));
                             }
-                            else if(type.equals("mqpfPngref5m")){
-                                //QPFRef_201807031710.png
+                            else if(type.equals("eleh")){
+                                //MSP1_PMSC_ELEH_ME_L88_CHN_201807291540_00020-00000.nc
+
                                 String[] arr = matcher.group(1).split("_");
-                                obj.put("type", "MQPF_PNG5M");
-                                obj.put("name", "MQPF_PNG5M");
-                                String time = arr[1].replace(".png","");
+
+                                String time = arr[6];
+                                int addtime = Integer.parseInt(arr[7].replace("-00000.nc","")) ;
 
                                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
-                                Date d = df.parse(time);
+                                Date oldDt = df.parse(time);
+
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(oldDt);
+                                cal.add(Calendar.MINUTE, addtime);
+
+                                obj.put("type", "eleh");
+                                obj.put("name", "eleh");
+
                                 df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-                                subobj.put("data_time", df.format(d));
+                                subobj.put("data_time", df.format(cal.getTime()));
                             }
-                            else if(type.equals("mqpfNc5m")) {
-                                //mqpf_20180703_2320.nc
-                                String[] arr = matcher.group(1).split("_");
-                                obj.put("type", "MQPF_NC5M");
-                                obj.put("name", "MQPF_NC5M");
-                                String time = arr[1]+arr[2].replace(".nc","");
-
-                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
-                                Date d = df.parse(time);
-                                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-                                subobj.put("data_time", df.format(d));
-                            }else{
+                            else{
                                 obj.put("type", type);
                             }
 
@@ -211,7 +193,7 @@ public class MQPF_AC_Consumer extends MsgConsumer{
 
                                         toEsJsons.add(obj.toString());
 
-//                                        System.out.println(obj.toString());
+                                        System.out.println(obj.toString());
                                     }
 
                                     list.clear();
@@ -223,12 +205,14 @@ public class MQPF_AC_Consumer extends MsgConsumer{
                 }
             }
         }catch(Exception e){
-            logger.warn("!!!!!!error");
-            logger.error(""+e);
-            logger.error(msg);
+            System.out.println("!!!!!!error");
+            System.out.println(e);
+            System.out.println(msg);
             e.printStackTrace();
         }
 
         return toEsJsons;
     }
+
 }
+

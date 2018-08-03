@@ -1,6 +1,7 @@
 package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.bean.EsBean;
 import com.cn.hitec.feign.client.EsService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -83,22 +84,19 @@ public class MsgConsumer {
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
-//                    if(msg.indexOf("1h") > -1 ){
-//                        break;
-//                    }
+
                     List<String> msgs = processing(msg);
                     if(msgs != null && msgs.size() > 0) {
                         if ("MQPF_AC".equals(topic)){
-                            if (msgs.size() <= 1){
-                                continue;
-                            }
-                            if ("采集".equals(msgs.get(msgs.size() -1 ))){
-                                msgs.remove(msgs.size() - 1 );
-                                list_mqpf_220.addAll(msgs);
-
-                            }else if ("分发".equals(msgs.get(msgs.size() -1 ))){
-                                msgs.remove(msgs.size() - 1 );
-                                list.addAll(msgs);
+                            try {
+                                JSONObject jsonObject = JSONObject.parseObject(msgs.get(0));
+                                if (jsonObject.containsKey("name") && "雷达基数据".equals(jsonObject.getString("name"))){
+                                    list_mqpf_220.addAll(msgs);
+                                }else {
+                                    list.addAll(msgs);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }else{
                             list.addAll(msgs);

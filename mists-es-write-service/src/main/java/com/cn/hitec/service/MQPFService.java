@@ -103,13 +103,13 @@ public class MQPFService {
                     prebuilt_220Map.put("startMoniter","yes");
                     prebuilt_220Map.put("name",name);
                     prebuilt_220Map.put("type",subType);
-//                    prebuilt_220Map.put("last_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 90000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
-//                    prebuilt_220Map.put("should_time",Pub.transform_DateToString(new Date(dataTime.getTime() + 60000),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    prebuilt_220Map.put("last_time",Pub.transform_DateToString(new Date(dataTime.getTime() + (10 * 60 * 1000)),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    prebuilt_220Map.put("should_time",Pub.transform_DateToString(new Date(dataTime.getTime() + (10 * 60 * 1000)),"yyyy-MM-dd HH:mm:ss.SSSZ"));
 
                     String strFileSize = fields.get("file_size").toString();
                     prebuiltFields_220Map.put("data_time",strDataTime);
                     prebuiltFields_220Map.put("file_name",fields.get("file_name").toString());
-                    prebuiltFields_220Map.put("file_size_define",strFileSize+","+strFileSize);
+                    prebuiltFields_220Map.put("file_size_define","0");
                     prebuiltFields_220Map.put("ip_addr",subIp_220);
                     prebuiltFields_220Map.put("module","采集");
                     prebuiltFields_220Map.put("start_time",fields.get("start_time").toString());
@@ -200,15 +200,20 @@ public class MQPFService {
 //                            log.warn("MQPF:--舍弃掉 相同的数据：" + json);
                             continue;
                         }
+                        // 将 应到时间 和 最晚到达时间，添到的数据中
+                        map.put("should_time",
+                                hitsSourceMap.containsKey("should_time") ? hitsSourceMap.get("should_time") : "");
+                        map.put("last_time", hitsSourceMap.containsKey("last_time") ? hitsSourceMap.get("last_time") : "");
 
-                        /*-------6.19 设置文件名新代码*/
+                        /*-------2018.8.1 设置文件名新代码*/
                         if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
                             if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
-                                if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
-                                    String old_fileName = hitsSource_fields.get("file_name").toString();
-                                    old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
-                                    fields.put("file_name", old_fileName + fields.get("file_name").toString().replace("/", ""));
-                                }
+//                                if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
+                                String[] strs = fields.get("file_name").toString().split("/");
+                                String old_fileName = hitsSource_fields.get("file_name").toString();
+                                old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
+                                fields.put("file_name", old_fileName + strs[strs.length - 1]);
+//                                }
                             } else {
                                 fields.put("file_name", hitsSource_fields.get("file_name"));
                             }
@@ -218,7 +223,7 @@ public class MQPFService {
                         if (fields.get("event_status").toString().toUpperCase().equals("OK")
                                 || fields.get("event_status").toString().equals("0")) {
                             map.put("aging_status", "正常");
-
+                            fields.put("event_info", "正常");
                             //判断文件大小是否正常
                             String strSizeDefine = hitsSource_fields.containsKey("file_size_define") ? hitsSource_fields.get("file_size_define").toString():"";
                             if (!StringUtils.isEmpty(strSizeDefine)){
@@ -260,7 +265,8 @@ public class MQPFService {
 
                         if (alertBean != null) {
                             /*   需要修改该方法  2018.3.20没有修改   */
-                            alertService.alert_MQPF(es,index, alertType, alertBean); // 生成告警
+                            // 先不告警，等讨论完告警策略后再开启
+//                            alertService.alert_MQPF(es,index, alertType, alertBean); // 生成告警
                             alertBean = null;
                         }
                         // 数据入库
@@ -272,9 +278,10 @@ public class MQPFService {
                             if (fields.get("event_status").toString().toUpperCase().equals("OK")
                                     || fields.get("event_status").toString().equals("0")) {
                                 map.put("aging_status", "正常");
-                                // fields.put("event_info","正常");
+                                fields.put("event_info","正常");
                             } else {
                                 map.put("aging_status", "异常");
+                                fields.put("event_info","数据状态码："+fields.get("event_status"));
                             }
                         }
 

@@ -4,7 +4,6 @@ import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.feign.client.EsQueryService;
-import com.cn.hitec.service.impl.BaseService;
 import com.cn.hitec.tools.Pub;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -70,7 +69,7 @@ public class MQPFService extends BaseController {
                 Map<String,Object> params = new HashMap<>();    //查询参数
 
                 // 不区分过程和类型直接查
-                Date d1 = DateUtils.truncate(new Date(), Calendar.HOUR);
+                Date d1 = DateUtils.truncate(new Date(), Calendar.MINUTE);
                 String dateStr = DateFormatUtils.format(d1, "yyyy-MM-dd HH:mm:ss.SSSZ");
 
 
@@ -148,7 +147,7 @@ public class MQPFService extends BaseController {
                 Map<String,Object> params = new HashMap<>();    //查询参数
 
                 // 不区分过程和类型直接查
-                Date d1 = DateUtils.truncate(new Date(), Calendar.HOUR);
+                Date d1 = DateUtils.truncate(new Date(), Calendar.MINUTE);
                 String dateStr = DateFormatUtils.format(d1, "yyyy-MM-dd HH:mm:ss.SSSZ");
 
                 if (!StringUtils.isEmpty(esQueryBean.getSubType())){
@@ -158,12 +157,24 @@ public class MQPFService extends BaseController {
                 }
 
                 Map<String, Object> mustMap = new HashMap<>();
-                mustMap.put("name","分钟降水-雷达基数据");
+                mustMap.put("name","雷达基数据");
                 mustMap.put("fields.module",esQueryBean.getModule());
                 mustMap.put("fields.ip_addr",esQueryBean.getStrIp());
-
-
                 params.put("must", mustMap);
+
+                if (!StringUtils.isEmpty(esQueryBean.getStatus())){
+                    String status = esQueryBean.getStatus();
+                    if ("正常".equals(status)){
+                        mustMap.put("aging_status","正常");
+                    }else {
+                        mustMap.put("aging_status", new String[]{"异常","超时"});
+                    }
+                }else {
+                    Map<String, Object> mustNotMap = new HashMap<>();
+                    mustNotMap.put("aging_status", "未处理");
+                    params.put("mustNot", mustNotMap);
+                }
+
 
                 List<Map> rangeList = new ArrayList<>();
                 Map<String,String> map = new HashMap<>();

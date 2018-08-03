@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,7 +34,12 @@ public class SendWechartMessage {
     @Autowired
     HttpPub httpPub;
 
-    public void sendWechart(boolean sendwechart) throws  Exception{
+    @Value("${send.WECHART}")
+    private boolean sendWechart;
+    @Value("${send.SMS}")
+    private boolean sendSMS;
+
+    public void sendWechart() throws  Exception{
 
         EsQueryBean esQueryBean = new EsQueryBean();
         String[] str_indexs = Pub.getIndices(new Date(),1);
@@ -63,7 +69,7 @@ public class SendWechartMessage {
                     Map<String,Object> map = (Map<String, Object>) object;
 
                     //发送消息
-                    if (sendwechart){
+                    if (sendWechart){
                         String alertTitle = map.get("alertTitle").toString();
                         if (alertTitle.indexOf(".tmp") > -0){
                             //去掉.tmp 后缀名
@@ -102,13 +108,13 @@ public class SendWechartMessage {
             logger.error(JSON.toJSONString(weChartMap));
         }
 
-        logger.info("预发送微信数量："+num +", 实际发送数量："+sendNum+", 是否发送微信："+sendwechart);
+        logger.info("预发送微信数量："+num +", 实际发送数量："+sendNum+", 是否发送微信："+sendWechart);
 
     }
 
 
 
-    public void sendSMS(boolean sendSms){
+    public void sendSMS(){
 //   短信那一套
         EsQueryBean esQueryBean1 = new EsQueryBean();
         String[] str_indexs1 = Pub.getIndices(new Date(),1);
@@ -156,7 +162,7 @@ public class SendWechartMessage {
                     logger.error("发送短信的手机号码为空！");
                     return;
                 }
-                if (sendSms){
+                if (sendSMS){
                     Map<String, Object> resultMap =  httpPub.httpSMSPost(sendUser, sendMessage);
                     if(resultMap == null || !"Success".equals(resultMap.get("returnStatus"))){
                         logger.error(JSON.toJSONString(resultMap));
@@ -196,6 +202,6 @@ public class SendWechartMessage {
             logger.error(JSON.toJSONString(SMStMap));
         }
 
-        logger.info("预发送短信数量："+num1 +", 实际发送数量："+sendNum1+", 是否发送微信："+sendSms);
+        logger.info("预发送短信数量："+num1 +", 实际发送数量："+sendNum1+", 是否发送微信："+sendSMS);
     }
 }

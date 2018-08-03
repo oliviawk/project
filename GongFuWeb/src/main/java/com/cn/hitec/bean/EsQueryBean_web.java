@@ -14,6 +14,7 @@ public class EsQueryBean_web {
     private String size = "10";
     private String subType;
     private String strIp ;
+    private String status;
     private String hour_before = "2";
     private String minute_before = "120";
 
@@ -108,5 +109,13 @@ public class EsQueryBean_web {
 
     public void setRand(String rand) {
         this.rand = rand;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

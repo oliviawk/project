@@ -38,8 +38,8 @@ public class SendWechartTask {
 	@Scheduled(cron = "0/30 * * * * ?")
 	public void updTimeoutData() {
 		try {
-			sendWechartMessage.sendWechart(true);
-			sendWechartMessage.sendSMS(true);
+			sendWechartMessage.sendWechart();
+			sendWechartMessage.sendSMS();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

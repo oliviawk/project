@@ -149,13 +149,11 @@ public class DataSourceSendConsumerTest {
 
         logger.info("==========================------------------------=========================");
         logger.info("file_name_log:{}",file_name_log);
-        User_Catalog user_catalog=user_catalog_repository.findAll_User_catalog(user);
-        if (user_catalog == null || StringUtils.isEmpty(user_catalog.getUser_catalog_content())){
+        List<User_Catalog>  user_catalogs =user_catalog_repository.findAll_User_catalog(user,ipAddr);
+        if (user_catalogs == null || user_catalogs.size() < 1 || StringUtils.isEmpty(user_catalogs.get(0).getUser_catalog_content())){
             return  null;
         }
-        String UserCatalog_username=user_catalog.getUser_catalog_content();
-
-//        logger.info(msg);
+        String UserCatalog_username=user_catalogs.get(0).getUser_catalog_content();
 
         file_sizeStr = msgs[7];
         event_status = msgs[15];

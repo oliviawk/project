@@ -17,15 +17,8 @@ $(function () {
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
         $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
-        if ((arr[2] == "10.30.16.111" || arr[2] == "10.30.16.220") && arr[1] == "采集"){
-            $("#queryButtonDiv").show();
-            var zname = $("#znameQuery").val();
-            var zstatus = $("#zstatusQuery").val();
-            getMQPFHistory_111( zname,arr[1], pageSize, arr[2],zstatus);
-        }else{
-            $("#queryButtonDiv").hide();
-            getMQPFHistory(arr[0], arr[1], pageSize, arr[2]);
-        }
+
+        getHistory(arr[0], arr[1], pageSize, arr[2]);
 
 
     });
@@ -39,35 +32,14 @@ $(function () {
         var subType = $('#subTypeHidden').val();
         var module = $('#moduleHidden').val();
         var ip = $('#ipHidden').val();
-        if ((ip == "10.30.16.111" || ip == "10.30.16.220" ) && module == "采集"){
-            $("#queryButtonDiv").show();
-            var zname = $("#znameQuery").val();
-            var zstatus = $("#zstatusQuery").val();
-            getMQPFHistory_111(zname,module, pageSize, ip,zstatus);
-        }else{
-            $("#queryButtonDiv").hide();
-            getMQPFHistory(subType, module, pageSize, ip);
-        }
+        getHistory(subType, module, pageSize, ip);
 
 
     });
 
-
-    $('#queryButton').on('click', function (e) {
-        var pageSize = $('#pageSizeHidden').val();
-        $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
-        var module = $('#moduleHidden').val();
-        var ip = $('#ipHidden').val();
-
-        var zname = $("#znameQuery").val();
-        var zstatus = $("#zstatusQuery").val();
-        getMQPFHistory_111(zname,module, pageSize, ip ,zstatus);
-
-
-    });
 
     var func = function () {
-        getMQPFdataAggQuery();
+        getDataAggQuery();
     };
 
     // 设置定时刷新
@@ -100,14 +72,7 @@ $(function () {
         var url = "../basicresource/getBaseEventData";
         var params = {
             "listIp": [
-                "10.30.16.111",
-                "10.30.16.249",
                 "10.30.16.220",
-                "10.30.16.231",
-                "10.30.16.232",
-                "10.30.16.233",
-                "10.30.16.225",
-                "10.0.122.155"
             ],
             "minute": -240
         }
@@ -152,11 +117,11 @@ $(function () {
 
 
 
-function getMQPFdataAggQuery() {
+function getDataAggQuery() {
 
     $.ajax({
         type: "POST",
-        url: "../MQPF/MQPFAggQuery",
+        url: "../RGF/rgfAggQuery",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         async: false,
@@ -206,11 +171,11 @@ function getMQPFdataAggQuery() {
 
 
 
-function getMQPFHistory(type, module, size, ip) {
+function getHistory(type, module, size, ip) {
     var r = Math.ceil(Math.random() * 100);
 
     var req = {
-        "types": ["MQPF"],
+        "types": ["RGF"],
         "subType": type,
         "module": module,
         "size": size,
@@ -221,7 +186,7 @@ function getMQPFHistory(type, module, size, ip) {
 
     $.ajax({
         type: "POST",
-        url: "../MQPF/getHistory",
+        url: "../RGF/getHistory",
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -262,60 +227,6 @@ function getMQPFHistory(type, module, size, ip) {
 }
 
 
-
-function getMQPFHistory_111(type,module, size, ip , status) {
-    var r = Math.ceil(Math.random() * 100);
-
-    var req = {
-        "types": ["MQPF"],
-        "subType": type,
-        "module": module,
-        "size": size,
-        "strIp": ip,
-        "status":status,
-        "rand": r
-    };
-    console.log(r + " request:  " + req.subType);
-
-    $.ajax({
-        type: "POST",
-        url: "../MQPF/findData",
-        data: JSON.stringify(req),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        beforeSend: function () {
-            $("#history_thead").html("");
-            $("#history_tbody").html("");
-            $("#modalHeader").html(req.module + "环节" + req.subType + "历史数据");
-        },
-        complete: function () {
-        },
-        success: function (d) {
-            console.log(d);
-            if (d.result == 'success') {
-                if (d.resultData.length > 0) {
-                    setHistoryTable(d.resultData);
-                }else {
-                    // 没有数据
-                    alert('出错啦！服务器没有返回！@@');
-                    $("#history_thead").html("");
-                    $("#history_tbody").html("There's nothing I can show you. @_@");
-                }
-
-            } else {
-                // 查询失败
-                //alert("失败！" + d.message);
-                console.log("%c失败！" + d.message, "color:#c7254e");
-                $("div[id^='" + req.subType + "_" + req.module + "']").attr("class", "list-red");
-                $("#history_tbody").html("There's nothing I can show you. @_@");
-            }
-
-        },
-        error: function (err) {
-            alert(err);
-        }
-    });
-}
 
 function setHistoryTable(data){
         // 有数据

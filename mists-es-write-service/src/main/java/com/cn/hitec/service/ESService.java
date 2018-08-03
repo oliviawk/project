@@ -393,14 +393,15 @@ public class ESService {
 									resultMap.containsKey("should_time") ? resultMap.get("should_time") : "");
 							map.put("last_time", resultMap.containsKey("last_time") ? resultMap.get("last_time") : "");
 
-							/*-------6.19 设置文件名新代码*/
+							/*-------2018.8.1 设置文件名新代码*/
 							if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
 								if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
-									if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
-										String old_fileName = hitsSource_fields.get("file_name").toString();
-										old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
-										fields.put("file_name", old_fileName + fields.get("file_name").toString().replace("/", ""));
-									}
+//                                if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
+									String[] strs = fields.get("file_name").toString().split("/");
+									String old_fileName = hitsSource_fields.get("file_name").toString();
+									old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
+									fields.put("file_name", old_fileName + strs[strs.length - 1]);
+//                                }
 								} else {
 									fields.put("file_name", hitsSource_fields.get("file_name"));
 								}
