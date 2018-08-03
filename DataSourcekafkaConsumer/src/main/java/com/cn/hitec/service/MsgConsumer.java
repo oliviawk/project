@@ -160,12 +160,13 @@ public class MsgConsumer {
                     mqpfList.clear();
                     startTime3 = System.currentTimeMillis();
                 }
-                consumer.commitSync();
 
             }catch (Exception e){
                 logger.error("!!!!!!error");
                 logger.debug("",e);
                 e.printStackTrace();
+            }finally {
+                consumer.commitSync();
             }
         }
 

@@ -9,7 +9,7 @@ import com.cn.hitec.bean.DataInfo;
 
 public interface DataInfoRepository extends JpaRepository<DataInfo, Long>{
     
-    @Query(value="from DataInfo where parentId=?1 order by id")
+    @Query(value="select * from DataInfo where parentId=?1 order by id" , nativeQuery = true)
     List<DataInfo> findDatasByParentId(long parentId);
     
     @Query(value="select name from data_info where parent_id=?1 order by id", nativeQuery = true)
