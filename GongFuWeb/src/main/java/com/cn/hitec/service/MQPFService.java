@@ -4,7 +4,6 @@ import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.controller.BaseController;
 import com.cn.hitec.feign.client.EsQueryService;
-import com.cn.hitec.service.impl.BaseService;
 import com.cn.hitec.tools.Pub;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
