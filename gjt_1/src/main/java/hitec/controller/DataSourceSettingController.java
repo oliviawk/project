@@ -199,7 +199,13 @@ public class DataSourceSettingController {
 		dataSourceSetting.setMoniterTimer(request.getParameter("moniterTimer"));
 		String pkId = request.getParameter("pkId");
 		dataSourceSetting.setPkId(Long.parseLong(pkId));
-		String result = dataSourceSettingService.EditDataSource(dataSourceSetting);
+		String Exitbefore=request.getParameter("Exitbefore");
+		ArrayList<DataSourceSetting> arrayList = new ArrayList<DataSourceSetting>();
+		JSONArray parseArray = JSONArray.parseArray(Exitbefore);
+		for (Object object : parseArray) {
+			arrayList.add(JSON.parseObject(JSON.toJSONString(object), DataSourceSetting.class));
+		}
+		String result = dataSourceSettingService.EditDataSource(dataSourceSetting,arrayList);
 
 
 		JSONObject resultObj = new JSONObject();

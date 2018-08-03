@@ -186,47 +186,47 @@ $(function(){
             var useDepartment = $("#useDepartment").val();
             var moniterTimer = $("#moniterTimer").val();
             //表单验证
-			if(ipAddr==null ||ipAddr == ""){
+			if(ipAddr==null ||ipAddr.trim() == ""){
 				bool=false;
 
 			}
-            if(senderUser==null|| senderUser==""){
+            if(senderUser==null|| senderUser.trim()==""){
                 bool=false;
 
             }
-          if(deleteId==null|| deleteId==""){
+          if(deleteId==null|| deleteId.trim()==""){
             bool=false;
 
            }
-           if(dataType==null|| dataType==""){
+           if(dataType==null|| dataType.trim()==""){
             bool=false;
 
          }
-         if(departmentName==null || departmentName==""){
+         if(departmentName==null || departmentName.trim()==""){
             bool=false;
 
           }
-        if(name==null || name==""){
+        if(name==null || name.trim()==""){
             bool=false;
 
         }
-        if(directory==null || directory==""){
+        if(directory==null || directory.trim()==""){
             bool=false;
 
         }
-       if(fileName==null || fileName==""){
+       if(fileName==null || fileName.trim()==""){
             bool=false;
 
         }
-        if(phone==null || phone==""){
+        if(phone==null || phone.trim()==""){
             bool=false;
 
         }
-        if(useDepartment==null || useDepartment==""){
+        if(useDepartment==null || useDepartment.trim()==""){
             bool=false;
 
         }
-        if(moniterTimer==null || moniterTimer==""){
+        if(moniterTimer==null || moniterTimer.trim()==""){
             bool=false;
 
         }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Null;
 
 import hitec.domain.Alert_strategy;
 import hitec.domain.User_Catalog;
@@ -246,7 +247,7 @@ public class DataSourceSettingService {
 		String insertDateType = request.getParameter("dataType");
 		String filename= request.getParameter("fileName");
 		String timeformat=request.getParameter("timeFormat");
-		if(timeformat!=null){
+		if(timeformat!=null&&timeformat!=""){
 			int leng=timeformat.length();
 			String regx="\\d{"+leng+"}";
 			filename=filename.replace(regx,"{"+timeformat+"}");
@@ -373,9 +374,70 @@ public class DataSourceSettingService {
 		return jsonObj;
 	}
 
-	public String EditDataSource(DataSourceSetting dataSourceSetting) {
-		DataSourceSetting save = dataSourceSettingRepository.save(dataSourceSetting);
+	public String EditDataSource(DataSourceSetting dataSourceSetting,ArrayList<DataSourceSetting> list) {
 		String message = "fail";
+		DataInfo dataInfo=null;
+		String name=dataSourceSetting.getName();
+		String ip=dataSourceSetting.getIpAddr();
+		String filepath=dataSourceSetting.getDirectory();
+		for (DataSourceSetting dataSourceSetting1:list){
+			String beforefilepath=dataSourceSetting1.getDirectory();
+			String beforefilename=dataSourceSetting1.getFileName();
+			String beforetimeformat=dataSourceSetting1.getTimeFormat();
+			String beforeip=dataSourceSetting1.getIpAddr();
+			String beforename=dataSourceSetting1.getName();
+
+			if(beforetimeformat!=null&&beforefilename!=null&&beforetimeformat!=""&&beforefilename!=""){
+				int leng=beforetimeformat.length();
+				String regx="\\d{"+leng+"}";
+				beforefilename=beforefilename.replace(regx,"{"+beforetimeformat+"}");
+			}
+			try {
+				logger.info("名字："+beforename+"ip："+beforeip+"文件名："+beforefilename+"路径："+beforefilepath);
+				dataInfo=dataInfoRepository.findDatainfo(beforename,beforeip,beforefilename,beforefilepath);
+			} catch (Exception e) {
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+				logger.error("插入一条数据源数据出错,"+ sw.toString());
+				return message;
+			}
+			if (null==dataInfo){
+				logger.error("查询数据出错！！");
+				return  message;
+			}
+
+		}
+		//			insertData.setId(lastInsertId);
+//			insertData.setParentId(insertId);
+		dataInfo.setName(name);
+		dataInfo.setSubName(name);
+		dataInfo.setMonitorTimes(dataSourceSetting.getMoniterTimer());
+//			insertData.setShouldTime("0");
+//			insertData.setTimeoutThreshold("0");
+//			insertData.setRegular(1);
+//			dataInfo.setFileNameDefine(filename);
+		dataInfo.setIp(ip);
+		dataInfo.setFilePath(filepath);
+//			insertData.setModule("DS");
+//			insertData.setServiceType("DATASOURCE");
+//			insertData.setAlertLevel(1);
+//			insertData.setStartMoniter("yes");
+//			insertData.setIsData(1);
+
+		DataInfo backData = null;
+		try {
+			backData = dataInfoRepository.save(dataInfo);
+
+		} catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			logger.error("插入一条数据源数据出错,"+ sw.toString());
+			return message;
+		}
+
+		DataSourceSetting save = dataSourceSettingRepository.save(dataSourceSetting);
 		if(save!=null){
 			message = "success";
 		}
@@ -402,15 +464,28 @@ public class DataSourceSettingService {
 		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
 				}
 
-		    	pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
-			   if(pk_id!=-1){
-				   shu=alert_strategy_repository.delectAlert_strategy(pk_id);
+		    	  pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+			       if(pk_id!=-1){
+				         try {
+					          shu=alert_strategy_repository.delectAlert_strategy(pk_id);
+						 } catch (Exception e) {
+					       StringWriter sw = new StringWriter();
+					       PrintWriter pw = new PrintWriter(sw);
+					       e.printStackTrace(pw);
+					       logger.error("删除Alert_strategy一条数据源类型出错,"+ sw.toString());
+				       }
 			   }
 			   else {
 			   	logger.info("删除Alert_stratergy_Repository失败未查询到对应的pk_id");
 			   }
-				logger.info("删除Alert_stratergy_Repository个数："+shu);
-		        shutwo =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+				try {
+					shutwo =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+				} catch (Exception e) {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					e.printStackTrace(pw);
+					logger.error("删除datainfo一条数据源类型出错,"+ sw.toString());
+				}
 				logger.info(filename+"个数："+shutwo);
 		    }
 

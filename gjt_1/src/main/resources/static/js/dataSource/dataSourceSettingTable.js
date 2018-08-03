@@ -97,7 +97,7 @@ var TableInit = function() {
 var ButtonInit = function () {
     var oInit = new Object();
     var postdata = {};
-
+	var Exitarray;
     oInit.Init = function () {
 
         $("#btn_edit").click(function () {
@@ -108,10 +108,11 @@ var ButtonInit = function () {
                 return;
             }
             if (arrselections.length <= 0) {
-                alert('请选择有效数据');
+                alert('请选择有效数据')
 
                 return;
             }
+            Exitarray=arrselections;
             $("#nameEdit").val(arrselections[0].name);
             $("#directoryEdit").val(arrselections[0].directory);
             $("#typeEdit").val(arrselections[0].fileName);
@@ -128,6 +129,7 @@ var ButtonInit = function () {
         });
 
         $("#submitEdit").click(function(){
+        	var bol=true;
     		//获取所有的属性
             $("#submitEdit").attr("disabled",true);
     		debugger;
@@ -145,13 +147,37 @@ var ButtonInit = function () {
     		var useDepartment = $("#useDepartmentEdit").val();
     		var moniterTimer = $("#moniterTimerEdit").val();
     		var pkId = $("#idEdit").val();
-    		
+    		if (name==null||name.trim()==""){
+    			bol=false;
+			}
+            if (directory==null||directory.trim()==""){
+                bol=false;
+            }
+            if (senderUser==null||senderUser.trim()==""){
+                bol=false;
+            }
+            if (ipAddr==null||ipAddr.trim()==""){
+                bol=false;
+            }
+            if (departmentName==null||departmentName.trim()==""){
+                bol=false;
+            }
+
+            if (moniterTimer==null||moniterTimer.trim()==""){
+                bol=false;
+            }
+           if (!bol){
+            	alert("请不要填写空字符！！"+phone)
+               $("#submitEdit").attr("disabled",false);
+			   return ;
+		   }
     		var data = {"pkId":pkId,"timeFormat":timeFormat, "name":name, "directory":directory, "type":type, "senderUser":senderUser,
     				"ipAddr":ipAddr, "dataType":dataType, "departmentName":departmentName,
-    				"phone":phone, "useDepartment":useDepartment, "moniterTimer":moniterTimer};
+    				"phone":phone, "useDepartment":useDepartment, "moniterTimer":moniterTimer, "Exitbefore": JSON.stringify(Exitarray)};
     		$.ajax({
     			url: "/dataSourceSetting/EditDataSource",
     			data: data,
+                // traditional: true,
     			type: "post",
     			success: function(result){
     				debugger;
