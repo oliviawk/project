@@ -22,7 +22,7 @@
                     return "载入更多结果…"
                 },
                 maximumSelected: function(e) {
-                    var t = "最多只能选择" + e.maximum + "个项目";
+                    var t = "最多只能选择" + e.maximum + "个项目,清空后再选择";
                     return t
                 },
                 noResults: function() {
