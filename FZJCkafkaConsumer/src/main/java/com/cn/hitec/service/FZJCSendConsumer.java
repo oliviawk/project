@@ -141,19 +141,22 @@ public class FZJCSendConsumer extends MsgConsumer {
 								//FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_20180802050000_20180802051459_4000M_V0001.HDF
 								//FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_4000M_V0001_20180802120000000.png
 								if(matcher.group(1).startsWith("FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_4000M_V0001_")){
-									obj.put("type", "FY4A云图");
+									obj.put("type", "FY4A");
 									obj.put("name", "FY4A");
 									time = arr[11].substring(0,arr[11].indexOf("."));
 								}
 								else if(matcher.group(1).startsWith("FY4A-_AGRI--_N_DISK_1047E_L1-_FDI-_MULT_NOM_")){
-									obj.put("type", "FY4A云图");
+									obj.put("type", "FY4A");
 									obj.put("name", "FY4A");
-									time = arr[9];
+									time = arr[9] + "000";
 								}
-								else{
+								else if(matcher.group(1).startsWith("SEVP_NSMC_WXGN_FY2G_E99_ACHN_LNO_P9_")){
 									obj.put("type", "云图");
 									obj.put("name", arr[3]);
 									time = arr[8].substring(0,arr[8].indexOf("."));
+								}
+								else {
+									continue;
 								}
 
 								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
@@ -199,6 +202,18 @@ public class FZJCSendConsumer extends MsgConsumer {
 								String[] arr = matcher.group(1).split("_");
 								obj.put("type", "T639");
 								obj.put("name", "T639");
+								String time = arr[3].substring(0,arr[3].indexOf("."));
+
+								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
+								Date d = df.parse(time);
+								df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+								subobj.put("data_time", df.format(d));
+							}
+							else if(type.equals("ec_wind") || type.equals("")){
+								//EC_GLOBAL_WIND_2018080200.json
+								String[] arr = matcher.group(1).split("_");
+								obj.put("type", "EC风流场");
+								obj.put("name", "EC");
 								String time = arr[3].substring(0,arr[3].indexOf("."));
 
 								SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");

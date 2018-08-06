@@ -70,7 +70,12 @@ public class DataSourceSendConsumer extends MsgConsumer{
 
         String file_name_log = msgs[8];
 		file_name_log=file_name_log.replace(".tmp","");
+        String filenamelogtwo=null;
 
+		String [] filenamelog_array=file_name_log.split("/");
+		if (filenamelog_array!=null&&filenamelog_array.length>=1){
+			filenamelogtwo=filenamelog_array[filenamelog_array.length-1];
+		}
 		String file_sizeStr = "";
 		String event_status = "";
 		String ipAddr = "";
@@ -142,11 +147,12 @@ public class DataSourceSendConsumer extends MsgConsumer{
 		file_sizeStr = msgs[7];
 		event_status = msgs[15];
 		ipAddr = msgs[18];
-		List<User_Catalog>  user_catalogs =user_catalog_repository.findAll_User_catalog(user,ipAddr);
-		if (user_catalogs == null || user_catalogs.size() < 1 || StringUtils.isEmpty(user_catalogs.get(0).getUser_catalog_content())){
-			return  null;
-		}
-		String UserCatalog_username=user_catalogs.get(0).getUser_catalog_content();
+
+//		List<User_Catalog>  user_catalogs =user_catalog_repository.findAll_User_catalog(user,ipAddr);
+//		if (user_catalogs == null || user_catalogs.size() < 1 || StringUtils.isEmpty(user_catalogs.get(0).getUser_catalog_content())){
+//			return  null;
+//		}
+//		String UserCatalog_username=user_catalogs.get(0).getUser_catalog_content();
 
 
 
@@ -187,10 +193,10 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			String fileName = dataSourceSetting.getFileName();
 			String filePath=dataSourceSetting.getDirectory();
 //			logger.info("-- fileName:{} , filePath:{} , usercatalogName:{}",fileName,filePath,UserCatalog_username);
-			filePath="/"+filePath.replace(UserCatalog_username,"");
-			fileName=filePath+fileName;
+//			filePath="/"+filePath.replace(UserCatalog_username,"");
+//			fileName=filePath+fileName;
 			Pattern pattern = Pattern.compile(fileName);
-    	    Matcher matcher = pattern.matcher(file_name_log);
+    	    Matcher matcher = pattern.matcher(filenamelogtwo);
     	    // 查找字符串中是否有匹配正则表达式的字符/字符串
     	    boolean rs = matcher.matches();
     	    if (rs){
