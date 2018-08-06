@@ -237,9 +237,41 @@ public class DataSourceSettingService {
                     .setScroll(new TimeValue(2000))
                     .execute().actionGet();
         } while(response.getHits().getHits().length != 0);
-		
+
 		return outData;
 	}
+
+	public List<Map<String, Object>> getPossibleNeedDataFileNameByIpAddrAndSendUserAndFileName(String ipAddr, String sendUser,String fileName) {
+		List<Map<String, Object>> outData = new ArrayList<Map<String, Object>>();
+
+		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+		boolQuery.must(QueryBuilders.termQuery("ipAddr", ipAddr));
+		boolQuery.must(QueryBuilders.termQuery("sendUser", sendUser));
+		boolQuery.must(QueryBuilders.wildcardQuery("fileName","*"+fileName+"*"));
+
+		SearchRequestBuilder requestBuilder = es.client.prepareSearch(indexHeader +"possible_needed_data")
+				.setTypes(new String[]{"POSSIBLE_NEEDED_DATA"})
+				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+				.setQuery(boolQuery)
+				.setSize(30);
+
+		SearchResponse response = requestBuilder.setScroll(new TimeValue(1000)).get();
+
+		for (SearchHit hits : response.getHits().getHits()) {
+			try {
+				Map<String, Object> data = new HashMap<String, Object>();
+				Map<String, Object> source = hits.getSource();
+				data.put("id", hits.getId());
+				data.put("fileName", source.get("fileName"));
+				outData.add(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return outData;
+	}
+
 
 	public DataInfo insertDataInfo(HttpServletRequest request) {
 		//1.判断是否存在当前类型数据
@@ -492,7 +524,6 @@ public class DataSourceSettingService {
 	}
 
 	public User_Catalog findAll_User_catalog(String user_name,String user_ip){
-		User_Catalog user_catalog=null;
-		return user_catalog=user_catalog_repository.findAll_User_catalog(user_name,user_ip);
+		return user_catalog_repository.findAll_User_catalog(user_name,user_ip);
 	}
 }

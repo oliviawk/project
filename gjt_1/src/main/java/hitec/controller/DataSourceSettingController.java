@@ -2,7 +2,6 @@ package hitec.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +9,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import hitec.domain.User_Catalog;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +39,10 @@ public class DataSourceSettingController {
 		return "dataSource/dataSourceSetting";
 	}
 
+//	@RequestMapping("/2")
+//	public String index2() {
+//		return "dataSource/dataSourceSetting2";
+//	}
 	/**
 	 * @Description 获取所有可能需要的数据的文件名称 TODO
 	 * 
@@ -163,6 +165,27 @@ public class DataSourceSettingController {
 	}
 
 	/**
+	 * @Description 根据ipAddr获取所有可能需要的数据的sendUser TODO
+	 *
+	 *              <pre>
+	 * @author HuYiWu
+	 *
+	 *         <pre>
+	 * @date 2018年4月19日 下午3:44:50
+	 *
+	 *       <pre>
+	 */
+	@RequestMapping(value = "/getPossibleNeedDataFileNameByIpAddrAndSendUserAndFileName", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getPossibleNeedDataFileNameByIpAddrAndSendUserAndFileName(HttpServletRequest request) {
+		String ipAddr = request.getParameter("ipAddr");
+		String sendUser = request.getParameter("sendUser");
+		String fileName = request.getParameter("fileName");
+		return dataSourceSettingService.getPossibleNeedDataFileNameByIpAddrAndSendUserAndFileName(ipAddr, sendUser,fileName);
+	}
+
+
+	/**
 	 * 查询DataSourceSetting
 	 */
 	@RequestMapping(value = "getDataSourceSettingData")
@@ -256,6 +279,8 @@ public class DataSourceSettingController {
 		String user_ip=request.getParameter("User_ip");
 		userfile=userfile.trim();
 		user_catalog_name=user_catalog_name.trim();
+		System.out.println(user_catalog_name);
+		System.out.println(user_ip);
 		User_Catalog user_catalog=dataSourceSettingService.findAll_User_catalog(user_catalog_name,user_ip);
 		if (null==user_catalog){
 			outData.put("type", "fail");

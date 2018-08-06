@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <title>元数据配置</title>
-<link rel="stylesheet" href="../css/bootstrap.css" />
+<link rel="stylesheet" href="../css/bootstrap.css"></link>
+<link rel="stylesheet" href="../css/bootstrap-select.css"></link>
+<link rel="stylesheet" href="../css/bootstrap-table.min.css"></link>
 
-<link rel="stylesheet" href="../css/bootstrap-table.min.css" />
-	<link rel="stylesheet" href="../css/bootstrap-select2.css" />
-
-	<style>
-		.selectInsertData{
-			float: left;
-			margin-right: 10px;
-			width: 130px;
-		}
-	</style>
 </head>
 <body>
 
@@ -30,7 +22,6 @@
 		<button id="btn_delete" type="button" class="btn btn-default">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
 		</button>
-
 	</div>
 	<div style="position: absolute; left: 10px; top: 30px; height: 500px;">
 		<table id="dataSourceTable"></table>
@@ -39,7 +30,7 @@
 
 
 	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="insertDataSource"
+	<div class="modal fade" id="insertDataSource" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width: 800px">
 			<div class="modal-content">
@@ -49,14 +40,20 @@
 					<h4 class="modal-title" id="myModalLabel">添加元数据</h4>
 				</div>
 				<div class="modal-body">
-
 					<div class="form-group" >
-						<select id="IpAddrSelect" class="form-control selectInsertData" title="IP"></select>
-						<select id="SendUserNameSelect" class="form-control selectInsertData" title="用户"></select>
-						<select  id="fileNameSelect" class="form-control selectInsertData"  style="width: 50%"></select>
-						<input type="text" id="fileNameHidden" value="123" onchange="fileNameChange()" style="display: none" />
-						<button id="fileNameClear" type="button" class="btn btn-default btn-sm" >清空</button>
+						<select id="IpAddrSelect" class="selectpicker"
+							data-live-search="true" data-hide-disabled="true" data-size="6"
+							title="IP">
+						</select> <select id="SendUserNameSelect" class="selectpicker"
+							data-live-search="true" data-hide-disabled="true" data-size="6"
+							title="发送用户">
+						</select>
+						<select id="fileNameSelect" class="selectpicker"
+							data-live-search="true" data-hide-disabled="true" data-size="6"
+							title="文件名称">
+						</select>
 						<br/><hr/>
+
 
 					</div>
 					<div class="form-group">
@@ -160,13 +157,12 @@
 
 	<script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="../js/bootstrap.js"></script>
+	<script type="text/javascript" src="../js/bootstrap-select.js"></script>
+	<script type="text/javascript"
+		src="../js/dataSource/dataSourceSetting.js"></script>
 	<script type="text/javascript"
 		src="../js/dataSource/dataSourceSettingTable.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-table.min.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
-
-	<script type="text/javascript" src="../js/dataSource/dataSourceSetting.js"></script>
-	<script type="text/javascript" src="../js/bootstrap-select2.js"></script>
-	<script type="text/javascript" src="../js/bootstrap-select2-zh-CN.js.js"></script>
 </body>
 </html>
