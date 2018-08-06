@@ -51,7 +51,7 @@ public class AgingStatusService {
         EsQueryBean esQueryBean = new EsQueryBean();
         String[] str_indexs = Pub.getIndices(new Date(), 1);
         esQueryBean.setIndices(str_indexs);
-        esQueryBean.setTypes(new String[]{"FZJC", "LAPS","DATASOURCE","MQPF"});
+        esQueryBean.setTypes(new String[]{"FZJC", "LAPS","DATASOURCE","MQPF","RGF"});
 
         Map<String, Object> mustMap = new HashMap<>();
         Map<String, Object> params = new HashMap<>();
