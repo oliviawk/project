@@ -2,6 +2,7 @@ package hitec.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -330,24 +331,34 @@ public class DataSourceSettingController {
 		String regEx="[^0-9]";
 		Pattern pattern=Pattern.compile(regEx);
 		Matcher matcher=pattern.matcher(filename);
-		String newfilename=matcher.replaceAll(" ").trim();
-		String[] newFileNameArray = newfilename.split(" ");
-		String timeStr = new String();
+
+		String[] newFileNameArray = matcher.replaceAll(" ").trim().split(" ");
+		List<String> timeList = new ArrayList<>();
 		for (int i = 0; i < newFileNameArray.length; i++) {
-			String group = newFileNameArray[i];
-			if (timeStr == null || timeStr.length() < group.length()){
-				timeStr = group;
+			if (newFileNameArray[i].length() >= 8 && !timeList.contains(newFileNameArray[i])){
+				timeList.add(newFileNameArray[i]);
 			}
 		}
-		if (timeStr.length()<format.length()){
+
+//		String newfilename=matcher.replaceAll(" ").trim();
+//		String[] newFileNameArray = newfilename.split(" ");
+//		String timeStr = new String();
+//		for (int i = 0; i < newFileNameArray.length; i++) {
+//			String group = newFileNameArray[i];
+//			if (timeStr == null || timeStr.length() < group.length()){
+//				timeStr = group;
+//			}
+//		}
+
+		if (timeList.get(0).length()<format.length()){
 			outData.put("type","fail");
 			outData.put("leng",filenametxt);
 			outData.put("message","你选的时间格式和文件时间格式不匹配");
 			return outData;
 		}
 		else {
-			String mat=format+timeStr.substring(format.length());
-			filename=filename.replace(timeStr,mat);
+			String mat= "{"+format+"}"+timeList.get(0).substring(format.length());
+			filename=filename.replace(timeList.get(0),mat);
 			outData.put("type",type);
 			outData.put("message",message);
 			outData.put("outfilename",filename);
