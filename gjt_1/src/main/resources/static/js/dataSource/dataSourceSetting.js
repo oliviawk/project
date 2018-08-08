@@ -90,7 +90,7 @@ $(document).ready(function() {
         }, // let our custom formatter work
         minimumInputLength: 3,
         language: "zh-CN", //设置 提示语言
-        width:"50%",
+        width:"58%",
         maximumSelectionLength: 1,  //设置最多可以选择多少项
         placeholder: "请选择",
         tags: false,  //设置必须存在的选项 才能选中
