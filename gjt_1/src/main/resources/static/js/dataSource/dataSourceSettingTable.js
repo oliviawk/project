@@ -167,7 +167,7 @@ var ButtonInit = function () {
                 bol=false;
             }
            if (!bol){
-            	alert("请不要填写空字符！！"+phone)
+            	alert("请不要填写空字符！！")
                $("#submitEdit").attr("disabled",false);
 			   return ;
 		   }

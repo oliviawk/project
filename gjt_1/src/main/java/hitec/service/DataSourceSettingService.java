@@ -279,11 +279,6 @@ public class DataSourceSettingService {
 		String insertDateType = request.getParameter("dataType");
 		String filename= request.getParameter("fileName");
 		String timeformat=request.getParameter("timeFormat");
-		if(timeformat!=null&&timeformat!=""){
-			int leng=timeformat.length();
-			String regx="\\d{"+leng+"}";
-			filename=filename.replace(regx,"{"+timeformat+"}");
-		}
 
 		long insertId = -1;
 		long lastId = -1;
@@ -419,11 +414,11 @@ public class DataSourceSettingService {
 			String beforeip=dataSourceSetting1.getIpAddr();
 			String beforename=dataSourceSetting1.getName();
 
-			if(beforetimeformat!=null&&beforefilename!=null&&beforetimeformat!=""&&beforefilename!=""){
-				int leng=beforetimeformat.length();
-				String regx="\\d{"+leng+"}";
-				beforefilename=beforefilename.replace(regx,"{"+beforetimeformat+"}");
-			}
+//			if(beforetimeformat!=null&&beforefilename!=null&&beforetimeformat!=""&&beforefilename!=""){
+//				int leng=beforetimeformat.length();
+//				String regx="\\d{"+leng+"}";
+//				beforefilename=beforefilename.replace(regx,"{"+beforetimeformat+"}");
+//			}
 			try {
 				logger.info("名字："+beforename+"ip："+beforeip+"文件名："+beforefilename+"路径："+beforefilepath);
 				dataInfo=dataInfoRepository.findDatainfo(beforename,beforeip,beforefilename,beforefilepath);
@@ -486,15 +481,15 @@ public class DataSourceSettingService {
 		    	logger.info("开始删除datainfo数据");
 		    	String filename=dataSourceSetting.getFileName();
 		    	String timeformat=dataSourceSetting.getTimeFormat();
-		    	if (timeformat!=null && !timeformat.equals("")){
-					String regx="\\d{"+dataSourceSetting.getTimeFormat().length()+"}";
-					if (filename.indexOf(regx)!=-1){
-						filename=filename.replace(regx,"{"+timeformat+"}");
-					}
-				}
-				else {
-		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
-				}
+//		    	if (timeformat!=null && !timeformat.equals("")){
+//					String regx="\\d{"+dataSourceSetting.getTimeFormat().length()+"}";
+//					if (filename.indexOf(regx)!=-1){
+//						filename=filename.replace(regx,"{"+timeformat+"}");
+//					}
+//				}
+//				else {
+//		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
+//				}
 
 		    	  pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
 			       if(pk_id!=-1){
@@ -508,7 +503,7 @@ public class DataSourceSettingService {
 				       }
 			   }
 			   else {
-			   	logger.info("删除Alert_stratergy_Repository失败未查询到对应的pk_id");
+			   	logger.info("删除Alert_stratergy_Repository失败未查询到对应的数据");
 			   }
 				try {
 					shutwo =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());

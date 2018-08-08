@@ -346,7 +346,7 @@ public class DataSourceSettingController {
 			return outData;
 		}
 		else {
-			String mat="\\d{"+format.length()+"}"+timeStr.substring(format.length());
+			String mat=format+timeStr.substring(format.length());
 			filename=filename.replace(timeStr,mat);
 			outData.put("type",type);
 			outData.put("message",message);
