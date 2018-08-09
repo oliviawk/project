@@ -5,10 +5,9 @@ import org.quartz.CronExpression;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CronPub {
 
@@ -182,6 +181,65 @@ public class CronPub {
         } finally {
             return strTime;
         }
+    }
+
+
+    /**
+     * 根据cron表达式， 生成 接下来几天的 时间列表---------时次对应的时间
+     * @param cron
+     * @param days
+     * @return
+     */
+    public static List<Date> getTimeByCron_Date_NextFewDays(String cron , int days){
+        List<Date> timeList = new ArrayList<>();
+        try {
+            if(org.springframework.util.StringUtils.isEmpty(cron)){
+                return null;
+            }
+            Date dt = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dt);
+            calendar.add(Calendar.DAY_OF_MONTH,days+1);
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+
+            timeList = getTimeBycron_Date(cron,dt,calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            timeList = null;
+        }
+        return timeList;
+    }
+
+    /**
+     * 根据cron表达式， 生成 接下来几天的 时间列表---------时次对应的时间
+     * @param cron
+     * @param days
+     * @return
+     */
+    public static List<String> getTimeByCron_String_NextFewDays(String cron ,String format, int days){
+        List<String> timeList = new ArrayList<>();
+        try {
+            if(org.springframework.util.StringUtils.isEmpty(cron)){
+                return null;
+            }
+            Date dt = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dt);
+            calendar.add(Calendar.DAY_OF_MONTH,days+1);
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+
+            timeList = getTimeBycron_String(cron,format,dt,calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            timeList = null;
+        }
+        return timeList;
     }
 
 //
