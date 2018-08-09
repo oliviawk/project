@@ -4,10 +4,9 @@ import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CronPub {
 
@@ -85,6 +84,65 @@ public class CronPub {
                 }
                 startDate = exp.getNextValidTimeAfter(startDate);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            timeList = null;
+        }
+        return timeList;
+    }
+
+
+    /**
+     * 根据cron表达式， 生成 接下来几天的 时间列表---------时次对应的时间
+     * @param cron
+     * @param days
+     * @return
+     */
+    public static List<Date> getTimeByCron_Date_NextFewDays(String cron , int days){
+        List<Date> timeList = new ArrayList<>();
+        try {
+            if(org.springframework.util.StringUtils.isEmpty(cron)){
+                return null;
+            }
+            Date dt = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dt);
+            calendar.add(Calendar.DAY_OF_MONTH,days+1);
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+
+            timeList = getTimeBycron_Date(cron,dt,calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            timeList = null;
+        }
+        return timeList;
+    }
+
+    /**
+     * 根据cron表达式， 生成 接下来几天的 时间列表---------时次对应的时间
+     * @param cron
+     * @param days
+     * @return
+     */
+    public static List<String> getTimeByCron_String_NextFewDays(String cron ,String format, int days){
+        List<String> timeList = new ArrayList<>();
+        try {
+            if(org.springframework.util.StringUtils.isEmpty(cron)){
+                return null;
+            }
+            Date dt = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dt);
+            calendar.add(Calendar.DAY_OF_MONTH,days+1);
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+
+            timeList = getTimeBycron_String(cron,format,dt,calendar.getTime());
         } catch (Exception e) {
             e.printStackTrace();
             timeList = null;
@@ -176,6 +234,89 @@ public class CronPub {
             strTime = null;
         }
         return strTime;
+    }
+
+
+    public static List<String> regToStr(String strFileName, String cron){
+
+        Pattern p = Pattern.compile("\\{(.+?)(\\[[\\+\\-]?\\d\\])?\\}");
+        Pattern p2 = Pattern.compile("(\\[.+?\\])");
+        Matcher m = p.matcher(strFileName);
+        List<String> strList = new ArrayList<>();
+
+        while(m.find()){
+            String timeFormat = m.group(1);
+            int timezI = 0;
+            if(m.group(2)!=null){
+                String timez = m.group(2).replaceAll("(\\[)|(\\])","");
+                timezI = Integer.parseInt(timez);
+                strFileName = strFileName.replace(m.group(2),"");
+            }
+
+            SimpleDateFormat df = new SimpleDateFormat(timeFormat);
+            List<Date> strTimeList = CronPub.getTimeByCron_Date_NextFewDays(cron,0);
+            for (int i = 0 ; i < strTimeList.size(); i++){
+                Date dt = strTimeList.get(i);
+                String tempStr = strFileName;
+                dt.setHours(dt.getHours()+timezI);
+
+                tempStr = tempStr.replace("{" + timeFormat + "}",df.format(dt));
+                strList.add(tempStr);
+            }
+            break;
+        }
+        List<String> results = new ArrayList<>();
+        for (String str : strList ){
+            m = p2.matcher(str);
+            Map<String,List<String>> paramsMap = new HashMap<>();
+            List<String> matchers = new ArrayList<>();
+            while(m.find()){
+                List<String> params = new ArrayList<>();
+                String param = m.group().replaceAll("(\\[)|(\\])","");
+                if(param.contains("-")){
+                    String[] arr = param.split("-");
+                    int begin = Integer.parseInt(arr[0]);
+                    int end = Integer.parseInt(arr[1]);
+                    for(int i = begin;i<=end;i++){
+                        params.add(i+"");
+                    }
+                }
+                else if(param.contains(",")){
+                    String[] arr = param.split(",");
+                    params.addAll(Arrays.asList(arr));
+                }
+
+                if(params.size() != 0){
+                    paramsMap.put(m.group(),params);
+                    matchers.add(m.group());
+                }
+            }
+            int index = 0;
+            if(matchers.size() > 0){
+                replaceReg(str,paramsMap,index,matchers,results);
+            }
+            else{
+                results.add(str);
+            }
+        }
+
+        return results;
+    }
+
+    private static List<String> replaceReg(String replaceStr,Map<String,List<String>> paramsMap,int index,List<String> matchers,List<String> results){
+
+        String matcher = matchers.get(index);
+        index++;
+        for(String s:paramsMap.get(matcher)){
+            String str = replaceStr.replace(matcher,s);
+            if(index<matchers.size()){
+                replaceReg(str,paramsMap,index,matchers,results);
+            }
+            else{
+                results.add(str);
+            }
+        }
+        return results;
     }
 
 
