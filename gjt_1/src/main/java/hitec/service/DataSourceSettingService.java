@@ -473,12 +473,14 @@ public class DataSourceSettingService {
 	}
 
 	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) {
+		logger.info("Arraylist集合长度："+arrayList.size());
 		dataSourceSettingRepository.delete(arrayList);
 		int shu=0;
 		int shutwo=0;
 		long pk_id=-1;
-		    for (DataSourceSetting dataSourceSetting: arrayList){
+		    for (int i=0;i<arrayList.size();i++){
 		    	logger.info("开始删除datainfo数据");
+		    	DataSourceSetting dataSourceSetting=arrayList.get(i);
 		    	String filename=dataSourceSetting.getFileName();
 		    	String timeformat=dataSourceSetting.getTimeFormat();
 //		    	if (timeformat!=null && !timeformat.equals("")){
