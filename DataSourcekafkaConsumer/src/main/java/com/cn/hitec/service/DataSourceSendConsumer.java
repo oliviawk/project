@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,20 +11,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.cn.hitec.bean.User_Catalog;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.cn.hitec.bean.DataInfo;
 import com.cn.hitec.bean.DataSourceSetting;
-import com.cn.hitec.feign.client.DataSourceEsInterface;
-import com.cn.hitec.repository.DataInfoRepository;
-import com.cn.hitec.tool.CronPub;
 
 @Service
 public class DataSourceSendConsumer extends MsgConsumer{
