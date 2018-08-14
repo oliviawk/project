@@ -36,6 +36,7 @@ import com.alibaba.fastjson.JSONObject;
 import hitec.domain.DataInfo;
 import hitec.domain.DataSourceSetting;
 import hitec.feign.client.DataSourceEsInterface;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("DataSourceSettingService")
 public class DataSourceSettingService {
@@ -89,11 +90,11 @@ public class DataSourceSettingService {
 		return outData;
 	}
 
-	public DataSourceSetting insertDataSource(HttpServletRequest request) {
+	public DataSourceSetting insertDataSource(HttpServletRequest request) throws  RuntimeException{
 		DataSourceSetting dataSourceSetting = new DataSourceSetting();
 
 		DataSourceSetting backData = null;
-		try {
+//		try {
 			logger.info(JSON.toJSONString(request.getParameterMap()));
 
 			dataSourceSetting.setName(request.getParameter("name"));
@@ -124,13 +125,13 @@ public class DataSourceSettingService {
 				}
 			}
 			backData = dataSourceSettingRepository.save(dataSourceSetting);
-		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			logger.error("添加元数据报错："+ sw.toString());
-			return null;
-		}
+//		} catch (Exception e) {
+//			StringWriter sw = new StringWriter();
+//			PrintWriter pw = new PrintWriter(sw);
+//			e.printStackTrace(pw);
+//			logger.error("添加元数据报错："+ sw.toString());
+//			return null;
+//		}
 		return backData;
 	}
 	
@@ -273,13 +274,16 @@ public class DataSourceSettingService {
 	}
 
 
-	public DataInfo insertDataInfo(HttpServletRequest request) {
+	public DataInfo insertDataInfo(HttpServletRequest request) throws RuntimeException{
 		//1.判断是否存在当前类型数据
 		List<DataInfo> findTypeDatasByParentId = dataInfoRepository.findDatasByParentId(3003);
 		String insertDateType = request.getParameter("dataType");
 		String filename= request.getParameter("fileName");
 		String timeformat=request.getParameter("timeFormat");
-
+		if (timeformat!=null||timeformat.equals("")){
+			String timeregx="\\d{"+timeformat.length()+"}";
+			filename=filename.replace(timeregx,"{"+timeformat+"}");
+		}
 		long insertId = -1;
 		long lastId = -1;
 		for (int i = 0; i < findTypeDatasByParentId.size(); i++) {
@@ -300,15 +304,17 @@ public class DataSourceSettingService {
 			insertType.setName(insertDateType);
 			
 			DataInfo backData = null;
-			try {
+//			try {
 				backData = dataInfoRepository.save(insertType);
-			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				e.printStackTrace(pw);
-				logger.error("插入一条数据源类型出错,"+ sw.toString());
-				return null;
-			}
+
+//			} catch (Exception e) {
+//				StringWriter sw = new StringWriter();
+//				PrintWriter pw = new PrintWriter(sw);
+//				e.printStackTrace(pw);
+//				logger.error("插入一条数据源类型出错,"+ sw.toString());
+//				return null;
+//
+//			}
 			if (backData != null){	//插入类型成功，继续插入数据，新插入类型下没有数据，id从parentId * 1000 + 1开始
 				DataInfo insertData = new DataInfo();
 				insertData.setId(insertId * 1000 + 1);
@@ -328,16 +334,15 @@ public class DataSourceSettingService {
 				insertData.setAlertLevel(1);
 				insertData.setStartMoniter("yes");
 				insertData.setIsData(1);
-				
-				try {
+//				try {
 					backData = dataInfoRepository.save(insertData);
-				} catch (Exception e) {
-					StringWriter sw = new StringWriter();
-					PrintWriter pw = new PrintWriter(sw);
-					e.printStackTrace(pw);
-					logger.error("插入一条数据源类型出错,"+ sw.toString());
-					return null;
-				}
+//				} catch (Exception e) {
+//					StringWriter sw = new StringWriter();
+//					PrintWriter pw = new PrintWriter(sw);
+//					e.printStackTrace(pw);
+//					logger.error("插入一条数据源类型出错,"+ sw.toString());
+//					return null;
+//				}
 			}
 			return backData;
 		}
@@ -379,16 +384,16 @@ public class DataSourceSettingService {
 		insertData.setIsData(1);
 
 		DataInfo backData = null;
-		try {
+//		try {
 			backData = dataInfoRepository.save(insertData);
 
-		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			logger.error("插入一条数据源数据出错,"+ sw.toString());
-			return null;
-		}
+//		} catch (Exception e) {
+//			StringWriter sw = new StringWriter();
+//			PrintWriter pw = new PrintWriter(sw);
+//			e.printStackTrace(pw);
+//			logger.error("插入一条数据源数据出错,"+ sw.toString());
+//			return null;
+//		}
 		return backData;
 	}
 
@@ -400,8 +405,8 @@ public class DataSourceSettingService {
 		jsonObj.put("total", size);
 		return jsonObj;
 	}
-
-	public String EditDataSource(DataSourceSetting dataSourceSetting,ArrayList<DataSourceSetting> list) {
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public String EditDataSource(DataSourceSetting dataSourceSetting,ArrayList<DataSourceSetting> list)throws RuntimeException {
 		String message = "fail";
 		DataInfo dataInfo=null;
 		String name=dataSourceSetting.getName();
@@ -414,28 +419,20 @@ public class DataSourceSettingService {
 			String beforeip=dataSourceSetting1.getIpAddr();
 			String beforename=dataSourceSetting1.getName();
 
-//			if(beforetimeformat!=null&&beforefilename!=null&&beforetimeformat!=""&&beforefilename!=""){
-//				int leng=beforetimeformat.length();
-//				String regx="\\d{"+leng+"}";
-//				beforefilename=beforefilename.replace(regx,"{"+beforetimeformat+"}");
-//			}
-			try {
+			if(beforetimeformat!=null&&beforefilename!=null&&beforetimeformat!=""&&beforefilename!=""){
+				int leng=beforetimeformat.length();
+				String regx="\\d{"+leng+"}";
+				beforefilename=beforefilename.replace(regx,"{"+beforetimeformat+"}");
+			}
+
 				logger.info("名字："+beforename+"ip："+beforeip+"文件名："+beforefilename+"路径："+beforefilepath);
 				dataInfo=dataInfoRepository.findDatainfo(beforename,beforeip,beforefilename,beforefilepath);
-			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				e.printStackTrace(pw);
-				logger.error("插入一条数据源数据出错,"+ sw.toString());
-				return message;
-			}
 			if (null==dataInfo){
 				logger.error("查询数据出错！！");
 				return  message;
 			}
-
 		}
-		//			insertData.setId(lastInsertId);
+		//	insertData.setId(lastInsertId);
 //			insertData.setParentId(insertId);
 		dataInfo.setName(name);
 		dataInfo.setSubName(name);
@@ -450,30 +447,18 @@ public class DataSourceSettingService {
 //			insertData.setServiceType("DATASOURCE");
 //			insertData.setAlertLevel(1);
 //			insertData.setStartMoniter("yes");
-//			insertData.setIsData(1);
-
+//			 insertData.setIsData(1);
 		DataInfo backData = null;
-		try {
-			backData = dataInfoRepository.save(dataInfo);
-
-		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			logger.error("插入一条数据源数据出错,"+ sw.toString());
-			return message;
-		}
-
+		backData = dataInfoRepository.save(dataInfo);
 		DataSourceSetting save = dataSourceSettingRepository.save(dataSourceSetting);
 		if(save!=null){
 			message = "success";
 		}
-
 		return message;
 	}
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) throws RuntimeException {
 
-	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) {
-		logger.info("Arraylist集合长度："+arrayList.size());
 		dataSourceSettingRepository.delete(arrayList);
 		int shu=0;
 		int shutwo=0;
@@ -483,38 +468,39 @@ public class DataSourceSettingService {
 		    	DataSourceSetting dataSourceSetting=arrayList.get(i);
 		    	String filename=dataSourceSetting.getFileName();
 		    	String timeformat=dataSourceSetting.getTimeFormat();
-//		    	if (timeformat!=null && !timeformat.equals("")){
-//					String regx="\\d{"+dataSourceSetting.getTimeFormat().length()+"}";
-//					if (filename.indexOf(regx)!=-1){
-//						filename=filename.replace(regx,"{"+timeformat+"}");
-//					}
-//				}
-//				else {
-//		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
-//				}
+		    	if (timeformat!=null && !timeformat.equals("")){
+					String regx="\\d{"+dataSourceSetting.getTimeFormat().length()+"}";
+					if (filename.indexOf(regx)!=-1){
+						filename=filename.replace(regx,"{"+timeformat+"}");
+					}
+				}
+				else {
+		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
+				}
 
 		    	  pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
 			       if(pk_id!=-1){
-				         try {
+//				         try {
 					          shu=alert_strategy_repository.delectAlert_strategy(pk_id);
-						 } catch (Exception e) {
-					       StringWriter sw = new StringWriter();
-					       PrintWriter pw = new PrintWriter(sw);
-					       e.printStackTrace(pw);
-					       logger.error("删除Alert_strategy一条数据源类型出错,"+ sw.toString());
-				       }
+//						 } catch (Exception e) {
+//					       StringWriter sw = new StringWriter();
+//					       PrintWriter pw = new PrintWriter(sw);
+//					       e.printStackTrace(pw);
+//					       logger.error("删除Alert_strategy一条数据源类型出错,"+ sw.toString());
+//				       }
 			   }
 			   else {
 			   	logger.info("删除Alert_stratergy_Repository失败未查询到对应的数据");
+			   	throw  new RuntimeException("无对应数据");
 			   }
-				try {
+//				try {
 					shutwo =dataInfoRepository.deletedatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
-				} catch (Exception e) {
-					StringWriter sw = new StringWriter();
-					PrintWriter pw = new PrintWriter(sw);
-					e.printStackTrace(pw);
-					logger.error("删除datainfo一条数据源类型出错,"+ sw.toString());
-				}
+//				} catch (Exception e) {
+//					StringWriter sw = new StringWriter();
+//					PrintWriter pw = new PrintWriter(sw);
+//					e.printStackTrace(pw);
+//					logger.error("删除datainfo一条数据源类型出错,"+ sw.toString());
+//				}
 				logger.info(filename+"个数："+shutwo);
 		    }
 
@@ -522,5 +508,28 @@ public class DataSourceSettingService {
 
 	public User_Catalog findAll_User_catalog(String user_name,String user_ip){
 		return user_catalog_repository.findAll_User_catalog(user_name,user_ip);
+	}
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public Map<String, Object> InsertData(HttpServletRequest request,Map<String, Object> outData) throws RuntimeException {
+//		String type = "success";
+//		String message = "成功";
+		DataInfo dataInfo = insertDataInfo(request);// 添加datainfo为了预生成数据
+		if (dataInfo == null) {
+			outData.put("type", "fail");
+			outData.put("message", "添加数据返回为空");
+			return outData;
+		}
+		DataSourceSetting insertResult = insertDataSource(request);// 添加数据库
+		if (insertResult == null) {
+			outData.put("type", "fail");
+			outData.put("message", "添加元数据返回为空");
+			return outData;
+		}
+		if (insertResult.getSendUser().equals("DataSourceSetting数据重复")){
+			outData.put("type", "fail");
+			outData.put("message", "添加的元数据已存在不能重复添加！！！");
+			return outData;
+		}
+		return  outData;
 	}
 }

@@ -116,6 +116,7 @@ $(document).ready(function() {
     $("#fileNameSelect").change(function () {
         findUserFile();
     })
+
     $("#timeFormat").change(function () {
         debugger
         // var filename=$("#fileNameSelect").val();
@@ -253,7 +254,9 @@ $(document).ready(function() {
                     }
                 },
                 error: function(error){
-                    alert(error)
+                    $("#submitBtn").attr("disabled",false);
+                    //关闭模态框
+                    alert(error+"系统异常添加失败")
                 }
             });
         }

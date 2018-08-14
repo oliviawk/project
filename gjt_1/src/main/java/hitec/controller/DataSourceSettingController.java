@@ -1,5 +1,7 @@
 package hitec.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +11,12 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sun.org.apache.bcel.internal.generic.I2F;
 import hitec.domain.User_Catalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,38 +79,56 @@ public class DataSourceSettingController {
 	 */
 	@RequestMapping(value = "/insertDataSource", method = RequestMethod.POST)
 	@ResponseBody
+	@Transactional(rollbackFor = {RuntimeException.class})
 	public Object insertDataSource(HttpServletRequest request) {
 		Map<String, Object> outData = new HashMap<String, Object>();
 		String type = "success";
-		String message = "成功";
+	    String message = "成功";
 		String deleteId = request.getParameter("deleteId");
 
-		DataInfo dataInfo = dataSourceSettingService.insertDataInfo(request);// 添加datainfo为了预生成数据
-		if (dataInfo == null) {
-			outData.put("type", "fail");
-			outData.put("message", "添加dataInfo返回为空");
-			return outData;
-		}
-		DataSourceSetting insertResult = dataSourceSettingService.insertDataSource(request);// 添加数据库
-		if (insertResult == null) {
-			outData.put("type", "fail");
-			outData.put("message", "添加元数据返回为空");
-			return outData;
-		}
-		if (insertResult.getSendUser().equals("DataSourceSetting数据重复")){
-			outData.put("type", "fail");
-			outData.put("message", "添加的元数据已存在不能重复添加！！！");
-			return outData;
-		}
-		String deleteResult = dataSourceSettingService.deleteImpossibleData(deleteId);// 删除模板库中的对应记录
-		if (!"success".equals(deleteResult)) {
-			message = deleteResult;
-		}
-		String updataResult = dataSourceKafkaInterface.updataInsertBaseFilter();// 调用kafka订阅程序更新数据库对比内容
-		if (!"SUCCESS".equals(updataResult)) {
-			message = "远程调用kafka订阅程序更新对比map失败";
-		}
+	try{
+//		DataInfo dataInfo = dataSourceSettingService.insertDataInfo(request);// 添加datainfo为了预生成数据
+//		if (dataInfo == null) {
+//			outData.put("type", "fail");
+//			outData.put("message", "添加数据返回为空");
+//			return outData;
+//		}
+//		DataSourceSetting insertResult = dataSourceSettingService.insertDataSource(request);// 添加数据库
+//		if (insertResult == null) {
+//			outData.put("type", "fail");
+//			outData.put("message", "添加元数据返回为空");
+//			return outData;
+//		}
+//		if (insertResult.getSendUser().equals("DataSourceSetting数据重复")){
+//			outData.put("type", "fail");
+//			outData.put("message", "添加的元数据已存在不能重复添加！！！");
+//			return outData;
+//		}
 
+		 outData=dataSourceSettingService.InsertData(request,outData);
+		 Object obj=outData.get(type);
+		 if (obj.equals("fail")){
+		 	return  outData;
+		 }
+        /*ES 如果发生异常，事务将无法回滚，ES不支持事务，处理方式为先保存操作之前的数据如果ES发生异常，
+        则把操作之前的数据重新存入ES，暂时没有实现此功能，日后在改，在编辑修改功能方法中也涉及ES的事务回滚问题*/
+//		String updataResult = dataSourceKafkaInterface.updataInsertBaseFilter();// 调用kafka订阅程序更新数据库对比内容
+//		if (!"SUCCESS".equals(updataResult)) {
+//			message = "远程调用kafka订阅程序更新对比map失败";
+//		}
+//		String deleteResult = dataSourceSettingService.deleteImpossibleData(deleteId);// 删除模板库中的对应记录
+//		if (!"success".equals(deleteResult)) {
+//			message = deleteResult;
+//		}
+	}catch (RuntimeException e){
+		    type="fail";
+		    message="添加失败";
+		    StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+		return outData;
+
+	}
 		outData.put("type", type);
 		outData.put("message", message);
 		return outData;
@@ -207,6 +230,7 @@ public class DataSourceSettingController {
 	 */
 	@RequestMapping(value = "EditDataSource")
 	@ResponseBody
+
 	public Object EditDataSource(HttpServletRequest request) {
 		String message="success";
 		DataSourceSetting dataSourceSetting = new DataSourceSetting();
@@ -229,25 +253,51 @@ public class DataSourceSettingController {
 		for (Object object : parseArray) {
 			arrayList.add(JSON.parseObject(JSON.toJSONString(object), DataSourceSetting.class));
 		}
-		String result = dataSourceSettingService.EditDataSource(dataSourceSetting,arrayList);
-
-
 		JSONObject resultObj = new JSONObject();
-		resultObj.put("result", result);
-		String updataResult = dataSourceKafkaInterface.updataInsertBaseFilter();// 调用kafka订阅程序更新数据库对比内容
-		if (!"SUCCESS".equals(updataResult)) {
+		try{
+		    String result = dataSourceSettingService.EditDataSource(dataSourceSetting,arrayList);
+			if (result==null||result.equals("")||result.equals("fail")){
+				resultObj.put("result", "fail");
+				message="fail";
+				resultObj.put("message",message);
+				return resultObj;
+			}
+			else {
+				resultObj.put("message",message);
+				resultObj.put("result", result);
+			}
+//			String updataResult = dataSourceKafkaInterface.updataInsertBaseFilter();// 调用kafka订阅程序更新数据库对比内容
+//			if (!"SUCCESS".equals(updataResult)) {
+//				message = "fail";
+//				resultObj.put("message",message);
+//			}
+//			else if ("SUCCESS".equals(updataResult)){
+//				resultObj.put("message",message);
+//			}
+
+		}
+		catch (RuntimeException e){
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
 			message = "fail";
+			resultObj.put("result", "fail");
 			resultObj.put("message",message);
+
+			System.out.println("更改失败，事务回滚！"+e.getMessage());
+			return resultObj;
+
 		}
-		else if ("SUCCESS".equals(updataResult)){
-			resultObj.put("message",message);
-		}
+
 		return resultObj;
+
+
 
 	}
 
 	@RequestMapping(value = "deleteDataSource")
 	@ResponseBody
+
 	public Object deleteDataSource(HttpServletRequest request) {
 		String data = request.getParameter("data");
 		
@@ -260,10 +310,20 @@ public class DataSourceSettingController {
 		try {
 			dataSourceSettingService.deleteDataSource(arrayList);
 			resultObj.put("result", "success");
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
 			resultObj.put("result", "fail");
+			System.out.println(e.getMessage());
+//              throw new RuntimeException("测试删除事务！");
+
 		}
-		return resultObj;
+
+			return resultObj;
+
+
+
 	}
 
 	/**
@@ -357,7 +417,7 @@ public class DataSourceSettingController {
 			return outData;
 		}
 		else {
-			String mat= "{"+format+"}"+timeList.get(0).substring(format.length());
+			String mat= "\\d{"+format.length()+"}"+timeList.get(0).substring(format.length());
 			filename=filename.replace(timeList.get(0),mat);
 			outData.put("type",type);
 			outData.put("message",message);

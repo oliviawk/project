@@ -189,21 +189,20 @@ var ButtonInit = function () {
                         $("#submitEdit").attr("disabled",false);
 
                     }
-    				if (result.result == 'fail'){
-
-    					alert("修改失败！!");
-                        $("#submitEdit").attr("disabled",false);
-    				}else{
+    				if (result.result == 'success'){
     					alert("修改成功!!");
     					//关闭模态框
                         $("#submitEdit").attr("disabled",false);
     					$('#EditDataSource').modal('hide');
     					$("#dataSourceTable").bootstrapTable('refresh');
 
-    				}
+    				} else {
+                        alert("修改失败！!");
+                        $("#submitEdit").attr("disabled",false);
+                    }
 
 
-    			}, 
+                },
     			error: function(error){
     				
     			}
@@ -228,11 +227,15 @@ var ButtonInit = function () {
                 type: "post",
                 url: "/dataSourceSetting/deleteDataSource",
                 data: { "data": JSON.stringify(arrselections) },
-                success: function (data, status) {
-                    if (status == "success") {
+                success: function (data) {
+                    if (data.result == "success") {
                         alert('删除数据成功');
                         $("#dataSourceTable").bootstrapTable('refresh');
                     }
+                    else {
+                        alert('删除数据失败');
+                        $("#dataSourceTable").bootstrapTable('refresh');
+					}
                 },
                 error: function () {
                     alert('Error');
