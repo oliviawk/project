@@ -56,7 +56,7 @@
 //        consumer.subscribe(Arrays.asList(topic));
 //
 //        EsBean esBean_t639 = new EsBean();
-//        esBean_t639.setType("MQPF");
+//        esBean_t639.setType("FZJC");
 //        esBean_t639.setIndex("");
 //
 //        long startTime1 = System.currentTimeMillis();

@@ -2,12 +2,7 @@ package com.cn.hitec.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,9 +63,10 @@ public class DataSourceSendConsumer extends MsgConsumer{
 		if (filenamelog_array!=null&&filenamelog_array.length>=1){
 			filenamelogtwo=filenamelog_array[filenamelog_array.length-1];
 		}
-		String file_sizeStr = "";
-		String event_status = "";
-		String ipAddr = "";
+
+		String file_sizeStr = msgs[7];
+		String event_status = msgs[15];
+		String ipAddr = msgs[18];
 
         if(file_name_log.indexOf("/radar-base/bz2") > -1){	//说明是MQPF的雷达日志
 //			Sun Feb 25 03:32:31 2018 1 10.1.72.76 647951 /radar-base/bz2/Z_RADR_I_Z9519_20180224192600_O_DOR_SA_CAP.bin.bz2.tmp b _ i r nmic_provider ftp 0 * c
@@ -79,9 +75,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				if(!("10.1.72.77".equals(sourceIp) || "10.1.72.76".equals(sourceIp) || "10.1.72.75".equals(sourceIp) || "10.1.72.74".equals(sourceIp))){
 					return null;
 				}
-				file_sizeStr = msgs[7];
-				event_status = msgs[15];
-				ipAddr = msgs[18];
+
 				String occurTimeStr = "";
 				for (int j = 0; j < 5; j++) {
 					if (j < 4){
@@ -133,20 +127,65 @@ public class DataSourceSendConsumer extends MsgConsumer{
 				return null;
 			}
 			return outData;
+		}else if (file_name_log.indexOf("T639-GMFS-HNEHE") > -1){
+			try {
+
+				String[] filePaths = file_name_log.split("/");
+
+				String occurTimeStr = "";
+				for (int j = 0; j < 5; j++) {
+					if (j < 4){
+						occurTimeStr += msgs[j] + " ";
+					}
+					if (j == 4){
+						occurTimeStr += msgs[j];
+					}
+				}
+				Date date = new Date(occurTimeStr);
+				long occur_time = date.getTime();
+				data.put("occur_time", occur_time);
+
+				sdf.applyPattern("yyyyMMddHH");
+				String strTime = filePaths[1];
+
+				Date dataTime_H = sdf.parse(strTime);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(dataTime_H);
+
+				String strHour = filePaths[2].replace(".grib2","").split("-")[4];
+				strHour = strHour.substring(0,3);
+				calendar.add(Calendar.HOUR_OF_DAY,Integer.parseInt(strHour));
+
+				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+				String data_time = sdf.format(calendar.getTime());
+
+				long file_size_long = Long.parseLong(file_sizeStr);
+
+				// 采集数据中不包含的数据，后期从配置库中获取
+				data.put("name", "T639采集");
+				data.put("type", "Z_NAFP_C_BABJ");
+
+				field.put("file_name", file_name_log);
+				field.put("file_size", file_size_long);
+				field.put("data_time", data_time);
+				field.put("event_status", event_status);
+				field.put("ip_addr", "10.30.16.220");
+				field.put("module", "采集");
+				data.put("fields", field);
+
+
+				outData.put("type", "FZJC_DataSource");
+				outData.put("data", data);
+
+			} catch (ParseException e) {
+				logger.error("解析 FZJC日志 并组装入库数据出错 ." + e.getMessage() );
+				logger.warn(msg);
+				return null;
+			}
+			return outData;
 		}else if(file_name_log.indexOf("?") > -1  || file_name_log.indexOf("RADA") != -1 || file_name_log.indexOf("RADR") != -1){
 			return null;
 		}
-		file_sizeStr = msgs[7];
-		event_status = msgs[15];
-		ipAddr = msgs[18];
-
-//		List<User_Catalog>  user_catalogs =user_catalog_repository.findAll_User_catalog(user,ipAddr);
-//		if (user_catalogs == null || user_catalogs.size() < 1 || StringUtils.isEmpty(user_catalogs.get(0).getUser_catalog_content())){
-//			return  null;
-//		}
-//		String UserCatalog_username=user_catalogs.get(0).getUser_catalog_content();
-
-
 
 		String regEx = "[^0-9]";//匹配指定范围内的数字
 		//Pattern是一个正则表达式经编译后的表现模式

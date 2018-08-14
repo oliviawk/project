@@ -96,11 +96,14 @@ public class MsgConsumer {
         long startTime1 = System.currentTimeMillis();
         long startTime2 = System.currentTimeMillis();
         long startTime3 = System.currentTimeMillis();
+        long startTime_fzjc = System.currentTimeMillis();
         long useaTime1 = 0;
         long useaTime2 = 0;
         long useaTime3 = 0;
+        long useaTime_fzjc = 0;
         List<Object> possibleNeedDataList = new ArrayList<Object>();
         List<String> mqpfList = new ArrayList<String>();
+        List<String> FZJCList = new ArrayList<String>();
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(1000);
@@ -109,7 +112,6 @@ public class MsgConsumer {
 
                     String msg = record.value();
                     Map<String, Object> data = processing(msg);
-//                    System.out.println(msg);
                     if (data == null){
                         continue;
                     }
@@ -119,12 +121,14 @@ public class MsgConsumer {
                         possibleNeedDataList.add(data.get("data"));
                     }else if ("MQPF_DataSource".equals(data.get("type"))){
                         mqpfList.add(JSON.toJSONString(data.get("data")));
+                    }else if("FZJC_DataSource".equals(data.get("type"))){
+                        FZJCList.add(JSON.toJSONString(data.get("data")));
                     }
                 }
                 useaTime1 = System.currentTimeMillis() - startTime1;
                 useaTime2 = System.currentTimeMillis() - startTime2;
                 useaTime3 = System.currentTimeMillis() - startTime3;
-
+                useaTime_fzjc = System.currentTimeMillis() - startTime_fzjc;
                 //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
                 if (msgs.size() > 3000 || (msgs.size() > 0 && useaTime1 > 5000)) {
                     esBean.setData(msgs);
@@ -161,6 +165,13 @@ public class MsgConsumer {
                     startTime3 = System.currentTimeMillis();
                 }
 
+                if (FZJCList.size() > 3000 || (FZJCList.size() > 0 && useaTime_fzjc > 5000)){
+                    EsBean esBean_fzjc = new EsBean();
+                    esBean.setType("FZJC");
+                    esBean.setIndex("");
+                    //开始入库
+
+                }
             }catch (Exception e){
                 logger.error("!!!!!!error");
                 logger.debug("",e);

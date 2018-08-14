@@ -20,8 +20,6 @@ public class RunnerKafkaConsumerComponent implements CommandLineRunner{
 	@Autowired
 	DataSourceSendConsumer dataSourceSendConsumer;
 
-//	@Autowired
-//	FZJC_T639_Consumer fzjc_t639_consumer;
 	@Override
 	public void run(String... arg0) throws Exception {
 		//启动kafka订阅程序
@@ -35,14 +33,6 @@ public class RunnerKafkaConsumerComponent implements CommandLineRunner{
 		};
 		datasourceSendThread.start();
 
-
-//        Thread fzjc_t639_thread = new Thread(){
-//        	@Override
-//			public void run(){
-//				fzjc_t639_consumer.consume();
-//			}
-//		};
-//		fzjc_t639_thread.start();
 
 	}
 
