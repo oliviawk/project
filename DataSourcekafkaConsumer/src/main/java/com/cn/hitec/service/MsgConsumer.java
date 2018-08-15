@@ -171,6 +171,8 @@ public class MsgConsumer {
                     esBean.setIndex("");
                     //开始入库
 
+                    FZJCList.clear();
+                    startTime_fzjc = System.currentTimeMillis();
                 }
             }catch (Exception e){
                 logger.error("!!!!!!error");
