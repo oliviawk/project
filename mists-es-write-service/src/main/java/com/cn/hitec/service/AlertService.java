@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -262,8 +264,11 @@ public class AlertService {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String strError = sw.toString();
+            log.error(strError.length() > 1000 ? strError.substring(0,999):strError);
         }
 
     }

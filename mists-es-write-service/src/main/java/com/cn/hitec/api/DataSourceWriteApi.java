@@ -73,7 +73,7 @@ public class DataSourceWriteApi extends BaseController {
 		long start = 0;
 		Map<String,Object> map ;
 		List<Map> listData = JSON.parseArray(json,Map.class);
-		System.out.println(JSON.toJSONString(listData));
+//		System.out.println(JSON.toJSONString(listData));
 		start = System.currentTimeMillis();
 		map = new HashMap<>();
 		for (Map dataMap : listData){
@@ -91,7 +91,7 @@ public class DataSourceWriteApi extends BaseController {
 				String module = fieldsMap.get("module").toString();
 				String ipAddr = fieldsMap.get("ip_addr").toString();
 
-				logger.info(str_type+","+sub_type+","+module+","+ipAddr+","+dataTime);
+//				logger.info(str_type+","+sub_type+","+module+","+ipAddr+","+dataTime);
 
 				String str_id = Pub.MD5(str_type+","+sub_type+","+module+","+ipAddr+","+dataTime);
 
@@ -99,7 +99,7 @@ public class DataSourceWriteApi extends BaseController {
                     SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
                     str_index = Pub.Index_Head + (sdf.format(new Date()));
                 }
-				System.out.println(str_index+","+str_type+","+str_id);
+//				System.out.println(str_index+","+str_type+","+str_id);
 				dataSourceService.add(str_index, str_type, str_id , JSON.toJSONString(dataMap));
 			} catch (Exception e) {
 				e.printStackTrace();

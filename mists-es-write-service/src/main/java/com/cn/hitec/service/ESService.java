@@ -1,5 +1,7 @@
 package com.cn.hitec.service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,7 @@ import com.cn.hitec.bean.AlertBeanNew;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.tools.AlertType;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -511,6 +514,7 @@ public class ESService {
 								}
 							}
 						}
+
 						// 数据入库
 						es.bulkProcessor.add(new IndexRequest(index, type, str_id).source(map));
 //						DIMap = null;
@@ -531,7 +535,12 @@ public class ESService {
 					}
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					e.printStackTrace(pw);
+					String strError = sw.toString();
+					log.error(strError.length() > 1000 ? strError.substring(0,999):strError);
+
 					log.error("错误数据："+json);
 					error_num++;
 				}

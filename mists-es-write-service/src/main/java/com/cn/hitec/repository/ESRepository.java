@@ -79,22 +79,28 @@ public class ESRepository {
         bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
             @Override
             public void beforeBulk(long executionId, BulkRequest request) {
+                log.info("---尝试操作 " + request.numberOfActions() + " 条数据---");
             }
 
             @Override
             public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
+                log.info("---尝试操作" + request.numberOfActions() + "条数据成功---");
             }
 
             @Override
             public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
+                log.info("---尝试操作" + request.numberOfActions() + "条数据失败---");
             }
         }).setBulkActions(5000)
-                .setBulkSize(new ByteSizeValue(3, ByteSizeUnit.MB))
-                .setFlushInterval(TimeValue.timeValueSeconds(5))
-                .setConcurrentRequests(1)
-                .setBackoffPolicy(
-                        BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
-                .build();
+            .setBulkSize(new ByteSizeValue(3, ByteSizeUnit.MB))
+            // 固定5s必须刷新一次
+            .setFlushInterval(TimeValue.timeValueSeconds(5))
+            // 并发请求数量, 0不并发, 1并发允许执行
+            .setConcurrentRequests(1)
+            // 设置退避, 100ms后执行, 最大请求3次
+            .setBackoffPolicy(
+                    BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
+            .build();
     }
 
     public void closeClient() {
