@@ -45,12 +45,10 @@ public class MsgConsumer {
         this.type = type;
     }
 
-//    public Map<String, List<DataSourceSetting>> insertBaseFilter = new HashMap<String, List<DataSourceSetting>>();
     public List<DataSourceSetting> insertBaseFilter = new ArrayList<DataSourceSetting>();
     
     private final KafkaConsumer<String, String> consumer;
-  // private List<Map<String, Object>> msgs = new ArrayList<Map<String,Object>>();
-    private List<String> msgs = new ArrayList<String>();
+
     private String topic;
     private String type;
     public MsgConsumer(String topic, String group, String type) {
@@ -101,6 +99,7 @@ public class MsgConsumer {
         long useaTime2 = 0;
         long useaTime3 = 0;
         long useaTime_fzjc = 0;
+        List<String> msgs = new ArrayList<String>();
         List<Object> possibleNeedDataList = new ArrayList<Object>();
         List<String> mqpfList = new ArrayList<String>();
         List<String> FZJCList = new ArrayList<String>();
