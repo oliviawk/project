@@ -129,6 +129,12 @@ function lct_status_agg() {
             list1.push("machining_T639_10-30-16-223");
             list1.push("distribute_T639_10-30-16-220");
             list1.push("distribute_T639_10-0-74-226");
+            list1.push("machining_EC风流场_10-30-16-223");
+            list1.push("distribute_EC风流场_10-30-16-220");
+            list1.push("distribute_EC风流场_10-0-74-226");
+            list1.push("machining_FY4A_10-30-16-223");
+            list1.push("distribute_FY4A_10-30-16-220");
+            list1.push("distribute_FY4A_10-0-74-226");
 
 
             if(json.result != "success" || json.resultData.length < 1){
@@ -245,6 +251,11 @@ function lct_status_regular(findType) {
                 list1.push("distribute_hot")
                 list1.push("machining_T639")
                 list1.push("distribute_T639")
+                list1.push("collect_satellite")
+                list1.push("machining_FY4A")
+                list1.push("distribute_FY4A")
+                list1.push("machining_EC风流场")
+                list1.push("distribute_EC风流场")
             }else if(findType == "no_regular"){
                 list1.push("machining_LatLonQREFEnd")
                 list1.push("collect_LAPS3KM")
@@ -260,22 +271,10 @@ function lct_status_regular(findType) {
             if(json.result != "success" || json.resultData.length < 1){
                 for (var i = 0; i < list1.length ; i++){
                     var strId = list1[i];
-//                    if(strId.indexOf("distribute_") > -1){
-//                        $("#"+strId).attr({
-//                            "class":"list-red-f"
-//                        });
-//                        $("#"+strId +" i").each(function (i) {
-//                            if( i == 1){
-//                                $(this).attr("class","sn-r bd");
-//                            }else{
-//                                $(this).attr("class","sn-r");
-//                            }
-//                        })
-//                    }else{
+
                         $("#"+strId).attr({
                             "class":"list-red"
                         });
-//                    }
                 }
                 return ;
             }
@@ -353,24 +352,12 @@ function lct_status_regular(findType) {
                         continue;
                     }
                     console.log(strId)
-//                    if(strId.indexOf("distribute_") > -1){
-//                        $("#"+strId).attr({
-//                            "class":liStatus+"-f"
-//                        });
-//                        $("#" + strId).attr("title", values.fields.data_time);
-//                        $("#"+strId +" i").each(function (i) {
-//                            if( i == 1){
-//                                $(this).attr("class", liI +" bd");
-//                            }else{
-//                                $(this).attr("class", liI );
-//                            }
-//                        })
-//                    }else{
-                        $("#"+strId).attr({
-                            "class":liStatus
-                        });
-                        $("#" + strId).attr("title", values.fields.data_time);
-//                    }
+
+                    $("#"+strId).attr({
+                        "class":liStatus
+                    });
+                    $("#" + strId).attr("title", values.fields.data_time);
+
                 }
 
 
@@ -382,165 +369,7 @@ function lct_status_regular(findType) {
         }
     });
 }
-/**
- * 流程图各环节状态
- */
-function lct_statusNew(moduleName,ip,subType) {
-    var esQeuryBean_web = {
-        // "indices":["log_20170920"],
-        "types":["FZJC"],
-        "subType":subType,
-        "module":moduleName,
-        "strIp":ip
-    }
 
-    var moduleE = "";
-    if(moduleName == "采集"){
-        moduleE = "collect";
-    }else if(moduleName == "加工"){
-        moduleE = "machining";
-    }else if(moduleName == "分发"){
-        moduleE = "distribute";
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '../fzjc/findData_DI',
-        data: JSON.stringify(esQeuryBean_web),
-        dataType: "json",
-        async: false,
-        headers: {
-            "Content-Type": "application/json; charset=utf-8"
-        },
-        success: function (json) {
-            console.log("---");
-            console.log(esQeuryBean_web);
-            console.log(json);
-            console.log("---");
-            if(subType == "FY-2E/G云图数据" || subType == "云图"){
-                subType = "satellite";
-            }else if(subType == "雷达数据" || subType == "雷达"){
-                subType = "radarlatlon";
-            }else if(subType == "风流场"){
-                subType = "T639";
-            }else if(subType == "炎热指数"){
-                subType = "hot";
-            }else if(subType == "城市预报"){
-                subType = "cityforcast";
-            }else if(subType == "台风"){
-                subType = "typhoon";
-            }else if(subType == "预警信号"){
-                subType = "warning";
-            }else if(subType == "突发事件"){
-                subType = "emergency";
-            }else if(subType == "船舶"){
-                subType = "boats";
-            }else if(subType == "交通拥堵"){
-                subType = "trafficjam";
-            }
-
-            if(json.result != "success"){
-                var upId = moduleE+"_"+subType;
-//                if(moduleName == "分发"){
-//                    $("#"+upId).attr({
-//                        "class":"list-red-f"
-//                    });
-//                    $("#"+upId +" i").each(function (i) {
-//                        if( i == 1){
-//                            $(this).attr("class","sn-r bd");
-//                        }else{
-//                            $(this).attr("class","sn-r");
-//                        }
-//                    })
-//                }else{
-                    $("#"+upId).attr({
-                        "class":"list-red"
-                    });
-//                }
-                return;
-            }
-            var data = json.resultData;
-
-            if(data.length < 1){
-                var upId = moduleE+"_"+subType;
-//                if(moduleName == "分发"){
-//                    $("#"+upId).attr({
-//                        "class":"list-red-f"
-//                    });
-//                    $("#"+upId +" i").each(function (i) {
-//                        if( i == 1){
-//                            $(this).attr("class","sn-r bd");
-//                        }else{
-//                            $(this).attr("class","sn-r");
-//                        }
-//                    })
-//                }else{
-                    $("#"+upId).attr({
-                        "class":"list-red f"
-                    });
-//                }
-                console.error("查询到的数据为空")
-                return;
-            }
-            $.each(data,function(i,values){
-                var liStatus = "list-red";
-                var liI = "sn-r";
-
-                var agingStatus_isOK = false ;
-                var eventStatus_isOK = false ;
-                $(values).each(function(){
-                    if(this.hasOwnProperty("aging_status")){
-                        if(this.aging_status == "未处理" || this.aging_status == "正常"){
-                            agingStatus_isOK = true;
-                        }else{
-                            agingStatus_isOK = false;
-                        }
-                    }else {
-                        agingStatus_isOK = true;
-                    }
-                    if(this.fields.hasOwnProperty("event_status") ){
-                        if(this.fields.event_status == "0" || this.fields.event_status.toUpperCase() == "OK") {
-                            eventStatus_isOK = true;
-                        }else{
-                            eventStatus_isOK = false;
-                        }
-                    }else{
-                        eventStatus_isOK = true;
-                    }
-
-                    if(agingStatus_isOK && eventStatus_isOK){
-                        liStatus = "list-green";
-                        liI = "sn-g";
-                    }
-                    var upId = moduleE+"_"+subType;
-//                    if(moduleName == "分发"){
-//                        $("#"+upId).attr({
-//                            "class":liStatus+"-f",
-//                            "title":this.fields.data_time
-//                        });
-//                        $("#"+upId +" i").each(function (i) {
-//                            if( i == 1){
-//                                $(this).attr("class",liI + " bd");
-//                            }else{
-//                                $(this).attr("class",liI);
-//                            }
-//                        })
-//                    }else{
-                        $("#"+upId).attr({
-                            "class":liStatus,
-                            "title":this.fields.data_time
-                        });
-//                    }
-
-                });
-            });
-            data = null;
-        },
-        error:function (e) {
-            console.error(e);
-        }
-    });
-}
 
 /**
  * 历史数据弹出框

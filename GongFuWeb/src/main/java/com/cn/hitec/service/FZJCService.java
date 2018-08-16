@@ -616,7 +616,7 @@ public class FZJCService extends BaseController{
             esQueryBean.setTypes(new String[]{"FZJC"});
 
             Map params = new HashMap();
-            params.put("subTypes","雷达,云图,炎热指数,ReadFY2NC,风流场,T639");
+            params.put("subTypes","雷达,云图,炎热指数,ReadFY2NC,风流场,T639,FY4A,EC风流场");
             esQueryBean.setParameters(params);
             outMap = esQueryService.lctAggQuery(esQueryBean);
 
@@ -661,7 +661,8 @@ public class FZJCService extends BaseController{
                 /*------开始拼接查询参数--------*/
                 //判断是 预先生成的数据
                 if( "ReadFY2NC".equals(esQueryBean.getSubType()) || "云图".equals(esQueryBean.getSubType()) || "雷达".equals(esQueryBean.getSubType())
-                            || "炎热指数".equals(esQueryBean.getSubType()) || "风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType())){
+                            || "炎热指数".equals(esQueryBean.getSubType()) || "风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType())
+                        || "EC风流场".equals(esQueryBean.getSubType()) || "FY4A".equals(esQueryBean.getSubType())){
                     Map<String,Object> mustMap = new HashMap<>();
                     mustMap.put("type",esQueryBean.getSubType());
                     mustMap.put("fields.module",esQueryBean.getModule());
@@ -670,7 +671,7 @@ public class FZJCService extends BaseController{
                     Map<String,Object> mustNotMap = new HashMap<>();
                     mustNotMap.put("aging_status","未处理");
 
-                    if("风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType())){
+                    if("风流场".equals(esQueryBean.getSubType()) || "T639".equals(esQueryBean.getSubType()) || "EC风流场".equals(esQueryBean.getSubType())){
                         Map<String,String> rangeMap = new HashMap<>();
                         List<Map> list = new ArrayList<>();
                         rangeMap.put("name","fields.data_time");
