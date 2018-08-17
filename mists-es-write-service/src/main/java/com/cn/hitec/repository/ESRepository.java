@@ -79,17 +79,17 @@ public class ESRepository {
         bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
             @Override
             public void beforeBulk(long executionId, BulkRequest request) {
-                log.info("---尝试操作 " + request.numberOfActions() + " 条数据---");
+//                log.info("---尝试操作 " + request.numberOfActions() + " 条数据---");
             }
 
             @Override
             public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
-                log.info("---尝试操作" + request.numberOfActions() + "条数据成功---");
+//                log.info("---尝试操作" + request.numberOfActions() + "条数据成功---");
             }
 
             @Override
             public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
-                log.info("---尝试操作" + request.numberOfActions() + "条数据失败---");
+                log.info("---elastic录入数据：" + request.numberOfActions() + "条数据失败---");
             }
         }).setBulkActions(5000)
             .setBulkSize(new ByteSizeValue(3, ByteSizeUnit.MB))
