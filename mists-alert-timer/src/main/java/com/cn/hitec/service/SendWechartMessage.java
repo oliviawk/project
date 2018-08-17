@@ -170,7 +170,7 @@ public class SendWechartMessage {
                     }
                 }
 
-                logger.info("发送短信消息：{}",sendMessage);
+//                logger.info("发送短信消息：{}",sendMessage);
 
                 for (int i = 0 ; i < dataList.size() ; i++){
                     try {

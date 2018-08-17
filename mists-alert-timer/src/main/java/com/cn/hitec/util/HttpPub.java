@@ -104,7 +104,6 @@ public class HttpPub {
             alertMessage.put("content",jsonParam);
             params.put("text",alertMessage);
 
-            System.out.println(JSON.toJSONString(params));
             if (null != jsonParam) {
                 //解决中文乱码问题
                 StringEntity entity = new StringEntity(JSON.toJSONString(params), "utf-8");
