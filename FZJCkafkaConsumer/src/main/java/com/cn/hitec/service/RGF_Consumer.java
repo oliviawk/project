@@ -146,8 +146,13 @@ public class RGF_Consumer extends MsgConsumer{
 
                                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
                                 Date d = df.parse(time);
+
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(d);
+                                cal.add(Calendar.HOUR, 8);
+
                                 df.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-                                subobj.put("data_time", df.format(d));
+                                subobj.put("data_time", df.format(cal.getTime()));
                             }
                             else if(type.equals("eleh")){
                                 //MSP1_PMSC_ELEH_ME_L88_CHN_201807291540_00020-00000.nc
@@ -162,7 +167,7 @@ public class RGF_Consumer extends MsgConsumer{
 
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTime(oldDt);
-                                cal.add(Calendar.MINUTE, addtime);
+                                cal.add(Calendar.MINUTE, addtime+480);
 
                                 obj.put("type", "ELEH");
                                 obj.put("name", "ELEH");
@@ -220,7 +225,7 @@ public class RGF_Consumer extends MsgConsumer{
             logger.error(msg);
             e.printStackTrace();
         }
-
+        logger.info(JSON.toJSONString(toEsJsons));
         return toEsJsons;
     }
 
