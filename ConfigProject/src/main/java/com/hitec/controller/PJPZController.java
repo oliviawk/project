@@ -416,6 +416,7 @@ public class PJPZController {
 			JSONObject jb=JSON.parseObject(op);
 			JSONObject strategyObj = jb.getJSONObject("strategy");
 			JSONArray datainfoArray = jb.getJSONArray("datainfo");
+			List<DataInfo> list= new ArrayList<DataInfo>();
 			DataInfo dataInfo = null;
 			for (int i = 0; i < datainfoArray.size(); i++){
 				JSONObject diObj = datainfoArray.getJSONObject(i);
@@ -426,9 +427,9 @@ public class PJPZController {
 				String monitorTimes = diObj.getString("monitorTimes");
 				String fileSizeDefine = diObj.getString("fileSizeDefine");
 				String fileNameDefine = diObj.getString("fileNameDefine");
-
+                DataInfo dataInfoprepare=dataInfoRepository.findqueryalldata(id);
+                list.add(dataInfoprepare);
 				dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
-
 				Integer beforeAlert = diObj.getInteger("beforeAlert");
 				Integer delayAlert = diObj.getInteger("delayAlert");
 				String alertTimeRange = diObj.getString("alertTimeRange");
@@ -456,7 +457,10 @@ public class PJPZController {
 				JSONObject j = new JSONObject();
 
 				j.put("serviceType",dataInfo.getService_type());
+				JSONObject deleteprepare = new JSONObject();
+				String datainfostr=JSON.toJSONString(list);
 //				//更新策略
+                updStrategyWrite.DeletePrepareData(datainfostr);
 				updStrategyTimer.updInitMap(JSON.toJSONString(j));
 				updStrategyWrite.updInitMap();
 

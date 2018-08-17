@@ -22,7 +22,7 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     @Modifying
     /*@Query(value="UPDATE alert_module_copy RIGHT JOIN (SELECT id,service_type,module,`name`,ip FROM data_info WHERE id=?5) d ON module_key=CONCAT('OP_',service_type,'_',module,',',d.name,',',ip) SET beforeAlert=?1,delayAlert=?2,alertTimeRange=?3,maxAlerts=?4", nativeQuery = true)*/
     @Query(value="INSERT INTO alert_rules(id,beforeAlert,delayAlert,alertTimeRange,maxAlerts,currentAlerts) VALUES(?5,?1,?2,?3,?4,0) ON DUPLICATE KEY UPDATE beforeAlert=VALUES(beforeAlert),delayAlert=VALUES(delayAlert),alertTimeRange=VALUES(alertTimeRange),maxAlerts=VALUES(maxAlerts),currentAlerts=0", nativeQuery = true)
-    void updateAlertRules(Integer beforeAlert,Integer delayAlert,String alertTimeRange,Integer maxAlerts,long id);
+    void updateAlertRules(Integer beforeAlert, Integer delayAlert, String alertTimeRange, Integer maxAlerts, long id);
 
     @Query(value="select id from data_info where parent_id = ?1", nativeQuery = true)
     List<Object> findId(int parent_id);
@@ -32,13 +32,13 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     @Query(value="UPDATE data_info SET regular=?2,timeout_threshold=?3,should_time=?4,monitor_times=?5 " +
             ",file_size_define=?6,file_name_define=?7 " +
             "WHERE id = ?1", nativeQuery = true)
-    void updateWhereId(long id,int regular,String timeout,String shouldTime,String monitorTimes,String fileSizeDefine,String fileNameDefine);
+    void updateWhereId(long id, int regular, String timeout, String shouldTime, String monitorTimes, String fileSizeDefine, String fileNameDefine);
 
 
     @Query(value = "select * from " +
             "(select * from data_info where FIND_IN_SET(id, getChildLst(?1)) and is_data = 1 ) din," +
             "alert_strategy als where als.di_id = din.id;", nativeQuery = true)
-    List<DataInfo> findAll( long id );
+    List<DataInfo> findAll(long id);
 
     @Query(value = "select * from data_info where  is_data = 1 and id = ?1 ;", nativeQuery = true)
     DataInfo findAllById(long id);
@@ -47,7 +47,7 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     @Transactional
     @Modifying
     @Query(value="UPDATE data_info SET alert_level=?1,timeout_threshold=?2  WHERE id IN (?3);", nativeQuery = true)
-    void updateWhereIds(int level,String timeout,Long... ids);
+    void updateWhereIds(int level, String timeout, Long... ids);
 
     @Query(value="select id from data_info where parent_id=1 and name=?1",nativeQuery=true)
     String ensureIpExit(String ip);
@@ -59,6 +59,9 @@ public interface DataInfoRepository extends JpaRepository<DataInfo,Long> {
     
     @Query(value="select id from data_info where parent_id=1",nativeQuery=true)
     List findIdMaxValue();
-    
+
+    @Query(value="select * from data_info where id=?1",nativeQuery=true)
+    DataInfo findqueryalldata(Long id);
+
     
 }

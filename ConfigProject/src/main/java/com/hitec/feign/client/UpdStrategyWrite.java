@@ -20,6 +20,10 @@ public interface UpdStrategyWrite {
     /**
      * @return
      */
+
     @RequestMapping(value = "/updStrategyApiWrite/initMap", method = RequestMethod.POST, consumes = "application/json")
     String updInitMap();
+    @RequestMapping(value = "/updStrategyApiWrite/DelectPrepareData", method = RequestMethod.POST, consumes = "application/json")
+    void DeletePrepareData(String json);
+
 }
