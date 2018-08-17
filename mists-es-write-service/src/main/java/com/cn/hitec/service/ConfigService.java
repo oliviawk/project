@@ -7,19 +7,22 @@ import com.cn.hitec.repository.ESRepository;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
 import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.bulk.byscroll.BulkByScrollResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.search.SearchHit;
+import org.omg.CORBA.DATA_CONVERSION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @Description: 这里是描述信息
@@ -29,6 +32,7 @@ import java.util.Map;
 @Slf4j
 @Service
 public class ConfigService {
+
 
     @Autowired
     ESRepository esRepository;
@@ -222,5 +226,26 @@ public class ConfigService {
 
     }
 
+    public long  deletepreparedata(List<DataInfo> list){
+        long num=-5;
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        String index="data_"+simpleDateFormat.format(new Date());
+        for (DataInfo dataInfo : list){
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("fields.module", dataInfo.getModule()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("type", dataInfo.getName()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("fields.ip_addr", dataInfo.getIp()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("aging_status", "未处理"));
+            BulkByScrollResponse response =
+                    DeleteByQueryAction.INSTANCE.newRequestBuilder(esRepository.client)
+                            .filter(queryBuilder)
+                            .source(index)
+                            .get();
 
+             num= response.getDeleted()+num;
+
+        }
+
+        return num;
+    }
 }
