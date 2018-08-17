@@ -83,13 +83,6 @@ public class MsgConsumer {
 
         updateInsertBaseFilter();
         consumer.subscribe(Arrays.asList(topic));
-        EsBean esBean = new EsBean();
-        esBean.setType("DATASOURCE");
-        esBean.setIndex("");
-
-        EsBean esBean_mqpf = new EsBean();
-        esBean_mqpf.setType("MQPF");
-        esBean_mqpf.setIndex("");
 
         long startTime1 = System.currentTimeMillis();
         long startTime2 = System.currentTimeMillis();
@@ -130,8 +123,10 @@ public class MsgConsumer {
                 useaTime_fzjc = System.currentTimeMillis() - startTime_fzjc;
                 //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
                 if (msgs.size() > 3000 || (msgs.size() > 0 && useaTime1 > 5000)) {
+                    EsBean esBean = new EsBean();
+                    esBean.setType("DATASOURCE");
+                    esBean.setIndex("");
                     esBean.setData(msgs);
-
 //                    logger.info("入库数据："+ JSON.toJSONString(msgs));
                     Map<String, Object> insertDataSource = dataSourceEsInterface.update(esBean);
 //                	System.out.println(JSON.toJSONString(insertDataSource));
@@ -154,6 +149,9 @@ public class MsgConsumer {
                     startTime2 = System.currentTimeMillis();
                 }
                 if(mqpfList.size() > 3000 || (mqpfList.size() > 0 && useaTime3 > 5000)){
+                    EsBean esBean_mqpf = new EsBean();
+                    esBean_mqpf.setType("MQPF");
+                    esBean_mqpf.setIndex("");
                     esBean_mqpf.setData(mqpfList);
                     //执行入库
                     //
@@ -166,8 +164,8 @@ public class MsgConsumer {
 
                 if (FZJCList.size() > 3000 || (FZJCList.size() > 0 && useaTime_fzjc > 5000)){
                     EsBean esBean_fzjc = new EsBean();
-                    esBean.setType("FZJC");
-                    esBean.setIndex("");
+                    esBean_fzjc.setType("FZJC");
+                    esBean_fzjc.setIndex("");
                     //开始入库
 
                     FZJCList.clear();
