@@ -75,6 +75,7 @@ public class SendWechartMessage {
                             //去掉.tmp 后缀名
                             alertTitle.replace(".tmp","");
                         }
+
                         Map<String, Object> resultMap =  httpPub.httpPost(
                                 StringUtils.isEmpty(map.get("sendUser").toString())? "@all":map.get("sendUser").toString(),
                                 map.get("alertTitle").toString());
@@ -139,63 +140,63 @@ public class SendWechartMessage {
         if(SMStMap != null && "success".equals(SMStMap.get("result"))){
             List dataList = (List) SMStMap.get("resultData");
             num1 = dataList.size();
-            if (dataList != null && dataList.size() > 0){
-                String sendMessage = "业务告警:";
-                String sendUser = "";
-                //拼接发送消息
-                for (int i = 0 ; i < dataList.size() ; i++){
-                    try {
-                        Map<String,Object> map = (Map<String, Object>) dataList.get(i);
-//                        String sendUser = map.get("sendUser").toString();
-                        //测试短信发送用户
-                        sendUser = "13810933845|13810168659|13717602125|18600023553|15201211053";
+            String sendMessage = "业务告警:\n";
+            for (int i = 0 ; i < dataList.size() ; i++){
+                try {
+                    Map<String,Object> map = (Map<String, Object>) dataList.get(i);
+                    if (sendSMS){
+                        String sendUser = map.get("sendUser").toString();
                         String sendTitle = map.get("alertTitle").toString();
-
-                        sendMessage += ("\t"+sendTitle+"\n");
-
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    }
-                }
-
-                if (StringUtils.isEmpty(sendUser)){
-                    logger.error("发送短信的手机号码为空！");
-                    return;
-                }
-                if (sendSMS){
-                    Map<String, Object> resultMap =  httpPub.httpSMSPost(sendUser, sendMessage);
-                    if(resultMap == null || !"Success".equals(resultMap.get("returnStatus"))){
-                        logger.error(JSON.toJSONString(resultMap));
-                        return ;
-                    }
-                }
-
-//                logger.info("发送短信消息：{}",sendMessage);
-
-                for (int i = 0 ; i < dataList.size() ; i++){
-                    try {
-                        Map<String,Object> map = (Map<String, Object>) dataList.get(i);
-
-                        String str_index = map.get("_index").toString();
-                        String str_id = map.get("_id").toString();
-                        Map<String, Object> pam = new HashMap<>();
-                        EsWriteBean esWriteBean = new EsWriteBean();
-                        esWriteBean.setIndex(str_index);
-                        esWriteBean.setType(str_type1);
-                        esWriteBean.setId(str_id);
-                        pam.put("send_time", System.currentTimeMillis());
-                        pam.put("isSend", "true");
-                        esWriteBean.setParams(pam);
-                        Map<String,Object> updResultMap = esWriteService.update_field(esWriteBean);
-                        if(updResultMap == null || !"success".equals(updResultMap.get("result"))){
-                            logger.error(JSON.toJSONString(updResultMap));
-                            continue;
+                        if (StringUtils.isEmpty(sendUser)){
+                            logger.error("发送短信的手机号码为空！");
+                            break;
                         }
-                        sendNum1 ++;
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                        break;
+                        //测试用户
+                        sendUser = "13810933845|13810168659|13717602125|18600023553|15201211053";
+                        //超过字节数，分批次发送
+                        if (sendMessage.length()+sendTitle.length() > 500){
+
+                            Map<String, Object> resultMap =  httpPub.httpSMSPost(sendUser, sendMessage);
+                            if(resultMap == null || !"Success".equals(resultMap.get("returnStatus"))){
+                                logger.error(JSON.toJSONString(resultMap));
+                                continue;
+                            }
+                            logger.info("阶段发送短信消息：{}",sendMessage);
+                            sendMessage = sendTitle+"\n";
+                        }else {
+                            sendMessage += ("\t"+sendTitle+"\n");
+
+                        }
+                        //最后一次循环，发送所有拼接的短信
+                        if (i == dataList.size() -1 ){
+
+                            Map<String, Object> resultMap =  httpPub.httpSMSPost(sendUser, sendMessage);
+                            if(resultMap == null || !"Success".equals(resultMap.get("returnStatus"))){
+                                logger.error(JSON.toJSONString(resultMap));
+                                continue;
+                            }
+                            logger.info("发送短信消息：{}",sendMessage);
+                        }
                     }
+
+                    String str_index = map.get("_index").toString();
+                    String str_id = map.get("_id").toString();
+                    Map<String, Object> pam = new HashMap<>();
+                    EsWriteBean esWriteBean = new EsWriteBean();
+                    esWriteBean.setIndex(str_index);
+                    esWriteBean.setType(str_type1);
+                    esWriteBean.setId(str_id);
+                    pam.put("send_time", System.currentTimeMillis());
+                    pam.put("isSend", "true");
+                    esWriteBean.setParams(pam);
+                    Map<String,Object> updResultMap = esWriteService.update_field(esWriteBean);
+                    if(updResultMap == null || !"success".equals(updResultMap.get("result"))){
+                        logger.error(JSON.toJSONString(updResultMap));
+                        continue;
+                    }
+                    sendNum1 ++;
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
                 }
             }
         }else {
