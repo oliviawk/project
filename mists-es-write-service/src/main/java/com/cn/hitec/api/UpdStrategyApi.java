@@ -1,10 +1,12 @@
 package com.cn.hitec.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.service.ConfigService;
 import com.cn.hitec.tools.Pub;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,15 +55,18 @@ public class UpdStrategyApi {
 	@RequestMapping(value = "/DelectPrepareData", method = RequestMethod.POST, consumes = "application/json")
 	public void DeletePrepareData(@RequestBody String json){
 		logger.info("传递的参数是："+json);
-		JSONObject job = JSON.parseObject(json);
-		String serviceType = "";
-		if (!job.containsKey("serviceType")){
-			logger.info("数据错误datainfo 为空");
+		if (StringUtils.isEmpty(json)){
+			logger.error("要删除的数据为空" );
+			return ;
 		}
-		String  datainfostr=job.getString("list");
-		List<DataInfo> list = (List<DataInfo>) JSON.parse(datainfostr);
-        long  num=configService.deletepreparedata(list);
-		logger.info("删除预生成数据条数"+num);
+
+		try {
+			List<DataInfo> list = JSONArray.parseArray(json,DataInfo.class );
+			long  num=configService.deletepreparedata(list);
+			logger.info("删除预生成数据 "+num+" 条");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

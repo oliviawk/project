@@ -83,32 +83,6 @@ public class ConfigService {
 
             }
             log.info("DI_configMap.size = "+Pub.DI_ConfigMap.size());
-        /*---------------------3.8 日，旧代码------------------------*/
-//            List<Map> listMap_collect = getConfigAlert("config","collect",null);
-//            for (Map map : listMap_collect){
-//                String DI_name = map.get("DI_name").toString();
-//                Pub.alertMap_collect.put(DI_name,map);
-//            }
-//
-//            List<Map> listMap_machining = getConfigAlert("config","machining",null);
-//            for (Map map : listMap_machining){
-//                String DI_name = map.get("DI_name").toString();
-//                Pub.alertMap_machining.put(DI_name,map);
-//            }
-//
-//            List<Map> listMap_distribute = getConfigAlert("config","distribute",null);
-//            for (Map map : listMap_distribute){
-//                String DI_name = map.get("DI_name").toString();
-//                Pub.alertMap_distribute.put(DI_name,map);
-//            }
-//            List<Map> list_alert_time_map = getConfigAlertDI("config");
-//            for (Map map : list_alert_time_map){
-//                 if(map.containsKey("DI_name")){
-//                    String DI_name = map.get("DI_name").toString();
-//                    Pub.alert_time_map.put(DI_name,1);
-//                }
-//
-//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,9 +201,9 @@ public class ConfigService {
     }
 
     public long  deletepreparedata(List<DataInfo> list){
-        long num=-5;
+        long num = 0;
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-        String index="data_"+simpleDateFormat.format(new Date());
+        String[] indexs = Pub.getIndices(new Date(),1);
         for (DataInfo dataInfo : list){
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             queryBuilder.must(QueryBuilders.matchPhraseQuery("fields.module", dataInfo.getModule()));
@@ -239,8 +213,7 @@ public class ConfigService {
             BulkByScrollResponse response =
                     DeleteByQueryAction.INSTANCE.newRequestBuilder(esRepository.client)
                             .filter(queryBuilder)
-                            .source(index)
-                            .get();
+                            .source(indexs).get();
 
              num= response.getDeleted()+num;
 
