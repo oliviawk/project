@@ -1,10 +1,14 @@
 package com.hitec.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hitec.util.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -427,9 +431,11 @@ public class PJPZController {
 				String monitorTimes = diObj.getString("monitorTimes");
 				String fileSizeDefine = diObj.getString("fileSizeDefine");
 				String fileNameDefine = diObj.getString("fileNameDefine");
+
                 DataInfo dataInfoprepare=dataInfoRepository.findqueryalldata(id);
                 list.add(dataInfoprepare);
-				dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
+
+                dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
 				Integer beforeAlert = diObj.getInteger("beforeAlert");
 				Integer delayAlert = diObj.getInteger("delayAlert");
 				String alertTimeRange = diObj.getString("alertTimeRange");
@@ -452,22 +458,35 @@ public class PJPZController {
 
 			}
 
-			try {
 
-				JSONObject j = new JSONObject();
+			JSONObject j = new JSONObject();
+			j.put("serviceType",dataInfo.getService_type());
+			String datainfostr=JSON.toJSONString(list);
 
-				j.put("serviceType",dataInfo.getService_type());
-				JSONObject deleteprepare = new JSONObject();
-				String datainfostr=JSON.toJSONString(list);
-//				//更新策略
-                updStrategyWrite.DeletePrepareData(datainfostr);
-				updStrategyTimer.updInitMap(JSON.toJSONString(j));
-				updStrategyWrite.updInitMap();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "更新失败";
-			}
+			Thread updaThread = new Thread(){
+				@Override
+				public void run(){
+					long time = System.currentTimeMillis();
+					logger.info("开启线程更新告警策略，线程ID："+this.getName());
+					//更新策略
+					try {
+						updStrategyWrite.DeletePrepareData(datainfostr);
+						updStrategyTimer.updInitMap(JSON.toJSONString(j));
+						updStrategyWrite.updInitMap();
+						logger.info("更新告警策略-成功，线程ID："+this.getName());
+					} catch (Exception e) {
+						SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						logger.error("更新告警策略-失败！ 操作时间："+ sd.format(new Date(time)) +"，线程ID："+this.getName());
+						StringWriter sw = new StringWriter();
+						PrintWriter pw = new PrintWriter(sw);
+						e.printStackTrace(pw);
+						String strError = sw.toString();
+						logger.error(strError.length() > 1000 ? strError.substring(0,999):strError);
+					}
+				}
+			};
+			updaThread.setName("update_alert_strategy");
+			updaThread.start();
 
 		} catch (Exception e) {
 			e.printStackTrace();
