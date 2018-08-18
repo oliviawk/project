@@ -26,4 +26,6 @@ public interface DataSourceEsInterface {
      */
     @RequestMapping(value = "/datasource/insertDataSource", method = RequestMethod.POST, consumes = "application/json")
     public Map<String, Object> insertDataSource(@RequestBody String json);
+
+
 }

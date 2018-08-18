@@ -38,18 +38,16 @@ public class CreateDIDataTask {
 		boolean isError = false;
 		int errorNum = 0;
 		do {
-
-			configService.initAlertMap();
 			logger.info("---------------------------------开始执行定时任务，生成第二天的数据--------------------------------");
 			try {
+				configService.initAlertMap();
+
+				configService.initSendMessage();
+
 				System.out.println("DIMap.size:"+ Pub.DIMap.size()+",--:"+ JSON.toJSONString(Pub.DIMap));
-//				System.out.println("alertMap_machining.size:"+ Pub.DIMap_machining.size()+",--:"+ JSON.toJSONString(Pub.DIMap_machining));
-//				System.out.println("alertMap_distribute.size:"+ Pub.DIMap_distribute.size()+",--:"+ JSON.toJSONString(Pub.DIMap_distribute));
 				System.out.println("DIMap_t639.size:"+ Pub.DIMap_t639.size()+",--:"+ JSON.toJSONString(Pub.DIMap_t639));
 
 				configService.createAlertDI( Pub.DIMap,1,new Date());
-//				configService.createAlertDI("加工", Pub.DIMap_machining,1,new Date());
-//				configService.createAlertDI("分发", Pub.DIMap_distribute,1,new Date());
 
 				configService.makeProjectTable(new Date(),1,Pub.DIMap_DS,new Date());
 

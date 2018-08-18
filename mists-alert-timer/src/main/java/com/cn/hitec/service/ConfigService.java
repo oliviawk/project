@@ -39,7 +39,7 @@ public class ConfigService {
 	DataSourceEsInterface dataSourceEsInterface;
 
 
-	public void initAlertMap() {
+	public void initAlertMap() throws Exception{
 
 		//清空列表
 		Pub.DIMap_DS = Collections.synchronizedMap(new HashMap());
@@ -255,108 +255,104 @@ public class ConfigService {
 	 * @param date
 	 * @param num
 	 */
-	public void makeProjectTable(Date date , int num , Map<String, Map> DIMap,Date runDate){
+	public void makeProjectTable(Date date , int num , Map<String, Map> DIMap,Date runDate) throws Exception{
 		if (DIMap == null || DIMap.size() < 1) {
 			logger.warn("makeProjectTable is fail ： alertMap is null or 0 in length");
 			return;
 		}
 
-		try {
-			List<Object> outData = new ArrayList<Object>();
+		List<Object> outData = new ArrayList<Object>();
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			cal.add(Calendar.DAY_OF_MONTH, num);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			Date startDate = cal.getTime();
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			Date endDate = cal.getTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, num);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date startDate = cal.getTime();
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		Date endDate = cal.getTime();
 
 
-			Map<String, Object> map = null;
-			// 循环 告警配置信息
-			for (String key : DIMap.keySet()) {
-				try {
-					map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
+		Map<String, Object> map = null;
+		// 循环 告警配置信息
+		for (String key : DIMap.keySet()) {
+			try {
+				map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
 
-					String cron = map.get("time_interval").toString();
-					String subType = map.get("DI_name").toString();
-					String name = map.get("sub_name").toString();;
-					String IP = map.get("IP").toString();
-					String path = map.get("path").toString();
-					String[] shuld_time = map.get("should_time").toString().split(",");
-					String[] last_time = map.get("last_time").toString().split(",");
+				String cron = map.get("time_interval").toString();
+				String subType = map.get("DI_name").toString();
+				String name = map.get("sub_name").toString();;
+				String IP = map.get("IP").toString();
+				String path = map.get("path").toString();
+				String[] shuld_time = map.get("should_time").toString().split(",");
+				String[] last_time = map.get("last_time").toString().split(",");
 
-					List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss.SSSZ", startDate, endDate);
-					int regular = Integer.parseInt(map.get("regular").toString());
-					if(regular == 2){
-						if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
-							logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!!");
-							continue;
-						}
+				List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss.SSSZ", startDate, endDate);
+				int regular = Integer.parseInt(map.get("regular").toString());
+				if(regular == 2){
+					if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
+						logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!!");
+						continue;
 					}
-
-					for (int i = 0; i < timerList.size(); i++) {
-						Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss.SSSZ");
-						if (runDate.getTime() > dt.getTime()){
-							continue;
-						}
-                        Map<String, Object> data = new HashMap<String, Object>();
-                        data.put("aging_status", "未处理");
-                        data.put("occur_time", 0);
-                        data.put("name", name);
-
-                        data.put("type", subType);
-                        data.put("startMoniter", "yes");
-
-                        Map<String, Object> fields = new HashMap<String, Object>();
-                        fields.put("data_time", timerList.get(i));
-
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(dt);
-						if(regular == 2){
-							calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[i]));
-						}else{
-							calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[0]));
-						}
-                        data.put("should_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
-
-						if(regular == 2){
-							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[i]));
-						}else{
-							calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[0]));
-						}
-						data.put("last_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
-
-                        fields.put("file_name", path);
-                        fields.put("ip_addr", IP);
-                        fields.put("module", "DS");
-
-						//添加文件大小范围和文件名
-						fields.put("file_size_define",map.get("size_define").toString());
-						String nameDefine = map.get("name_define").toString();
-						String fileName = changeFileName(nameDefine,dt);
-						fields.put("file_name",path+fileName);
-
-
-                        data.put("fields", fields);
-                        outData.add(data);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-					logger.warn(e.getMessage());
 				}
-			}
 
-			Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
-			logger.info("DS -> SEVP_NMC_RFFC_SCON_EME_ACHN_LNO_P9 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
-		} catch (Exception e) {
-			e.printStackTrace();
+				for (int i = 0; i < timerList.size(); i++) {
+					Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss.SSSZ");
+					if (runDate.getTime() > dt.getTime()){
+						continue;
+					}
+					Map<String, Object> data = new HashMap<String, Object>();
+					data.put("aging_status", "未处理");
+					data.put("occur_time", 0);
+					data.put("name", name);
+
+					data.put("type", subType);
+					data.put("startMoniter", "yes");
+
+					Map<String, Object> fields = new HashMap<String, Object>();
+					fields.put("data_time", timerList.get(i));
+
+
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(dt);
+					if(regular == 2){
+						calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[i]));
+					}else{
+						calendar.add(Calendar.MINUTE, Integer.parseInt(shuld_time[0]));
+					}
+					data.put("should_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+					if(regular == 2){
+						calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[i]));
+					}else{
+						calendar.add(Calendar.MINUTE, Integer.parseInt(last_time[0]));
+					}
+					data.put("last_time", Pub.transform_DateToString(calendar.getTime(),"yyyy-MM-dd HH:mm:ss.SSSZ"));
+
+					fields.put("file_name", path);
+					fields.put("ip_addr", IP);
+					fields.put("module", "DS");
+
+					//添加文件大小范围和文件名
+					fields.put("file_size_define",map.get("size_define").toString());
+					String nameDefine = map.get("name_define").toString();
+					String fileName = changeFileName(nameDefine,dt);
+					fields.put("file_name",path+fileName);
+
+
+					data.put("fields", fields);
+					outData.add(data);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.warn(e.getMessage());
+			}
 		}
 
+		Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
+		logger.info("DS -> SEVP_NMC_RFFC_SCON_EME_ACHN_LNO_P9 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
 	}
 
 	/**
@@ -364,31 +360,31 @@ public class ConfigService {
 	 * 
 	 * @param DIMapObj
 	 */
-	public void createT639DI(String type, Map<String, Map> DIMapObj, int numDay) {
+	public void createT639DI(String type, Map<String, Map> DIMapObj, int numDay) throws Exception{
 		if (DIMapObj == null || DIMapObj.size() < 1) {
 			logger.warn("createT639DI is fail ： alertMap is null or 0 in length");
 			return;
 		}
 
-		try {
-			// 生成日历插件， 计算出 第二天的开始时间和结束时间
-			Calendar calendar = Calendar.getInstance();
-			Date date = new Date();
-			calendar.setTime(date);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
+		// 生成日历插件， 计算出 第二天的开始时间和结束时间
+		Calendar calendar = Calendar.getInstance();
+		Date date = new Date();
+		calendar.setTime(date);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 
-			Date startDate = calendar.getTime();
-			calendar.add(Calendar.DAY_OF_MONTH, numDay + 1);
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			Date endDate = calendar.getTime();
+		Date startDate = calendar.getTime();
+		calendar.add(Calendar.DAY_OF_MONTH, numDay + 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		Date endDate = calendar.getTime();
 
-			// String strIndex =
-			// Pub.Index_Head+Pub.transform_DateToString(startDate,Pub.Index_Food_Simpledataformat);
-			Map<String, Object> map = null;
-			// 循环 告警配置信息
-			for (String key : DIMapObj.keySet()) {
+		// String strIndex =
+		// Pub.Index_Head+Pub.transform_DateToString(startDate,Pub.Index_Food_Simpledataformat);
+		Map<String, Object> map = null;
+		// 循环 告警配置信息
+		for (String key : DIMapObj.keySet()) {
+			try {
 				String module = key.contains("T639") ? "分发" : "加工";
 				int addNum = 0;
 				map = (Map<String, Object>) DIMapObj.get(key); // 获取单条配置信息
@@ -403,62 +399,61 @@ public class ConfigService {
 
 				Map<String, Object> indexMap = new HashMap<>();
 				for (Date dt : timeList) {
-					String indexKey = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
-//					// 判断是否预生成过，没有的话生成
-//					if (isExist_DI_Data(indexKey, type, key)) {
-//						continue;
-//					}
-					if (!indexMap.containsKey(indexKey)) {
-						indexMap.put(indexKey, new ArrayList<>());
-					}
-					DataBean dataBean = new DataBean();
-					dataBean.setName(name);
-					dataBean.setType(subType);
-					dataBean.setServiceType(serviceType);
+                    String indexKey = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
+    //					// 判断是否预生成过，没有的话生成
+    //					if (isExist_DI_Data(indexKey, type, key)) {
+    //						continue;
+    //					}
+                    if (!indexMap.containsKey(indexKey)) {
+                        indexMap.put(indexKey, new ArrayList<>());
+                    }
+                    DataBean dataBean = new DataBean();
+                    dataBean.setName(name);
+                    dataBean.setType(subType);
+                    dataBean.setServiceType(serviceType);
 
-					dataBean.setAging_status("未处理");
-					Map<String, Object> fields = new HashMap<>();
-					fields.put("module", module);
-					fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
-					fields.put("ip_addr", IP);
-					fields.put("end_time", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    dataBean.setAging_status("未处理");
+                    Map<String, Object> fields = new HashMap<>();
+                    fields.put("module", module);
+                    fields.put("data_time", Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    fields.put("ip_addr", IP);
+                    fields.put("end_time", Pub.transform_DateToString(date, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 
-					//添加文件大小范围和文件名
-					fields.put("file_size_define",map.get("size_define").toString());
-					String nameDefine = map.get("name_define").toString();
-					String fileName = changeFileName(nameDefine,dt);
-					fields.put("file_name",path+fileName);
+                    //添加文件大小范围和文件名
+                    fields.put("file_size_define",map.get("size_define").toString());
+                    String nameDefine = map.get("name_define").toString();
+                    String fileName = changeFileName(nameDefine,dt);
+                    fields.put("file_name",path+fileName);
 
-					dataBean.setFields(fields);
+                    dataBean.setFields(fields);
 
-					dt.setMinutes(startDate.getMinutes()-30);
-					dataBean.setLast_time(Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
+                    dt.setMinutes(startDate.getMinutes()-30);
+                    dataBean.setLast_time(Pub.transform_DateToString(dt, "yyyy-MM-dd HH:mm:ss.SSSZ"));
 
-					((List<String>) indexMap.get(indexKey)).add(JSON.toJSONString(dataBean));
-				}
+                    ((List<String>) indexMap.get(indexKey)).add(JSON.toJSONString(dataBean));
+                }
 				logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 				for (String strIndex : indexMap.keySet()) {
-					// 分批次录入数据
-					EsWriteBean esWriteBean = new EsWriteBean();
-					esWriteBean.setIndex(strIndex);
-					// esWriteBean.setType(type);
-					esWriteBean.setData((List<String>) indexMap.get(strIndex));
-					Map<String, Object> response = esWriteService.insert1(esWriteBean);
-					Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
-					if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
-						addNum += (int) responseData.get("insert_number");
-					} else {
-						logger.error(module + "->" + subType + "->" + response.get(Pub.KEY_MESSAGE));
-					}
-				}
+                    // 分批次录入数据
+                    EsWriteBean esWriteBean = new EsWriteBean();
+                    esWriteBean.setIndex(strIndex);
+                    // esWriteBean.setType(type);
+                    esWriteBean.setData((List<String>) indexMap.get(strIndex));
+                    Map<String, Object> response = esWriteService.insert1(esWriteBean);
+                    Map<String, Object> responseData = (Map<String, Object>) response.get("resultData");
+                    if (response.get(Pub.KEY_RESULT).toString().equals(Pub.VAL_SUCCESS)) {
+                        addNum += (int) responseData.get("insert_number");
+                    } else {
+                        logger.error(module + "->" + subType + "->" + response.get(Pub.KEY_MESSAGE));
+                    }
+                }
 
 				logger.info(module + "->" + subType + "->录入数据条数：" + addNum);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -484,6 +479,53 @@ public class ConfigService {
 		flag = (Boolean) resultMap.get("resultData");
 
 		return flag;
+	}
+
+	/**
+	 * 预先添加一条微信、短信测试数据
+	 */
+	public void initSendMessage(){
+
+		try {
+			Calendar calendar = Calendar.getInstance();
+			Date date = new Date();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+			EsWriteBean esWriteBean = new EsWriteBean();
+			esWriteBean.setIndex(Pub.Index_Head+Pub.transform_DateToString(calendar.getTime(),Pub.Index_Food_Simpledataformat));
+			//微信
+			esWriteBean.setType("sendWeichart");
+			Map<String,Object> weichartMap = new HashMap<>();
+			weichartMap.put("sendUser", "test");
+			weichartMap.put("alertTitle","这里是已发送测试数据--微信");
+			weichartMap.put("isSend","true");
+			weichartMap.put("create_time",System.currentTimeMillis());
+			weichartMap.put("send_time",System.currentTimeMillis());
+
+			List<String> paramWeichart = new ArrayList<>();
+			paramWeichart.add(JSON.toJSONString(weichartMap));
+			esWriteBean.setData(paramWeichart);
+			esWriteService.add(esWriteBean); // 存入微信待发送消息
+
+
+			//短信
+			esWriteBean.setType("sendSMS");
+			Map<String,Object> SMSMap = new HashMap<>();
+			SMSMap.put("sendUser", "test");
+			SMSMap.put("alertTitle","这里是已发送测试数据--短信");
+			SMSMap.put("isSend","true");
+			SMSMap.put("create_time",System.currentTimeMillis());
+			SMSMap.put("send_time",System.currentTimeMillis());
+
+			List<String> paramSms = new ArrayList<>();
+			paramSms.add(JSON.toJSONString(SMSMap));
+			esWriteBean.setData(paramSms);
+			esWriteService.add(esWriteBean); // 存入短信
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

@@ -50,13 +50,6 @@ public class UpdStrategyApi {
 				return "更新失败!";
 			}
 
-//			logger.info("DIMap:{}",JSON.toJSON(Pub.DIMap));
-//			logger.info("DIMap_machining:{}",JSON.toJSON(Pub.DIMap_machining));
-//			logger.info("DIMap_distribute:{}",JSON.toJSON(Pub.DIMap_distribute));
-//			logger.info("DIMap_t639:{}",JSON.toJSON(Pub.DIMap_t639));
-//			logger.info("DIMap_DS:{}",JSON.toJSON(Pub.DIMap_DS));
-//
-//			logger.info("DI_ConfigMap:{}",JSON.toJSON(Pub.DI_ConfigMap));
 
 			Map DI_temp = new HashMap();
 			for (String key : Pub.DIMap.keySet()){
@@ -64,23 +57,8 @@ public class UpdStrategyApi {
                     DI_temp.put(key,Pub.DIMap.get(key));
                 }
 			}
-			logger.info(JSON.toJSONString(DI_temp));
+//			logger.info(JSON.toJSONString(DI_temp));
 
-//			Map machining_temp = new HashMap();
-//            for (String key : Pub.DIMap_machining.keySet()){
-//                if (key.contains(serviceType)){
-//                    machining_temp.put(key,Pub.DIMap_machining.get(key));
-//                }
-//            }
-//            logger.info(JSON.toJSONString(machining_temp));
-//
-//            Map distribute_temp = new HashMap();
-//            for (String key : Pub.DIMap_distribute.keySet()){
-//                if (key.contains(serviceType)){
-//                    distribute_temp.put(key,Pub.DIMap_distribute.get(key));
-//                }
-//            }
-//            logger.info(JSON.toJSONString(distribute_temp));
 
             Map t639_temp = new HashMap();
             for (String key : Pub.DIMap_t639.keySet()){
@@ -88,7 +66,7 @@ public class UpdStrategyApi {
                     t639_temp.put(key,Pub.DIMap_t639.get(key));
                 }
             }
-            logger.info(JSON.toJSONString(t639_temp));
+//            logger.info(JSON.toJSONString(t639_temp));
 
             Map datasource_temp = new HashMap();
             for (String key : Pub.DIMap_DS.keySet()){
@@ -96,32 +74,18 @@ public class UpdStrategyApi {
                     datasource_temp.put(key,Pub.DIMap_DS.get(key));
                 }
             }
-            logger.info(JSON.toJSONString(datasource_temp));
+//            logger.info(JSON.toJSONString(datasource_temp));
 
             //更新全部数据
 			if (DI_temp.size() > 0 ){
                 configService.createAlertDI(DI_temp,0,new Date());
             }
-//            if (machining_temp.size() > 0 ){
-//                configService.createAlertDI("加工", machining_temp,0,new Date());
-//            }
-//            if (distribute_temp.size() > 0 ){
-//                configService.createAlertDI("分发", distribute_temp,0,new Date());
-//            }
             if (t639_temp.size() > 0 ){
                 configService.createT639DI("FZJC",t639_temp,5);
             }
             if (datasource_temp.size() > 0 ){
                 configService.makeProjectTable(new Date(),0,datasource_temp,new Date());
             }
-
-//			//更新全部数据
-//			configService.createAlertDI("采集", Pub.DIMap,0,new Date());
-//			configService.createAlertDI("加工", Pub.DIMap_machining,0,new Date());
-//			configService.createAlertDI("分发", Pub.DIMap_distribute,0,new Date());
-//
-//			configService.createT639DI("FZJC",Pub.DIMap_t639,5);
-//			configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,new Date());
 
 			logger.info("更新策略成功");
 		} catch (Exception e) {
