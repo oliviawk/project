@@ -485,7 +485,7 @@ public class PJPZController {
 					}
 				}
 			};
-			updaThread.setName("update_alert_strategy");
+			updaThread.setName("update_alert_strategy_"+((int)(Math.random()*1000)));
 			updaThread.start();
 
 		} catch (Exception e) {
