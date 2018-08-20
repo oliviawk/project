@@ -293,7 +293,7 @@ public class ConfigService {
 				int regular = Integer.parseInt(map.get("regular").toString());
 				if(regular == 2){
 					if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
-						logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!!");
+						logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!! 数据名称："+subType);
 						continue;
 					}
 				}
@@ -352,7 +352,7 @@ public class ConfigService {
 		}
 
 		Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
-		logger.info("DS -> SEVP_NMC_RFFC_SCON_EME_ACHN_LNO_P9 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
+		logger.info("DS -> 数据源 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
 	}
 
 	/**
