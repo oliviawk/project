@@ -182,10 +182,10 @@ var ButtonInit = function () {
     			success: function(result){
     				debugger;
                     if (result.message == 'success'){
-                        alert("更新数据库对比内容成功！!");
+
                         $("#submitEdit").attr("disabled",false);
                     }else{
-                        alert("更新数据库对比内容失败!!");
+
                         $("#submitEdit").attr("disabled",false);
 
                     }

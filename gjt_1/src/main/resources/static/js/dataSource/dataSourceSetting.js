@@ -98,7 +98,7 @@ $(document).ready(function() {
             if (dt == null){
                 return "数据有误";
             }
-            var markup = "<option value='"+dt.id+"'>" + dt.fileName + "</>";
+            var markup = "<option value='"+dt.id+"'>" + dt.fileName + "</option>";
             return markup;
         },
         templateSelection: function (repo) {  //选中某一个选时执行
@@ -163,7 +163,7 @@ $(document).ready(function() {
 
         //获取所有的属
         var deleteId = $("#fileNameHidden").val();
-        var name = $("#name").val();
+        var name = $("#name").val().trim();
         var directory = $("#directory").val();
         var fileNametxt = $("#fileName").val();
         var fileName=fileNametxt;
