@@ -81,7 +81,6 @@ public class MsgConsumer {
 	public void consume() {
 
 
-        updateInsertBaseFilter();
         consumer.subscribe(Arrays.asList(topic));
 
         long startTime1 = System.currentTimeMillis();
@@ -99,7 +98,10 @@ public class MsgConsumer {
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(1000);
-
+                if (records.isEmpty()){
+                    continue;
+                }
+                insertBaseFilter = dataSourceSettingRepository.findAll();
                 for (ConsumerRecord<String, String> record : records) {
 
                     String msg = record.value();
@@ -186,28 +188,28 @@ public class MsgConsumer {
         return null;
     }
     
-    /**
-    * @Description 查询配置库给全局变量赋值 TODO <pre>
-    * @author HuYiWu <pre>
-    * @date 2018年4月11日 下午3:07:04 <pre>
-     */
-    public void updateInsertBaseFilter(){
-//    	List<DataSourceSetting> dataSourceSettings = dataSourceSettingRepository.findAll();
-//    	System.out.println("查询数据库更新对比map:"+ JSON.toJSONString(dataSourceSettings));
-//    	for (int i = 0; i < dataSourceSettings.size(); i++) {
-//    		DataSourceSetting dataSourceSetting = dataSourceSettings.get(i);
-//    		String key = dataSourceSetting.getIpAddr() +":"+ dataSourceSetting.getSendUser()
-//    				+":"+ dataSourceSetting.getFileName();
-//    		List<DataSourceSetting> value = insertBaseFilter.get(key);
-//    		if (value == null){
-//    			value = new ArrayList<DataSourceSetting>();
-//    			value.add(dataSourceSetting);
-//    		}else{
-//    			value.add(dataSourceSetting);
-//    		}
-//    		insertBaseFilter.put(key, value);
-//		}
-    	insertBaseFilter = dataSourceSettingRepository.findAll();
-    }
+//    /**
+//    * @Description 查询配置库给全局变量赋值 TODO <pre>
+//    * @author HuYiWu <pre>
+//    * @date 2018年4月11日 下午3:07:04 <pre>
+//     */
+//    public void updateInsertBaseFilter(){
+////    	List<DataSourceSetting> dataSourceSettings = dataSourceSettingRepository.findAll();
+////    	System.out.println("查询数据库更新对比map:"+ JSON.toJSONString(dataSourceSettings));
+////    	for (int i = 0; i < dataSourceSettings.size(); i++) {
+////    		DataSourceSetting dataSourceSetting = dataSourceSettings.get(i);
+////    		String key = dataSourceSetting.getIpAddr() +":"+ dataSourceSetting.getSendUser()
+////    				+":"+ dataSourceSetting.getFileName();
+////    		List<DataSourceSetting> value = insertBaseFilter.get(key);
+////    		if (value == null){
+////    			value = new ArrayList<DataSourceSetting>();
+////    			value.add(dataSourceSetting);
+////    		}else{
+////    			value.add(dataSourceSetting);
+////    		}
+////    		insertBaseFilter.put(key, value);
+////		}
+//    	insertBaseFilter = dataSourceSettingRepository.findAll();
+//    }
 
 }
