@@ -33,7 +33,6 @@ public class RunnerKafkaConsumerComponent implements CommandLineRunner{
 		};
 		datasourceSendThread.start();
 
-
 	}
 
 }
