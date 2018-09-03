@@ -149,7 +149,7 @@ function getDataAggQuery() {
                         $("#" + key).attr("title", dmap.fields.data_time);
 
                         //判断异常数据是否为OCF*H系列，如果是则做标记
-                        if(key.indexOf("CH_MERGE_") > -1 || key.indexOf("AGLB_MERGE_") > -1 || key.indexOf("AGLB_") > -1 || key.indexOf("CH_") > -1 ){
+                        if( key.indexOf("DEBACKUP") == -1 && (key.indexOf("CH_MERGE_") > -1 || key.indexOf("AGLB_MERGE_") > -1 || key.indexOf("AGLB_") > -1 || key.indexOf("CH_") > -1) ){
                             if(key.indexOf("1H") > -1){
                                 H1 = H1 + 1;
                             }else if(key.indexOf("3H") > -1){
