@@ -184,7 +184,12 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			}
 			return outData;
 		}else if(file_name_log.indexOf("?") > -1  || file_name_log.indexOf("RADA") != -1 || file_name_log.indexOf("RADR") != -1){
-			return null;
+			if(file_name_log.indexOf("Z_RADR_C_BABJ_") > -1 && file_name_log.indexOf("P_DOR_ACHN_MQPE") > -1){
+
+			}else{
+				return null;
+			}
+
 		}
 
 		String regEx = "[^0-9]";//匹配指定范围内的数字
@@ -220,16 +225,23 @@ public class DataSourceSendConsumer extends MsgConsumer{
             return outData;
 	    }
 		for (int i = 0; i < insertBaseFilter.size(); i++) {
-			dataSourceSetting = insertBaseFilter.get(i);
-			String fileName = dataSourceSetting.getFileName();
-			String filePath=dataSourceSetting.getDirectory();
+			boolean rs=false;
+			try{
+				dataSourceSetting = insertBaseFilter.get(i);
+				String fileName = dataSourceSetting.getFileName();
+				String filePath=dataSourceSetting.getDirectory();
 //			logger.info("-- fileName:{} , filePath:{} , usercatalogName:{}",fileName,filePath,UserCatalog_username);
 //			filePath="/"+filePath.replace(UserCatalog_username,"");
 //			fileName=filePath+fileName;
-			Pattern pattern = Pattern.compile(fileName);
-    	    Matcher matcher = pattern.matcher(filenamelogtwo);
-    	    // 查找字符串中是否有匹配正则表达式的字符/字符串
-    	    boolean rs = matcher.matches();
+				Pattern pattern = Pattern.compile(fileName);
+				Matcher matcher = pattern.matcher(filenamelogtwo);
+				// 查找字符串中是否有匹配正则表达式的字符/字符串
+				 rs = matcher.matches();
+			}
+			catch (Exception e){
+				logger.info("正则表达式异常！！！");
+				continue;
+			}
     	    if (rs){
     	    	break;
     	    }
