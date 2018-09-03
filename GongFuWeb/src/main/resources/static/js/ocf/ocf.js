@@ -11,7 +11,6 @@ $(function () {
 
         $('#subTypeHidden').val(arr[0]);
         $('#moduleHidden').val(arr[1]);
-        console.info(arr)
         arr[2] = arr[2].replace(new RegExp("-", "gm"), ".");
         $('#ipHidden').val(arr[2]);
         //var pageSize = $('pageSizeHidden').val();
@@ -143,11 +142,6 @@ function getDataAggQuery() {
                     console.log(dmap)
                     console.log("------")
 
-
-                    if (key.indexOf("OCF1H_BAK") > -1){
-                        debugger
-                    }
-
                     if(dmap.aging_status != '正常'){
                         // 界面报警
                         //list-red
@@ -172,19 +166,19 @@ function getDataAggQuery() {
 
                 });
                 if(H1 != 0){
-                    $("#OCF1H").attr("class","list-red");
+                    $("#OCF1H_分发_10-30-16-220").attr("class","list-red");
                 }else {
-                    $("#OCF1H").attr("class","list-green");
+                    $("#OCF1H_分发_10-30-16-220").attr("class","list-green");
                 }
                 if(H3 != 0){
-                    $("#OCF3H").attr("class","list-red");
+                    $("#OCF3H_分发_10-30-16-220").attr("class","list-red");
                 }else {
-                    $("#OCF3H").attr("class","list-green");
+                    $("#OCF3H_分发_10-30-16-220").attr("class","list-green");
                 }
                 if(H12 != 0){
-                    $("#OCF12H").attr("class","list-red");
+                    $("#OCF12H_分发_10-30-16-220").attr("class","list-red");
                 }else {
-                    $("#OCF12H").attr("class","list-green");
+                    $("#OCF12H_分发_10-30-16-220").attr("class","list-green");
                 }
 
             } else {
@@ -209,9 +203,23 @@ function getDataAggQuery() {
 function getHistory(type, module, size, ip) {
     var r = Math.ceil(Math.random() * 100);
 
+    var types = type;
+    var arrType = new Array();
+    if (type == "OCF1H"){
+        arrType.push("CH_1H","AGLB_1H","AGLB_MERGE_1H","CH_MERGE_1H");
+        types = arrType.toString();
+    }else if(type == "OCF3H"){
+        arrType.push("CH_MERGE_3H","AGLB_MERGE_3H","AGLB_3H","CH_3H");
+        types = arrType.toString();
+    }else if (type == "OCF12H"){
+        arrType.push("CH_MERGE_12H","AGLB_MERGE_12H","AGLB_12H","CH_12H");
+        types = arrType.toString();
+    }
+    console.info(types);
+    console.info(arrType);
     var req = {
         "types": ["OCF"],
-        "subType": type,
+        "subType": types,
         "module": module,
         "size": size,
         "strIp": ip,
@@ -233,7 +241,7 @@ function getHistory(type, module, size, ip) {
         complete: function () {
         },
         success: function (d) {
-            //console.log(d);
+            console.log(d);
             if (d.result == 'success') {
                 if (d.resultData.length > 0) {
                     // 有数据
