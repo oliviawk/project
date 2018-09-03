@@ -38,81 +38,81 @@ public class RunnerEsComponent implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-//        Thread mqthread = new Thread(){
-//            @Override
-//            public void run(){
-//                mqpf_ac_consumer.consume();
-//            }
-//        };
-//        mqthread.start();
-//
-//        Thread rgfThread = new Thread(){
-//            @Override
-//            public void run(){
-//                rgf_consumer.consume();
-//            }
-//        };
-//        rgfThread.start();
-//
-//        Thread fzjc = new Thread(){
-//
-//			@Override
-//			public void run() {
-//				kafkaConsumer.consume();
-//			}
-//
-//        };
-//
-//        Thread laps = new Thread(){
-//
-//			@Override
-//			public void run() {
-//				lapsConsumer.consume();
-//			}
-//
-//        };
-//
-//        Thread fzjcSend = new Thread(){
-//
-//			@Override
-//			public void run() {
-//				fzjcSendConsumer.consume();
-//			}
-//
-//        };
-//
-//        Thread lapsSend = new Thread(){
-//
-//            @Override
-//            public void run() {
-//                lapsSendConsumer.consume();
-//            }
-//
-//        };
-//        Thread lapsColl = new Thread(){
-//
-//            @Override
-//            public void run() {
-//                lapsCollectConsumer.consume();
-//            }
-//
-//        };
-//
-//        fzjc.start();
-//        laps.start();
-//        fzjcSend.start();
-//        lapsSend.start();
-//        lapsColl.start();
-//
-//        Thread xjf = new Thread(){
-//
-//            @Override
-//            public void run() {
-//                LAPSCollectConsumerEX.consume();
-//            }
-//
-//        };
-//        xjf.start();
+        Thread mqthread = new Thread(){
+            @Override
+            public void run(){
+                mqpf_ac_consumer.consume();
+            }
+        };
+        mqthread.start();
+
+        Thread rgfThread = new Thread(){
+            @Override
+            public void run(){
+                rgf_consumer.consume();
+            }
+        };
+        rgfThread.start();
+
+        Thread fzjc = new Thread(){
+
+			@Override
+			public void run() {
+				kafkaConsumer.consume();
+			}
+
+        };
+
+        Thread laps = new Thread(){
+
+			@Override
+			public void run() {
+				lapsConsumer.consume();
+			}
+
+        };
+
+        Thread fzjcSend = new Thread(){
+
+			@Override
+			public void run() {
+				fzjcSendConsumer.consume();
+			}
+
+        };
+
+        Thread lapsSend = new Thread(){
+
+            @Override
+            public void run() {
+                lapsSendConsumer.consume();
+            }
+
+        };
+        Thread lapsColl = new Thread(){
+
+            @Override
+            public void run() {
+                lapsCollectConsumer.consume();
+            }
+
+        };
+
+        fzjc.start();
+        laps.start();
+        fzjcSend.start();
+        lapsSend.start();
+        lapsColl.start();
+
+        Thread xjf = new Thread(){
+
+            @Override
+            public void run() {
+                LAPSCollectConsumerEX.consume();
+            }
+
+        };
+        xjf.start();
     }
 
 }
