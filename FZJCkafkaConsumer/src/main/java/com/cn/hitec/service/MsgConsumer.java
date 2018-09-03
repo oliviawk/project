@@ -7,11 +7,15 @@ import com.cn.hitec.feign.client.EsService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MsgConsumer {
@@ -85,7 +89,12 @@ public class MsgConsumer {
 
                     String msg = record.value();
 
+                    System.out.println(msg);
+
                     List<String> msgs = processing(msg);
+
+                    System.out.println(JSONObject.toJSONString(msgs));
+
                     if(msgs != null && msgs.size() > 0) {
                         if ("MQPF_AC".equals(topic)){
                             try {
@@ -140,6 +149,50 @@ public class MsgConsumer {
     public List<String> processing (String msg) throws ParseException {
 
         return null;
+    }
+
+
+    public void getHistory() throws ParseException {
+        String startTime = "2018-08-22 10:00:00";//起始时间点
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Long stime = sdf.parse(startTime).getTime();
+//存放主题分区信息
+        List<PartitionInfo> partitionSet = consumer.partitionsFor(topic);
+        Map<TopicPartition, Long> offsetMapAll  = new HashMap<TopicPartition, Long>();
+        for (PartitionInfo partitionInfo : partitionSet) {
+            //存放主题信息和时间戳
+            Map<TopicPartition, Long> startmap = new HashMap<TopicPartition, Long>();
+            TopicPartition topicPartition = new TopicPartition(partitionInfo.topic(), partitionInfo.partition());
+            startmap.put(topicPartition, stime);
+            //给consumer指定分区
+            consumer.assign(Arrays.asList(topicPartition));
+            //获得该分区的起始偏移量
+            Map<TopicPartition, OffsetAndTimestamp> offsetMap = consumer.offsetsForTimes(startmap);
+            if(offsetMap.get(topicPartition)==null) {
+                continue;
+            }
+            offsetMapAll.put(topicPartition, offsetMap.get(topicPartition).offset());
+        }
+        if(offsetMapAll.size()>0) {
+            consumer.assign(offsetMapAll.keySet());
+            for(TopicPartition tp : offsetMapAll.keySet()){
+                consumer.seek(tp, offsetMapAll.get(tp));//设置分区的起始偏移量
+            }
+            int cnt = 0;
+            //轮询读取消息
+            while (true) {
+
+                ConsumerRecords<String, String> records = consumer.poll(1000);
+
+                for (ConsumerRecord<String, String> record : records){
+//                  TimeUnit.SECONDS.sleep(1);
+                    System.out.printf("offset = %d, key = %s, partition = %s%n", record.offset(), record.key(), record.partition());
+                    logger.error( record.offset()+"\t"+ record.key()+"\t"+record.partition());
+                    cnt ++;
+                }
+                System.out.println("总数:" + cnt);
+            }
+        }
     }
 
 }
