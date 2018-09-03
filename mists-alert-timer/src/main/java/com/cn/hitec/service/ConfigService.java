@@ -163,24 +163,47 @@ public class ConfigService {
 				List<String> listDataBeanYesterday = new ArrayList<>();
 				String serviceType = map.get("serviceType").toString();
 				String subType = map.get("DI_name").toString();
+				String[] shuld_time = map.get("should_time").toString().split(",");
+				String[] last_time = map.get("last_time").toString().split(",");
 				// if(!"炎热指数".equals(subType)){
 				// continue;
 				// }
 				String name = map.get("sub_name").toString();
+				System.out.println(name);
 				String IP = map.get("IP").toString();
 				String path = map.get("path").toString();
 
-				for (Date dt : timeList) {
-					if (runDate.getTime() > dt.getTime()){
+				int regular = Integer.parseInt(map.get("regular").toString());
+				if(regular == 2){
+					if (shuld_time.length < 1 || shuld_time.length != timeList.size() || shuld_time.length != last_time.length){
+						logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!! 数据名称："+subType);
 						continue;
+					}
+				}
+
+				for (int i = 0; i< timeList.size();i++) {
+					Date dt = timeList.get(i);
+					if (runDate.getTime() > dt.getTime()){
+						if(!name.equals("BHFK")){
+						continue;}
 					}
 					DataBean dataBean = new DataBean();
 					dataBean.setName(name);
 					dataBean.setServiceType(serviceType);
 					dataBean.setType(subType);
+					int cron_shouldTime = 0;
+					int cron_lastTime = 0;
 					// 这里需要封装一个方法，根据不同的 数据源、时次，生成不同的应到时间和最晚时间
-					int cron_shouldTime = Integer.valueOf(map.get("should_time").toString()) * 60;
-					int cron_lastTime = Integer.valueOf(map.get("last_time").toString()) * 60;
+					if(regular == 1){
+						cron_shouldTime = Integer.valueOf(shuld_time[0].toString()) * 60;
+						cron_lastTime = Integer.valueOf(last_time[0].toString()) * 60;
+					}
+					if(regular == 2){
+						cron_shouldTime = Integer.valueOf(shuld_time[i].toString()) * 60;
+						cron_lastTime = Integer.valueOf(last_time[i].toString()) * 60;
+					}
+
+
 					dataBean.setShould_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_shouldTime,
 							"yyyy-MM-dd HH:mm:ss.SSSZ"));
 					dataBean.setLast_time(Pub.transform_longDataToString(dt.getTime() / 1000 + cron_shouldTime + cron_lastTime,

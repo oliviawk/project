@@ -151,12 +151,12 @@ public class Task_create_DIdata_Test {
 
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
-                cal.set(Calendar.HOUR_OF_DAY, 1);
-//                cal.set(Calendar.MINUTE, 0);
+//                cal.set(Calendar.HOUR_OF_DAY, 1);
+//                cal.set(Calendar.MINUTE, 0);、
 //                cal.set(Calendar.SECOND, 0);
 
-//                configService.createAlertDI(Pub.DIMap,0,cal.getTime());
-                configService.createT639DI("FZJC",Pub.DIMap_t639,5);
+                configService.createAlertDI(Pub.DIMap,0,cal.getTime());
+//                configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 //                configService.makeProjectTable(new Date(),0,Pub.DIMap_DS,cal.getTime());
             } catch (Exception e) {
                 isError = true;
