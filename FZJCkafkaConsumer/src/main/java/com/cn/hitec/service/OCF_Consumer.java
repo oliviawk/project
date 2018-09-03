@@ -87,9 +87,7 @@ public class OCF_Consumer extends MsgConsumer{
                 matcher = typepattern.matcher(lines[i]);
                 if (matcher.find()) {
                     type = matcher.group(1);
-                    System.out.println(type);
                     date = matcher.group(2);
-                    System.out.println(date);
 
                     if(!datatypes.contains(type)){
                         return toEsJsons;
@@ -367,7 +365,6 @@ public class OCF_Consumer extends MsgConsumer{
 
                                         toEsJsons.add(obj.toString());
 
-                                        System.out.println(obj.toString());
                                     }
 
                                     list.clear();

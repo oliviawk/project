@@ -89,11 +89,7 @@ public class MsgConsumer {
 
                     String msg = record.value();
 
-                    System.out.println(msg);
-
                     List<String> msgs = processing(msg);
-
-                    System.out.println(JSONObject.toJSONString(msgs));
 
                     if(msgs != null && msgs.size() > 0) {
                         if ("MQPF_AC".equals(topic)){

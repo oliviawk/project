@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("fu")
 public class OCF_tset1 {
 
     @Value("${OCF.send.target.ips}")

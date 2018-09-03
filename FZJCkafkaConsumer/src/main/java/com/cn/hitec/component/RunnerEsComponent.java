@@ -20,6 +20,8 @@ public class RunnerEsComponent implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(RunnerEsComponent.class);
 
     @Autowired
+    OCF_Consumer ocf_consumer;
+    @Autowired
     MQPF_AC_Consumer mqpf_ac_consumer;
     @Autowired
     RGF_Consumer rgf_consumer;
@@ -38,6 +40,13 @@ public class RunnerEsComponent implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        Thread ocfthread = new Thread(){
+            @Override
+            public void run(){
+                ocf_consumer.consume();
+            }
+        };
+        ocfthread.start();
         Thread mqthread = new Thread(){
             @Override
             public void run(){
