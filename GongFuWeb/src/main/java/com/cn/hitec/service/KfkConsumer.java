@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,8 +32,9 @@ public class KfkConsumer {
     private List<String> list  = new ArrayList<>();
 //    private String TOPIC = "websocket";
     private String TOPIC = "ALERT";
-    private String GROUP = "0";
-    public KfkConsumer() {
+
+    private String GROUP;
+    public KfkConsumer(@Value("${consumer.group.id}") String GROUP ) {
 
         //*******************bootstrap.servers方式******************//
         Properties props = new Properties();
