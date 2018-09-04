@@ -2,6 +2,7 @@ package com.cn.hitec.service;
 
 import com.alibaba.fastjson.JSON;
 import com.cn.hitec.repository.ESRepository;
+import com.cn.hitec.tools.DiskUnit;
 import com.cn.hitec.tools.Pub;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -16,6 +17,8 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.sum.Sum;
+import org.elasticsearch.search.aggregations.metrics.sum.SumAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
@@ -126,7 +129,7 @@ public class ESWebService {
         queryBuilder.must(QueryBuilders.termsQuery("type", subTypes));
         queryBuilder.mustNot(QueryBuilders.termQuery("aging_status", "未处理"));
         //创建 聚合 条件
-        TermsAggregationBuilder aggbuilder = AggregationBuilders.terms("groupByType").field("type").size(20)
+        TermsAggregationBuilder aggbuilder = AggregationBuilders.terms("groupByType").field("type").size(100)
                 .subAggregation(
                         AggregationBuilders.terms("groupByModule").field("fields.module").size(10)
                                 .subAggregation(
@@ -176,6 +179,69 @@ public class ESWebService {
         }
         return resultMap;
     }
+
+
+    /**
+     * 聚合数据，返回数据量大小，默认单位 M
+     * @param endDate 数据参照物
+     * @param timeGranularity 间隔时间  正数 10 代表 参照物时间往后每隔10分钟， 负数 -10 代表参照时间往前每隔10分钟
+     * @param diskUnit 需要转换成的单位
+     * @param scale 保留几位小数
+     * @param modules 环节列表
+     * @return
+     */
+    public Map<String,Double> aggAll_fileSizeCount(Date endDate , int timeGranularity ,String diskUnit,int scale,String... modules){
+        Map<String,Double> fileSizeCountMap = new HashMap<>();
+
+        try {
+            int t = 12 ;
+            List<Date> listDate = Pub.getDateList(endDate,timeGranularity,t);
+
+            Date lteDate = null;
+            Date gtDate = null;
+
+            for (int i = 0; i < t - 1  ; i++){
+                lteDate = listDate.get(i);
+                gtDate = listDate.get(i+1);
+                //获取到对应的index
+                List<String> indexList = Pub.getIndexList(lteDate,gtDate);
+                if (indexList == null || indexList.size() < 1 || listDate.size() != t ){
+                    continue;
+                }
+                String[] indexs = indexList.toArray(new String[indexList.size()]);
+                //创建查询类
+                BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+                queryBuilder.must(QueryBuilders.termsQuery("fields.module", modules));
+                queryBuilder.must(QueryBuilders.rangeQuery("fields.data_time")
+                        .gt(Pub.transform_DateToString(gtDate,"yyyy-MM-dd HH:mm:ss.sssZ"))
+                        .lte(Pub.transform_DateToString(lteDate,"yyyy-MM-dd HH:mm:ss.sssZ")));
+
+
+                //创建 聚合 条件
+                SumAggregationBuilder sumAggbuilder = AggregationBuilders.sum("fileSizeSum").field("fields.file_size");
+
+                //返回查询结果
+                SearchResponse response = es.client.prepareSearch(indexs)
+                        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setQuery(queryBuilder).setSize(0)
+                        .addAggregation(sumAggbuilder)
+                        .setExplain(true).get();
+
+                //结果转换
+                Sum groupByTypeResponse = response.getAggregations().get("fileSizeSum");
+                double count = DiskUnit.transforDiskSize(diskUnit,groupByTypeResponse.getValue(),scale);
+                System.out.println(Pub.transform_DateToString(lteDate,"yyyy-MM-dd HH:mm")+","+count);
+                fileSizeCountMap.put(Pub.transform_DateToString(lteDate,"yyyy-MM-dd HH:mm"),count);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return fileSizeCountMap;
+    }
+
 
     public List<Map> findDataByQuery(String[] indices, String[] types, Map<String, Object> params) throws Exception {
         System.out.println(JSON.toJSONString(params));
