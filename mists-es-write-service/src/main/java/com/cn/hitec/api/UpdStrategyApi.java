@@ -54,7 +54,6 @@ public class UpdStrategyApi {
 
 	@RequestMapping(value = "/DelectPrepareData", method = RequestMethod.POST, consumes = "application/json")
 	public void DeletePrepareData(@RequestBody String json){
-		logger.info("传递的参数是："+json);
 		if (StringUtils.isEmpty(json)){
 			logger.error("要删除的数据为空" );
 			return ;
@@ -65,6 +64,7 @@ public class UpdStrategyApi {
 			long  num=configService.deletepreparedata(list);
 			logger.info("删除预生成数据 "+num+" 条");
 		} catch (Exception e) {
+            logger.info("传递的参数是："+json);
 			e.printStackTrace();
 		}
 
