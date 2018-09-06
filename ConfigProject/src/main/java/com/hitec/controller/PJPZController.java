@@ -8,7 +8,8 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.hitec.util.Tools;
+import com.hitec.domain.*;
+import com.hitec.repository.jpa.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +24,8 @@ import org.thymeleaf.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hitec.domain.AlertStrategy;
-import com.hitec.domain.DataInfo;
-import com.hitec.domain.SendTemplate;
-import com.hitec.domain.Users;
 import com.hitec.feign.client.UpdStrategyTimer;
 import com.hitec.feign.client.UpdStrategyWrite;
-import com.hitec.repository.jpa.AlertStrategyRepository;
-import com.hitec.repository.jpa.DataInfoRepository;
-import com.hitec.repository.jpa.SendTemplateRepository;
-import com.hitec.repository.jpa.UsersRepository;
 
 
 /**
@@ -59,7 +52,12 @@ public class PJPZController {
 	UpdStrategyTimer updStrategyTimer;
 	@Autowired
 	UpdStrategyWrite updStrategyWrite;
-
+	@Autowired
+	DataSourceSettingRepository dataSourceSettingRepository;
+   @Autowired
+   Basesource_rulesRepository basesource_rulesRepository;
+   @Autowired
+   Basesource_userRepository basesource_userRepository;
 	@RequestMapping("/")
 	public String index() {
 
@@ -433,9 +431,24 @@ public class PJPZController {
 				String fileNameDefine = diObj.getString("fileNameDefine");
 
                 DataInfo dataInfoprepare=dataInfoRepository.findqueryalldata(id);
+                String  name= dataInfoprepare.getName();
                 list.add(dataInfoprepare);
+				DataSourceSetting dataSourceSetting=null;
+				System.out.println("名字："+name);
+				if(strategyObj.getString("businesstypes").equals("数据源")){
+					logger.info("执行数据源业务！！！");
+					dataSourceSetting=dataSourceSettingRepository.queryDataSourceSettingConfig(name);
+					if(dataSourceSetting==null){
+						throw  new  RuntimeException("表数据不一致！！");
+					}
+					dataSourceSetting=handletimeformat(dataSourceSetting,fileNameDefine);
+					if (dataSourceSetting==null){
+						throw  new  RuntimeException("日期格式不正确！！");
+					}
+					dataSourceSettingRepository.save(dataSourceSetting);
+				}
 
-                dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
+				dataInfoRepository.updateWhereId(id,regular,timeoutValue,shouldtimeValue,monitorTimes,fileSizeDefine,fileNameDefine);
 				Integer beforeAlert = diObj.getInteger("beforeAlert");
 				Integer delayAlert = diObj.getInteger("delayAlert");
 				String alertTimeRange = diObj.getString("alertTimeRange");
@@ -490,7 +503,7 @@ public class PJPZController {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "异常数据";
+			return "异常数据,或文件时间格式不正确！！！";
 		}
 
 
@@ -542,19 +555,95 @@ public class PJPZController {
 				Long tempId = Long.parseLong(id+"00"+temp);
 				DataInfo dataInfo = new DataInfo(tempId, Long.parseLong(id), name, 1, 80, null, 0, name, 0, null,null,null, null, "-", ip, 0);
 //				dataInfoRepository.insertExistIpBaseSource(Long.parseLong(id+"00"+temp), Long.parseLong(id), name, 1, 80, null, 0, null, 0, null, null, "-", ip, 0);
-				dataInfoRepository.save(dataInfo);
-
 				AlertStrategy as=new AlertStrategy(name,strategyObj.getString("userId"),strategyObj.getString("weChartContent"),strategyObj.getInteger("weChart"),strategyObj.getString("smsContent"),strategyObj.getInteger("sms"),tempId,strategyObj.getInteger("selectTemp"));
-				alertStrategyRepository.save(as);
-
+				 alertStrategyRepository.save(as);
+				 dataInfoRepository.save(dataInfo);
 			}
 		}
 
 		System.out.println(id);
 		return null;
 	}
+  public DataSourceSetting handletimeformat(DataSourceSetting dataSourceSetting,String filenameone) throws Exception{
+
+	     String filename=filenameone;
+	     if (filename.indexOf("{")!=filename.lastIndexOf("{")||filename.indexOf("}")!=filename.lastIndexOf("}")){
+	     	return null;
+		 }
+	     int start=filename.indexOf("{");
+	     int end=filename.indexOf("}");
+	     String format=null;
+	     if (start!=-1&&end!=-1){
+	       format=filename.substring(start+1,end);
+		 }
+		 else {
+	     	return  null;
+		 }
+		 String regx="\\d{"+format.length()+"}";
+		 String filenametwo=filename.replace("{"+format+"}",regx);
+		 dataSourceSetting.setFileName(filenametwo);
+		 dataSourceSetting.setTimeFormat(format);
+		 return  dataSourceSetting;
+  }
+	@RequestMapping(value = "/SelectUserPhone", method = RequestMethod.POST)
+	@ResponseBody
+	public  Object  SelectUserPhone(HttpServletRequest request){
+           String  username =request.getParameter("user");
+           logger.info("用户名："+username);
+           if (username.isEmpty()){
+           	return null;
+		   }
+		   else {
+            List<Users> list= userMessageRepository.SelectUserPhone(username);
+            if (list.size()==1){
+				String userphone=list.get(0).getPhone();
+
+				return userphone;
+			}
+			else {
+            	logger.info("集合长度："+list.size());
+            	return null;
+			}
+		   }
+
+	}
+
+	@RequestMapping(value = "/SelectUserPhonezero", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Users> SelectUserPhonezero() {
+		List<Users> list = userMessageRepository.findAllis_user();
+		return list;
+
+	}
 
 
+	@RequestMapping(value = "/SaveBasicreSources", method = RequestMethod.POST)
+	@ResponseBody
+	public Object SaveBasicreSources(@RequestBody String js){
+		JSONObject jb=JSON.parseObject(js);
+		Integer alertnum;
+		Integer alertme;
+		String alerttime;
+		String user;
+		String phone;
+		Float tf;
+		try{
+			 alertnum=Integer.valueOf(jb.getString("alertnum"));
+			 alertme=Integer.valueOf(jb.getString("alertme"));
+			 alerttime=jb.getString("alerttime");
+			 user=jb.getString("user");
+			 phone=jb.getString("phone");
+			 tf=Float.valueOf(jb.getString("tf"));
+		}catch (Exception e){
+			e.printStackTrace();
+			return "数据类型异常！！";
+		}
+		 basesource_rulesRepository.Addbasesource(alertnum,alerttime,alertme);
+		 basesource_userRepository.Addbasesource(user,phone,tf);
+
+     return "保存成功！！";
+
+	}
 }
 
     

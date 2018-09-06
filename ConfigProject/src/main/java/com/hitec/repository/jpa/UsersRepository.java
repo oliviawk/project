@@ -11,8 +11,14 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
 
     List<Users> findAll();
 
+    @Query(value = "SELECT * FROM  users WHERE  name=?1",nativeQuery = true)
+    List<Users> SelectUserPhone (String  username);
+
     @Query(value = "select * from users where  is_user = 1 order by parent_id desc;",nativeQuery = true)
     List<Users> findAllParent();
+
+    @Query(value = "select * from users where  is_user = 0 order by parent_id desc;",nativeQuery = true)
+    List<Users> findAllis_user();
 
 //    @Transactional
 //    @Modifying
