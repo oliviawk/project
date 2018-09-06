@@ -6,19 +6,19 @@ $(function () {
         //var a = $button.attr('id').split(/_(?=[\u4e00-\u9fa5])/);
         //var a = $button.attr('id').split(/_(?![A-Za-z])/);
         //console.log(a);
-        var arr = $button.attr('id').split(/_(?![A-Za-z])/); // [0]为type, [1]为module
-        //console.log(arr);
+        var arr = $button.attr('id').split("_分发_"); // [0]为type, [1]为module
+        console.log(arr);
 
         $('#subTypeHidden').val(arr[0]);
-        $('#moduleHidden').val(arr[1]);
-        arr[2] = arr[2].replace(new RegExp("-", "gm"), ".");
-        $('#ipHidden').val(arr[2]);
+        $('#moduleHidden').val("分发");
+        arr[1] = arr[1].replace(new RegExp("-", "gm"), ".");
+        $('#ipHidden').val(arr[1]);
         //var pageSize = $('pageSizeHidden').val();
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
         $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
 
-        getHistory(arr[0], arr[1], pageSize, arr[2]);
+        getHistory(arr[0], "分发", pageSize, arr[1]);
 
 
     });
