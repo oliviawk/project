@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link type="text/css" rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="../css/laps/style_laps.css" />
+    <link href="../css/common.css" rel="stylesheet" />
+</head>
+<body>
+<style>
+    .block-wrap {
+        position: relative;
+        float: left;
+        width: 248px;
+    }
+</style>
+<!--header-->
+<div class="top">
+    <div class="logo">
+        公服中心业务全流程监控系统
+    </div>
+
+</div>
+<!--header end-->
+<div class="process">
+    <table class="process-table" width="90%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="50px">&nbsp;</td>
+            <td width="130px">
+                <div class="bg-grey">采集</div>
+            </td>
+            <td width="30px">&nbsp;</td>
+            <td width="130px">
+                <div class="bg-grey">加工</div>
+            </td>
+            <td width="30px">&nbsp;</td>
+            <td width="300px">
+                <div class="bg-grey">分发/存储</div>
+            </td>
+            <td width="30px">&nbsp;</td>
+            <td width="130px">
+                <div class="bg-grey">服务</div>
+            </td>
+            <td width="30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal"
+                     data-ip="10.30.16.225" style="width: 100%;">
+                    <ul>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                    </ul>
+                    <span style="margin-left: 50px;">10.16.57.45</span>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal"
+                     data-ip="10.30.16.204" style="width: 100%;">
+                    <ul>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                    </ul>
+                    <span style="margin-left: 50px;">10.30.16.204</span>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal"
+                     data-ip="10.30.16.220" style="width: 50%;">
+                    <ul>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                    </ul>
+                    <span style="margin-left: 50px;">10.30.16.220</span>
+                </div>
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal"
+                     data-ip="10.30.16.225" style="width: 50%;">
+                    <ul>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                    </ul>
+                    <span style="margin-left: 50px;">DMZ</span>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div class="title-grey block-wrap" style="width: 100%;">
+                    <span style="margin-left: 50px;">DMZ</span>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <div id="H8_NC_加工_10-16-57-45" class="list-grey" style="width: 100%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">常规预报</span></div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div class="title-grey block-wrap" data-toggle="modal" data-target="#baseSourceModal"
+                     data-ip="10.30.16.206" style="width: 100%;">
+                    <ul>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                        <li class="green"></li>
+                    </ul>
+                    <span style="margin-left: 50px;">10.30.16.206</span>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF1H_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF1H</span></div>
+                <div  style="width: 50%;float: left;"
+                     ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="ELEH_分发_10-30-16" class="list-grey" style="width: 100%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">CVS</span></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <div id="H8_NC_加工_10-16-57-" class="list-grey" style="width: 100%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">精细化预报</span></div>
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF3H_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF3H</span></div>
+                <div   style="width: 50%;float: left;"
+                    ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <div id="H8_NC_加工_10-16-57" class="list-grey" style="width: 100%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">全球地面逐小时</span></div>
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF12H_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF12H</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <div id="H8_NC_加工_10-16-5" class="list-grey" style="width: 100%;float: left;"
+                     data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">中国地面逐小时</span></div>
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF1H_ME_L88_GLB_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF1H_ME_L88_GLB</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF3H_ME_L88_GLB_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF3H_ME_L88_GLB</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF12H_ME_L88_GLB_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF12H_ME_L88_GLB</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF_FINAL_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF_FINAL</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF_3H_UPDATE_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF_3H_UPDATE</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF_12H_UPDATE_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF_12H_UPDATE</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="OCF_1H_UPDATE_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">OCF_1H_UPDATE</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="T639_NEW_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">T639</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="NCEP_NEW_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">ncep</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="RJTD_NEW_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">RJTD</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="ECMWF_NEW_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">ECMWF</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div  style="width: 50%;float: left;"
+                      ><span style="margin-left: 10px;"></span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div id="BHFK_分发_10-30-16-220" class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">To航天飞行控制中心</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div  class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">To产品室</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <div  class="list-grey" style="width: 50%;float: left;"
+                      data-toggle="modal" data-target="#pubModal"><span style="margin-left: 10px;">To智能写稿系统</span></div>
+                <div   style="width: 50%;float: left;"
+                ><span style="margin-left: 10px;"></span></div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="pubModal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-bg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class='glyphicon glyphicon-remove' aria-hidden='true' style="color: #d9534f;"></span>
+                </button>
+                <h4 class="modal-title" id="modalHeader">Modal title</h4>
+            </div>
+            <div id="modalBody" class="modal-body modal-body-h500" style="color: #fff">
+                <table class="table table-bordered navbar-fixed-to">
+                    <thead style="color: #17c4df;" id="history_thead">
+                    <tr>
+                        <th style="width: 60px;">编号</th>
+                        <th>文件名</th>
+                        <th style="width: 245px;">资料时次</th>
+                        <th style="width: 70px;">耗时</th>
+                        <th style="width: 60px;">状态</th>
+                        <th>信息</th>
+                    </tr>
+                    </thead>
+                    <tbody id="history_tbody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div id="sizeNumberButton" class="btn-group" style="float: left;">
+                    <a id="pageSizeNumber" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        展示数量：10
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="sizeNumber" id="ddl_pageSize">
+                        <li><a href="#">10</a></li>
+                        <li><a href="#">15</a></li>
+                        <li><a href="#">20</a></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                <input id="moduleHidden" type="hidden" value=""/>
+                <input id="subTypeHidden" type="hidden" value=""/>
+                <input id="pageSizeHidden" type="hidden" value="10"/>
+                <input id="ipHidden" type="hidden" value=""/>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal end -->
+
+
+<!-- Modal2 -->
+<div class="modal fade bs-example-modal-lg" id="baseSourceModal" tabindex="-1"
+     role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-bg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header" style="border-bottom:0px">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+						<span class='glyphicon glyphicon-remove' aria-hidden='true'
+                              style="color: #d9534f;"></span>
+                </button>
+                <h2 class="modal-title" style="font-weight:bold;text-align:center" id="baseSourceModalHeader">
+                    基础资源实时运行情况(10.20.40.132)</h2>
+            </div>
+
+            <div id="modalBody2" class="modal-body modal-body-h370"
+                 style="color: #fff">
+                <div text-align="center">
+                    <div class='col-sm-12 col-md-6'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="cpu">CPU使用率</label>
+                            <div class="panel-body">
+                                <div id="cpuUsed" style="height: 200px;"></div>
+                                <div id="tooltip-cpu" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br/>
+                                    <div></div>
+                                </div>
+                                <div id="cpuUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px"
+                                   id="memory">内存使用率</label>
+                            <div class="panel-body">
+                                <div id="memoryUsed" style="height: 200px;"></div>
+                                <div id="tooltip-p" class="panel"
+                                     style="width: 200px; height: 80px; position: absolute; display: none; opacity: 1">
+										<span
+                                                style="position: absolute; font-size: 12px; left: 8px; top: 8px;"></span>
+                                    <br/>
+                                    <div></div>
+                                </div>
+                                <div id="memoryUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-6'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="net">网络流量</label>
+                            <div class="panel-body">
+                                <div id="netUsed" style="height: 200px;"></div>
+                                <div id="netUsed-table" style="height: 70px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-sm-12 col-md-6'>
+                        <div class="panel panel-card">
+                            <label class="panel-title-lable" style="margin: 10px" id="disk">磁盘使用情况</label>
+                            <div class="panel-body">
+                                <div id="directoryUsed"
+                                     style="height: 270px;overflow-x: hidden;overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- core js start -->
+<script src="../js/core/jquery-1.8.3.min.js"></script>
+<script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+<script src="../js/tool/publicTool.js"></script>
+<!-- core js end -->
+<!-- laps start -->
+<script src="../frame/d3/d3.v3.min.js"></script>
+<script src="../js/ocf/ocf.js"></script>
+
+<!-- laps end -->
+</body>
+</html>

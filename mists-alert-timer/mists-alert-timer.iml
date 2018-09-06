@@ -25,6 +25,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.lz4:lz4-java:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch.client:transport:5.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch:5.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:6.5.0" level="project" />
@@ -175,8 +177,8 @@
     <orderEntry type="library" name="Maven: jline:jline:0.9.94" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:3.2" level="project" />
     <orderEntry type="library" name="Maven: com.101tec:zkclient:0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:1.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.lz4:lz4-java:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.lz4:lz4-java:1.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:1.5.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:1.5.4.RELEASE" level="project" />
