@@ -587,7 +587,7 @@ function pzsave() {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(list) {
-                alert(list)
+
             },
             error : function(err) {
                 alert(err);
