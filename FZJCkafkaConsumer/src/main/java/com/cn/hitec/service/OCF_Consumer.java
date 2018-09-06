@@ -212,8 +212,15 @@ public class OCF_Consumer extends MsgConsumer{
                                 String[] arr = matcher.group(1).split("_");
                                 //  aglb_obs2018082208.dat
 
-                                obj.put("type", "CIMISS_TO_OBS");
-                                obj.put("name", "CIMISS_TO_OBS");
+
+                                if(matcher.group(1).indexOf("aglb") > -1){
+                                    obj.put("type", "AGLB_OBS");
+                                    obj.put("name", "AGLB_OBS");
+                                }
+                                if(matcher.group(1).indexOf("ch") > -1){
+                                    obj.put("type", "CH_OBS");
+                                    obj.put("name", "CH_OBS");
+                                }
                                 String time  = arr[1].replace("obs","").replace(".dat","")+"00";
 
                                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
