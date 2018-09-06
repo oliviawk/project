@@ -47,7 +47,6 @@ $(document)
                     console.log(err.message)
                 }
             });
-
             // 用户表显示
             $.ajax({
                 type : "POST",
@@ -59,6 +58,7 @@ $(document)
                 success : function(r) {
                     var m = "";
                     for (var i = 0; i < r.length; i++) {
+
                         var userT = r[i];
                         m += "<option value='" + userT.id + "'>"
                             + userT.name + "</option>";
@@ -74,7 +74,6 @@ $(document)
                 }
             });
             searchUser();
-
             // 决策配置查询选择框
             $.ajax({
                     type : "POST",
@@ -125,8 +124,39 @@ $(document)
                 var str = $(this).html();
                 $("#" + write_id).val(old_str + str);
             })
+            var phonezreo;
+            $.ajax({
+                type:"POST",
+                async : false,
+                url:"/pjpz/SelectUserPhonezero",
+                headers : {
+                    "Content-Type" : "application/json; charset=utf-8"
+                },
+                success  : function(r) {
+                    var m = "";
+                    for (var i = 0; i < r.length; i++) {
+                        if (i==1){
+                            phonezreo=userT.phone;
+                        }
+                        var userT = r[i];
+                        m += "<option value='" + userT.id + "'>"
+                            + userT.name + "</option>";
+                    }
+                    $("#selectUserhx").html(m)
+                    $("#selectuserphonehx").val(phonezreo);
+                },
+                error : function(err) {
+                    alert(err);
+                    console.log(err.message)
+                }
 
-        });
+
+            });
+
+        }
+
+        );
+
 
 function checkClick(id) {
     var input_id = id.substring(0, id.length - 2);
@@ -588,6 +618,7 @@ function pzsave() {
         } else {
             sms = 0;
         }
+        var pzAddSelect=$("#pzAddSelect2").find("option:selected").text();
         var userId = $("#selectUser").val();
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
@@ -600,7 +631,8 @@ function pzsave() {
             "weChartContent" : weChartContent,
             "weChart" : weChart,
             "smsContent" : smsContent,
-            "sms" : sms
+            "sms" : sms,
+            "businesstypes":pzAddSelect
         }
         // 数据类型
         var dataInfoParams = [];
@@ -666,7 +698,51 @@ function pzsave() {
     alertStrategy_Search();
 
 }
-
+/*保存基础资源*/
+function pzsavehx(){
+      $("#pzsavehx").attr("disabled",true);
+     var alertnum=$("#alertnumhx").val().trim();
+     var alerttime=$("#alerttimehx").val().trim();
+     var alertme=$("#alertmehx").val().trim();
+     var user=$("#selectUserhx").find("option:selected").text().trim();
+     var phone=$("#selectuserphonehx").val().trim();
+     var tf;
+     if ($("#enablehx").checked){
+         tf=0;
+     }
+     else {
+         tf=1;
+     }
+        var params={
+            "alertnum":alertnum,
+            "alerttime":alerttime,
+            "alertme":alertme,
+            "user":user,
+            "phone":phone,
+            "tf":tf
+        };
+     console.info("参数据json："+params)
+        $.ajax({
+            type : "POST",
+            url : "/pjpz/SaveBasicreSources",
+            datatype : "json",
+            async : false,
+            data : JSON.stringify(params),
+            headers : {
+                "Content-Type" : "application/json; charset=utf-8"
+            },
+            success : function(r) {
+                $(".claer").val("");
+                $(".enablehx").attr("checkbox",true)
+                $("#pzsavehx").attr("disabled",false);
+                alert(r)
+            },
+            error : function(err) {
+                alert(err);
+                console.log(err.message)
+            }
+        });
+}
 /**
  * 发布模板初始化
  */
@@ -688,15 +764,21 @@ function changeContent() {
             // 把模板表中的信息显示出来
             $("#tempWc").html(r.wechartContentTemplate);
             $("#tempSm").html(r.smsContentTemplate);
+
+
             if (r.wechartSendEnable == 1) {
                 document.getElementById('inlineCheckbox1').checked = true;
+
             } else {
                 document.getElementById('inlineCheckbox1').checked = false;
+
             }
             if (r.smsSendEnable == 1) {
                 document.getElementById('inlineCheckbox2').checked = true;
+
             } else {
                 document.getElementById('inlineCheckbox2').checked = false;
+
             }
             // 查看最终发送选择是否选中
 
@@ -708,6 +790,74 @@ function changeContent() {
     });
 
 }
+
+function changeContentlc() {
+    console.info("执行changeContentlc方法")
+    var id = $("#selectTemplc").val();
+    $.ajax({
+        type : "POST",
+        url : "/pjpz/changeContent",
+        datatype : "json",
+        data : JSON.stringify({
+            "id" : id
+        }),
+        headers : {
+            "Content-Type" : "application/json; charset=utf-8"
+        },
+        success : function(r) {
+            // 把模板表中的信息显示出来
+            $("#tempWclc").html(r.wechartContentTemplate);
+            $("#tempSmlc").html(r.smsContentTemplate);
+            if (r.wechartSendEnable == 1) {
+                document.getElementById('inlineCheckbox1lc').checked = true;
+            } else {
+                document.getElementById('inlineCheckbox1lc').checked = false;
+            }
+            if (r.smsSendEnable == 1) {
+                document.getElementById('inlineCheckbox2lc').checked = true;
+            } else {
+                document.getElementById('inlineCheckbox2lc').checked = false;
+            }
+            // 查看最终发送选择是否选中
+
+        },
+        error : function(err) {
+            alert(err);
+            console.log(err.message)
+        }
+    });
+
+}
+   /*根据所选用户名查询用户电话*/
+ function changeContentUserhx(){
+     console.info("执行changeContentUser方法")
+    var user= $("#selectUserhx").find("option:selected").text()
+
+     console.info("参数："+user)
+     if (user==null|| user==""){
+
+         return ;
+     }
+     else {
+         $.ajax({
+             url: "/pjpz/SelectUserPhone",
+             data: {"user": user},
+             type: "post",
+             success: function (r) {
+                 if (r!==null){
+                     $("#selectuserphonehx").val(r)
+                 }
+                 else {
+                     alert("数据异常！！！")
+                 }
+
+             },
+             error: function (error) {
+
+             }
+         });
+     }
+ }
 
 /*-------------------->fukl.2018.03.14<-------------------------*/
 
@@ -1147,3 +1297,4 @@ function initSendTemplate(data_id){
         });
     }
 }
+
