@@ -24,6 +24,14 @@ public class Basesourceuser implements Serializable {
     private  String  sms;
     private  float enable;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Basesourceuser() {
     }
 

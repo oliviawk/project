@@ -125,6 +125,32 @@ $(document)
                 $("#" + write_id).val(old_str + str);
             })
             var phonezreo;
+            // $.ajax({
+            //     type:"POST",
+            //     async : false,
+            //     url:"/pjpz/SelectUserPhonezero",
+            //     headers : {
+            //         "Content-Type" : "application/json; charset=utf-8"
+            //     },
+            //     success  : function(r) {
+            //         var m = "";
+            //         for (var i = 0; i < r.length; i++) {
+            //             if (i==1){
+            //                 phonezreo=userT.phone;
+            //             }
+            //             var userT = r[i];
+            //             m += "<option value='" + userT.id + "'>"
+            //                 + userT.name + "</option>";
+            //         }
+            //         $("#selectUserhx").html(m)
+            //         $("#selectuserphonehx").val(phonezreo);
+            //     },
+            //     error : function(err) {
+            //         alert(err);
+            //         console.log(err.message)
+            //     }
+            // });
+            // 基础资源配置初始化加载 ！！
             $.ajax({
                 type:"POST",
                 async : false,
@@ -132,24 +158,38 @@ $(document)
                 headers : {
                     "Content-Type" : "application/json; charset=utf-8"
                 },
-                success  : function(r) {
-                    var m = "";
-                    for (var i = 0; i < r.length; i++) {
-                        if (i==1){
-                            phonezreo=userT.phone;
-                        }
-                        var userT = r[i];
-                        m += "<option value='" + userT.id + "'>"
-                            + userT.name + "</option>";
-                    }
-                    $("#selectUserhx").html(m)
-                    $("#selectuserphonehx").val(phonezreo);
-                },
-                error : function(err) {
+               success:function (r) {
+                    var listone=r.listone;
+                    var list=listone;
+                    var listtwo=r.listtwo;
+                    $("#rulesid").val(listtwo[0][0]);
+                    $("#alertnumhx").val(listtwo[0][1]);
+                    $("#alerttimehx").val(listtwo[0][2]);
+                    $("#alertmehx").val(listtwo[0][3]);
+                   var s = "<tr style='height: 40px;'><th style='display: none;vertical-align:middle;text-align: center' >id</th><th  style='vertical-align:middle;text-align: center'>用户名</th><th style='vertical-align:middle;text-align: center'>用户电话</th><th  style='vertical-align:middle;text-align: center'>是否发送生效</th></th>"
+                   var m = "";
+                   for (var i = 0; i < listone.length; i++) {
+                       s += "<tr style='height: 40px;'><td style='display: none ; vertical-align:middle;text-align: center'>"
+                           + list[i][0]
+                           + "</td><td style='vertical-align:middle;text-align: center;height: 60px'>"
+                           + list[i][1]
+                           + "</td><td style='vertical-align:middle;text-align: center;height: 60px'>"
+                           + list[i][2]+"</td>"
+                           var last=list[i][3]
+                          if(last==0||last==null){
+                              console.info("状态码："+last)
+                              s=s+"<td style='vertical-align:middle;text-align: center;height: 60px'><input class='zhuantai' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
+                          }
+                          else {
+                              console.info("状态码："+last)
+                              s=s+"<td style='vertical-align:middle;text-align: center;height: 60px'><input class='zhuantai' checked='checked' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
+                          }
+                   }
+                   $("#hxuser").html(s);
+               }, error : function(err) {
                     alert(err);
                     console.log(err.message)
                 }
-
 
             });
 
@@ -623,7 +663,6 @@ function pzsave() {
         var weChartContent = $("#tempWc").val();
         var smsContent = $("#tempSm").val();
         var selectTemp = $("#selectTemp").val();
-
         // console.log({"pznameid":pznameid,"alertLevel":alertLevel,"pzAddtimeyz":pzAddtimeyz,"userId":userId,"weChartContent":weChartContent,"weChart":weChart,"smsContent":smsContent,"sms":sms})
         var strategyParams = {
             "userId" : userId,
@@ -700,44 +739,58 @@ function pzsave() {
 }
 /*保存基础资源*/
 function pzsavehx(){
-      $("#pzsavehx").attr("disabled",true);
-     var alertnum=$("#alertnumhx").val().trim();
-     var alerttime=$("#alerttimehx").val().trim();
-     var alertme=$("#alertmehx").val().trim();
-     var user=$("#selectUserhx").find("option:selected").text().trim();
-     var phone=$("#selectuserphonehx").val().trim();
-     var tf;
-     if ($("#enablehx").checked){
-         tf=0;
-     }
-     else {
-         tf=1;
-     }
-        var params={
-            "alertnum":alertnum,
-            "alerttime":alerttime,
-            "alertme":alertme,
-            "user":user,
-            "phone":phone,
-            "tf":tf
-        };
-     console.info("参数据json："+params)
+    console.info("执行保存方法！！pzsavehx")
+     $("#pzsavehx").attr("disabled",true);
+    var mytable = document.getElementById("hxuser");
+    var data = [];
+    for(var i=1,rows=mytable.rows.length; i<rows; i++){
+        for(var j=0,cells=mytable.rows[i].cells.length; j<cells; j++){
+            if(!data[i-1]){
+                data[i-1] = new Array();
+            }
+            if(j==3){
+             var tf= mytable.rows[i].cells[j].firstChild.checked;
+                console.info("元素："+j+"row："+i+"boolean:"+tf)
+             if (tf){
+                 data[i-1][j]="1";
+             }
+             else {
+                 data[i-1][j]="0";
+             }
+        }
+             else {
+                data[i-1][j] = mytable.rows[i].cells[j].innerHTML;
+            }
+
+        }
+    }
+    var alertnum=$("#alertnumhx").val();
+    var alerttime=$("#alerttimehx").val();
+    var alertme=$("#alertmehx").val();
+    var rulesid=$("#rulesid").val();
+    var datatemple={
+        "alertnum":alertnum,
+        "alerttime":alerttime,
+        "alertme":alertme,
+        "rulesid":rulesid,
+        "tabledata":data
+    }
+        console.info("数据元素："+datatemple)
         $.ajax({
             type : "POST",
             url : "/pjpz/SaveBasicreSources",
             datatype : "json",
             async : false,
-            data : JSON.stringify(params),
+            data : JSON.stringify(datatemple),
             headers : {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(r) {
-                $(".claer").val("");
-                $(".enablehx").attr("checkbox",true)
                 $("#pzsavehx").attr("disabled",false);
                 alert(r)
             },
             error : function(err) {
+                $("#pzsavehx").attr("disabled",false);
                 alert(err);
                 console.log(err.message)
             }

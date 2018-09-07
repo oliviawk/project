@@ -22,7 +22,7 @@ public class Basesourcerules implements Serializable {
     private long id;
     private Integer  maxAlerts;
     private  Integer currentAlerts;
-    private  String alertTimeRange;
+    private  String  alertTimeRange;
     private  Integer interval;
 
     public Basesourcerules() {
@@ -43,19 +43,19 @@ public class Basesourcerules implements Serializable {
         this.id = id;
     }
 
-    public int getMaxAlerts() {
+    public Integer getMaxAlerts() {
         return maxAlerts;
     }
 
-    public void setMaxAlerts(int maxAlerts) {
+    public void setMaxAlerts(Integer maxAlerts) {
         this.maxAlerts = maxAlerts;
     }
 
-    public int getCurrentAlerts() {
+    public Integer getCurrentAlerts() {
         return currentAlerts;
     }
 
-    public void setCurrentAlerts(int currentAlerts) {
+    public void setCurrentAlerts(Integer currentAlerts) {
         this.currentAlerts = currentAlerts;
     }
 
@@ -67,11 +67,11 @@ public class Basesourcerules implements Serializable {
         this.alertTimeRange = alertTimeRange;
     }
 
-    public int getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
-    public void setInterval(int interval) {
+    public void setInterval(Integer interval) {
         this.interval = interval;
     }
 }

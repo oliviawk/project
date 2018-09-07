@@ -8,12 +8,15 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONException;
+import com.google.common.collect.ObjectArrays;
 import com.hitec.domain.*;
 import com.hitec.repository.jpa.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -435,14 +438,17 @@ public class PJPZController {
                 list.add(dataInfoprepare);
 				DataSourceSetting dataSourceSetting=null;
 				System.out.println("名字："+name);
-				if(strategyObj.getString("businesstypes").equals("数据源")){
+				logger.info("业务名字"+strategyObj.getString("businesstypes"));
+				if("数据源".equals(strategyObj.getString("businesstypes"))){
 					logger.info("执行数据源业务！！！");
 					dataSourceSetting=dataSourceSettingRepository.queryDataSourceSettingConfig(name);
 					if(dataSourceSetting==null){
+						logger.info("表数据不一致！！");
 						throw  new  RuntimeException("表数据不一致！！");
 					}
 					dataSourceSetting=handletimeformat(dataSourceSetting,fileNameDefine);
 					if (dataSourceSetting==null){
+						logger.info("日期格式不正确！！");
 						throw  new  RuntimeException("日期格式不正确！！");
 					}
 					dataSourceSettingRepository.save(dataSourceSetting);
@@ -610,40 +616,88 @@ public class PJPZController {
 
 	@RequestMapping(value = "/SelectUserPhonezero", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Users> SelectUserPhonezero() {
-		List<Users> list = userMessageRepository.findAllis_user();
-		return list;
+	public Map<String,Object> SelectUserPhonezero() {
+		Map<String,Object> map=new HashMap<String,Object>();
+		List<Object> list = basesource_userRepository.queryallrules();
+		List<Object> listtwo=basesource_rulesRepository.queryrules();
+        map.put("listone",list);
+        map.put("listtwo",listtwo);
+		return map;
 
 	}
 
 
 	@RequestMapping(value = "/SaveBasicreSources", method = RequestMethod.POST)
 	@ResponseBody
+	@Transactional(rollbackFor = {RuntimeException.class})
 	public Object SaveBasicreSources(@RequestBody String js){
-		JSONObject jb=JSON.parseObject(js);
-		Integer alertnum;
-		Integer alertme;
-		String alerttime;
-		String user;
-		String phone;
-		Float tf;
-		try{
-			 alertnum=Integer.valueOf(jb.getString("alertnum"));
-			 alertme=Integer.valueOf(jb.getString("alertme"));
-			 alerttime=jb.getString("alerttime");
-			 user=jb.getString("user");
-			 phone=jb.getString("phone");
-			 tf=Float.valueOf(jb.getString("tf"));
-		}catch (Exception e){
-			e.printStackTrace();
-			return "数据类型异常！！";
+		System.out.print(js);
+		JSONObject json=JSON.parseObject(js);
+		Integer alertnum=null;
+		String alerttime=null;
+		Integer alertme=null;
+		Long rulesid=null;
+		JSONArray tabledata = json.getJSONArray("tabledata");
+		List<Basesourceuser> list=null;
+        try {
+			 alertnum=Integer.valueOf(json.getString("alertnum"));
+			 alerttime=json.getString("alerttime");
+			alertme=Integer.valueOf(json.getString("alertme"));
+			rulesid=Long.valueOf(json.getString("rulesid"));
+		   list	=Transformation(tabledata);
 		}
-		 basesource_rulesRepository.Addbasesource(alertnum,alerttime,alertme);
-		 basesource_userRepository.Addbasesource(user,phone,tf);
-
+		catch (Exception e){
+        	logger.info("数据异常！！");
+        	return "数据异常！！";
+		}
+		   basesource_rulesRepository.updaterules(rulesid,alertnum,alerttime,alertme);
+		 for (Basesourceuser basesourceuser:list){
+		 	logger.info("id:   "+ basesourceuser.getId()+"名字：  "+basesourceuser.getUser()+"电话：  "+basesourceuser.getSms()+"状态码： "+basesourceuser.getEnable());
+		 	Basesourceuser bsone=basesource_userRepository.queryrules(basesourceuser.getId());
+		 	if (bsone==null){
+               basesource_userRepository.Addbasesource(basesourceuser.getId(),basesourceuser.getUser(),basesourceuser.getSms(),basesourceuser.getEnable());
+			}
+		 	else {
+				basesource_userRepository.updaterules(basesourceuser.getId(),basesourceuser.getUser(),basesourceuser.getSms(),basesourceuser.getEnable());
+			}
+		 }
      return "保存成功！！";
 
 	}
+	public List<Basesourceuser> Transformation(JSONArray tabledata){
+		List<Basesourceuser> list=new ArrayList<Basesourceuser>();
+		for (Object object : tabledata){
+			JSONArray a = JSONArray.parseArray(object.toString());
+			Basesourceuser basesourceuser=new Basesourceuser();
+			int i=1;
+			for (Object objecttwo:a){
+				if (i==1){
+					Long id=Long.valueOf(objecttwo.toString());
+					basesourceuser.setId(id);
+				}
+				if (i==2){
+					String name= objecttwo.toString();
+					basesourceuser.setUser(name);
+				}
+				if (i==3){
+					String sms=objecttwo.toString();
+					basesourceuser.setSms(sms);
+				}
+				if(i==4){
+					Float tf=Float.valueOf(objecttwo.toString());
+					basesourceuser.setEnable(tf);
+				}
+				i++;
+                if (i==5){
+                	i=1;
+				}
+			}
+			list.add(basesourceuser);
+		}
+		return list;
+	}
+
 }
+
 
     

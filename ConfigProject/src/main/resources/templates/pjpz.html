@@ -180,39 +180,42 @@
 
 	<!--  基础资源告警配置-->
 	<div class="tab-pane fade" id="basics_hx"  style="height: 700px; width: 90%; background-color: white">
-		 <div style="zoom: 1;padding: 30px 0px 10px 40px;" id="huaxinbox" >
-		<div style=" width: 177px; height: 50px;display: block; float: left;margin-right: 30px " id='baseSourceIphx'>
-			ip:<input type="text" id="iphx" />
-		</div>
+		 <!--<div style="zoom: 1;padding: 30px 0px 10px 40px;" id="huaxinbox" >-->
+		<!--<div style=" width: 177px; height: 50px;display: block; float: left;margin-right: 30px " id='baseSourceIphx'>-->
+			<!--ip:<input type="text" id="iphx" />-->
+		<!--</div>-->
 
-		<div style="margin:25px 30px 0px 0px;float: left" >
-			<label class="checkbox-inline">
-				<input type="checkbox" name="baseSourcehx" value="disk"  class="enablehx"/> 磁盘
-			</label>
-		</div>
+		<!--<div style="margin:25px 30px 0px 0px;float: left" >-->
+			<!--<label class="checkbox-inline">-->
+				<!--<input type="checkbox" name="baseSourcehx" value="disk"  class="enablehx"/> 磁盘-->
+			<!--</label>-->
+		<!--</div>-->
 
-		<div style="margin:25px 30px 0px 0px;; float: left">
-			<label class="checkbox-inline">
-				<input type="checkbox" name="baseSource" value="cpu" class="enablehx"/> cpu
-			</label>
-		</div>
+		<!--<div style="margin:25px 30px 0px 0px;; float: left">-->
+			<!--<label class="checkbox-inline">-->
+				<!--<input type="checkbox" name="baseSource" value="cpu" class="enablehx"/> cpu-->
+			<!--</label>-->
+		<!--</div>-->
 
-		<div style="margin:25px 30px 0px 0px;;float: left">
-			<label class="checkbox-inline">
-				<input type="checkbox" name="baseSourcehx" value="mem" class="enablehx"/> 内存
-			</label>"
-		</div>
+		<!--<div style="margin:25px 30px 0px 0px;;float: left">-->
+			<!--<label class="checkbox-inline">-->
+				<!--<input type="checkbox" name="baseSourcehx" value="mem" class="enablehx"/> 内存-->
+			<!--</label>"-->
+		<!--</div>-->
 
-		<div style="margin:25px 30px 0px 0px;;float: left">
-			<label class="checkbox-inline">
-				<input type="checkbox" name="baseSourcehx" value="net" class="enablehx"/> 网络
-			</label>
-		</div>
-		 </div>
+		<!--<div style="margin:25px 30px 0px 0px;;float: left">-->
+			<!--<label class="checkbox-inline">-->
+				<!--<input type="checkbox" name="baseSourcehx" value="net" class="enablehx"/> 网络-->
+			<!--</label>-->
+		<!--</div>-->
+		 <!--</div>-->
 
 		<div id="startegysDivhx" style="margin: 10px auto; padding: 20px;" >
 			<span class="little-title" >选择策略</span>
-			<div class="area"  style="margin: 0 auto;padding:15px 20px;width: 800px;zoom:1;height: 300px"  >
+			<div class="area"  style="margin: 0 auto;padding:15px 20px;width: 800px;zoom:1;"  >
+				<div id="rulesiddiv" style="display: none">
+					<input type="text" id="rulesid"/>
+				</div>
 				<div style="margin:30px 0px 30px 0px; clear: both; " >
 					连续报警次数： &nbsp;<input type="text" id="alertnumhx" class="claer"/>
 				</div>
@@ -221,24 +224,21 @@
 					告警时间段： <input style="margin-left: 20px" type="text" id="alerttimehx" class="claer"/>
 				</div>
 
-				<div style="margin-right: 30px;float: right; clear: both" >
+				<div style="margin: 0px 30px 30px 0px;float: right; clear: both" >
 					报警间隔(注意：单位为分)： &nbsp;<input type="text" id="alertmehx" class="claer"/>
 				</div>
 
-				<div class="row" style="margin: 30px 0px 10px 0px; clear: both">
-					<div class="form-control form-attribute"
-						 style=" width: 100px; float: left;" >用  &nbsp;&nbsp;&nbsp;&nbsp;  户:</div>
-					<div style="width: 170px; float: left; " >
-						<select class=" form-control " title="用户" width="400px"
-								id="selectUserhx" onchange="changeContentUserhx()">
-
-						</select>
-
-					</div>
-					<div style="clear: both ;margin-top: 60px"> 用户电话： <input style="margin-left: 20px" id="selectuserphonehx" type="text" readonly="readonly"/> &nbsp;&nbsp;是否发送给该用户： <input type="checkbox" id="enablehx" class="enablehx"/></div>
-
+				<div class="row" style="margin: 30px 0px 10px 0px; clear: both" id="saveuser" >
+					<!--<div class="form-control form-attribute"-->
+						 <!--style=" width: 100px; float: left;" >用  &nbsp;&nbsp;&nbsp;&nbsp;  户:</div>-->
+					<!--<div style="width: 170px; float: left; " >-->
+						<!--<select class=" form-control " title="用户" width="400px"-->
+								<!--id="selectUserhx" onchange="changeContentUserhx()">-->
+						<!--</select>-->
+					<!--</div>-->
+					<!--<div style="clear: both ;margin-top: 60px"> 用户电话： <input style="margin-left: 20px" id="selectuserphonehx" type="text" readonly="readonly"/> &nbsp;&nbsp;是否发送给该用户： <input type="checkbox" id="enablehx" class="enablehx"/></div>-->
+				<table id="hxuser" style="width: 97%; overflow: auto;table-layout:fixed;" border="1"></table>
 				</div>
-
 			  </div>
 			<div>
 				<div class="modal-footer">
