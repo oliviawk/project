@@ -171,18 +171,16 @@ $(document)
                    for (var i = 0; i < listone.length; i++) {
                        s += "<tr style='height: 40px;'><td style='display: none ; vertical-align:middle;text-align: center'>"
                            + list[i][0]
-                           + "</td><td style='vertical-align:middle;text-align: center;height: 60px'>"
+                           + "</td><td style='vertical-align:middle;text-align: center;height: 40px'>"
                            + list[i][1]
-                           + "</td><td style='vertical-align:middle;text-align: center;height: 60px'>"
+                           + "</td><td style='vertical-align:middle;text-align: center;height: 40px'>"
                            + list[i][2]+"</td>"
                            var last=list[i][3]
                           if(last==0||last==null){
-                              console.info("状态码："+last)
-                              s=s+"<td style='vertical-align:middle;text-align: center;height: 60px'><input class='zhuantai' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
+                              s=s+"<td style='vertical-align:middle;text-align: center;height: 40px'><input class='zhuantai' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
                           }
                           else {
-                              console.info("状态码："+last)
-                              s=s+"<td style='vertical-align:middle;text-align: center;height: 60px'><input class='zhuantai' checked='checked' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
+                              s=s+"<td style='vertical-align:middle;text-align: center;height: 40px'><input class='zhuantai' checked='checked' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
                           }
                    }
                    $("#hxuser").html(s);
@@ -775,7 +773,7 @@ function pzsavehx(){
         "rulesid":rulesid,
         "tabledata":data
     }
-        console.info("数据元素："+datatemple)
+
         $.ajax({
             type : "POST",
             url : "/pjpz/SaveBasicreSources",
@@ -800,7 +798,7 @@ function pzsavehx(){
  * 发布模板初始化
  */
 function changeContent() {
-    console.info("执行changeContent方法")
+
     var id = $("#selectTemp").val();
     $.ajax({
         type : "POST",
@@ -845,7 +843,7 @@ function changeContent() {
 }
 
 function changeContentlc() {
-    console.info("执行changeContentlc方法")
+
     var id = $("#selectTemplc").val();
     $.ajax({
         type : "POST",
