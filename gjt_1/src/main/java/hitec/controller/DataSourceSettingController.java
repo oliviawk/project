@@ -374,6 +374,11 @@ public class DataSourceSettingController {
 		}
 		else {
 			//因为不是全路径，所以截取这部分路径和User_catalog表中的用户路径拼接成全路径
+			System.out.println("else");
+			if(userfilepath.startsWith("/")&&user_content.endsWith("/")){
+				System.out.println("去除   /");
+				userfilepath=userfilepath.substring(1);
+			}
 			user_content=user_content+userfilepath;
 			outData.put("type", type);
 			outData.put("message", message);
