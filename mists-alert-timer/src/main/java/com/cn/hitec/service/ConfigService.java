@@ -1,29 +1,27 @@
 package com.cn.hitec.service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.cn.hitec.bean.DataBean;
+import com.cn.hitec.bean.EsQueryBean_Exsit;
+import com.cn.hitec.bean.EsWriteBean;
 import com.cn.hitec.domain.DataInfo;
 import com.cn.hitec.feign.client.DataSourceEsInterface;
+import com.cn.hitec.feign.client.EsQueryService;
+import com.cn.hitec.feign.client.EsWriteService;
 import com.cn.hitec.repository.jpa.DataInfoRepository;
+import com.cn.hitec.util.CronPub;
+import com.cn.hitec.util.Pub;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.cn.hitec.bean.DataBean;
-import com.cn.hitec.bean.EsQueryBean;
-import com.cn.hitec.bean.EsQueryBean_Exsit;
-import com.cn.hitec.bean.EsWriteBean;
-import com.cn.hitec.feign.client.EsQueryService;
-import com.cn.hitec.feign.client.EsWriteService;
-import com.cn.hitec.util.CronPub;
-import com.cn.hitec.util.Pub;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ConfigService {
@@ -283,7 +281,7 @@ public class ConfigService {
 			logger.warn("makeProjectTable is fail ： alertMap is null or 0 in length");
 			return;
 		}
-
+        List<Object> saveoutData=new ArrayList<Object>();
 		List<Object> outData = new ArrayList<Object>();
 
 		Calendar cal = Calendar.getInstance();
@@ -321,7 +319,7 @@ public class ConfigService {
 					}
 				}
 
-				for (int i = 0; i < timerList.size(); i++) {
+				for (int i = 0; i < timerList.size(); i++){
 					Date dt = Pub.transform_StringToDate(timerList.get(i),"yyyy-MM-dd HH:mm:ss.SSSZ");
 					if (runDate.getTime() > dt.getTime()){
 						continue;
@@ -361,21 +359,31 @@ public class ConfigService {
 					//添加文件大小范围和文件名
 					fields.put("file_size_define",map.get("size_define").toString());
 					String nameDefine = map.get("name_define").toString();
-					String fileName = changeFileName(nameDefine,dt);
-					fields.put("file_name",path+fileName);
+					System.out.println(nameDefine+"生成的字符串有：");
+					nameDefine=nameDefine.replace("((","[");
+					nameDefine=nameDefine.replace("))","]");
+					nameDefine=nameDefine.replace(")|(",",");
+					List<String> fileNameregx = changeFileNameregx(nameDefine,dt);
+					for (String str:fileNameregx){
+						fields.put("file_name",path+str);
+						data.put("fields", fields);
+						outData.add(data);
+					}
+					saveoutData.add(outData);
 
-
-					data.put("fields", fields);
-					outData.add(data);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.warn(e.getMessage());
 			}
 		}
-
+    for (Object Objlist:saveoutData){
+			List<Object>  list=(List<Object>) Objlist;
 		Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
 		logger.info("DS -> 数据源 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
+	}
+
+
 	}
 
 	/**
@@ -610,6 +618,17 @@ public class ConfigService {
 	}
 
 
+	public List<String> changeFileNameregx(String nameDefine,Date date){
+
+		List<String> listfilename=null;
+
+		try {
+			listfilename=regToStr(nameDefine,date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listfilename;
+	}
 
 	private List<String> regToStr(String str, Date date){
 		Pattern p = Pattern.compile("\\{(.+?)(\\[[\\+\\-]?\\d\\])?\\}");
