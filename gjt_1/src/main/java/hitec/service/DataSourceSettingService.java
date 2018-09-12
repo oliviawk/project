@@ -457,9 +457,10 @@ public class DataSourceSettingService {
 		return message;
 	}
 	@Transactional(rollbackFor = {RuntimeException.class})
-	public void deleteDataSource(ArrayList<DataSourceSetting> arrayList) throws RuntimeException {
+	public List<DataInfo> deleteDataSource(ArrayList<DataSourceSetting> arrayList) throws RuntimeException {
 
 		dataSourceSettingRepository.delete(arrayList);
+		List<DataInfo> dataInfoList =new ArrayList<DataInfo>();
 		int shu=0;
 		int shutwo=0;
 		long pk_id=-1;
@@ -478,8 +479,10 @@ public class DataSourceSettingService {
 		    		logger.info("时间格式为空--"+dataSourceSetting.getTimeFormat());
 				}
 
-		    	  pk_id=dataInfoRepository.findDatainfoID(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
-			       if(pk_id!=-1){
+		    	  DataInfo dataInfo=dataInfoRepository.findDatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
+
+		    	  if(pk_id!=-1){
+		    	  	  dataInfoList.add(dataInfo);
 //				         try {
 					          shu=alert_strategy_repository.delectAlert_strategy(pk_id);
 //						 } catch (Exception e) {
@@ -502,8 +505,9 @@ public class DataSourceSettingService {
 //					logger.error("删除datainfo一条数据源类型出错,"+ sw.toString());
 //				}
 				logger.info(filename+"个数："+shutwo);
-		    }
 
+		    }
+		return  dataInfoList;
 	}
 
 	public User_Catalog findAll_User_catalog(String user_name,String user_ip){

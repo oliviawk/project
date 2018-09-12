@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.sun.org.apache.bcel.internal.generic.I2F;
 import hitec.domain.User_Catalog;
+import hitec.feign.client.DataSourceEsInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,8 @@ public class DataSourceSettingController {
 	DataSourceSettingService dataSourceSettingService;
 	@Autowired
 	DataSourceKafkaInterface dataSourceKafkaInterface;
-
+    @Autowired
+	DataSourceEsInterface dataSourceEsInterface;
 
 	@RequestMapping("/")
 	public String index() {
@@ -308,7 +310,9 @@ public class DataSourceSettingController {
 		}
 		JSONObject resultObj = new JSONObject();
 		try {
-			dataSourceSettingService.deleteDataSource(arrayList);
+			List<DataInfo> dataInfoList=dataSourceSettingService.deleteDataSource(arrayList);
+			String jsondatainfolist=JSON.toJSONString(dataInfoList);
+			dataSourceEsInterface.DeletePrepareData(jsondatainfolist);
 			resultObj.put("result", "success");
 		} catch (RuntimeException e) {
 			StringWriter sw = new StringWriter();
@@ -356,6 +360,9 @@ public class DataSourceSettingController {
 			if(lengstr==null||lengstr.length()<userfilearrray[i].length()){
 				userfilepath=userfilepath+userfilearrray[i]+"/";
 			}
+		}
+		if(!userfilepath.startsWith("/")){
+			userfilepath="/"+userfilepath;
 		}
 		String user_content= user_catalog.getUser_catalog_content();
 		//判断文件名是否是全路径，如果是则不进行拼接直接返回文件名，反之则拼接成全路径
