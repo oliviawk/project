@@ -56,7 +56,7 @@ public class UpdStrategyApi {
 	public void DeletePrepareData(@RequestBody String json){
 		if (StringUtils.isEmpty(json)){
 			logger.error("要删除的数据为空" );
-			return ;
+
 		}
 
 		try {
@@ -65,6 +65,7 @@ public class UpdStrategyApi {
 			logger.info("删除预生成数据 "+num+" 条");
 		} catch (Exception e) {
             logger.info("传递的参数是："+json);
+			logger.info("更改告警策略，删除预生成数据失败 数据如下："+json);
 			e.printStackTrace();
 		}
 
