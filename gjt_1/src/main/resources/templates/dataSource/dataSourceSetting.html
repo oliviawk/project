@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <title>元数据配置</title>
-<link rel="stylesheet" href="../css/bootstrap.css" />
-
-<link rel="stylesheet" href="../css/bootstrap-table.min.css" />
-	<link rel="stylesheet" href="../css/bootstrap-select2.css" />
+	<link rel="stylesheet" href="../css_option/bootstrap_3.3.7.css" />
+	<link rel="stylesheet" href="../css/bootstrap-table.min.css" />
+	<link rel="stylesheet" href="../css/bootstrap-select.css" />
+	<link rel="stylesheet" href="../css_option/bootstrap.min.css" />
+	<link rel="stylesheet" href="../css_option/main.css" />
 
 	<style>
 		.selectInsertData{
@@ -14,14 +15,54 @@
 			margin-right: 10px;
 			width: 130px;
 		}
+		.shade1{background: -webkit-linear-gradient(white, rgba(191, 233, 255, 0.93)); /* Safari 5.1 - 6.0 */
+			background: -o-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Opera 11.1 - 12.0 */
+			background: -moz-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Firefox 3.6 - 15 */
+			background: linear-gradient(white,rgba(191, 233, 255, 0.93));}
+		.bootstrap-table .table thead>tr>th {
+			padding: 0;
+			margin: 0;
+			background: -webkit-linear-gradient(white, rgba(191, 233, 255, 0.93)); /* Safari 5.1 - 6.0 */
+			background: -o-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Opera 11.1 - 12.0 */
+			background: -moz-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Firefox 3.6 - 15 */
+			background: linear-gradient(white,rgba(191, 233, 255, 0.93));
+		}
 	</style>
 </head>
 <body>
-
-	
-	<div id="toolbar" class="btn-group">
-		<button id="insertDataSourceBtn" type="button" class="btn btn-default"
-			data-toggle="modal" data-target="#insertDataSource">
+<header class="header">
+	<div class="container">
+		<!--门户logo-->
+		<div class="brand clearfix">
+			<div class="logo">
+				<div class="azure-logo">
+					<a id="navigation-azure-logo-id" href="http://datalist.cma.cn/">公共气象服务中心业务全流程监控系统</a>
+				</div>
+			</div>
+			<div class="top-nav">
+				<a class="search" id="top-nav_search" href="http://datalist.cma.cn/index.html#" title="搜索">
+					<i class="icon icon-search"></i>
+				</a>
+				<a class="nav-toggle" id="top-nav_nav" href="http://datalist.cma.cn/index.html#" title="导航">
+					<i class="icon icon-navigation"></i>
+				</a>
+			</div>
+		</div>
+		<!--门户logo end-->
+		<!--导航菜单-->
+		<nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="height: auto;">
+			<ul class="accordian-menu" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+				<li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
+			</ul>
+		</nav>
+		<!--导航菜单 end-->
+	</div>
+</header>
+<div class="row" style="height: 650px;">
+	<div class="col-md-12" style="height: 20px"></div>
+	<div class="col-md-10 col-md-offset-1" style="height: 30px;border-bottom: solid 1px black">数据源 >>配置</div>
+	<div id="toolbar" class="btn-group col-md-12">
+		<button id="insertDataSourceBtn" type="button" class="btn btn-default" data-toggle="modal" data-target="#insertDataSource" >
 			<span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span>添加元数据
 		</button>
 		<button id="btn_edit" type="button" class="btn btn-default">
@@ -30,11 +71,12 @@
 		<button id="btn_delete" type="button" class="btn btn-default">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
 		</button>
-
 	</div>
-	<div style="position: absolute; left: 10px; top: 30px; height: 500px;">
+	<div class="col-md-10 col-md-offset-1">
 		<table id="dataSourceTable"></table>
 	</div>
+</div>
+
 
 
 
@@ -155,14 +197,78 @@
 			</div>
 		</div>
 	</div>
-
+<!--页脚-->
+<footer class="footer">
+	<div class="container">
+		<ul class="accordian-menu" data-accordiandisabled="desktop">
+			<li class="follow-us">
+				<h3 class="menu-title footer-title expand">关注我们<i class="icon icon-arrow-top"></i></h3>
+				<div class="footer-qrcode clearfix hidden-xs hidden-sm">
+					<div class="qrcode-wrapper">
+						<img src="../imsg/qrcode.jpg" alt="qrcode" ></img>
+						<span>欢迎关注质控报告微信公众号</span>
+					</div>
+				</div>
+			</li>
+			<li>
+				<h3 id="footer_support" class="menu-title footer-title">支持<i class="icon icon-arrow-top"></i></h3>
+				<ul class="menu-child">
+					<li>
+						<a id="footer-contact-id" href="#" title="联系我们">
+							联系我们
+						</a>
+					</li>
+					<li>
+						<a id="footer-plans-id" href="#" title="支持计划">
+							支持计划
+						</a>
+					</li>
+					<li>
+						<a id="footer-service-dashboard-id" href="#" title="服务仪表盘">
+							服务仪表盘
+						</a>
+					</li>
+					<li>
+						<a id="footer-legal-id" href="#" title="法律">
+							法律
+						</a>
+					</li>
+					<li>
+						<a id="footer-sla-id" href="#" title="服务级别协议">
+							服务级别协议
+						</a>
+					</li>
+					<li>
+						<a id="footer-icp-id" href="#" title="ICP 备案">
+							ICP 备案
+						</a>
+					</li>
+					<li>
+						<a id="footer-support-faq-id" href="#" title="常见问题">
+							常见问题
+						</a>
+					</li>
+					<li>
+						<a id="footer-news-id" href="#" title="最新公告">
+							最新公告
+						</a>
+					</li>
+					<li>
+						<a href="#" target="_blank" title="数据清单编辑器">
+							数据清单编辑器
+						</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</footer>
+<!--页脚 end-->
 	<script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="../js/bootstrap.js"></script>
-	<script type="text/javascript"
-		src="../js/dataSource/dataSourceSettingTable.js"></script>
+	<script type="text/javascript" src="../js/dataSource/dataSourceSettingTable.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-table.min.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
-
 	<script type="text/javascript" src="../js/dataSource/dataSourceSetting.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-select2.js"></script>
 	<script type="text/javascript" src="../js/bootstrap-select2-zh-CN.js"></script>
