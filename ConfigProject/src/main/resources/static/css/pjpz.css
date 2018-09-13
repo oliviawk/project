@@ -43,3 +43,6 @@ table#table_cjf tr td:first-child{
     top: -4px;
     width: 50px;
 }
+.borderTable{
+    border-left: #e1dfe3 solid 1px;
+}

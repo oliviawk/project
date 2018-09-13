@@ -5,8 +5,10 @@
 <title>告警配置</title>
 <link rel="stylesheet" href="../css/bootstrap_3.3.7.css" />
 
-<link rel="stylesheet" href="../css/bootstrap-select.css"></link>
+	<link rel="stylesheet" href="../css/bootstrap-select.css"></link>
 	<link rel="stylesheet" href="../css/pjpz.css" />
+	<link rel="stylesheet" href="../css_option/bootstrap.min.css" />
+	<link rel="stylesheet" href="../css_option/main.css" />
 
 <style>
 	dd>a {
@@ -26,294 +28,369 @@
 	.little-title{ display:block; width:848px;color:#007d98; font-size:14px; font-weight:bolder; margin-left:15px; padding-top:10px; /*border-top: dashed 1px #CCCCCC;*/ margin-top:10px;}
 	.area{background-color:#edf8fa; width:680px; padding-top:10px; padding-bottom:10px;}
 	.top-option-border{ border:solid 1px #ccc;}
+	.shade{background: -webkit-linear-gradient(white, rgba(191, 233, 255, 0.93), white); /* Safari 5.1 - 6.0 */
+		   background: -o-linear-gradient(white,rgba(191, 233, 255, 0.93), white); /* Opera 11.1 - 12.0 */
+		   background: -moz-linear-gradient(white,rgba(191, 233, 255, 0.93), white); /* Firefox 3.6 - 15 */
+		   background: linear-gradient(white,rgba(191, 233, 255, 0.93), white);}
+	.shade1{background: -webkit-linear-gradient(white, rgba(191, 233, 255, 0.93)); /* Safari 5.1 - 6.0 */
+		   background: -o-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Opera 11.1 - 12.0 */
+		   background: -moz-linear-gradient(white,rgba(191, 233, 255, 0.93)); /* Firefox 3.6 - 15 */
+		   background: linear-gradient(white,rgba(191, 233, 255, 0.93));}
+	.button, input, select, textarea {
+		margin: 0;
+		line-height: inherit;
+		border-radius: 0;
+		width: 100px;
+	}
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		padding: 8px;
+		line-height: 1.42857143;
+		vertical-align: top;
+		border-top: 1px solid #ddd;
+		border-left: 1px solid #ddd;
+	}
+
 
 </style>
 </head>
-<body style="background-color: #fffacd;">
-<div style="position: relative; left: 5%; top: 30px;">
-<ul id="myTab" class="nav nav-tabs">
-	<li class="active"><a href="#home" data-toggle="tab">
-		<h4>告警决策配置</h4>
-	</a></li>
-	<li><a href="#ios" data-toggle="tab"><h4>用户组配置</h4></a></li>
-	<li><a href="#ad" data-toggle="tab"><h4>发布模板配置</h4></a></li>
-	<li><a href="#basics_hx" data-toggle="tab"><h4>基础资源配置</h4></a></li>
-</ul>
-<div id="myTabContent" class="tab-content">
-	<!--告警策略配置-->
-	<div class="tab-pane fade in active" id="home"
-		 style="background-color: white; height: 700px; width: 90%;">
-		<div>
-				<span
-						style="background-color: #cbcedb; font-size: 20px; border-radius: 10px;">查询表信息</span>
-		</div>
-		<div style="margin: 10px 40px">
-			<div
-					style="width: 150px;float: left;margin: 5px 20px;">
-				数据类型 <select class="form-control top-option-border" id="basic_ifo" title="数据资源"
-							 onchange="onchangeSelect(this)">
-
-			</select>
+<body>
+<header class="header">
+	<div class="container">
+		<!--门户logo-->
+		<div class="brand clearfix">
+			<div class="logo">
+				<div class="azure-logo">
+					<a id="navigation-azure-logo-id" href="http://datalist.cma.cn/">公共气象服务中心业务全流程监控系统</a>
+				</div>
 			</div>
-			<div
-					style="width: 150px;float: left;margin: 5px 20px;">
-				业务名/IP <select class="form-control top-option-border" id="basic_ifo1" title="业务名/IP"
-							   onchange="onchangeSelect(this)">
-
-			</select>
-			</div>
-			<div
-					style="width: 150px;float: left;margin: 5px 20px;">
-				<span id="hjName">资料名</span> <select class="form-control top-option-border"
-													 id="basic_ifo2" title="资料名" onchange="onchangeSelect(this)">
-			</select>
-			</div>
-			<!--
-            <div
-                    style="width: 150px;float: left;margin: 5px 20px;"
-                    id="zlName">
-                <span>环节</span> <select class="form-control" id="basic_ifo3"
-                                        title="环节名">
-
-            </select>
-            </div>
-            -->
-			<div style="float: left;margin: 25px 20px 0;">
-				<button type="button" class="btn btn-success"
-						onclick="alertStrategy_Search()">查询</button>
-			</div>
-			<div style="float: left;margin: 25px 20px 0;">
-				<button type="button" class="btn btn-success" data-toggle="modal"
-						data-target="#big_m" onclick="addalertStrategy()">添加告警策略</button>
+			<div class="top-nav">
+				<a class="search" id="top-nav_search" href="http://datalist.cma.cn/index.html#" title="搜索">
+					<i class="icon icon-search"></i>
+				</a>
+				<a class="nav-toggle" id="top-nav_nav" href="http://datalist.cma.cn/index.html#" title="导航">
+					<i class="icon icon-navigation"></i>
+				</a>
 			</div>
 		</div>
-		<div
-				style="position: absolute; left: 50px; top: 230px; height: 500px; overflow: auto;">
-			<table class="table table-bordered"
-				   style="text-align: center; width: 900px; font-size: 18px"
-				   id="dataTable">
-			</table>
-		</div>
+		<!--门户logo end-->
+		<!--导航菜单-->
+		<nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="height: auto;">
+			<ul class="accordian-menu" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+				<li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
+			</ul>
+		</nav>
+		<!--导航菜单 end-->
 	</div>
-
-	<div class="tab-pane fade" id="ios"
-		 style="height: 700px; width: 90%; background-color: white">
-		<div class="userDiv">
-			组名:
-			<select class="form-control top-option-border"  name="user_group" id="user_group" style=""></select>
-			<br />
-		</div>
-		<div class="userDiv">
-			用户名:<input class="form-control top-option-border" type="text" id="user_name" /><br />
-		</div>
-		<div class="userDiv">
-			手机号:<input class="form-control top-option-border" type="text" id="user_phone" /><br />
-		</div>
-		<div class="userDiv">
-			公众号:<input class="form-control top-option-border" type="text" id="user_wechart" /><br />
-		</div>
-		<div class="userDiv" style="margin-top: 40px;">
-			<button type="button" class="btn btn-success"
-					onclick="searchUser()">确认查询</button>
-		</div>
-		<div class="userDiv" style="margin-top: 40px;">
-			<button type="button" class="btn btn-success btn-primary"
-					data-toggle="modal" data-target="#ueserAdd">添加用户</button>
-		</div>
-		<div
-				style="position: absolute; left: 50px; top: 230px; height: 500px; overflow: auto;">
-			<table id="userTable" class="table table-bordered"
-				   style="text-align: center; width: 780px; font-size: 18px">
-				<th>
-				<td>组名</td>
-				<td>用户名</td>
-				<td>操作</td>
-				</th>
-			</table>
-		</div>
-	</div>
-	<!--发布模板配置-->
-	<div class="tab-pane fade" id="ad"
-		 style="height: 700px; width: 90%; background-color: white">
-		<div style="width: 200px; position: relative; left: 25px; top: 20px">
-			模板名:<input class="form-control top-option-border" type="text" id="tempName" /><br />
-		</div>
-		<div
-				style="width: 200px; position: relative; left: 236px; top: -54px">
-			模板种类:<input class="form-control top-option-border" type="text" id="tempType" /><br />
-		</div>
-		<div
-				style="width: 200px; position: relative; left: 448px; top: -128px">
-			微信号:<input class="form-control top-option-border" type="text" id="tempWechart" /><br />
-		</div>
-		<div
-				style="width: 200px; position: relative; left: 660px; top: -202px">
-			手机号:<input class="form-control top-option-border" type="text" id="tempSms" /><br />
-		</div>
-		<div style="position: relative; left: 30px; top: -190px;">
-			<button type="button" class="btn btn-success"
-					onclick="searchTemp()">模板查询</button>
-		</div>
-		<div style="position: relative; left: 250px; top: -225px;">
-			<button type="button" class="btn btn-success btn-primary"
-					data-toggle="modal" data-target="#tempAdd">添加模板</button>
-		</div>
-
-		<div
-				style="height: 500px; overflow: auto; position: relative; left: 30px; top: -200px; width: 95%;">
-			<table class="table table -bordered" id="table_send">
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
-		</div>
-	</div>
-
-
-
-	<!--  基础资源告警配置-->
-	<div class="tab-pane fade" id="basics_hx"  style="height: 700px; width: 90%; background-color: white">
-		<div id="startegysDivhx" style="margin: 10px auto; padding: 20px;" >
-			<span class="little-title" >选择策略</span>
-			<div class="area"  style="margin: 0 auto;padding:15px 20px;width: 800px;zoom:1;"  >
-				<div id="rulesiddiv" style="display: none">
-					<input type="text" id="rulesid"/>
+</header>
+<div class="row" style="height: 750px">
+	<div class="col-md-8 col-md-offset-2">
+		<div style="position: relative; top: 30px;">
+			<ul id="myTab" class="nav nav-tabs">
+				<li class="active"><a href="#home" data-toggle="tab"><h5>告警决策配置</h5></a></li>
+				<li><a href="#ios" data-toggle="tab"><h5>用户组配置</h5></a></li>
+				<li><a href="#ad" data-toggle="tab"><h5>发布模板配置</h5></a></li>
+				<li><a href="#basics_hx" data-toggle="tab"><h5>基础资源配置</h5></a></li>
+			</ul>
+			<div id="myTabContent" class="tab-content">
+				<!--告警策略配置-->
+				<div class="tab-pane fade in active" id="home" style="background-color: white; height: 650px; width: 100%;">
+                    <div class="row">
+                        <div class="col-ms-12" style="height: 20px"></div>
+                        <div class="col-md-2" >
+                            <span style=" font-size: 15px; border-radius: 10px;">查询表信息</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-5 " style="text-align:center;height: 33px;border: 1px solid #e1dfe3;width: 100px;border-radius: 5px">数据类型</div>
+                                <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo" title="数据资源" onchange="onchangeSelect(this)"></select></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="float: left;">
+                            <div class="row">
+                                <div class="col-md-5 " style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">业务名/IP</div>
+                                <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo1" title="业务名/IP" onchange="onchangeSelect(this)"></select></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="float: left;">
+                            <div class="row">
+                                <div class="col-md-5 " style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px"><span id="hjName">资料名</span></div>
+                                <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo2" title="业务名/IP" onchange="onchangeSelect(this)"></select></div>
+                            </div>
+                        </div>
+						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-4">
+									<button type="button" style="border-radius: 5px;" onclick="alertStrategy_Search()"><img src="../fonts/png/glyphicons-28-search.png" />确认查询</button>
+								</div>
+								<div class="col-md-3">
+									<button type="button" style="border-radius: 5px;" data-toggle="modal" data-target="#big_m" onclick="addalertStrategy()"><img src="../fonts/png/glyphicons-433-plus.png" />添加告警策略</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12" style="height: 30px"></div>
+						<div class="col-md-10 col-md-offset-1">
+							<div style="position: absolute; height: 500px; overflow: auto;border:1px solid #e1dfe3;">
+								<table class="table table-striped" style="text-align: center; width: 900px;height: 500px; font-size: 18px" id="dataTable">
+								</table>
+							</div>
+						</div>
+                    </div>
 				</div>
-				<div style="margin:30px 0px 30px 0px; clear: both; " >
-					连续报警次数： &nbsp;<input type="text" id="alertnumhx" class="claer"/>
+				<!--用户组-->
+				<div class="tab-pane fade" id="ios" style="height: 650px; width:100%; background-color: white">
+					<div class="row">
+						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">组名:</div>
+								<div class="col-md-7" style="margin-left: -15px"><select class="form-control top-option-border"  name="user_group" id="user_group" style=""></select></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">用户名:</div>
+								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_name" /></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">手机号:</div>
+								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_phone" /></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">公众号:</div>
+								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_wechart" /></div>
+							</div>
+						</div>
+						<div class="col-md-12" >
+							<div class="row">
+								<div class="col-md-12" style="height: 20px"></div>
+								<div class="col-md-2 col-md-offset-4" >
+									<button type="button" style="border-radius: 5px;" onclick="searchUser()"><img src="../fonts/png/glyphicons-28-search.png" />确认查询</button>
+								</div>
+								<div class="col-md-3" >
+									<button type="button" style="border-radius: 5px;" data-toggle="modal" data-target="#ueserAdd"><img src="../fonts/png/glyphicons-433-plus.png" />添加用户</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12" style="height: 30px"></div>
+						<div class="col-md-10 col-md-offset-1">
+							<div style="height: 500px; overflow: auto;border:1px solid #e1dfe3;">
+								<table id="userTable" class="table table-striped" style="text-align: center; width: 910px;font-size: 18px">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--发布模板配置-->
+				<div class="tab-pane fade" id="ad" style="height: 650px; width: 100%; background-color: white">
+					<div class="row">
+						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">模板名:</div>
+								<div class="col-md-7" style="margin-left: -15px">
+									<input class="form-control top-option-border" type="text" id="tempName" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">模板种类:</div>
+								<div class="col-md-7" style="margin-left: -15px">
+									<input class="form-control top-option-border" type="text" id="tempType" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">微信号:</div>
+								<div class="col-md-7" style="margin-left: -15px">
+									<input class="form-control top-option-border" type="text" id="tempWechart" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">手机号:</div>
+								<div class="col-md-7" style="margin-left: -15px">
+									<input class="form-control top-option-border" type="text" id="tempSms" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12" >
+							<div class="row">
+								<div class="col-md-12" style="height: 20px"></div>
+								<div class="col-md-2 col-md-offset-4">
+									<button type="button" style="border-radius: 5px;" onclick="searchTemp()"><img src="../fonts/png/glyphicons-28-search.png" />模板查询</button>
+								</div>
+								<div class="col-md-3">
+									<button type="button" style="border-radius: 5px;" data-toggle="modal" data-target="#tempAdd"><img src="../fonts/png/glyphicons-433-plus.png" />添加模板</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12" style="height: 30px"></div>
+						<div class="col-md-12">
+							<div style="height: 500px; overflow: auto;border:1px solid #e1dfe3;">
+								<table id="table_send" class="table table-striped" style="text-align: center; width: 1080px;font-size: 18px">
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<div style="margin: 0px; width: 350px;float: left" >
-					告警时间段： <input style="margin-left: 20px" type="text" id="alerttimehx" class="claer"/>
-				</div>
 
-				<div style="margin: 0px 30px 30px 0px;float: right; clear: both" >
-					报警间隔(注意：单位为分)： &nbsp;<input type="text" id="alertmehx" class="claer"/>
-				</div>
 
-				<div class="row" style="height:380px;margin: 30px 0px 10px 0px; clear: both;overflow:scroll;" id="saveuser" >
-
-				<table id="hxuser" style="width: 97%;table-layout:fixed;" border="1" class="table table -bordered"></table>
+				<!--  基础资源告警配置-->
+				<div class="tab-pane fade" id="basics_hx"  style="height: 650px; width: 100%; background-color: white">
+					<div class="row">
+						<div class="col-md-12" style="height: 20px"></div>
+						<div id="rulesiddiv" style="display: none">
+							<input type="text" id="rulesid"/>
+						</div>
+						<div class="col-md-1">
+							<span>选择策略</span>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-7" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">连续报警次数：</div>
+								<div class="col-md-5" style="margin-left: -15px">
+									<input type="text" id="alertnumhx"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-7" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">告警时间段：</div>
+								<div class="col-md-5" width="50px" style="margin-left: -15px">
+									<input  type="text" id="alerttimehx"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-8" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">报警间隔(注意：单位为分)：</div>
+								<div class="col-md-4" style="margin-left: -15px">
+									<input type="text" id="alertmehx"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12" style="height: 30px"></div>
+						<div class="col-md-8 col-md-offset-2" style="height:500px;overflow:scroll;" id="saveuser">
+							<table id="hxuser" style="width: 97%;table-layout:fixed;" border="1" class="table table-striped"></table>
+						</div>
+						<div class="col-md-12" style="height: 20px"></div>
+						<div class="modal-footer col-md-2 col-md-offset-8">
+							<button type="button" style="border-radius: 5px;" onclick="pzsavehx()" id="pzsavehx"><img src="../fonts/png/glyphicons-207-ok.png" />保存</button>
+						</div>
+					</div>
 				</div>
-
-			  </div>
-			<div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-success" onclick="pzsavehx()"
-							id="pzsavehx">保存</button>
-				</div>
+				<!--弹框配置发布信息-->
 			</div>
 		</div>
-
-	</div>
-
-	<!--弹框配置发布信息-->
-</div>
-</div>
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
- aria-labelledby="myLargeModalLabel" id="big_m">
-<div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content">
-		<div class="modal-body">
-			<div style="width: 150px; float: left; margin-left: 50px;">
-				数据种类 <select class="form-control top-option-border" title="数据源" id="pzAddSelect1"
-							 onchange="onchangeSelect2(this)">
-				<option></option>
-			</select> <input type="hidden" id="selectTypeHidden" value="" />
-			</div>
-			<div style="width: 150px; float: left; margin-left: 50px;">
-				<span id="hjName2">业务名/IP</span> <select class="form-control top-option-border"
-														 title="业务名/IP" id="pzAddSelect2" onchange="onchangeSelect2(this)">
-				<option></option>
-			</select>
-			</div>
-			<div style="width: 150px; float: left; margin-left: 50px; margin-bottom: 10px;">
-				<span id="hjName3">资料名</span> <select class="form-control top-option-border"
-													  title="资料名" id="pzAddSelect3" onchange="onchangeSelect2(this)">
-				<option></option>
-			</select>
-			</div>
-
-			<div style="float: left; width: 177px;display: none; margin-top: 23px;margin-left: -150px;" id='baseSourceIp'>
-				ip:<input type="text" id="ip" />
-			</div>
-			<div class="alert alert-warning" style="display: none;  margin-top: 57px; margin-bottom: -15px;font-size: 11px;height: 57px;" id="tip_cjf" role="alert">
-				<img src="../imsg/warning.png" style="display:block; float:left; margin-top:3px;margin-right: 10px;" />
-				<span style="margin-left: 10px;">(有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开,报警时间段格式'00:00:00-23:59:59')</span>
-			</div>
-
-
-			<table id="table_cjf" style="width: 97%; overflow: auto;" >
-
-			</table>
-			<div id="startegysDiv">
-				<span class="little-title">发布策略</span>
-				<div class="area" >
-					<div class="row" style="margin-left: 10px;">
-						<div class="form-control form-attribute"
-							 style=" width: 100px; float: left;">用   户:</div>
-						<div style="width: 170px; float: left;">
-							<select class=" form-control " title="用户" width="400px"
-									id="selectUser">
-								<option>用户A</option>
-								<option>用户B</option>
-							</select>
+		<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+			 aria-labelledby="myLargeModalLabel" id="big_m">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div style="width: 150px; float: left; margin-left: 50px;">
+							数据种类 <select class="form-control top-option-border" title="数据源" id="pzAddSelect1"
+										 onchange="onchangeSelect2(this)">
+							<option></option>
+						</select> <input type="hidden" id="selectTypeHidden" value="" />
+						</div>
+						<div style="width: 150px; float: left; margin-left: 50px;">
+							<span id="hjName2">业务名/IP</span> <select class="form-control top-option-border"
+																	 title="业务名/IP" id="pzAddSelect2" onchange="onchangeSelect2(this)">
+							<option></option>
+						</select>
+						</div>
+						<div style="width: 150px; float: left; margin-left: 50px; margin-bottom: 10px;">
+							<span id="hjName3">资料名</span> <select class="form-control top-option-border"
+																  title="资料名" id="pzAddSelect3" onchange="onchangeSelect2(this)">
+							<option></option>
+						</select>
 						</div>
 
-						<div class="form-control form-attribute"
-							 style="width: 100px; float: left;margin-left: 20px;">发布模板:</div>
-						<div style="width: 170px; float: left;">
-							<select class=" form-control" title="模板" width="400px"
-									id="selectTemp" onchange="changeContent()">
-								<option>模板1</option>
-								<option>模板2</option>
-							</select>
+						<div style="float: left; width: 177px;display: none; margin-top: 23px;margin-left: -150px;" id='baseSourceIp'>
+							ip:<input type="text" id="ip" />
+						</div>
+						<div class="alert alert-warning" style="display: none;  margin-top: 57px; margin-bottom: -15px;font-size: 11px;height: 57px;" id="tip_cjf" role="alert">
+							<img src="../imsg/warning.png" style="display:block; float:left; margin-top:3px;margin-right: 10px;" />
+							<span style="margin-left: 10px;">(有规律的填写与时次的差值，无规律的填写多个时次不同的差值，中间用英文逗号分开,报警时间段格式'00:00:00-23:59:59')</span>
+						</div>
+
+
+						<table id="table_cjf" style="width: 97%; overflow: auto;" >
+
+						</table>
+						<div id="startegysDiv">
+							<span class="little-title">发布策略</span>
+							<div class="area" >
+								<div class="row" style="margin-left: 10px;">
+									<div class="form-control form-attribute"
+										 style=" width: 100px; float: left;">用   户:</div>
+									<div style="width: 170px; float: left;">
+										<select class=" form-control " title="用户" width="400px"
+												id="selectUser">
+											<option>用户A</option>
+											<option>用户B</option>
+										</select>
+									</div>
+
+									<div class="form-control form-attribute"
+										 style="width: 100px; float: left;margin-left: 20px;">发布模板:</div>
+									<div style="width: 170px; float: left;">
+										<select class=" form-control" title="模板" width="400px"
+												id="selectTemp" onchange="changeContent()">
+											<option>模板1</option>
+											<option>模板2</option>
+										</select>
+									</div>
+
+								</div>
+
+								<div class="row" style="margin-left: 10px; margin-top:10px;">
+									<div class="form-control form-attribute"
+										 style="width: 100px;float:left; margin-top:20px;">发布内容:</div>
+									<div style="float:left; width:530px;  margin-top:20px;">
+										<label class="checkbox-inline"> <input type="checkbox"
+																			   id="inlineCheckbox1" value="option1" name="inlineCheckbox" disabled="disabled" />
+											微信
+										</label>
+
+										<textarea class="form-control" rows="7" name="usersm"
+												  id="tempWc" readonly="readonly"  />
+									</div>
+									<div style="float:left; width:530px;  margin-top:10px; margin-left:100px;">
+										<label class="checkbox-inline"> <input type="checkbox"
+																			   id="inlineCheckbox2" value="option2" name="inlineCheckbox" disabled="disabled"  />
+											短信
+										</label>
+										<textarea class="form-control" rows="7" name="usersm"
+												  id="tempSm" readonly="readonly" />
+									</div>
+
+								</div>
+							</div>
 						</div>
 
 					</div>
 
-					<div class="row" style="margin-left: 10px; margin-top:10px;">
-						<div class="form-control form-attribute"
-							 style="width: 100px;float:left; margin-top:20px;">发布内容:</div>
-						<div style="float:left; width:530px;  margin-top:20px;">
-							<label class="checkbox-inline"> <input type="checkbox"
-																   id="inlineCheckbox1" value="option1" name="inlineCheckbox" disabled="disabled" />
-								微信
-							</label>
-
-							<textarea class="form-control" rows="7" name="usersm"
-									  id="tempWc" readonly="readonly"  />
-						</div>
-						<div style="float:left; width:530px;  margin-top:10px; margin-left:100px;">
-							<label class="checkbox-inline"> <input type="checkbox"
-																   id="inlineCheckbox2" value="option2" name="inlineCheckbox" disabled="disabled"  />
-								短信
-							</label>
-							<textarea class="form-control" rows="7" name="usersm"
-									  id="tempSm" readonly="readonly" />
-						</div>
-
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" onclick="pzsave()"
+								id="pzsave">保存</button>
 					</div>
 				</div>
+
 			</div>
-
-		</div>
-
-		<div class="modal-footer">
-			<button type="button" class="btn btn-success" onclick="pzsave()"
-					id="pzsave">保存</button>
 		</div>
 	</div>
+</div>
 
-</div>
-</div>
 
 <!--修改模态框-->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
@@ -384,7 +461,7 @@
 					   id="username" /><br />
 		</div>
 		<div
-				style="width: 200px; position: relative; left: 236px; top: -54px">
+				style="width: 200px; position: relative; left: 236px; top: -62px">
 			分配组:<br /> <select class="" title="分配组" name="usergroup"
 							   id="usergroup" style="width: 100px; height: 33px;">
 		</select>
@@ -395,7 +472,7 @@
 					   id="userphone" /><br />
 		</div>
 		<div
-				style="width: 200px; position: relative; left: 237px; top: -124px">
+				style="width: 200px; position: relative; left: 237px; top: -132px">
 			邮箱:<input class="form-control top-option-border" type="text" name="useremail"
 					  id="useremail" /><br />
 		</div>
@@ -404,12 +481,11 @@
 			公众号:<input class="form-control top-option-border" type="text" name="usergzh"
 					   id="usergzh" /><br />
 		</div>
-		<div class="form-group"
-			 style="position: relative; left: 25px; top: -140px; height: 300px; width: 250px">
-			<label for="name">说明:</label>
+		<div class="form-group" style="position: relative; left: 240px; top: -224px; height: 300px; width: 250px">
+			说明:
 			<textarea class="form-control top-option-border" rows="3" name="usersm" id="usersm"></textarea>
 		</div>
-		<div style="position: absolute; left: 350px; top: 275px;">
+		<div style="position: absolute; left: 190px; top: 320px;">
 			<button type="button" class="btn btn-success" onclick="addUser()">确认提交</button>
 		</div>
 
@@ -421,7 +497,7 @@
  role="dialog" aria-labelledby="myLargeModalLabel">
 <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content"
-		 style="height: 500px; width: 500px; position: absolute; left: 20%; top: 50%;">
+		 style="height: 600px; width: 420px; position: absolute; left: 20%; top: 50%;">
 
 
 		<div style="width: 200px">
@@ -451,21 +527,21 @@
 
 			</dl>
 		</div>
-		<div style="width: 400px; position: relative; left: 10px; top: 22px">
+		<div style="width: 400px; position: relative; left: 10px; top: 30px">
 			<input type="checkbox" id="wechart_send_c"
 				   onclick="checkClick('wechart_send_c')" />微信 <input type="hidden"
 																	  name="wechart_send" id="wechart_send" value="0" />
 			<textarea class="form-control top-option-border" rows="5" name="wechart_content"
 					  id="wechart_content"></textarea>
 		</div>
-		<div style="width: 400px; position: relative; left: 10px; top: 22px">
+		<div style="width: 400px; position: relative; left: 10px; top: 30px">
 			<input type="checkbox" id="sms_send_c"
 				   onclick="checkClick('sms_send_c')" />短信 <input type="hidden"
 																  name="sms_send" id="sms_send" value="0" />
 			<textarea class="form-control top-option-border" rows="5" name="sns_content"
 					  id="sns_content"></textarea>
 		</div>
-		<div style="position: absolute; left: 380px; top: 453px;">
+		<div style="position: relative; left: 150px; top: 40px;">
 			<button class="btn btn-success" value="确认添加" onclick="addTemple()">确认添加</button>
 		</div>
 	</div>
@@ -585,6 +661,74 @@
 	</div>
 </div>
 </div>
+<!--内容 end-->
+<!--页脚-->
+<footer class="footer">
+	<div class="container">
+		<ul class="accordian-menu" data-accordiandisabled="desktop">
+			<li class="follow-us">
+				<h3 class="menu-title footer-title expand">关注我们<i class="icon icon-arrow-top"></i></h3>
+				<div class="footer-qrcode clearfix hidden-xs hidden-sm">
+					<div class="qrcode-wrapper">
+						<img src="../imsg/qrcode.jpg" alt="qrcode" ></img>
+						<span>欢迎关注质控报告微信公众号</span>
+					</div>
+				</div>
+			</li>
+			<li>
+				<h3 id="footer_support" class="menu-title footer-title">支持<i class="icon icon-arrow-top"></i></h3>
+				<ul class="menu-child">
+					<li>
+						<a id="footer-contact-id" href="#" title="联系我们">
+							联系我们
+						</a>
+					</li>
+					<li>
+						<a id="footer-plans-id" href="#" title="支持计划">
+							支持计划
+						</a>
+					</li>
+					<li>
+						<a id="footer-service-dashboard-id" href="#" title="服务仪表盘">
+							服务仪表盘
+						</a>
+					</li>
+					<li>
+						<a id="footer-legal-id" href="#" title="法律">
+							法律
+						</a>
+					</li>
+					<li>
+						<a id="footer-sla-id" href="#" title="服务级别协议">
+							服务级别协议
+						</a>
+					</li>
+					<li>
+						<a id="footer-icp-id" href="#" title="ICP 备案">
+							ICP 备案
+						</a>
+					</li>
+					<li>
+						<a id="footer-support-faq-id" href="#" title="常见问题">
+							常见问题
+						</a>
+					</li>
+					<li>
+						<a id="footer-news-id" href="#" title="最新公告">
+							最新公告
+						</a>
+					</li>
+					<li>
+						<a href="#" target="_blank" title="数据清单编辑器">
+							数据清单编辑器
+						</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</footer>
+<!--页脚 end-->
 <script src="../js/jquery2.1.1.js"></script>
 <script type="text/javascript" src="../js/bootstrap-select.js"></script>
 <script src="../js/bootstrap_3.3.7.js"></script>
