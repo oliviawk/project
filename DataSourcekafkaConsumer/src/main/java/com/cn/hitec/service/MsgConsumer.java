@@ -110,7 +110,12 @@ public class MsgConsumer {
                         continue;
                     }
                     if ("dataSource".equals(data.get("type"))){
-                        msgs.add(JSON.toJSONString(data.get("data")));
+                        Map<String,Object> mapdata=(Map<String, Object>) data.get("data");
+                        Map<String,Object> fieldmap=(Map<String, Object>) mapdata.get("fields");
+                        String filename=(String)fieldmap.get("file_name");
+                        logger.info("文件名："+filename);
+                        mapdata.put("type",filename);
+                        msgs.add(JSON.toJSONString(mapdata));
                     }else if ("noDataSource".equals(data.get("type"))){
                         possibleNeedDataList.add(data.get("data"));
                     }else if ("MQPF_DataSource".equals(data.get("type"))){
