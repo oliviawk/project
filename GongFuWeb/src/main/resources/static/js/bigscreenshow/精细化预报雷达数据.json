@@ -1,0 +1,28 @@
+{
+  "SevpNmcScon": {
+    "ReleaseTime": "2018/9/7 10:18:52",
+    "StationNumber": "2599",
+    "ErrorStations": [
+      {
+        "StationID": "59989",
+        "ErrorType": "缺测",
+        "Detail": "时次156:12小时天气现象缺报 12小时风向缺报 12小时风速缺报"
+      },
+      {
+        "StationID": "58472",
+        "ErrorType": "温度雨雪相态",
+        "Detail": "时次120:最低气温:23.0高于10摄氏度，12小时天气现象:13阵雪"
+      },
+      {
+        "StationID": "51707",
+        "ErrorType": "温度极值",
+        "Detail": "时次:24:最低气温:-11.0 小于本站 8月历史极值温度-8(1.20)"
+      },
+      {
+        "StationID": "58249",
+        "ErrorType": "汛期暴雪",
+        "Detail": "时次:24:汛期大雪-暴雪"
+      }
+    ]
+  }
+}

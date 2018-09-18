@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../frame/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bigscreenshow/bigScreenShow.css"/>
+
+
+    <script src="../js/core/jquery-1.9.1.js"></script>
+    <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../frame/d3/d3.v3.min.js"></script>
+
+    <script src="../js/bigscreenshow/publicTool.js"></script>
+    <script src="../js/bigscreenshow/lineChart.js"></script>
+
+
+    <style>
+
+        .tooltip-inner{
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+<div id="bodyDiv" class="container">
+    <div class="row" style="height: 80px;">
+        <!--<h1>公共服务中心气象服务数据业务综合展示系统</h1>-->
+    </div>
+    <div class="row" style="height: 1000px;">
+        <div class="col-md-4 test">
+            <!--<img height="100%" width="100%" src="./bigScreenShow/left-s.png">-->
+        </div>
+        <div class="col-md-4 test">
+            <div class="row" id="mapDiv" style="height: 85%;"></div>
+            <div class="row" id="tableDiv" style="height: 15%;margin-left: 66px;">
+                <div class="col-md-10">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th class="tda">站号</th>
+                            <th class="tda">异常信息</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>吉林市</td>
+                            <td class="tda">Z9432</td>
+                            <td class="tda">未运行</td>
+                        </tr>
+                        <tr>
+                            <td>五寨</td>
+                            <td class="tda">Z9350</td>
+                            <td class="tda">未运行</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">....</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4 test">
+            <!--<img height="100%" width="100%" src="./bigScreenShow/right-s.png">-->
+            <div class="col-md-12" style="height: 33%">
+                <table class="table table-condensed table-striped" style="width: 100%;height: 100%;">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th class="tda">站号</th>
+                        <th class="tda">异常信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>吉林市</td>
+                        <td class="tda">Z9432</td>
+                        <td class="tda">未运行</td>
+                    </tr>
+                    <tr>
+                        <td>五寨</td>
+                        <td class="tda">Z9350</td>
+                        <td class="tda">未运行</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">....</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" style="height: 280px ; top: 105px;">
+                <div class="col-md-6" style="height: 280px; ">
+                    <div class="dash-border" id="flume_data1" style="width: 100%;height: 280px ;"></div>
+                </div>
+                <div class="col-md-6" style="height: 100%">
+                    <div class="dash-border" id="flume_data" style="width: 100%;height: 280px ;"></div>
+                </div>
+            </div>
+            <div class="col-md-12" style="height: 33%; top: 160px;">
+                <svg id="svg1"></svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div id="tooltip" class="tooltip" ></div>-->
+<script src="../js/bigscreenshow/bigScreenShow.js"></script>
+<script src="../js/bigscreenshow/Map.js"></script>
+</body>
+</html>
