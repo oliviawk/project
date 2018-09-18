@@ -1,0 +1,348 @@
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+body, html {
+  font-family: Segoe UI,"Microsoft Yahei","微软雅黑",STXihei,"华文细黑",Helvetica,Arial,Tahoma,sans-serif;
+}
+a:active,
+a:hover,
+a:link,
+a:visited {
+  text-decoration: none;
+}
+h1, h2, h3, h6 {
+  color: #323a45;
+}
+h1 {
+  font-size: 30px;
+  font-weight: lighter;
+  line-height: 38px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 26px;
+}
+
+.header,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 1280px;
+  }
+
+}
+
+
+/*门户首页*/
+/*页眉*/
+.header {
+  position: relative;
+  height: 100px;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  box-sizing: border-box;
+  background-color: #323a45;
+  transition: all .3s ease-in-out;
+  /*border: 1px solid red;*/
+}
+.header .brand {
+  padding-top: 16px;
+}
+.header .brand .logo {
+  height: 28px;
+}
+.header .brand .logo .azure {
+  float: left;
+  margin-right: 10px;
+  display: block;
+  text-indent: -9999px;
+  width: 165px;
+  height: 26px;
+}
+.header .brand .logo a {
+  color: #00a3d9;
+  font-size: 28px;
+}
+
+.header .nav {
+  display: block;
+  max-height: inherit;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: inherit;
+  box-sizing: border-box;
+  /*height: 54px;*/
+  padding-top: 24px;
+}
+.accordian-menu {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+.header .nav > ul {
+  margin: 0;
+  padding: 0;
+}
+.header .nav > ul > li {
+  list-style: none;
+  float: left;
+  margin-right: 30px;
+  border-bottom: 0;
+}
+.header .nav > ul > li > a {
+  display: block;
+  font-size: 14px;
+  color: #FFF;
+  line-height: 18px;
+  height: 30px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.header .nav > ul > li > a:hover {
+  color: #00a3d9;
+}
+.header .nav > ul > li > a:active {
+  color: #00a3d9;
+  font-weight: 500;
+}
+.header .nav > ul > li.current > a {
+  /*color: #FFF;*/
+  font-weight: 500;
+}
+.header .nav > ul > li.current > a span {
+  display: inline-block;
+  line-height: 18px;
+  height: 30px;
+  border-bottom: 4px solid #00a3d9;
+}
+/*页眉 end*/
+
+/*内容*/
+.content .row_box {
+  margin: 0 auto;
+  background-color: #FFF;
+  overflow: hidden;
+  padding: 44px 20px 60px;
+}
+.content .row_box h1 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 34px;
+  margin-top: 0;
+  line-height: 44px;
+}
+.content .row_box .item-box {
+  padding-top: 27px;
+  padding-bottom: 30px;
+  text-align: center;
+  border-right: 1px #ccc solid;
+  min-height: 265px;
+}
+.content .row_box .item-box:hover {
+  background-color: #fafafc;
+}
+.content .row_box .item-box:nth-child(-n+3) {
+  border-top: none;
+  border-image: -webkit-linear-gradient(#fff,#ccc) 30 30;
+}
+.content .row_box .item-box:nth-child(n+4) {
+  border-top: 1px #ccc solid;
+  border-image: -webkit-linear-gradient(#ccc,#fff) 30 30;
+}
+.content .row_box .item-box:nth-child(3n+0) {
+  border-right: 0;
+}
+.content .row_box .item-box svg {
+  margin: 17px auto 16px;
+  display: block;
+}
+.content .row_box .item-box .home-p {
+  color: #5e6d81;
+  padding-bottom: 2px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+.content .row_box .item-box .links-box {
+  white-space: nowrap;
+  display: inline;
+  color: #00a3d9;
+  position: relative;
+}
+.content .row_box .item-box .links-box a {
+  font-family: Segoe UI Semibold,San Francisco,Helvetica Neue,Arial,Microsoft Yahei,HanHei SC,PingFang SC,SimHe;
+  font-size: 14px;
+  color: #00a3d9;
+  font-weight: 400;
+  line-height: 20px;
+}
+.content .row_box .item-box .links-box i.icon {
+  display: inline-block;
+  width: 7px;
+  position: relative;
+  left: -5px;
+  color: #00a3d9;
+  margin-right: 4px;
+}
+.content .row_box .item-box .hdinsight-svg svg {
+  margin: 8px auto -28px;
+}
+
+/*内容 end*/
+
+
+/*页脚*/
+.footer {
+  background-color: #323a45;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.footer ul {
+  margin: 0;
+  padding: 0;
+}
+.footer .accordian-menu {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  overflow: hidden;
+}
+.footer .accordian-menu > li {
+  list-style: none;
+  width: 33.33%;
+  float: left;
+  border-bottom: none;
+}
+.footer .accordian-menu > li.follow-us {
+  position: relative;
+}
+.footer .accordian-menu > li .footer-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 54px;
+  font-weight: 400;
+  color: #89919c;
+}
+.footer .accordian-menu .footer-qrcode .qrcode-wrapper {
+  width: 220px;
+  height: auto;
+  padding: 5px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  float: left;
+  background-color: #edf0f5;
+}
+.footer .accordian-menu .footer-qrcode .qrcode-wrapper img {
+  width: 210px;
+  height: 210px;
+  border: 1px solid #ccc;
+}
+.footer .accordian-menu .footer-qrcode .qrcode-wrapper span {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  color: #89919c;
+  margin: 8px auto 4px;
+}
+.footer .accordian-menu ul.menu-child {
+  transition: max-height .3s ease-in-out;
+  overflow: hidden;
+}
+.footer .accordian-menu ul.menu-child li {
+  list-style: none;
+  margin-bottom: 8px;
+}
+.footer .accordian-menu ul.menu-child li a {
+  color: #FFF;
+  display: block;
+  font-size: 14px;
+  line-height: 22px;
+  vertical-align: middle;
+}
+.footer .accordian-menu ul.menu-child li a:hover {
+  color: #00a3d9;
+}
+
+/*页脚 end*/
+
+/*门户首页 end*/
+
+
+/*markdown*/
+.header-md {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 15px;
+}
+.footer-md {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+#dropdownFileSelect {
+  display: inline-block;
+}
+
+/*markdown end*/
+
+
+/*预览页*/
+.container-preview {
+  padding-left: 430px;
+  margin: 0;
+  box-sizing: border-box;
+  /* max-width: 1280px; */
+  max-width: auto;
+}
+.sidebar-md {
+  width: 400px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background-color: #FFF;
+  z-index: 100;
+  padding: 18px;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-bottom: none;
+}
+.sidebar-md:hover {
+  overflow: auto;
+}
+.sidebar-md h2 {
+  text-align: left;
+}
+
+/*预览页 end*/
+
+
+/*普屏适配*/
+@media screen and (max-width: 1280px) {
+  .container-preview {
+    padding-left: 26.8%;
+    max-width: 100%;
+  }
+
+  .sidebar-md {
+    width: 25%;
+  }
+
+}
+

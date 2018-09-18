@@ -1,11 +1,4 @@
-body{
-	background-color: #1f1f1f;
-    color: white;
-}
 
-.table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #413f46;
-}
 
 .table-hover > tbody > tr:hover {
   background-color: #948e44;

@@ -116,6 +116,61 @@ public class DataSourceWriteApi extends BaseController {
 
 
 
+
+	/**
+	 * 生成数据源节目表
+	 *   注：此方法为数据源独有的预生成方法，不同之处为es添加时 id 的md5加密参数不同
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping(value = "/insertDataSource_DIDataSource", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> insertDataSource_DIDataSource(@RequestBody String json) {
+		long start = 0;
+		Map<String,Object> map ;
+		List<Map> listData = JSON.parseArray(json,Map.class);
+//		System.out.println(JSON.toJSONString(listData));
+		start = System.currentTimeMillis();
+		map = new HashMap<>();
+		for (Map dataMap : listData){
+
+			try {
+//				Map<String,Object> dataMap = JSON.parseObject(str);
+				Map<String,Object> fieldsMap  = (Map<String, Object>) dataMap.get("fields");
+				String str_index = Pub.Index_Head + Pub.transform_DateToString(
+						Pub.transform_StringToDate(fieldsMap.get("data_time").toString(),"yyyy-MM-dd HH:mm:ss"),
+						Pub.Index_Food_Simpledataformat);
+				String str_type = "DATASOURCE";
+
+				String sub_type = fieldsMap.get("file_name").toString();
+				String dataTime = fieldsMap.get("data_time").toString();
+				String module = fieldsMap.get("module").toString();
+				String ipAddr = fieldsMap.get("ip_addr").toString();
+
+//				logger.info(str_type+","+sub_type+","+module+","+ipAddr+","+dataTime);
+
+				String str_id = Pub.MD5(str_type+","+sub_type+","+module+","+ipAddr+","+dataTime);
+
+				if (StringUtils.isEmpty(str_index)) {
+					SimpleDateFormat sdf = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
+					str_index = Pub.Index_Head + (sdf.format(new Date()));
+				}
+//				System.out.println(str_index+","+str_type+","+str_id);
+				dataSourceService.add(str_index, str_type, str_id , JSON.toJSONString(dataMap));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		long spend = System.currentTimeMillis() - start;
+		outMap.put(KEY_RESULT, VAL_SUCCESS);
+		outMap.put(KEY_RESULTDATA, map);
+		outMap.put(KEY_MESSAGE, "数据添加成功");
+		outMap.put(KEY_SPEND, spend + "mm");
+		return outMap;
+	}
+
+
+
 	/**
 	 * 生成节目表
 	 * @param json

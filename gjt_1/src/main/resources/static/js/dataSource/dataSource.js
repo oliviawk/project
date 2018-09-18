@@ -5,7 +5,7 @@ $(function(){
 	oTable.init();
 
 	$(".alertLevelBtn").click(function(){
-		debugger;
+//		debugger;
 		queryType = null;
 		alertLevel = $(this).html();
 		$("#dataSourceTable").bootstrapTable("refresh");	//刷新表格
@@ -14,7 +14,7 @@ $(function(){
 	});
 	
 	$(".queryTypeBtn").click(function(){
-		debugger;
+//		debugger;
 		alertLevel = null;
 		queryType = $(this).html();
 		$("#dataSourceTable").bootstrapTable("refresh");	//刷新表格
@@ -59,22 +59,22 @@ var TableInit = function(){
 				title: '状态',
 				sortable: true,
 				cellStyle:function (value, row, index) {  
-					debugger;
+//					debugger;
 					if (value == "正常"){
 						return{
-				        	css:{"background-color":"rgba(0, 204, 102, 1)"}  
+				        	css:{"color":"rgba(0, 204, 102, 1)"}
 				        }
 					}else if (value == "超时"){
 						return{
-				        	css:{"background-color":"rgba(255, 51, 51, 1)"}  
+				        	css:{"color":"rgba(255, 51, 51, 1)","font-weight":"bold","font-size":"16px"}
 				        }
 					}else if (value == "迟到"){
 						return{
-				        	css:{"background-color":"rgba(255, 204, 51, 1)"}
+				        	css:{"color":"rgba(255, 204, 51, 1)"}
 				        }
 					}else if (value == "异常"){
                         return{
-                            css:{"background-color":"rgba(255, 192, 203 ,1)"}
+                            css:{"color":"rgba(255, 192, 203 ,1)"}
                         }
                     }
 			    }
@@ -115,7 +115,7 @@ var TableInit = function(){
 	
 	//得到查询的参数
 	oTableIint.queryParams = function (params) {
-		debugger;
+//		debugger;
 		var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
 				limit: params.limit,   //页面大小
 				offset:params.offset,

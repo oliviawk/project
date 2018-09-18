@@ -271,9 +271,10 @@ function findUserFile() {
     var userIp =$("#IpAddrSelect").select2('val');
     var userName = $("#SendUserNameSelect").select2("val");
     var fileName = $("#fileNameHidden").val();
-    if (fileName == ''){
+    if (fileName == ''||userIp==""){
         return ;
     }
+    console.info("ip地址："+userIp)
     // console.info(userName)
     // console.info(userIp)
     $.ajax({

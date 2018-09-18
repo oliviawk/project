@@ -10,7 +10,7 @@ $(document)
                     "Content-Type" : "application/json; charset=utf-8"
                 },
                 success : function(r) {
-                    var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
+                    var s = "<tr><td class='shade1'>id</td><td class='shade1'>模板名称</td><td class='shade1'>数据类型</td><td width='250px' class='shade1'>微信模板</td><td class='shade1'>是否发微信</td><td width='250px' class='shade1'>短信模板</td><td class='shade1'>是否发短信</td><td class='shade1'>操作</td></tr>"
                     var m = "";
                     for (var i = 0; i < r.length; i++) {
                         var sendT = r[i];
@@ -28,9 +28,9 @@ $(document)
                             + sendT.smsContentTemplate
                             + "</td><td>"
                             + sendT.smsSendEnable
-                            + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                            + "</td><td><button style='border-radius: 5px;' class='shade' onclick='temptodelet("
                             + sendT.id
-                            + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                            + ")'>删除</button></br><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_m' onclick='upd("
                             + sendT.id
                             + ")'>修改</button></td></tr>"
                         m += "<option value='" + sendT.id
@@ -166,7 +166,7 @@ $(document)
                     $("#alertnumhx").val(listtwo[0][1]);
                     $("#alerttimehx").val(listtwo[0][2]);
                     $("#alertmehx").val(listtwo[0][3]);
-                   var s = "<tr style='height: 40px;'><th style='display: none;vertical-align:middle;text-align: center' >id</th><th  style='vertical-align:middle;text-align: center'>用户名</th><th style='vertical-align:middle;text-align: center'>用户电话</th><th  style='vertical-align:middle;text-align: center'>是否发送生效</th></th>"
+                   var s = "<tr style='height: 40px;'><th style='display: none;vertical-align:middle;text-align: center' class='shade1' >id</th><th  class='shade1' style='vertical-align:middle;text-align: center'>用户名</th><th class='shade1' style='vertical-align:middle;text-align: center'>用户电话</th><th class='shade1' style='vertical-align:middle;text-align: center'>是否发送生效</th></th>"
                    var m = "";
                    for (var i = 0; i < listone.length; i++) {
                        s += "<tr style='height: 40px;'><td style='display: none ; vertical-align:middle;text-align: center'>"
@@ -218,7 +218,7 @@ function usertodelet(id) {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(r) {
-                var s = "<tr><td>组名</td><td>用户名</td><td>微信号</td><td>手机号</td><td>操作</td></tr>";
+                var s = "<tr><td class='shade1'>组名</td><td class='shade1'>用户名</td><td class='shade1'>微信号</td><td class='shade1'>手机号</td><td class='shade1'>操作</td></tr>";
                 for (var i = 0; i < r.length; i++) {
                     var userT = r[i];
                     s += "<tr><td>"
@@ -229,9 +229,9 @@ function usertodelet(id) {
                         + userT[4]
                         + "</td><td>"
                         + userT[5]
-                        + "</td><td><button type='button' class='btn btn-info' onclick='updUser("
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='updUser("
                         + userT[0]
-                        + ")'>修改</button>&nbsp;&nbsp;<button class='btn btn-primary' onclick='usertodelet("
+                        + ")'>修改</button>&nbsp;&nbsp;<button style='border-radius: 5px;' class='shade' onclick='usertodelet("
                         + userT[0] + ")'>删除</button></td></tr>"
                 }
                 $("#userTable").html(s);
@@ -414,7 +414,7 @@ function searchUser() {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(r) {
-                var s = "<tr><td>组名</td><td>用户名</td><td>微信号</td><td>手机号</td><td>操作</td></tr>";
+                var s = "<tr><td class='shade1'>组名</td><td class='shade1'>用户名</td><td class='shade1'>微信号</td><td class='shade1'>手机号</td><td class='shade1'>操作</td></tr>";
                 for (var i = 0; i < r.length; i++) {
                     var userT = r[i];
                     s += "<tr><td>"
@@ -425,9 +425,9 @@ function searchUser() {
                         + userT[4]
                         + "</td><td>"
                         + userT[5]
-                        + "</td><td><button type='button' class='btn btn-info' onclick='updUser("
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='updUser("
                         + userT[0]
-                        + ")'>修改</button>&nbsp;&nbsp;<button class='btn btn-primary' onclick='usertodelet("
+                        + ")'>修改</button>&nbsp;&nbsp;<button style='border-radius: 5px;' class='shade' onclick='usertodelet("
                         + userT[0] + ")'>删除</button></td></tr>"
                 }
 
@@ -1225,7 +1225,7 @@ function alertStrategy_Search() {
             }); // 数据预处理 by Edward
 
             var s = '';
-            s = "<tr><td>业务名/IP</td><td>资料名</td><td>环节配置</td><td>操作</td></tr>";
+            s = "<tr><td class='shade1'>业务名/IP</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>资料名</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>环节配置</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>操作</td></tr>";
 
             $.each(t, function(k, o) {
                 var modules = '';
@@ -1240,10 +1240,10 @@ function alertStrategy_Search() {
                     + "</td><td>"
                     + modules
                     + "</td>"
-                    + "<td><button type='button' class='btn btn-info' onclick='lookAlertStrategy(" + k + ")'>查看</button>&nbsp;&nbsp;" +
+                    + "<td><button type='button' style='border-radius: 5px;' class='shade' onclick='lookAlertStrategy(" + k + ")'>查看</button>&nbsp;&nbsp;" +
                         // "<button type='button' class='btn
                         // btn-info'>修改</button>&nbsp;&nbsp;" +
-                    "<button type='button' class='btn btn-info' onclick='pztodelet(" + k + ")'>删除</button>" + "</td></tr>";
+                    "<button type='button' style='border-radius: 5px;' class='shade' onclick='pztodelet(" + k + ")'>删除</button>" + "</td></tr>";
             });
 
             $("#dataTable").html(s);

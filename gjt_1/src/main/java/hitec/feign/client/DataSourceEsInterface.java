@@ -13,5 +13,9 @@ public interface DataSourceEsInterface {
 	@RequestMapping(value = "/datasource/deletebyid", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> deleteByid(@RequestBody String json);
 
+	@RequestMapping(value = "/updStrategyApiWrite/DelectPrepareData", method = RequestMethod.POST, consumes = "application/json")
+	public void DeletePrepareData(@RequestBody String json);
+
+
 
 }

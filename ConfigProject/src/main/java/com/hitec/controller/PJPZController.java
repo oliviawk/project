@@ -446,7 +446,7 @@ public class PJPZController {
 						logger.info("表数据不一致！！");
 						throw  new  RuntimeException("表数据不一致！！");
 					}
-					dataSourceSetting=handletimeformat(dataSourceSetting,fileNameDefine);
+					dataSourceSetting=handletimeformat(dataSourceSetting,fileNameDefine,monitorTimes);
 					if (dataSourceSetting==null){
 						logger.info("日期格式不正确！！");
 						throw  new  RuntimeException("日期格式不正确！！");
@@ -570,7 +570,7 @@ public class PJPZController {
 		System.out.println(id);
 		return null;
 	}
-  public DataSourceSetting handletimeformat(DataSourceSetting dataSourceSetting,String filenameone) throws Exception{
+  public DataSourceSetting handletimeformat(DataSourceSetting dataSourceSetting,String filenameone,String monitor) throws Exception{
 
 	     String filename=filenameone;
 	     if (filename.indexOf("{")!=filename.lastIndexOf("{")||filename.indexOf("}")!=filename.lastIndexOf("}")){
@@ -589,6 +589,7 @@ public class PJPZController {
 		 String filenametwo=filename.replace("{"+format+"}",regx);
 		 dataSourceSetting.setFileName(filenametwo);
 		 dataSourceSetting.setTimeFormat(format);
+		 dataSourceSetting.setMoniterTimer(monitor);
 		 return  dataSourceSetting;
   }
 	@RequestMapping(value = "/SelectUserPhone", method = RequestMethod.POST)
