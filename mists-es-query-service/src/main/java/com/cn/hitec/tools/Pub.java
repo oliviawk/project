@@ -1,5 +1,6 @@
 package com.cn.hitec.tools;
 
+import com.alibaba.fastjson.JSONObject;
 import org.assertj.core.internal.Dates;
 import org.assertj.core.internal.Strings;
 import org.elasticsearch.index.query.RangeQueryBuilder;
@@ -47,6 +48,25 @@ public class Pub {
             calendar.add( d , timeGranularity);
             dateList.add(calendar.getTime());
         }
+
+        Collections.sort(dateList, new Comparator<Date>(){
+            /*
+             * int compare(Object ob1, Object ob2) 返回一个基本类型的整型，
+             * 返回负数表示：p1 小于p2，
+             * 返回0 表示：p1和p2相等，
+             * 返回正数表示：p1大于p2
+             */
+            public int compare(Date ob1, Date ob2) {
+                //按照时间顺序
+                if (ob1.getTime() > ob2.getTime()){
+                    return -1;
+                }else if(ob1.getTime() == ob2.getTime()){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }
+        });
 
         return dateList;
     }

@@ -1,17 +1,17 @@
 package com.cn.hitec.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cn.hitec.tools.DiskUnit;
+import com.cn.hitec.tools.Pub;
 import org.elasticsearch.script.mustache.SearchTemplateRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
@@ -393,5 +393,37 @@ public class QueryApi extends BaseController {
 	}
 
 
+
+	@RequestMapping(value = "/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
+	public List<Object>  getFileSizeCount(@RequestBody String str){
+		List<Object>  resultList= new ArrayList<>();
+		try {
+			JSONObject params = JSON.parseObject(str);
+			Date dt = new Date();
+			String unit = DiskUnit.getUnit(params.getString("unit"));
+			int timeGranularity = params.getInteger("timeGranularity");
+			int t =  params.getInteger("t");
+			int scale = params.getInteger("scale");
+			String callBack_dateFormat = params.getString("callBackDateFormat");
+			String dataType = params.getString("dataType");
+
+			String strDate = params.getString("dateStr");
+			String strFormat = params.getString("dateFormat");
+			SimpleDateFormat sd = new SimpleDateFormat(strFormat);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(sd.parse(strDate));
+			int minute = calendar.get(Calendar.MINUTE);
+			int n = minute / Math.abs(timeGranularity);
+			calendar.set(Calendar.MINUTE,n*Math.abs(timeGranularity));
+			dt = calendar.getTime();
+
+//			System.out.println("1:"+ Pub.transform_DateToString(dt,callBack_dateFormat));
+			resultList  = esWebService.getFileSize(dt,timeGranularity,t, unit,scale,callBack_dateFormat,dataType);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultList ;
+	}
 
 }

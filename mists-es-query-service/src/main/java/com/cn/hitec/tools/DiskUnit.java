@@ -25,6 +25,17 @@ public enum DiskUnit {
         this.pow = pow;
     }
 
+    public static String getUnit(String str){
+        String s = null;
+        for (DiskUnit du : DiskUnit.values()){
+            if (str.toUpperCase().equals(du.unit)){
+                s = du.unit;
+                break;
+            }
+        }
+        return s;
+    }
+
     /**
      * 转换单位
      * @param strUnit   单位：M、G、T
