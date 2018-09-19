@@ -13,42 +13,71 @@
 	<div class="logo">
 		公服中心业务全流程监控系统
 	</div>
-    <div class="nav">
-        <!--openWindow-->
-        <div class="dropdown" style="float: left;">
-            <a id="fzjc" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                辅助决策
-                <span class="caret"></span>
-            </a>
 
-            <ul class="dropdown-menu" aria-labelledby="fzjc">
-                <li><a onclick="openWindow('../fzjc/sxt')">时效图</a></li>
-                <li class="disabled"><a onclick="openWindow('../fzjc/lct')">流程图</a></li>
-            </ul>
-        </div>
-        <div class="dropdown" style="float: left;">
-            <a id="laps" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                LAPS
-                <span class="caret"></span>
-            </a>
+    <nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="margin-left: 100px">
+        <ul class="nav navbar-nav" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+            <li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>数据源</span><b class="caret"></b></a>
+                <ul class="dropdown-menu" >
+                    <li><a class="link-1" href="http://10.30.17.172:9091/dataSourceSetting/"><span>配置</span></a></li>
+                    <li><a class="link-2" href="http://10.30.17.171:9091/dataSource/"><span>告警列表</span></a></li>
+                    <li><a class="link-3" href="http://test.tvhf.com:8080/"><span>雷达基数据</span></a></li>
+                    <li><a class="link-4" href="http://10.14.83.52:8082/SURF_GLB_MUL_HOR"><span>CIMISS</span></a></li>
+                </ul>
+            </li>
+            <li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>重点业务</span><b class="caret"></b></a>
+                <ul class="dropdown-menu" >
+                    <li class="nav-index current"><a class="link-1" href="http://10.30.17.171:8090/fzjc/lct"><span>辅助决策</span></a></li>
+                    <li class="nav-index current"><a class="link-2" href="http://10.30.17.171:8090/laps/lct"><span>格点数据</span></a></li>
+                    <li class="nav-index current"><a class="link-3" href="http://10.30.17.171:8090/MQPF/"><span>MQPF</span></a></li>
+                    <li class="nav-index current"><a class="link-4" href="http://10.30.17.171:8090/RGF/"><span>RGF</span></a></li>
+                    <li class="nav-index current"><a class="link-5" href="http://10.30.17.171:8090/OCF/"><span>OCF</span></a></li>
+                </ul>
+            </li>
+            <li><a class="dropdown-toggle nav-index current" data-toggle="dropdown" href="#"><span>告警中心</span><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li class="nav-index current"><a class="link-1" href="http://10.30.17.172:9090/pjpz/"><span>配置</span></a></li>
+                    <li class="nav-index current"><a class="link-2" href="http://10.30.17.171:9091/alarmBrowse/"><span>查看</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <!--<div class="nav">-->
+        <!--&lt;!&ndash;openWindow&ndash;&gt;-->
+        <!--<div class="dropdown" style="float: left;">-->
+            <!--<a id="fzjc" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
+                <!--辅助决策-->
+                <!--<span class="caret"></span>-->
+            <!--</a>-->
 
-            <ul class="dropdown-menu" aria-labelledby="laps">
-                <li><a onclick="openWindow('../laps/sxt')">时效图</a></li>
-                <li class="disabled"><a onclick="openWindow('../laps/lct')">流程图</a></li>
-            </ul>
-        </div>
-        <div class="dropdown" style="float: left;">
-            <a id="mqpf" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                MQPF
-                <span class="caret"></span>
-            </a>
+            <!--<ul class="dropdown-menu" aria-labelledby="fzjc">-->
+                <!--<li><a onclick="openWindow('../fzjc/sxt')">时效图</a></li>-->
+                <!--<li class="disabled"><a onclick="openWindow('../fzjc/lct')">流程图</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="dropdown" style="float: left;">-->
+            <!--<a id="laps" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
+                <!--LAPS-->
+                <!--<span class="caret"></span>-->
+            <!--</a>-->
 
-            <ul class="dropdown-menu" aria-labelledby="mqpf">
-                <li><a href="#">时效图</a></li>
-                <li class="disabled"><a href="#">流程图</a></li>
-            </ul>
-        </div>
-    </div>
+            <!--<ul class="dropdown-menu" aria-labelledby="laps">-->
+                <!--<li><a onclick="openWindow('../laps/sxt')">时效图</a></li>-->
+                <!--<li class="disabled"><a onclick="openWindow('../laps/lct')">流程图</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="dropdown" style="float: left;">-->
+            <!--<a id="mqpf" data-target="#" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
+                <!--MQPF-->
+                <!--<span class="caret"></span>-->
+            <!--</a>-->
+
+            <!--<ul class="dropdown-menu" aria-labelledby="mqpf">-->
+                <!--<li><a href="#">时效图</a></li>-->
+                <!--<li class="disabled"><a href="#">流程图</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 <!--header end-->
 <div class="process">

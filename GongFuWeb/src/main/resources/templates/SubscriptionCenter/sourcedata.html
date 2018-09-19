@@ -5,6 +5,7 @@
     <title>定义源数据</title>
     <link type="text/css" rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css"></link>
     <link href="../css/common.css" rel="stylesheet"></link>
+    <link href="../js/main.css" rel="stylesheet"></link>
     <style>
         .page-header_fu{
             padding-bottom: 9px;
@@ -21,6 +22,35 @@
     </style>
 </head>
 <body>
+<!--页眉-->
+<header class="header">
+    <div class="container">
+        <!--门户logo-->
+        <div class="brand clearfix">
+            <div class="logo">
+                <div class="azure-logo">
+                    <a id="navigation-azure-logo-id" href="http://datalist.cma.cn/">公共气象服务中心业务全流程监控系统</a>
+                </div>
+            </div>
+            <div class="top-nav">
+                <a class="search" id="top-nav_search" href="http://datalist.cma.cn/index.html#" title="搜索">
+                    <i class="icon icon-search"></i>
+                </a>
+                <a class="nav-toggle" id="top-nav_nav" href="http://datalist.cma.cn/index.html#" title="导航">
+                    <i class="icon icon-navigation"></i>
+                </a>
+            </div>
+        </div>
+        <!--门户logo end-->
+        <!--导航菜单-->
+        <nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="height: auto;">
+            <ul class="accordian-menu" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+                <li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
+            </ul>
+        </nav>
+        <!--导航菜单 end-->
+    </div>
+</header>
 <!--header-->
 <div class="container">
     <div class="page-header">
@@ -93,7 +123,73 @@
         </div>
     </div>
 </div>
-
+<!--页脚-->
+<footer class="footer">
+    <div class="container">
+        <ul class="accordian-menu" data-accordiandisabled="desktop">
+            <li class="follow-us">
+                <h3 class="menu-title footer-title expand">关注我们<i class="icon icon-arrow-top"></i></h3>
+                <div class="footer-qrcode clearfix hidden-xs hidden-sm">
+                    <div class="qrcode-wrapper">
+                        <img src="qrcode.jpg" alt="qrcode">
+                        <span>欢迎关注质控报告微信公众号</span>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <h3 id="footer_support" class="menu-title footer-title">支持<i class="icon icon-arrow-top"></i></h3>
+                <ul class="menu-child">
+                    <li>
+                        <a id="footer-contact-id" href="#" title="联系我们">
+                            联系我们
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-plans-id" href="#" title="支持计划">
+                            支持计划
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-service-dashboard-id" href="#" title="服务仪表盘">
+                            服务仪表盘
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-legal-id" href="#" title="法律">
+                            法律
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-sla-id" href="#" title="服务级别协议">
+                            服务级别协议
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-icp-id" href="#" title="ICP 备案">
+                            ICP 备案
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-support-faq-id" href="#" title="常见问题">
+                            常见问题
+                        </a>
+                    </li>
+                    <li>
+                        <a id="footer-news-id" href="#" title="最新公告">
+                            最新公告
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" title="数据清单编辑器">
+                            数据清单编辑器
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</footer>
+<!--页脚 end-->
 <!-- core js start -->
 <script src="../js/core/jquery-1.8.3.min.js"></script>
 <script src="../frame/bootstrap/js/bootstrap.min.js"></script>
