@@ -185,7 +185,7 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			return outData;
 		}else if(file_name_log.indexOf("?") > -1  || file_name_log.indexOf("RADA") != -1 || file_name_log.indexOf("RADR") != -1){
 			if(file_name_log.indexOf("Z_RADR_C_BABJ_") > -1 && file_name_log.indexOf("P_DOR_ACHN_MQPE") > -1){
-
+				//如果是这类数据， 放过，可以入库
 			}else{
 				return null;
 			}

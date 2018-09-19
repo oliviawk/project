@@ -321,15 +321,22 @@ public class CronPub {
 
 
     public static void main(String[] args){
+        String word = "Hello";
+        aa(word);
+        System.out.println(word);
 
-        System.out.println(getLastTimeBycron_String("0 0 * * * ? *","yyyy-MM-dd HH:mm:ss",new Date()));
-        System.out.println(11);
+//        System.out.println(getLastTimeBycron_String("0 0 * * * ? *","yyyy-MM-dd HH:mm:ss",new Date()));
+//        System.out.println(11);
+//
+//        String strTest = "AW_aa_hh_hdr";
+//        if (strTest.indexOf("AW") > -1){
+//            System.out.println(1);
+//        }else if (strTest.indexOf("aa") > -1 || strTest.indexOf("hh") > -1){
+//            System.out.println(2);
+//        }
 
-        String strTest = "AW_aa_hh_hdr";
-        if (strTest.indexOf("AW") > -1){
-            System.out.println(1);
-        }else if (strTest.indexOf("aa") > -1 || strTest.indexOf("hh") > -1){
-            System.out.println(2);
-        }
+    }
+    public static void aa(String word){
+        word = word + "word";
     }
 }

@@ -1,0 +1,11 @@
+{
+    "SurfChinaHourlyNational": {
+        "ObserveTime": "2018/9/7 10:00:00",
+        "StationNumber": "2471",
+        "AbsentStations": [
+            "59989",
+            "58472",
+            "51707"
+        ]
+    }
+}

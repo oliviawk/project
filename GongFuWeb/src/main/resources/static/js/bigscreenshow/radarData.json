@@ -1,0 +1,1548 @@
+[{
+  "latitude": 39.57,
+  "longitude": 116.17,
+  "name": "北京",
+  "nameZ": "Z9001",
+  "province": "北京",
+  "state": "OK"
+}, {
+  "latitude": 39.49,
+  "longitude": 116.28,
+  "name": "大兴",
+  "nameZ": "Z9010",
+  "province": "北京",
+  "state": "OK"
+}, {
+  "latitude": 39.03,
+  "longitude": 117.43,
+  "name": "塘沽",
+  "nameZ": "Z9220",
+  "province": "天津",
+  "state": "OK"
+}, {
+  "latitude": 38.21,
+  "longitude": 114.43,
+  "name": "石家庄",
+  "nameZ": "Z9311",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 41.09,
+  "longitude": 114.42,
+  "name": "张北",
+  "nameZ": "Z9313",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 40.59,
+  "longitude": 117.55,
+  "name": "承德",
+  "nameZ": "Z9314",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 38.17,
+  "longitude": 116.48,
+  "name": "沧州",
+  "nameZ": "Z9317",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 39.53,
+  "longitude": 118.53,
+  "name": "秦皇岛",
+  "nameZ": "Z9335",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 36.28,
+  "longitude": 114.4,
+  "name": "邯郸",
+  "nameZ": "Z9310",
+  "province": "河北",
+  "state": "OK"
+}, {
+  "latitude": 37.44,
+  "longitude": 112.35,
+  "name": "太原",
+  "nameZ": "Z9351",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 40.04,
+  "longitude": 113.23,
+  "name": "大同",
+  "nameZ": "Z9352",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 36.13,
+  "longitude": 113.03,
+  "name": "长治",
+  "nameZ": "Z9355",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 36.04,
+  "longitude": 111.3,
+  "name": "临汾",
+  "nameZ": "Z9357",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 37.31,
+  "longitude": 111.08,
+  "name": "吕梁",
+  "nameZ": "Z9358",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 49.12,
+  "longitude": 119.45,
+  "name": "海拉尔",
+  "nameZ": "Z9470",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 40.59,
+  "longitude": 111.42,
+  "name": "呼和浩特",
+  "nameZ": "Z9471",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 43.37,
+  "longitude": 122.16,
+  "name": "通辽",
+  "nameZ": "Z9475",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 42.14,
+  "longitude": 118.58,
+  "name": "赤峰",
+  "nameZ": "Z9476",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 39.49,
+  "longitude": 110.02,
+  "name": "鄂尔多斯",
+  "nameZ": "Z9477",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 40.44,
+  "longitude": 107.22,
+  "name": "临河",
+  "nameZ": "Z9478",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 45.33,
+  "longitude": 119.39,
+  "name": "霍林郭勒",
+  "nameZ": "Z9020",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 49.35,
+  "longitude": 117.2,
+  "name": "满洲里",
+  "nameZ": "Z9021",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 41.56,
+  "longitude": 123.39,
+  "name": "沈阳",
+  "nameZ": "Z9240",
+  "province": "辽宁",
+  "state": "OK"
+}, {
+  "latitude": 38.54,
+  "longitude": 121.39,
+  "name": "大连",
+  "nameZ": "Z9411",
+  "province": "辽宁",
+  "state": "OK"
+}, {
+  "latitude": 40.39,
+  "longitude": 122.31,
+  "name": "营口",
+  "nameZ": "Z9417",
+  "province": "辽宁",
+  "state": "OK"
+}, {
+  "latitude": 41.32,
+  "longitude": 120.3,
+  "name": "朝阳",
+  "nameZ": "Z9421",
+  "province": "辽宁",
+  "state": "OK"
+}, {
+  "latitude": 39.53,
+  "longitude": 124.09,
+  "name": "丹东",
+  "nameZ": "Z9415",
+  "province": "辽宁",
+  "state": "OK"
+}, {
+  "latitude": 43.54,
+  "longitude": 125.15,
+  "name": "长春",
+  "nameZ": "Z9431",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 42.5,
+  "longitude": 129.28,
+  "name": "延吉",
+  "nameZ": "Z9433",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 45.37,
+  "longitude": 122.48,
+  "name": "白城",
+  "nameZ": "Z9436",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 42.54,
+  "longitude": 125.09,
+  "name": "辽源",
+  "nameZ": "Z9437",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 41.58,
+  "longitude": 126.12,
+  "name": "白山",
+  "nameZ": "Z9439",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 45.09,
+  "longitude": 124.52,
+  "name": "松原",
+  "nameZ": "Z9438",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 45.59,
+  "longitude": 127.15,
+  "name": "哈尔滨",
+  "nameZ": "Z9451",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 47.22,
+  "longitude": 123.56,
+  "name": "齐齐哈尔",
+  "nameZ": "Z9452",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 44.35,
+  "longitude": 129.36,
+  "name": "牡丹江",
+  "nameZ": "Z9453",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 46.48,
+  "longitude": 130.19,
+  "name": "佳木斯",
+  "nameZ": "Z9454",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 50.11,
+  "longitude": 127.19,
+  "name": "黑河",
+  "nameZ": "Z9456",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 50.25,
+  "longitude": 124.07,
+  "name": "加格达奇",
+  "nameZ": "Z9457",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 47.42,
+  "longitude": 128.55,
+  "name": "伊春",
+  "nameZ": "Z9458",
+  "province": "黑龙江",
+  "state": "OK"
+}, {
+  "latitude": 48.52,
+  "longitude": 125.18,
+  "name": "九三",
+  "nameZ": "Z9084",
+  "province": "黑龙江农垦",
+  "state": "OK"
+}, {
+  "latitude": 47.16,
+  "longitude": 132.38,
+  "name": "建三江",
+  "nameZ": "Z9085",
+  "province": "黑龙江农垦",
+  "state": "OK"
+}, {
+  "latitude": 31.04,
+  "longitude": 120.57,
+  "name": "青浦",
+  "nameZ": "Z9002",
+  "province": "上海",
+  "state": "OK"
+}, {
+  "latitude": 31,
+  "longitude": 121.53,
+  "name": "南汇",
+  "nameZ": "Z9210",
+  "province": "上海",
+  "state": "OK"
+}, {
+  "latitude": 32.11,
+  "longitude": 118.42,
+  "name": "南京",
+  "nameZ": "Z9250",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 32.05,
+  "longitude": 120.58,
+  "name": "南通",
+  "nameZ": "Z9513",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 33.26,
+  "longitude": 120.12,
+  "name": "盐城",
+  "nameZ": "Z9515",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 34.18,
+  "longitude": 117.09,
+  "name": "徐州",
+  "nameZ": "Z9516",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 33.15,
+  "longitude": 118.5,
+  "name": "淮安",
+  "nameZ": "Z9517",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 34.39,
+  "longitude": 119.18,
+  "name": "连云港",
+  "nameZ": "Z9518",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 31.54,
+  "longitude": 119.47,
+  "name": "常州",
+  "nameZ": "Z9519",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 32.33,
+  "longitude": 119.6,
+  "name": "泰州",
+  "nameZ": "Z9523",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 34.06,
+  "longitude": 118.2,
+  "name": "宿迁",
+  "nameZ": "Z9527",
+  "province": "江苏",
+  "state": "OK"
+}, {
+  "latitude": 29.05,
+  "longitude": 118.42,
+  "name": "衢州",
+  "nameZ": "Z9570",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 30.16,
+  "longitude": 120.2,
+  "name": "杭州",
+  "nameZ": "Z9571",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 30.5,
+  "longitude": 120.12,
+  "name": "湖州",
+  "nameZ": "Z9572",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 30.04,
+  "longitude": 121.31,
+  "name": "宁波",
+  "nameZ": "Z9574",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 28.27,
+  "longitude": 121.31,
+  "name": "台州",
+  "nameZ": "Z9576",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 27.53,
+  "longitude": 120.45,
+  "name": "温州",
+  "nameZ": "Z9577",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 29.13,
+  "longitude": 119.39,
+  "name": "金华",
+  "nameZ": "Z9579",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 30.04,
+  "longitude": 122.07,
+  "name": "舟山",
+  "nameZ": "Z9580",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 29.05,
+  "longitude": 118.42,
+  "name": "丽水",
+  "nameZ": "Z9578",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 30.02,
+  "longitude": 119,
+  "name": "临安",
+  "nameZ": "Z9040",
+  "province": "浙江",
+  "state": "OK"
+}, {
+  "latitude": 31.52,
+  "longitude": 117.14,
+  "name": "合肥",
+  "nameZ": "Z9551",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 32.55,
+  "longitude": 117.27,
+  "name": "蚌埠",
+  "nameZ": "Z9552",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 31.42,
+  "longitude": 118.31,
+  "name": "马鞍山",
+  "nameZ": "Z9555",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 30.37,
+  "longitude": 116.47,
+  "name": "安庆",
+  "nameZ": "Z9556",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 32.53,
+  "longitude": 115.44,
+  "name": "阜阳",
+  "nameZ": "Z9558",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 30.08,
+  "longitude": 118.1,
+  "name": "黄山",
+  "nameZ": "Z9559",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 30.57,
+  "longitude": 118.02,
+  "name": "铜陵",
+  "nameZ": "Z9562",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 25.59,
+  "longitude": 119.32,
+  "name": "福州",
+  "nameZ": "Z9591",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 24.29,
+  "longitude": 118.05,
+  "name": "厦门",
+  "nameZ": "Z9592",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 24.3,
+  "longitude": 118,
+  "name": "厦门双偏",
+  "nameZ": "",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 26.57,
+  "longitude": 120.13,
+  "name": "宁德",
+  "nameZ": "Z9593",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 24.54,
+  "longitude": 118.3,
+  "name": "泉州",
+  "nameZ": "Z9595",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 23.36,
+  "longitude": 117.24,
+  "name": "漳州",
+  "nameZ": "Z9596",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 25.04,
+  "longitude": 117.11,
+  "name": "龙岩",
+  "nameZ": "Z9597",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 27.01,
+  "longitude": 117.05,
+  "name": "三明",
+  "nameZ": "Z9598",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 27.21,
+  "longitude": 118.06,
+  "name": "建阳",
+  "nameZ": "Z9599",
+  "province": "福建",
+  "state": "OK"
+}, {
+  "latitude": 28.36,
+  "longitude": 115.54,
+  "name": "南昌",
+  "nameZ": "Z9791",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 29.32,
+  "longitude": 115.57,
+  "name": "九江",
+  "nameZ": "Z9792",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 28.26,
+  "longitude": 117.59,
+  "name": "上饶",
+  "nameZ": "Z9793",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 27.54,
+  "longitude": 116.16,
+  "name": "抚州",
+  "nameZ": "Z9794",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 27.48,
+  "longitude": 114.18,
+  "name": "宜春",
+  "nameZ": "Z9795",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 27.03,
+  "longitude": 114.55,
+  "name": "吉安",
+  "nameZ": "Z9796",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 25.53,
+  "longitude": 114.58,
+  "name": "赣州",
+  "nameZ": "Z9797",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 29.22,
+  "longitude": 117.13,
+  "name": "景德镇",
+  "nameZ": "Z9798",
+  "province": "江西",
+  "state": "OK"
+}, {
+  "latitude": 36.48,
+  "longitude": 116.47,
+  "name": "济南（齐河）",
+  "nameZ": "Z9531",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 35.59,
+  "longitude": 120.14,
+  "name": "青岛",
+  "nameZ": "Z9532",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 37.3,
+  "longitude": 121.23,
+  "name": "烟台",
+  "nameZ": "Z9535",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 36.4,
+  "longitude": 118.55,
+  "name": "潍坊",
+  "nameZ": "Z9536",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 36.15,
+  "longitude": 117.06,
+  "name": "泰山",
+  "nameZ": "Z9538",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 35.15,
+  "longitude": 118.25,
+  "name": "临沂",
+  "nameZ": "Z9539",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 37.21,
+  "longitude": 117.59,
+  "name": "滨州",
+  "nameZ": "Z9543",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 37.09,
+  "longitude": 122.23,
+  "name": "荣成",
+  "nameZ": "Z9631",
+  "province": "山东",
+  "state": "OK"
+}, {
+  "latitude": 34.25,
+  "longitude": 115.38,
+  "name": "商丘",
+  "nameZ": "Z9370",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 34.42,
+  "longitude": 113.42,
+  "name": "郑州",
+  "nameZ": "Z9371",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 33.01,
+  "longitude": 112.3,
+  "name": "南阳",
+  "nameZ": "Z9377",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 34.34,
+  "longitude": 112.27,
+  "name": "洛阳",
+  "nameZ": "Z9379",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 35.47,
+  "longitude": 114.57,
+  "name": "濮阳",
+  "nameZ": "Z9393",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 33.01,
+  "longitude": 114.01,
+  "name": "驻马店",
+  "nameZ": "Z9396",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 34.41,
+  "longitude": 111.08,
+  "name": "三门峡",
+  "nameZ": "Z9398",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 33.46,
+  "longitude": 113.07,
+  "name": "平顶山",
+  "nameZ": "Z9375",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 30.3,
+  "longitude": 114.23,
+  "name": "武汉",
+  "nameZ": "Z9270",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 32.12,
+  "longitude": 112.13,
+  "name": "襄阳",
+  "nameZ": "Z9710",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 30.21,
+  "longitude": 112.09,
+  "name": "荆州",
+  "nameZ": "Z9716",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 30.44,
+  "longitude": 111.21,
+  "name": "宜昌",
+  "nameZ": "Z9717",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 30.17,
+  "longitude": 109.15,
+  "name": "恩施",
+  "nameZ": "Z9718",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 32.36,
+  "longitude": 110.45,
+  "name": "十堰",
+  "nameZ": "Z9719",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 31.43,
+  "longitude": 113.23,
+  "name": "随州",
+  "nameZ": "Z9722",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 31.37,
+  "longitude": 110.2,
+  "name": "神农架",
+  "nameZ": "Z9060",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 29.18,
+  "longitude": 113.06,
+  "name": "岳阳",
+  "nameZ": "Z9730",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 28.28,
+  "longitude": 113.01,
+  "name": "长沙",
+  "nameZ": "Z9731",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 25.44,
+  "longitude": 112.59,
+  "name": "郴州",
+  "nameZ": "Z9735",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 29.11,
+  "longitude": 111.42,
+  "name": "常德",
+  "nameZ": "Z9736",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 27.12,
+  "longitude": 111.27,
+  "name": "邵阳",
+  "nameZ": "Z9739",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 27.34,
+  "longitude": 110,
+  "name": "怀化",
+  "nameZ": "Z9745",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 26.14,
+  "longitude": 111.37,
+  "name": "永州",
+  "nameZ": "Z9746",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 26.56,
+  "longitude": 112.35,
+  "name": "衡阳",
+  "nameZ": "Z9734",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 29.03,
+  "longitude": 110.28,
+  "name": "张家界",
+  "nameZ": "Z9744",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 23,
+  "longitude": 113.21,
+  "name": "广州",
+  "nameZ": "Z9200",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 24.47,
+  "longitude": 113.34,
+  "name": "韶关",
+  "nameZ": "Z9751",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 24.15,
+  "longitude": 115.59,
+  "name": "梅州",
+  "nameZ": "Z9753",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 23.17,
+  "longitude": 116.44,
+  "name": "汕头",
+  "nameZ": "Z9754",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 22.32,
+  "longitude": 114,
+  "name": "深圳",
+  "nameZ": "Z9755",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 22.56,
+  "longitude": 112.34,
+  "name": "肇庆",
+  "nameZ": "Z9758",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 22.01,
+  "longitude": 110.32,
+  "name": "湛江",
+  "nameZ": "Z9759",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 23.42,
+  "longitude": 114.36,
+  "name": "河源",
+  "nameZ": "Z9762",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 24.44,
+  "longitude": 112.24,
+  "name": "连州",
+  "nameZ": "Z9763",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 22.49,
+  "longitude": 115.21,
+  "name": "汕尾",
+  "nameZ": "Z9660",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 21.51,
+  "longitude": 111.59,
+  "name": "阳江",
+  "nameZ": "Z9662",
+  "province": "广东",
+  "state": "OK"
+}, {
+  "latitude": 21.32,
+  "longitude": 108.16,
+  "name": "防城港",
+  "nameZ": "Z9770",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 22.48,
+  "longitude": 108.24,
+  "name": "南宁",
+  "nameZ": "Z9771",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 24.21,
+  "longitude": 109.27,
+  "name": "柳州",
+  "nameZ": "Z9772",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 25.19,
+  "longitude": 110.18,
+  "name": "桂林",
+  "nameZ": "Z9773",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 23.29,
+  "longitude": 111.18,
+  "name": "梧州",
+  "nameZ": "Z9774",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 22.39,
+  "longitude": 110.13,
+  "name": "玉林",
+  "nameZ": "Z9775",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 23.54,
+  "longitude": 106.36,
+  "name": "百色",
+  "nameZ": "Z9776",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 24.59,
+  "longitude": 107.3,
+  "name": "河池",
+  "nameZ": "Z9778",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 21.27,
+  "longitude": 109.03,
+  "name": "北海",
+  "nameZ": "Z9779",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 22.22,
+  "longitude": 107.23,
+  "name": "崇左",
+  "nameZ": "Z9075",
+  "province": "广西",
+  "state": "OK"
+}, {
+  "latitude": 19.6,
+  "longitude": 110.15,
+  "name": "海口",
+  "nameZ": "Z9898",
+  "province": "海南",
+  "state": "OK"
+}, {
+  "latitude": 18.14,
+  "longitude": 109.36,
+  "name": "三亚",
+  "nameZ": "Z9070",
+  "province": "海南",
+  "state": "OK"
+}, {
+  "latitude": 16.5,
+  "longitude": 112.2,
+  "name": "西沙",
+  "nameZ": "Z9071",
+  "province": "海南",
+  "state": "OK"
+}, {
+  "latitude": 30.48,
+  "longitude": 108.41,
+  "name": "万州",
+  "nameZ": "Z9090",
+  "province": "重庆",
+  "state": "OK"
+}, {
+  "latitude": 29.36,
+  "longitude": 108.44,
+  "name": "黔江",
+  "nameZ": "Z9091",
+  "province": "重庆",
+  "state": "OK"
+}, {
+  "latitude": 29.14,
+  "longitude": 105.5,
+  "name": "永川",
+  "nameZ": "Z9092",
+  "province": "重庆",
+  "state": "OK"
+}, {
+  "latitude": 29.31,
+  "longitude": 106.29,
+  "name": "重庆",
+  "nameZ": "Z9230",
+  "province": "重庆",
+  "state": "OK"
+}, {
+  "latitude": 30.4,
+  "longitude": 104.01,
+  "name": "成都",
+  "nameZ": "Z9280",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 31.2,
+  "longitude": 104.46,
+  "name": "绵阳",
+  "nameZ": "Z9816",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 30.49,
+  "longitude": 106.05,
+  "name": "南充",
+  "nameZ": "Z9817",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 31.1,
+  "longitude": 107.32,
+  "name": "达州",
+  "nameZ": "Z9818",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 28.49,
+  "longitude": 104.35,
+  "name": "宜宾",
+  "nameZ": "Z9831",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 29.24,
+  "longitude": 103.49,
+  "name": "乐山",
+  "nameZ": "Z9833",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 27.53,
+  "longitude": 102.25,
+  "name": "西昌",
+  "nameZ": "Z9834",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 30.09,
+  "longitude": 101.44,
+  "name": "甘孜（康定）",
+  "nameZ": "Z9836",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 32.24,
+  "longitude": 105.49,
+  "name": "广元",
+  "nameZ": "Z9839",
+  "province": "四川",
+  "state": "OK"
+}, {
+  "latitude": 26.35,
+  "longitude": 106.44,
+  "name": "贵阳",
+  "nameZ": "Z9851",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 27.41,
+  "longitude": 106.55,
+  "name": "遵义",
+  "nameZ": "Z9852",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 26.19,
+  "longitude": 107.31,
+  "name": "都匀",
+  "nameZ": "Z9854",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 26.58,
+  "longitude": 108.41,
+  "name": "黔东南",
+  "nameZ": "Z9855",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 27.49,
+  "longitude": 109.13,
+  "name": "铜仁",
+  "nameZ": "Z9856",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 27.18,
+  "longitude": 105.18,
+  "name": "毕节",
+  "nameZ": "Z9857",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 25.05,
+  "longitude": 104.54,
+  "name": "兴义",
+  "nameZ": "Z9859",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 26.33,
+  "longitude": 104.56,
+  "name": "六盘水",
+  "nameZ": "Z9858",
+  "province": "贵州",
+  "state": "OK"
+}, {
+  "latitude": 27.21,
+  "longitude": 103.43,
+  "name": "昭通",
+  "nameZ": "Z9870",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 25.03,
+  "longitude": 102.35,
+  "name": "昆明",
+  "nameZ": "Z9871",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 25.37,
+  "longitude": 100.24,
+  "name": "大理",
+  "nameZ": "Z9872",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 23.29,
+  "longitude": 104.15,
+  "name": "文山",
+  "nameZ": "Z9876",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 22.5,
+  "longitude": 101.01,
+  "name": "普洱",
+  "nameZ": "Z9879",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 26.44,
+  "longitude": 100.03,
+  "name": "丽江",
+  "nameZ": "Z9888",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 24.29,
+  "longitude": 98.21,
+  "name": "德宏",
+  "nameZ": "Z9692",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 23.55,
+  "longitude": 100.11,
+  "name": "临沧",
+  "nameZ": "Z9883",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 25.29,
+  "longitude": 103.43,
+  "name": "曲靖",
+  "nameZ": "Z9874",
+  "province": "云南",
+  "state": "OK"
+}, {
+  "latitude": 29.4,
+  "longitude": 91.08,
+  "name": "拉萨",
+  "nameZ": "Z9891",
+  "province": "西藏",
+  "state": "OK"
+}, {
+  "latitude": 29.16,
+  "longitude": 88.53,
+  "name": "日喀则",
+  "nameZ": "Z9892",
+  "province": "西藏",
+  "state": "OK"
+}, {
+  "latitude": 29.38,
+  "longitude": 94.24,
+  "name": "林芝",
+  "nameZ": "Z9894",
+  "province": "西藏",
+  "state": "OK"
+}, {
+  "latitude": 31.29,
+  "longitude": 92.04,
+  "name": "那曲",
+  "nameZ": "Z9896",
+  "province": "西藏",
+  "state": "OK"
+}, {
+  "latitude": 34.27,
+  "longitude": 108.58,
+  "name": "西安",
+  "nameZ": "Z9290",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 36.37,
+  "longitude": 109.29,
+  "name": "延安",
+  "nameZ": "Z9911",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 38.16,
+  "longitude": 109.47,
+  "name": "榆林",
+  "nameZ": "Z9912",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 33.53,
+  "longitude": 109.56,
+  "name": "商洛",
+  "nameZ": "Z9914",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 32.42,
+  "longitude": 109.03,
+  "name": "安康",
+  "nameZ": "Z9915",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 33.08,
+  "longitude": 107.03,
+  "name": "汉中",
+  "nameZ": "Z9916",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 34.32,
+  "longitude": 107.14,
+  "name": "宝鸡",
+  "nameZ": "Z9917",
+  "province": "陕西",
+  "state": "OK"
+}, {
+  "latitude": 36.01,
+  "longitude": 103.51,
+  "name": "兰州",
+  "nameZ": "Z9931",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 35.43,
+  "longitude": 107.38,
+  "name": "西峰",
+  "nameZ": "Z9934",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 39.05,
+  "longitude": 100.17,
+  "name": "张掖",
+  "nameZ": "Z9936",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 39.46,
+  "longitude": 98.18,
+  "name": "嘉峪关",
+  "nameZ": "Z9937",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 34.36,
+  "longitude": 105.38,
+  "name": "天水",
+  "nameZ": "Z9938",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 34.55,
+  "longitude": 102.53,
+  "name": "甘南",
+  "nameZ": "Z9941",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 33.29,
+  "longitude": 105.09,
+  "name": "陇南",
+  "nameZ": "Z9939",
+  "province": "甘肃",
+  "state": "OK"
+}, {
+  "latitude": 36.57,
+  "longitude": 100.54,
+  "name": "海北",
+  "nameZ": "Z9970",
+  "province": "青海",
+  "state": "OK"
+}, {
+  "latitude": 36.36,
+  "longitude": 101.47,
+  "name": "西宁",
+  "nameZ": "Z9971",
+  "province": "青海",
+  "state": "OK"
+}, {
+  "latitude": 36.17,
+  "longitude": 101.54,
+  "name": "海南",
+  "nameZ": "Z9974",
+  "province": "青海",
+  "state": "OK"
+}, {
+  "latitude": 38.24,
+  "longitude": 106.22,
+  "name": "银川",
+  "nameZ": "Z9951",
+  "province": "宁夏",
+  "state": "OK"
+}, {
+  "latitude": 37.25,
+  "longitude": 106.03,
+  "name": "吴忠",
+  "nameZ": "Z9953",
+  "province": "宁夏",
+  "state": "OK"
+}, {
+  "latitude": 35.4,
+  "longitude": 106.12,
+  "name": "固原",
+  "nameZ": "Z9954",
+  "province": "宁夏",
+  "state": "OK"
+}, {
+  "latitude": 45.28,
+  "longitude": 84.58,
+  "name": "克拉玛依",
+  "nameZ": "Z9990",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 43.55,
+  "longitude": 87.24,
+  "name": "乌鲁木齐",
+  "nameZ": "Z9991",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 44.17,
+  "longitude": 85.59,
+  "name": "石河子",
+  "nameZ": "Z9993",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 41.46,
+  "longitude": 86.12,
+  "name": "库尔勒",
+  "nameZ": "Z9996",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 41.1,
+  "longitude": 80.14,
+  "name": "阿克苏",
+  "nameZ": "Z9997",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 39.28,
+  "longitude": 76.02,
+  "name": "喀什",
+  "nameZ": "Z9998",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 43.57,
+  "longitude": 81.2,
+  "name": "伊宁",
+  "nameZ": "Z9999",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 37.02,
+  "longitude": 79.5,
+  "name": "和田",
+  "nameZ": "Z9903",
+  "province": "新疆",
+  "state": "OK"
+}, {
+  "latitude": 44.23,
+  "longitude": 84.06,
+  "name": "奎屯",
+  "nameZ": "Z9080",
+  "province": "新疆兵团",
+  "state": "OK"
+}, {
+  "latitude": 44.09,
+  "longitude": 87.33,
+  "name": "五家渠",
+  "nameZ": "Z9081",
+  "province": "新疆兵团",
+  "state": "OK"
+}, {
+  "latitude": 39.52,
+  "longitude": 79.05,
+  "name": "图木舒克",
+  "nameZ": "Z9082",
+  "province": "新疆兵团",
+  "state": "OK"
+}, {
+  "latitude": 44.5,
+  "longitude": 82.21,
+  "name": "塔斯尔海",
+  "nameZ": "Z9083",
+  "province": "新疆兵团",
+  "state": "OK"
+}, {
+  "latitude": 40.34,
+  "longitude": 81.09,
+  "name": "阿拉尔",
+  "nameZ": "Z9086",
+  "province": "新疆兵团",
+  "state": "OK"
+}, {
+  "latitude": 40.99,
+  "longitude": 113.06,
+  "name": "乌兰察布",
+  "nameZ": "Z9474",
+  "province": "内蒙古",
+  "state": "OK"
+}, {
+  "latitude": 19.22,
+  "longitude": 108.73,
+  "name": "东方",
+  "nameZ": "Z9072",
+  "province": "海南",
+  "state": "OK"
+}, {
+  "latitude": 31.39,
+  "longitude": 115.3,
+  "name": "麻城",
+  "nameZ": "Z9713",
+  "province": "湖北",
+  "state": "OK"
+}, {
+  "latitude": 18.8,
+  "longitude": 110.41,
+  "name": "万宁",
+  "nameZ": "Z9073",
+  "province": "海南",
+  "state": "OK"
+}, {
+  "latitude": 38.92,
+  "longitude": 111.81,
+  "name": "五寨",
+  "nameZ": "Z9350",
+  "province": "山西",
+  "state": "OK"
+}, {
+  "latitude": 32.08,
+  "longitude": 114.08,
+  "name": "信阳",
+  "nameZ": "Z9376",
+  "province": "河南",
+  "state": "OK"
+}, {
+  "latitude": 43.86,
+  "longitude": 126.54,
+  "name": "吉林市",
+  "nameZ": "Z9432",
+  "province": "吉林",
+  "state": "OK"
+}, {
+  "latitude": 30.93,
+  "longitude": 118.75,
+  "name": "宣城",
+  "nameZ": "Z9563",
+  "province": "安徽",
+  "state": "OK"
+}, {
+  "latitude": 28.4,
+  "longitude": 111.2,
+  "name": "安化",
+  "nameZ": "Z9737",
+  "province": "湖南",
+  "state": "OK"
+}, {
+  "latitude": 31.93,
+  "longitude": 102.2,
+  "name": "阿坝",
+  "nameZ": "Z9837",
+  "province": "四川",
+  "state": "OK"
+}]

@@ -76,4 +76,5 @@ public interface EsQueryService {
 
     @RequestMapping(value = "/query/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
     public List<Object> getFileSizeCount(@RequestBody  String str);
+
 }

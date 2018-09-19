@@ -1,0 +1,20 @@
+{
+  "RadarBase": {
+    "RequestTime": "2018/9/7 10:18:52",
+    "StationNumber": "202",
+    "ArrivalStations": [
+      {
+        "StationID": "Z9002",
+        "DelayTime": "300.1"
+      },
+      {
+        "StationID": "Z9010",
+        "DelayTime": "305.9"
+      },
+      {
+        "StationID": "Z9071",
+        "DelayTime": "391.9"
+      }
+    ]
+  }
+}
