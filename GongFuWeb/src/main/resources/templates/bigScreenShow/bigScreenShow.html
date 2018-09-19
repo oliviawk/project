@@ -19,6 +19,10 @@
 
         .tooltip-inner{
             max-width: 500px;
+
+        }
+        .tooltip.top .tooltip-arrow {
+            margin-left: 0px;
         }
     </style>
 </head>
@@ -43,20 +47,8 @@
                             <th class="tda">异常信息</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>吉林市</td>
-                            <td class="tda">Z9432</td>
-                            <td class="tda">未运行</td>
-                        </tr>
-                        <tr>
-                            <td>五寨</td>
-                            <td class="tda">Z9350</td>
-                            <td class="tda">未运行</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">....</td>
-                        </tr>
+                        <tbody id="tbody_map">
+
                         </tbody>
                     </table>
                 </div>
@@ -69,24 +61,54 @@
                 <table class="table table-condensed table-striped" style="width: 100%;height: 100%;">
                     <thead>
                     <tr>
-                        <th>名称</th>
-                        <th class="tda">站号</th>
-                        <th class="tda">异常信息</th>
+                        <th>时空分辨率</th>
+                        <th>主要要素</th>
+                        <th>加工系统</th>
+                        <th>采集</th>
+                        <th>处理</th>
+                        <th>分发</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>吉林市</td>
-                        <td class="tda">Z9432</td>
-                        <td class="tda">未运行</td>
+                        <td>一公里,15天时长/逐1小时</td>
+                        <td>风、温、湿、水、云、天</td>
+                        <td>精细化预报(OCF)</td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
                     </tr>
                     <tr>
-                        <td>五寨</td>
-                        <td class="tda">Z9350</td>
-                        <td class="tda">未运行</td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
                     </tr>
                     <tr>
-                        <td colspan="3">....</td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
                     </tr>
                     </tbody>
                 </table>

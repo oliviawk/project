@@ -203,14 +203,14 @@ function showLeiDa(num){
                 })					//点的圆心y坐标
                 .on("mouseover", function (d) {                     //鼠标悬浮事件
 
-                    var titleHtml = "<span>站名："+d.name+",站号:"+d.nameZ+"</span>";
+                    var titleHtml = "<h4>站名："+d.name+",站号:"+d.nameZ+"</h4>";
                     if (d.state != "OK"){
-                        titleHtml += "<br/><span>错误信息："+d.state+"</span>";
+                        titleHtml += "<br/><h3>错误信息："+d.state+"</h3>";
                     }
 
                     $(this).tooltip({
                         container: 'body',
-                        placement: 'auto left',
+                        placement: 'auto top',
                         title: titleHtml,
                         trigger: 'hover',
                         html : true
@@ -234,22 +234,76 @@ function showLeiDa(num){
                     d3.select(this).transition().duration(100)
                         .attr("r",10);
 
-                    var x = $(this).attr("cx");
-                    var y = $(this).attr("cy") - 15;
-                    // var text_tooltip = svg.append("text").attr("transform", translateStr)
-                    //     .attr("id","tooltip")
-                    //     .attr("x",x)
-                    //     .attr("y",y)
-                    //     .attr("text-anchor","middle")
-                    //     .attr("font-family","sans-setif")
-                    //     .attr("font-size","15px")
-                    //     .attr("font-weight","bold")
-                    //     .attr("fill","#ffffff")
-                    //     .text('台站信息：' + d.station );
+                    var titleHtml = "<h3>省份："+d.province+"</h3>";
+                    titleHtml += "<h4>共有："+d.station.length+" 雷达站</h4>";
+                    if (d.state != "OK"){
+                        titleHtml += "<dl class='dl-horizontal'>";
+                        d.station.forEach(function (value) {
+                            if(value.state == "OK"){
+                                return true;
+                            }
+                            titleHtml += "<dt>站号:"+value.number+"</dt>";
+                            titleHtml += "<dd>错误信息:"+value.state+"</dd>"
+                        })
+                        titleHtml += "</dl>";
+                    }
+
+                    $(this).tooltip({
+                        container: 'body',
+                        placement: 'auto right',
+                        title: titleHtml,
+                        trigger: 'hover',
+                        html : true
+                    }).tooltip('show');
+
                 });
 
         }
+        console.info(arre);
 
+        //table框展示  开始
+        $("#tbody_map").html("");
+        var tbodyHtml = "";
+        var tbodyArry = [];
+        arre.forEach(function (a) {
+            if (num == 1){
+                tbodyArry.push("<tr> " +
+                        "<td>"+a.name+"("+a.province+")"+"</td>"+
+                        "<td>"+a.nameZ+"</td>"+
+                        "<td>"+a.state+"</td>"+
+                    "</tr>");
+                if(tbodyArry.length > 3){
+                    return false;
+                }
+            }else{
+                var station_arr = a.station;
+                station_arr.forEach(function (dd) {
+                    if(dd.state != "OK"){
+
+                        tbodyArry.push("<tr>" +
+                            "<td>"+dd.name+"("+a.province+")"+"</td>"+
+                            "<td>"+dd.number+"</td>"+
+                            "<td>"+dd.state+"</td>"+
+                            "</tr>");
+                        if(tbodyArry.length > 3){
+                            return false;
+                        }
+                    }
+                });
+
+            }
+        });
+        if (tbodyArry.length > 3){
+            tbodyArry[3] = "";
+            tbodyArry[2] = "<tr><td colspan='3'>......</td></tr>";
+        }
+        tbodyArry.forEach(function (value) {
+            tbodyHtml += value;
+        });
+        $("#tbody_map").html(tbodyHtml);
+        //table框展示  结束
+
+        //涟漪效果启动
         if (selectNum == -1){
             timeclear = false;
             selectNum = num;
@@ -362,12 +416,12 @@ function transform_Data(num){
         data.forEach(function (dd,i) {
             newData.forEach(function (tt,j) {
                 if (dd.nameZ == tt){
+                    console.info(1)
                     dd.state = "缺报";
                 }
             })
         });
     }
-
     if (num != "1"){
         arr_province.forEach(function (p) {
             var coordinates = p.coordinate.split(",");

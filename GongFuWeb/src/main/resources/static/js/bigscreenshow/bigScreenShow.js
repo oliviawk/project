@@ -309,6 +309,6 @@ function lineCharScript(e, dataType) {
     // }, 30 * 1000)
 }
 
-// lineCharScript("#flume_data1", "1");
-// lineCharScript("#flume_data", "2");
+lineCharScript("#flume_data1", "1");
+lineCharScript("#flume_data", "2");
 
