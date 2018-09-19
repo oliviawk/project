@@ -34,23 +34,19 @@ ul, li {
     font-weight: bold;
 }
 
-.top .nav {
-    display: inline-block;
-    float: right;
-}
 
-.top .nav a {
-    display: inline-block;
-    width: 100px;
-    height: 48px;
-    line-height: 48px;
-    color: #fff;
-    background: url(../../img/laps/menubtn.png) repeat-x;
-    border-radius: 8px;
-    text-align: center;
-    text-decoration: none;
-    margin-left: 8px;
-}
+/*.top .nav a {*/
+    /*display: inline-block;*/
+    /*width: 100px;*/
+    /*height: 48px;*/
+    /*line-height: 48px;*/
+    /*color: #fff;*/
+    /*background: url(../../img/laps/menubtn.png) repeat-x;*/
+    /*border-radius: 8px;*/
+    /*text-align: center;*/
+    /*text-decoration: none;*/
+    /*margin-left: 8px;*/
+/*}*/
 
 /*****流程图******/
 .process {
