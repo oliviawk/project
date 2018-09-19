@@ -3,18 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <title>告警配置</title>
-<link rel="stylesheet" href="../css/bootstrap_3.3.7.css" />
 
-	<link rel="stylesheet" href="../css/bootstrap-select.css"></link>
-	<link rel="stylesheet" href="../css/pjpz.css" />
-	<link rel="stylesheet" href="../css_option/bootstrap.min.css" />
-	<link rel="stylesheet" href="../css_option/main.css" />
+<link rel="stylesheet" href="../css/bootstrap.css" />
+<link rel="stylesheet" href="../css/bootstrap-select.css"></link>
+<link rel="stylesheet" href="../css/pjpz.css" />
+<link rel="stylesheet" href="../css_option/bootstrap.min.css" />
+<link rel="stylesheet" href="../css_option/main.css" />
 
 <style>
-	dd>a {
-		color: rgba(54, 159, 255, 0.97);
-		margin-left: 5px;
-	}
+
 
 
 	.form-control {
@@ -49,7 +46,26 @@
 		border-top: 1px solid #ddd;
 		border-left: 1px solid #ddd;
 	}
-
+	.grad1 {
+		background: -webkit-linear-gradient(left, white, #b2ebff,white);
+	}
+	.grad2 {
+		background: -webkit-linear-gradient(#ffffff, #f4f2f6, #faf8fc);
+	}
+	@media (min-width: 768px){
+		.navbar-nav > li > a {
+			padding-top: 5px;
+			padding-bottom: 0px;
+		}
+	}
+	.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+		background-color: #323a45;
+		border-color: #337ab7;
+	}
+	.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+		background-color: #323a45;
+		border-color: #337ab7;
+	}
 
 </style>
 </head>
@@ -59,7 +75,7 @@
 		<!--门户logo-->
 		<div class="brand clearfix">
 			<div class="logo">
-				<div class="azure-logo">
+				<div class="azure-logo" style="margin-left: -100px">
 					<a id="navigation-azure-logo-id" href="http://datalist.cma.cn/">公共气象服务中心业务全流程监控系统</a>
 				</div>
 			</div>
@@ -74,50 +90,74 @@
 		</div>
 		<!--门户logo end-->
 		<!--导航菜单-->
-		<nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="height: auto;">
-			<ul class="accordian-menu" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+		<nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="margin-left: 20px">
+			<ul class="nav navbar-nav" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
 				<li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>数据源</span></a>
+					<ul class="dropdown-menu" >
+						<li><a class="link-1" href="http://10.30.17.172:9091/dataSourceSetting/"><span>配置</span></a></li>
+						<li><a class="link-2" href="http://10.30.17.171:9091/dataSource/"><span>告警列表</span></a></li>
+						<li><a class="link-3" href="http://test.tvhf.com:8080/"><span>雷达基数据</span></a></li>
+						<li><a class="link-4" href="http://10.14.83.52:8082/SURF_GLB_MUL_HOR"><span>CIMISS</span></a></li>
+					</ul>
+				</li>
+				<li><a class="dropdown-toggle nav-index current" data-toggle="dropdown" href="#"><span>重点业务</span></a>
+					<ul class="dropdown-menu" >
+						<li class="nav-index current"><a class="link-1" href="http://10.30.17.171:8090/fzjc/lct"><span>辅助决策</span></a></li>
+						<li class="nav-index current"><a class="link-2" href="http://10.30.17.171:8090/laps/lct"><span>格点数据</span></a></li>
+						<li class="nav-index current"><a class="link-3" href="http://10.30.17.171:8090/MQPF/"><span>MQPF</span></a></li>
+						<li class="nav-index current"><a class="link-4" href="http://10.30.17.171:8090/RGF/"><span>RGF</span></a></li>
+						<li class="nav-index current"><a class="link-5" href="http://10.30.17.171:8090/OCF/"><span>OCF</span></a></li>
+					</ul>
+				</li>
+				<li><a class="dropdown-toggle nav-index current" data-toggle="dropdown" href="#"><span>告警中心</span></a>
+					<ul class="dropdown-menu">
+						<li class="nav-index current"><a class="link-1" href="http://10.30.17.171:9090/pjpz/"><span>配置</span></a></li>
+						<li class="nav-index current"><a class="link-2" href="http://10.30.17.171:9091/alarmBrowse/"><span>查看</span></a></li>
+					</ul>
+				</li>
 			</ul>
 		</nav>
 		<!--导航菜单 end-->
 	</div>
 </header>
 <div class="row" style="height: 750px">
+	<div class="col-md-12" style="height: 20px"></div>
+	<div class="col-md-8 col-md-offset-2" style="height: 30px;border-bottom: solid 1px black"><span>告警中心 >>配置</span></div>
 	<div class="col-md-8 col-md-offset-2">
-		<div style="position: relative; top: 30px;">
+		<div style="position: relative; top: 10px;">
 			<ul id="myTab" class="nav nav-tabs">
-				<li class="active"><a href="#home" data-toggle="tab"><h5>告警决策配置</h5></a></li>
-				<li><a href="#ios" data-toggle="tab"><h5>用户组配置</h5></a></li>
-				<li><a href="#ad" data-toggle="tab"><h5>发布模板配置</h5></a></li>
-				<li><a href="#basics_hx" data-toggle="tab"><h5>基础资源配置</h5></a></li>
+				<li class="active"><a href="#home" data-toggle="tab"><h6>告警决策配置</h6></a></li>
+				<li><a href="#ios" data-toggle="tab"><h6>用户组配置</h6></a></li>
+				<li><a href="#ad" data-toggle="tab"><h6>发布模板配置</h6></a></li>
+				<li><a href="#basics_hx" data-toggle="tab"><h6>基础资源配置</h6></a></li>
 			</ul>
 			<div id="myTabContent" class="tab-content">
 				<!--告警策略配置-->
-				<div class="tab-pane fade in active" id="home" style="background-color: white; height: 650px; width: 100%;">
+				<div class="tab-pane fade in active" id="home" style="background-color: white; height: 500px; width: 100%;">
                     <div class="row">
-                        <div class="col-ms-12" style="height: 20px"></div>
-                        <div class="col-md-2" >
-                            <span style=" font-size: 15px; border-radius: 10px;">查询表信息</span>
+                        <div class="col-ms-12" style="height: 10px"></div>
+                        <div class="col-md-1" style="margin-left: 50px">
                         </div>
                         <div class="col-md-3">
                             <div class="row">
-                                <div class="col-md-5 " style="text-align:center;height: 33px;border: 1px solid #e1dfe3;width: 100px;border-radius: 5px">数据类型</div>
+                                <div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">数据类型</div>
                                 <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo" title="数据资源" onchange="onchangeSelect(this)"></select></div>
                             </div>
                         </div>
                         <div class="col-md-3" style="float: left;">
                             <div class="row">
-                                <div class="col-md-5 " style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">业务名/IP</div>
+                                <div class="col-md-5 grad2" style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">业务名/IP</div>
                                 <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo1" title="业务名/IP" onchange="onchangeSelect(this)"></select></div>
                             </div>
                         </div>
                         <div class="col-md-3" style="float: left;">
                             <div class="row">
-                                <div class="col-md-5 " style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px"><span id="hjName">资料名</span></div>
+                                <div class="col-md-5 grad2" style="height: 33px;border: 1px solid #e1dfe3;border-radius: 5px"><span id="hjName">资料名</span></div>
                                 <div class="col-md-7 " style="margin-left: -15px"><select class="form-control top-option-border" id="basic_ifo2" title="业务名/IP" onchange="onchangeSelect(this)"></select></div>
                             </div>
                         </div>
-						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div class="col-md-12">
 							<div class="row">
 								<div class="col-md-2 col-md-offset-4">
@@ -128,46 +168,47 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12" style="height: 30px"></div>
-						<div class="col-md-10 col-md-offset-1">
-							<div style="position: absolute; height: 500px; overflow: auto;border:1px solid #e1dfe3;">
-								<table class="table table-striped" style="text-align: center; width: 900px;height: 500px; font-size: 18px" id="dataTable">
+						<div class="col-md-12" style="height: 10px"></div>
+						<div class="col-md-12">
+							<div style="height: 520px; overflow: auto;border:1px solid #e1dfe3;">
+								<table class="table table-striped" style="text-align: center;height: 450px; font-size: 18px" id="dataTable">
 								</table>
 							</div>
 						</div>
+						<div class="col-md-12 grad1" style="height: 8px;"></div>
                     </div>
 				</div>
 				<!--用户组-->
-				<div class="tab-pane fade" id="ios" style="height: 650px; width:100%; background-color: white">
+				<div class="tab-pane fade" id="ios" style="height: 500px; width:100%; background-color: white">
 					<div class="row">
-						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">组名:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">组名:</div>
 								<div class="col-md-7" style="margin-left: -15px"><select class="form-control top-option-border"  name="user_group" id="user_group" style=""></select></div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">用户名:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">用户名:</div>
 								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_name" /></div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">手机号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">手机号:</div>
 								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_phone" /></div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">公众号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">公众号:</div>
 								<div class="col-md-7" style="margin-left: -15px"><input class="form-control top-option-border" type="text" id="user_wechart" /></div>
 							</div>
 						</div>
 						<div class="col-md-12" >
 							<div class="row">
-								<div class="col-md-12" style="height: 20px"></div>
+								<div class="col-md-12" style="height: 10px"></div>
 								<div class="col-md-2 col-md-offset-4" >
 									<button type="button" style="border-radius: 5px;" onclick="searchUser()"><img src="../fonts/png/glyphicons-28-search.png" />确认查询</button>
 								</div>
@@ -176,22 +217,23 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12" style="height: 30px"></div>
-						<div class="col-md-10 col-md-offset-1">
-							<div style="height: 500px; overflow: auto;border:1px solid #e1dfe3;">
-								<table id="userTable" class="table table-striped" style="text-align: center; width: 910px;font-size: 18px">
+						<div class="col-md-12" style="height: 10px"></div>
+						<div class="col-md-12">
+							<div style="height: 520px; overflow: auto;border:1px solid #e1dfe3;">
+								<table id="userTable" class="table table-striped" style="text-align: center;font-size: 18px;">
 								</table>
 							</div>
 						</div>
+						<div class="col-md-12 grad1" style="height: 8px;"></div>
 					</div>
 				</div>
 				<!--发布模板配置-->
-				<div class="tab-pane fade" id="ad" style="height: 650px; width: 100%; background-color: white">
+				<div class="tab-pane fade" id="ad" style="height: 500px; width: 100%; background-color: white">
 					<div class="row">
-						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">模板名:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板名:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempName" />
 								</div>
@@ -199,7 +241,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">模板种类:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板种类:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempType" />
 								</div>
@@ -207,7 +249,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">微信号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">微信号:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempWechart" />
 								</div>
@@ -215,7 +257,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5" style="text-align:center;height: 33px;border: 1px solid #e1dfe3">手机号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">手机号:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempSms" />
 								</div>
@@ -223,7 +265,7 @@
 						</div>
 						<div class="col-md-12" >
 							<div class="row">
-								<div class="col-md-12" style="height: 20px"></div>
+								<div class="col-md-12" style="height: 10px"></div>
 								<div class="col-md-2 col-md-offset-4">
 									<button type="button" style="border-radius: 5px;" onclick="searchTemp()"><img src="../fonts/png/glyphicons-28-search.png" />模板查询</button>
 								</div>
@@ -232,22 +274,21 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12" style="height: 30px"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div class="col-md-12">
-							<div style="height: 500px; overflow: auto;border:1px solid #e1dfe3;">
-								<table id="table_send" class="table table-striped" style="text-align: center; width: 1080px;font-size: 18px">
+							<div style="height: 520px; overflow: auto;border:1px solid #e1dfe3;">
+								<table id="table_send" class="table table-striped" style="text-align: center; font-size: 18px">
 								</table>
 							</div>
 						</div>
+						<div class="col-md-12 grad1" style="height: 8px;"></div>
 					</div>
 				</div>
 
-
-
 				<!--  基础资源告警配置-->
-				<div class="tab-pane fade" id="basics_hx"  style="height: 650px; width: 100%; background-color: white">
+				<div class="tab-pane fade" id="basics_hx"  style="height: 500px; width: 100%; background-color: white">
 					<div class="row">
-						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div id="rulesiddiv" style="display: none">
 							<input type="text" id="rulesid"/>
 						</div>
@@ -256,7 +297,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-7" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">连续报警次数：</div>
+								<div class="col-md-7 grad2" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">连续报警次数：</div>
 								<div class="col-md-5" style="margin-left: -15px">
 									<input type="text" id="alertnumhx"/>
 								</div>
@@ -264,7 +305,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-7" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">告警时间段：</div>
+								<div class="col-md-7 grad2" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">告警时间段：</div>
 								<div class="col-md-5" width="50px" style="margin-left: -15px">
 									<input  type="text" id="alerttimehx"/>
 								</div>
@@ -272,17 +313,18 @@
 						</div>
 						<div class="col-md-4">
 							<div class="row">
-								<div class="col-md-8" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">报警间隔(注意：单位为分)：</div>
+								<div class="col-md-8 grad2" style="text-align:center;height: 30px;border: 1px solid #e1dfe3">报警间隔(注意：单位为分)：</div>
 								<div class="col-md-4" style="margin-left: -15px">
 									<input type="text" id="alertmehx"/>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12" style="height: 30px"></div>
-						<div class="col-md-8 col-md-offset-2" style="height:500px;overflow:scroll;" id="saveuser">
-							<table id="hxuser" style="width: 97%;table-layout:fixed;" border="1" class="table table-striped"></table>
+						<div class="col-md-12" style="height: 10px"></div>
+						<div class="col-md-12" style="height:520px;overflow:auto;" id="saveuser">
+							<table id="hxuser" style="width: 100%;table-layout:fixed;" border="1" class="table table-striped"></table>
 						</div>
-						<div class="col-md-12" style="height: 20px"></div>
+						<div class="col-md-12 grad1" style="height: 8px;"></div>
+						<div class="col-md-12" style="height: 10px"></div>
 						<div class="modal-footer col-md-2 col-md-offset-8">
 							<button type="button" style="border-radius: 5px;" onclick="pzsavehx()" id="pzsavehx"><img src="../fonts/png/glyphicons-207-ok.png" />保存</button>
 						</div>
@@ -396,54 +438,40 @@
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
  aria-labelledby="mySmallModalLabel" id="sm_m">
 <div class="modal-dialog modal-sm" role="document">
-	<div class="modal-content" style="width: 600px; height: 400px;">
+	<div class="modal-content" style="width: 500px; height: 400px;">
 		<form action="/pjpz/toupdate">
 			<input type="hidden" value="id" name="id" id="id_v" />
-			<div
-					style="position: absolute; left: 20px; top: 20px; width: 200px">
-				模板名：<input id="name_upd" class="form-control top-option-border" type="text"
-						   name="name" />
+			<div style="position: absolute; left: 20px; top: 20px; width: 200px">
+				模板名：<input id="name_upd" class="form-control top-option-border" type="text" name="name" />
 			</div>
-			<div
-					style="position: absolute; left: 250px; top: 20px; width: 200px">
-				<span>数据源</span> <select class="form-control top-option-border" title="资源类型"
-										 id="type_upd" name="type" width="50px">
+			<div style="position: absolute; left: 250px; top: 20px; width: 200px">
+				<span>数据源</span> <select class="form-control top-option-border" title="资源类型" id="type_upd" name="type" width="50px">
 				<option value="业务数据">业务数据</option>
 				<option value="测试数据">测试数据</option>
 			</select>
 			</div>
-			<div
-					style="position: absolute; left: 20px; top: 180px; width: 200px">
+			<div style="position: absolute; left: 20px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control top-option-border" rows="3" name="wechart_content"
-						  id="wechart_content_upd"></textarea>
+				<textarea class="form-control top-option-border" rows="3" name="wechart_content" id="wechart_content_upd"></textarea>
 			</div>
-			<div
-					style="position: absolute; left: 20px; top: 100px; width: 200px">
-				是否发送微信 <select class="form-control top-option-border" title="是否发送" id="weixin_upd"
-							   name="wei_send" width="50px">
+			<div style="position: absolute; left: 20px; top: 100px; width: 200px">
+				是否发送微信 <select class="form-control top-option-border" title="是否发送" id="weixin_upd" name="wei_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
 			</select>
 			</div>
-			<div
-					style="position: absolute; left: 250px; top: 180px; width: 200px">
+			<div style="position: absolute; left: 250px; top: 180px; width: 200px">
 				<label for="name"></label>
-				<textarea class="form-control top-option-border" rows="3" name="sns_content"
-						  id="sns_content_upd"></textarea>
+				<textarea class="form-control top-option-border" rows="3" name="sns_content" id="sns_content_upd"></textarea>
 			</div>
-			<div
-					style="position: absolute; left: 250px; top: 100px; width: 200px">
-				是否发送短信 <select class="form-control top-option-border" title="是否发送" id="sms_upd"
-							   name="sms_send" width="50px">
+			<div style="position: absolute; left: 250px; top: 100px; width: 200px">
+				是否发送短信 <select class="form-control top-option-border" title="是否发送" id="sms_upd" name="sms_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
 			</select>
 			</div>
-			<div
-					style="position: absolute; left: 370px; top: 400px; width: 200px">
-				<input type="submit" class="btn btn-success" id="toadd_upd"
-					   value="确认修改" />
+			<div style="position: relative; left: 350px; top: 320px; width: 200px">
+				<input type="submit" class="btn btn-success" id="toadd_upd" value="确认修改" />
 			</div>
 		</form>
 	</div>
@@ -730,7 +758,7 @@
 </footer>
 <!--页脚 end-->
 <script src="../js/jquery2.1.1.js"></script>
-<script type="text/javascript" src="../js/bootstrap-select.js"></script>
+<script src="../js/bootstrap-select.js"></script>
 <script src="../js/bootstrap_3.3.7.js"></script>
 <script type="text/javascript" src="../js/pjpz_1.js"></script>
 </body>
