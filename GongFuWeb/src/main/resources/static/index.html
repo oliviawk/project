@@ -7,7 +7,7 @@
     <title>公共气象服务中心业务全流程监控系统</title>
 
     <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../main.css" />
+    <link rel="stylesheet" href="../css_option/main.css" />
     <link rel="stylesheet" href="../css/bootstrap_3.3.7.css" />
     <link rel="stylesheet" href="../css/bootstrap-select.css" />
     <style>
@@ -61,7 +61,7 @@
                 <li class="nav-index current"><a id="nav_homepage" href="http://10.30.17.171:8090" title="首页"><span>首页</span></a></li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>数据源</span><b class="caret"></b></a>
                     <ul class="dropdown-menu" >
-                        <li><a class="link-1" href="http://10.30.17.172:9091/dataSourceSetting/"><span>配置</span></a></li>
+                        <li><a class="link-1" href="http://10.30.17.171:9091/dataSourceSetting/"><span>配置</span></a></li>
                         <li><a class="link-2" href="http://10.30.17.171:9091/dataSource/"><span>告警列表</span></a></li>
                         <li><a class="link-3" href="http://test.tvhf.com:8080/"><span>雷达基数据</span></a></li>
                         <li><a class="link-4" href="http://10.14.83.52:8082/SURF_GLB_MUL_HOR"><span>CIMISS</span></a></li>
@@ -69,16 +69,16 @@
                 </li>
                 <li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>重点业务</span><b class="caret"></b></a>
                     <ul class="dropdown-menu" >
-                        <li class="nav-index current"><a class="link-1" href="http://10.30.17.171:8090/fzjc/lct"><span>辅助决策</span></a></li>
-                        <li class="nav-index current"><a class="link-2" href="http://10.30.17.171:8090/laps/lct"><span>格点数据</span></a></li>
-                        <li class="nav-index current"><a class="link-3" href="http://10.30.17.171:8090/MQPF/"><span>MQPF</span></a></li>
-                        <li class="nav-index current"><a class="link-4" href="http://10.30.17.171:8090/RGF/"><span>RGF</span></a></li>
-                        <li class="nav-index current"><a class="link-5" href="http://10.30.17.171:8090/OCF/"><span>OCF</span></a></li>
+                        <li class="nav-index current"><a class="link-1" href="/fzjc/lct"><span>气象信息决策支持系统</span></a></li>
+                        <li class="nav-index current"><a class="link-2" href="/laps/lct"><span>LAPS</span></a></li>
+                        <li class="nav-index current"><a class="link-3" href="/MQPF/"><span>MQPF</span></a></li>
+                        <li class="nav-index current"><a class="link-4" href="/RGF/"><span>RGF</span></a></li>
+                        <li class="nav-index current"><a class="link-5" href="/OCF/"><span>OCF</span></a></li>
                     </ul>
                 </li>
                 <li><a class="dropdown-toggle nav-index current" data-toggle="dropdown" href="#"><span>告警中心</span><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li class="nav-index current"><a class="link-1" href="http://10.30.17.172:9090/pjpz/"><span>配置</span></a></li>
+                        <li class="nav-index current"><a class="link-1" href="http://10.30.17.171:9090/pjpz/"><span>配置</span></a></li>
                         <li class="nav-index current"><a class="link-2" href="http://10.30.17.171:9091/alarmBrowse/"><span>查看</span></a></li>
                     </ul>
                 </li>
@@ -137,11 +137,11 @@
                     <!--<div class="home-p">查看</div>-->
                 </a>
                 <div class="links-box">
-                    <a class="link-1" href="/fzjc/lct">决策辅助</a>
+                    <a class="link-1" href="/fzjc/lct">气象信息决策支持系统</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
-                    <a class="link-2" href="/laps/lct">格点实况</a>
+                    <a class="link-2" href="/laps/lct">LAPS</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
-                    <a class="link-3" href="/MQPF/">分钟降水</a>
+                    <a class="link-3" href="/MQPF/">MQPF</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
                     <a class="link-4" href="/RGF/">RGF</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
@@ -211,7 +211,7 @@
                 <h3 class="menu-title footer-title expand">关注我们<i class="icon icon-arrow-top"></i></h3>
                 <div class="footer-qrcode clearfix hidden-xs hidden-sm">
                     <div class="qrcode-wrapper">
-                        <img src="qrcode.jpg" alt="qrcode">
+                        <img src="imsg/qrcode.jpg" alt="qrcode">
                         <span>欢迎关注质控报告微信公众号</span>
                     </div>
                 </div>

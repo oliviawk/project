@@ -51,7 +51,6 @@ function lineChartMain(elementId , data , config ){
 
     //转换数据
     var newData = dataSource(data);
-    console.info(newData)
     var width = config.width - config.margin.left - config.margin.right;
     var height = config.height  - config.margin.top - config.margin.bottom;
 
@@ -61,7 +60,6 @@ function lineChartMain(elementId , data , config ){
             return v['num'];
         });
     });
-    console.info(maxNum)
 
     var x = d3.time.scale()
         .range([0, width])
@@ -163,7 +161,7 @@ function lineChartMain(elementId , data , config ){
             $(this).tooltip({
                 'container': 'body',
                 'placement': 'top',
-                'title': '连接数：'+d['num'],
+                'title': '数据量：'+d['num'],
                 'trigger': 'hover'
             }).tooltip('show');
         })

@@ -1,5 +1,5 @@
 //声明 雷达、精细化预报、常规预报、实况  雷达基站数据
-var radar_dataSource, yubao_dataSource, shikuang_dataSource = [];
+var radar_dataSource,sevpscon_dataSource, sevpsnwfd_dataSource, shikuang_dataSource = [];
 $(function () {
     console.info("加载雷达数据")
     $.ajax({
@@ -8,7 +8,7 @@ $(function () {
         dataType: "json",
         async: false,
         success: function (d) {
-            radar_dataSource = d;
+            radar_dataSource = d.slice(0);
         },
         error: function (err) {
             radar_dataSource = [];
@@ -21,10 +21,22 @@ $(function () {
         dataType: "json",
         async: false,
         success: function (d) {
-            yubao_dataSource = d;
+            sevpscon_dataSource = d.slice(0);
         },
         error: function (err) {
-            yubao_dataSource = [];
+            sevpscon_dataSource = [];
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: "../js/bigscreenshow/预报雷达基站数据.json",
+        dataType: "json",
+        async: false,
+        success: function (d) {
+            sevpsnwfd_dataSource = d.slice(0);
+        },
+        error: function (err) {
+            sevpsnwfd_dataSource = [];
         }
     });
     console.info("加载实况")
@@ -34,7 +46,7 @@ $(function () {
         dataType: "json",
         async: false,
         success: function (d) {
-            shikuang_dataSource = d;
+            shikuang_dataSource = d.slice(0);
         },
         error: function (err) {
             shikuang_dataSource = [];
@@ -46,16 +58,27 @@ $(function () {
 
 function data_jishuju() {
     var data = [];
-    data.push("办公业务,8,0");
-    data.push("预警业务,44,0");
-    data.push("数据资源池,20,0");
-    data.push("核心加工系统,66,0");
-    //           {"办公业务":"1,9","预警业务":"44,0","数据资源池":"20,0","核心加工系统":"66,0"};
+    // data.push("办公业务,8,0");
+    // data.push("预警业务,44,0");
+    // data.push("数据资源池,20,0");
+    // data.push("核心加工系统,66,0");
 
-    //       var BG = data.办公业务.split(",");
-    //       var BG_arg=BG[0]/(parseInt(BG[0])+parseInt(BG[1]));
-    //       var r =Math.floor(Math.random()*100+1);
-    //       console.log(r);
+    $.ajax({
+        type: "GET",
+        url: "/show/getoutherdata?url=http://10.30.17.171:8786/basesource/bigscreen",
+        dataType: "json",
+        async: false,
+        success: function (d) {
+            console.info(d)
+            for (var key in d) {
+                data.push(key+","+d[key]);
+            }
+        },
+        error: function (err) {
+            console.log("基础资源数据加载失败");
+        }
+    });
+
     var svg1 = d3.select("#svg1")
         .attr("width", 1500)
         .attr("height", 300)
@@ -238,7 +261,7 @@ function lineCharScript(e, dataType) {
         });
 
         n++;
-    }, 30 * 1000)
+    }, 60 * 1000)
 
     // var element = e;
     // var config1 = new lineChartConfig();
@@ -309,6 +332,4 @@ function lineCharScript(e, dataType) {
     // }, 30 * 1000)
 }
 
-lineCharScript("#flume_data1", "1");
-lineCharScript("#flume_data", "2");
 
