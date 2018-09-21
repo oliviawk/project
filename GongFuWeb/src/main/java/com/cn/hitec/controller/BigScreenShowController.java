@@ -1,8 +1,10 @@
 package com.cn.hitec.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cn.hitec.bean.EsQueryBean_web;
 import com.cn.hitec.feign.client.EsQueryService;
 import com.cn.hitec.service.OCFService;
+import com.cn.hitec.tools.HttpPub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +40,24 @@ public class BigScreenShowController {
         return esQueryService.getFileSizeCount(str);
     }
 
+
+
+    /**
+     *  根据utl 获取数据 / 防止页面直接调用引起的跨域问题
+     * @param url
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getoutherdata", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getOutherData( String url){
+        System.out.println(url);
+        if(url.indexOf("http") == -1){
+            return null;
+        }
+        Map<String,Object> res = HttpPub.getData(url);
+        System.out.println(JSON.toJSONString(res));
+        return res;
+    }
 
 }
