@@ -8,8 +8,6 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSONException;
-import com.google.common.collect.ObjectArrays;
 import com.hitec.domain.*;
 import com.hitec.repository.jpa.*;
 import org.slf4j.Logger;
@@ -61,6 +59,8 @@ public class PJPZController {
    Basesource_rulesRepository basesource_rulesRepository;
    @Autowired
    Basesource_userRepository basesource_userRepository;
+   @Autowired
+   UsersRepository usersRepository;
 	@RequestMapping("/")
 	public String index() {
 
@@ -120,7 +120,7 @@ public class PJPZController {
 		int is=0;
 		Users user=new Users();
 		user.setIs_user(is);
-		user.setDesc(ad.getString("usersm"));
+		user.setDescs(ad.getString("usersm"));
 		user.setWechart(ad.getString("usergzh"));
 		user.setEmail(ad.getString("useremail"));
 		user.setPhone(ad.getString("userphone"));
@@ -143,6 +143,22 @@ public class PJPZController {
 		List<SendTemplate> list = sendTemplateRepository.findAll();
 		for(int i=0;i<list.size();i++){
 			SendTemplate st = list.get(i);
+			if(l==st.getId()){
+				return st;
+			}
+
+		}
+
+		return null;
+	}
+	@RequestMapping(value = "/sen_c", method = RequestMethod.POST)
+	@ResponseBody
+	public Users give_1(@RequestBody String id) {
+		JSONObject jb=JSON.parseObject(id);
+		long l=Long.parseLong(jb.getString("id"));
+		List<Users> list = usersRepository.findAll();
+		for(int i=0;i<list.size();i++){
+			Users st = list.get(i);
 			if(l==st.getId()){
 				return st;
 			}
@@ -366,6 +382,20 @@ public class PJPZController {
 		String sms_send=request.getParameter("sms_send");
 		sendTemplateRepository.updateWhereId(iD,name,type,wechart_content,wei_send,sns_content,sms_send);
 		alertStrategyRepository.updateDataTemplate(iD,wechart_content,sns_content);
+		return "pjpz";
+	}
+	@RequestMapping("/toupdateu")
+	public String addUser7(HttpServletRequest request, ModelMap map) {
+		String id=request.getParameter("id");
+		long iD=Long.parseLong(id);
+		String name=request.getParameter("name");
+		String wechat=request.getParameter("wechat");
+		String phone=request.getParameter("phone");
+		String email=request.getParameter("email");
+		String descs=request.getParameter("descs");
+		System.out.println(name+wechat+phone+email+descs+iD);
+		usersRepository.updata_u(name,wechat,phone,email,descs,iD);
+
 		return "pjpz";
 	}
 

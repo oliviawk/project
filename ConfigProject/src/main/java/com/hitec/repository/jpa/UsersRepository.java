@@ -3,7 +3,9 @@ package com.hitec.repository.jpa;
 import com.hitec.domain.SendTemplate;
 import com.hitec.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,5 +49,11 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
             "IF(?4 = '' , 1=1 , us.wechart = ?4)" +
             "order by parent_id desc", nativeQuery = true)
     List<Object> findUsers_pname(String parent_name,String name, String phone, String wechart);
+
+
+    @Transactional
+    @Modifying
+    @Query( value = "UPDATE users SET name = ?1,wechart = ?2,phone = ?3,email = ?4 ,descs = ?5 WHERE id =?6",nativeQuery = true)
+    void updata_u(String name,String wechat,String phone,String email,String descs,long id);
 
 }

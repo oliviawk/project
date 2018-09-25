@@ -20,13 +20,13 @@ public class Users implements Serializable {
     private String descs;
     private int is_user;
 
-    public Users(String name, int parent_id, String email, String wechart, String phone, String desc, int is_user) {
+    public Users(String name, int parent_id, String email, String wechart, String phone, String descs, int is_user) {
         this.name = name;
         this.parent_id = parent_id;
         this.email = email;
         this.wechart = wechart;
         this.phone = phone;
-        this.descs = desc;
+        this.descs = descs;
         this.is_user = is_user;
     }
 
@@ -85,12 +85,12 @@ public class Users implements Serializable {
         this.phone = phone;
     }
 
-    public String getDesc() {
+    public String getDescs() {
         return descs;
     }
 
-    public void setDesc(String desc) {
-        this.descs = desc;
+    public void setDescs(String descs) {
+        this.descs = descs;
     }
 
     public int getIs_user() {

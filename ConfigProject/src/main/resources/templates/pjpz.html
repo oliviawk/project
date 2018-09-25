@@ -12,7 +12,9 @@
 
 <style>
 
-
+	.tr.th{
+		height: 40px;
+	}
 
 	.form-control {
 		border: none;
@@ -233,7 +235,7 @@
 						<div class="col-md-12" style="height: 10px"></div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板名:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板名称:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempName" />
 								</div>
@@ -241,7 +243,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板种类:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">模板类型:</div>
 								<div class="col-md-7" style="margin-left: -15px">
 									<input class="form-control top-option-border" type="text" id="tempType" />
 								</div>
@@ -249,17 +251,25 @@
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">微信号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">发送微信:</div>
 								<div class="col-md-7" style="margin-left: -15px">
-									<input class="form-control top-option-border" type="text" id="tempWechart" />
+									<select class="form-control top-option-border" type="text" id="tempWechart">
+										<option value=""></option>
+										<option value="1">发送</option>
+										<option value="0">不发送</option>
+									</select>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="row">
-								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">手机号:</div>
+								<div class="col-md-5 grad2" style="text-align:center;height: 33px;border: 1px solid #e1dfe3;border-radius: 5px">发送短信:</div>
 								<div class="col-md-7" style="margin-left: -15px">
-									<input class="form-control top-option-border" type="text" id="tempSms" />
+									<select class="form-control top-option-border" type="text" id="tempSms">
+										<option value=""></option>
+										<option value="1">发送</option>
+										<option value="0">不发送</option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -270,7 +280,7 @@
 									<button type="button" style="border-radius: 5px;" onclick="searchTemp()"><img src="../fonts/png/glyphicons-28-search.png" />模板查询</button>
 								</div>
 								<div class="col-md-3">
-									<button type="button" style="border-radius: 5px;" data-toggle="modal" data-target="#tempAdd"><img src="../fonts/png/glyphicons-433-plus.png" />添加模板</button>
+									<button type="button" style="border-radius: 5px;" onclick="clearcontent()" data-toggle="modal" data-target="#tempAdd"><img src="../fonts/png/glyphicons-433-plus.png" />添加模板</button>
 								</div>
 							</div>
 						</div>
@@ -333,32 +343,28 @@
 				<!--弹框配置发布信息-->
 			</div>
 		</div>
+		<!--添加告警策略 -->
 		<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
 			 aria-labelledby="myLargeModalLabel" id="big_m">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-body">
 						<div style="width: 150px; float: left; margin-left: 50px;">
-							数据种类 <select class="form-control top-option-border" title="数据源" id="pzAddSelect1"
-										 onchange="onchangeSelect2(this)">
+							数据类型 <select class="form-control top-option-border" title="数据源" id="pzAddSelect1" onchange="onchangeSelect2(this)">
 							<option></option>
 						</select> <input type="hidden" id="selectTypeHidden" value="" />
 						</div>
 						<div style="width: 150px; float: left; margin-left: 50px;">
-							<span id="hjName2">业务名/IP</span> <select class="form-control top-option-border"
-																	 title="业务名/IP" id="pzAddSelect2" onchange="onchangeSelect2(this)">
+							<span id="hjName2">业务名/IP</span> <select class="form-control top-option-border" title="业务名/IP" id="pzAddSelect2" onchange="onchangeSelect2(this)">
 							<option></option>
 						</select>
 						</div>
 						<div style="width: 150px; float: left; margin-left: 50px; margin-bottom: 10px;">
-							<span id="hjName3">资料名</span> <select class="form-control top-option-border"
-																  title="资料名" id="pzAddSelect3" onchange="onchangeSelect2(this)">
+							<span id="hjName3">资料名</span> <select class="form-control top-option-border" title="资料名" id="pzAddSelect3" onchange="onchangeSelect2(this)">
 							<option></option>
 						</select>
 						</div>
-
-						<div style="float: left; width: 177px;display: none; margin-top: 23px;margin-left: -150px;" id='baseSourceIp'>
-							ip:<input type="text" id="ip" />
+						<div style="float: left; width: 177px;display: none; margin-top: 23px;margin-left: -150px;" id='baseSourceIp'>ip:<input type="text" id="ip" />
 						</div>
 						<div class="alert alert-warning" style="display: none;  margin-top: 57px; margin-bottom: -15px;font-size: 11px;height: 57px;" id="tip_cjf" role="alert">
 							<img src="../imsg/warning.png" style="display:block; float:left; margin-top:3px;margin-right: 10px;" />
@@ -374,10 +380,9 @@
 							<div class="area" >
 								<div class="row" style="margin-left: 10px;">
 									<div class="form-control form-attribute"
-										 style=" width: 100px; float: left;">用   户:</div>
+										 style=" width: 100px; float: left;">用户名:</div>
 									<div style="width: 170px; float: left;">
-										<select class=" form-control " title="用户" width="400px"
-												id="selectUser">
+										<select class=" form-control " title="用户" width="400px" id="selectUser">
 											<option>用户A</option>
 											<option>用户B</option>
 										</select>
@@ -435,48 +440,89 @@
 
 
 <!--修改模态框-->
-<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
- aria-labelledby="mySmallModalLabel" id="sm_m">
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="sm_m">
 <div class="modal-dialog modal-sm" role="document">
-	<div class="modal-content" style="width: 500px; height: 400px;">
+	<div class="modal-content" style="width: 460px; height: 400px;">
 		<form action="/pjpz/toupdate">
+			<div class="row">
+				<div class="col-md-12" height="10px"></div>
+				<div class="col-md-12" style="height: 30px;border-bottom: solid 1px black">
+					修改模板 >>
+				</div>
+			</div>
 			<input type="hidden" value="id" name="id" id="id_v" />
-			<div style="position: absolute; left: 20px; top: 20px; width: 200px">
+			<div style="position: relative; left: 20px; top: 20px; width: 200px">
 				模板名：<input id="name_upd" class="form-control top-option-border" type="text" name="name" />
 			</div>
-			<div style="position: absolute; left: 250px; top: 20px; width: 200px">
+			<div style="position: relative; left: 240px; top: -40px; width: 200px">
 				<span>数据源</span> <select class="form-control top-option-border" title="资源类型" id="type_upd" name="type" width="50px">
 				<option value="业务数据">业务数据</option>
-				<option value="测试数据">测试数据</option>
+				<option value="测试数据">基础资源</option>
 			</select>
 			</div>
-			<div style="position: absolute; left: 20px; top: 180px; width: 200px">
-				<label for="name"></label>
-				<textarea class="form-control top-option-border" rows="3" name="wechart_content" id="wechart_content_upd"></textarea>
+			<div style="position: relative; left: 20px; top: -20px; width: 200px">是否发送短信
+				<select class="form-control top-option-border" title="是否发送" id="sms_upd" name="sms_send" width="50px">
+					<option value="1">发送</option>
+					<option value="0">不发送</option>
+				</select>
 			</div>
-			<div style="position: absolute; left: 20px; top: 100px; width: 200px">
+			<div style="position: relative; left: 240px; top: -80px; width: 200px">
 				是否发送微信 <select class="form-control top-option-border" title="是否发送" id="weixin_upd" name="wei_send" width="50px">
 				<option value="1">发送</option>
 				<option value="0">不发送</option>
 			</select>
 			</div>
-			<div style="position: absolute; left: 250px; top: 180px; width: 200px">
+			<div style="position: relative; left: 20px; top: -80px; width: 200px">
+				<label for="name"></label>
+				<textarea class="form-control top-option-border" rows="3" name="wechart_content" id="wechart_content_upd"></textarea>
+			</div>
+			<div style="position: relative; left: 240px; top: -190px; width: 200px">
 				<label for="name"></label>
 				<textarea class="form-control top-option-border" rows="3" name="sns_content" id="sns_content_upd"></textarea>
 			</div>
-			<div style="position: absolute; left: 250px; top: 100px; width: 200px">
-				是否发送短信 <select class="form-control top-option-border" title="是否发送" id="sms_upd" name="sms_send" width="50px">
-				<option value="1">发送</option>
-				<option value="0">不发送</option>
-			</select>
-			</div>
-			<div style="position: relative; left: 350px; top: 320px; width: 200px">
+			<div style="position: relative; left: 350px; top: -150px; width: 200px">
 				<input type="submit" class="btn btn-success" id="toadd_upd" value="确认修改" />
 			</div>
 		</form>
 	</div>
 </div>
 </div>
+
+<!--修改用户模态框-->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="sm_d">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content" style="width: 460px; height: 400px;">
+			<form action="/pjpz/toupdateu">
+				<div class="row">
+					<div class="col-md-12" height="10px"></div>
+					<div class="col-md-12" style="height: 30px;border-bottom: solid 1px black">
+						修改用户信息 >>
+					</div>
+				</div>
+				<input type="hidden" value="id" name="id" id="id_vu" />
+				<div style="position: relative; left: 20px; top: 20px; width: 200px">
+					用户名：<input id="name_updu" class="form-control top-option-border" type="text" name="name" />
+				</div>
+				<div style="position: relative; left: 240px; top: -40px; width: 200px">
+					微信号：<input id="wechat_updu" class="form-control top-option-border" type="text" name="wechat" />
+				</div>
+				<div style="position: relative; left: 20px; top: -20px; width: 200px">
+					手机号：<input id="phone_updu" class="form-control top-option-border" type="text" name="phone" />
+				</div>
+				<div style="position: relative; left: 240px; top: -80px; width: 200px">
+					邮箱号：<input id="email_updu" class="form-control top-option-border" type="text" name="email" />
+				</div>
+				<div style="position: relative; left: 20px; top: -60px; width: 200px">
+					备注：<input id="descs_updu" class="form-control top-option-border" type="text" name="descs" />
+				</div>
+				<div style="position: relative; left: 350px; top: 20px; width: 200px">
+					<input type="submit" class="btn btn-success" id="toadd_updu" value="确认修改" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <!--添加用户信息-->
 <div class="modal fade bs-example-modal-lg" id="ueserAdd" tabindex="-1"
  role="dialog" aria-labelledby="myLargeModalLabel">
@@ -524,50 +570,34 @@
 <div class="modal fade bs-example-modal-lg" id="tempAdd" tabindex="-1"
  role="dialog" aria-labelledby="myLargeModalLabel">
 <div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content"
-		 style="height: 600px; width: 420px; position: absolute; left: 20%; top: 50%;">
-
-
+	<div class="modal-content" style="height: 600px; width: 420px; position: absolute; left: 20%; top: 50%;">
 		<div style="width: 200px">
-			<span style="position: relative; left: 10px; top: 13px">模板名:</span><input
-				style="position: relative; left: 69px; top: -13px"
-				class="form-control top-option-border" type="text" id="name" name="name" />
+			<span style="position: relative; left: 10px; top: 13px">模板名:</span><input style="position: relative; left: 69px; top: -13px" class="form-control top-option-border" type="text" id="name" name="name" />
 		</div>
 		<div style="position: relative; left: 10px; top: 7px; width: 300px">
-				<span
-						style="position: relative; float: left; top: 5px; margin-right: 12px;">数据源:</span>
-			<select class="form-control top-option-border" title="资源类型" id="type" name="type"
-					style="width: 200px;">
+			<span style="position: relative; float: left; top: 5px; margin-right: 12px;">数据源:</span>
+			<select class="form-control top-option-border" title="资源类型" id="type" name="type" style="width: 200px;">
 				<option value="业务数据">业务数据</option>
 				<option value="基础资源">基础资源</option>
 			</select>
 		</div>
 
-		<div
-				style="width: 400px; height: 80px; position: relative; left: 10px; top: 22px">
+		<div style="width: 400px; height: 80px; position: relative; left: 10px; top: 22px">
 			<dl id="dl_document">
 				<dt>字段选择</dt>
 				<dd>
 					<a>[yyyy-MM-dd HH:mm:ss]</a> <a>[数据源]</a><a>[业务名]</a><a>[资料名]</a><a>[资料时次]</a><a>[环节]</a><a>[路径]</a>
 					<a>[错误信息]</a><a>[错误详情]</a><a>[IP]</a> <a>[影响的业务]</a><a>[处理方案]</a>
-
 				</dd>
-
 			</dl>
 		</div>
 		<div style="width: 400px; position: relative; left: 10px; top: 30px">
-			<input type="checkbox" id="wechart_send_c"
-				   onclick="checkClick('wechart_send_c')" />微信 <input type="hidden"
-																	  name="wechart_send" id="wechart_send" value="0" />
-			<textarea class="form-control top-option-border" rows="5" name="wechart_content"
-					  id="wechart_content"></textarea>
+			<input type="checkbox" id="wechart_send_c" name="we_is" onclick="checkClick('wechart_send_c')" />微信 <input type="hidden" name="wechart_send" id="wechart_send" value="0" />
+			<textarea class="form-control top-option-border" rows="5" name="wechart_content" id="wechart_content"></textarea>
 		</div>
 		<div style="width: 400px; position: relative; left: 10px; top: 30px">
-			<input type="checkbox" id="sms_send_c"
-				   onclick="checkClick('sms_send_c')" />短信 <input type="hidden"
-																  name="sms_send" id="sms_send" value="0" />
-			<textarea class="form-control top-option-border" rows="5" name="sns_content"
-					  id="sns_content"></textarea>
+			<input type="checkbox" id="sms_send_c" name="se_is" onclick="checkClick('sms_send_c')" />短信 <input type="hidden" name="sms_send" id="sms_send" value="0" />
+			<textarea class="form-control top-option-border" rows="5" name="sns_content" id="sns_content"></textarea>
 		</div>
 		<div style="position: relative; left: 150px; top: 40px;">
 			<button class="btn btn-success" value="确认添加" onclick="addTemple()">确认添加</button>
@@ -582,14 +612,12 @@
 <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h4 class="modal-title" id="myModalLabel">策略详情</h4>
 		</div>
 		<div class="modal-body">
 			<!--告警策略表格-->
-			<table class="table table-bordered table-hover"
-				   id="strategyDescTable">
+			<table class="table table-bordered table-hover" id="strategyDescTable">
 				<tr>
 					<td colspan="3">
 						<span>辅助决策</span> - <span>雷达</span>
