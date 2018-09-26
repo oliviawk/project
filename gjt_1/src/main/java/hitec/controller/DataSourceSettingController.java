@@ -393,13 +393,16 @@ public class DataSourceSettingController {
 		String type = "success";
 		String message = "成功";
 		String filenametxt=request.getParameter("filename");
+		System.out.println("时间格式更改文件名one:"+filenametxt);
 		String filename=filenametxt;
 		if (filename!=null){
 			String [] array=filename.split("/");
 			filename=array[array.length-1];
 		}
 		String filenametwo=filename;
+		System.out.println("时间格式更改文件名two:"+filename);
 		String format=request.getParameter("format");
+		System.out.println("需要更改的之后的时间格式："+format);
 		String regEx="[^0-9]";
 		Pattern pattern=Pattern.compile(regEx);
 		Matcher matcher=pattern.matcher(filename);
@@ -429,8 +432,10 @@ public class DataSourceSettingController {
 			return outData;
 		}
 		else {
-			String mat= "\\d{"+format.length()+"}"+timeList.get(0).substring(format.length());
-			filename=filename.replace(timeList.get(0),mat);
+			for(int i=0;i<timeList.size();i++){
+				String mat= "\\d{"+format.length()+"}"+timeList.get(i).substring(format.length());
+				filename=filename.replace(timeList.get(i),mat);
+			}
 			outData.put("type",type);
 			outData.put("message",message);
 			outData.put("outfilename",filename);

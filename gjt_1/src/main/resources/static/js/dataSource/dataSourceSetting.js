@@ -90,7 +90,7 @@ $(document).ready(function() {
         }, // let our custom formatter work
         minimumInputLength: 3,
         language: "zh-CN", //设置 提示语言
-        width:"58%",
+        width:"50%",
         maximumSelectionLength: 1,  //设置最多可以选择多少项
         placeholder: "请选择",
         tags: false,  //设置必须存在的选项 才能选中
@@ -216,10 +216,6 @@ $(document).ready(function() {
             bool=false;
 
         }
-        if(moniterTimer==null || moniterTimer.trim()==""){
-            bool=false;
-
-        }
         if (!bool){
             alert("你有选项未选择，或有栏目未填写！！！")
             $("#submitBtn").attr("disabled",false);
@@ -268,6 +264,7 @@ $(document).ready(function() {
 });
 
 function findUserFile() {
+    console.info("执行findUserFile()方法！！")
     var userIp =$("#IpAddrSelect").select2('val');
     var userName = $("#SendUserNameSelect").select2("val");
     var fileName = $("#fileNameHidden").val();
