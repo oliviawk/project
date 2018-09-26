@@ -140,6 +140,10 @@ h1{
     margin-left: 0px;
 }
 
+#centerDataTable > span {
+    top: -5px;
+    left: 5px;
+}
 #centerDataTable > thead > tr > th {
     background-color: transparent;
     font-size: 20px;

@@ -74,7 +74,12 @@ public interface EsQueryService {
     public Map<String, Object> findDataByQuery(@RequestBody EsQueryBean esQueryBean);
 
 
-    @RequestMapping(value = "/query/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
+    /**
+     * 大屏页面折现图--数据量 查询
+     * @param str
+     * @return
+     */
+    @RequestMapping(value = "/bigscreen/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
     public List<Object> getFileSizeCount(@RequestBody  String str);
 
 }

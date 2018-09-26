@@ -51,12 +51,10 @@ public class BigScreenShowController {
     @RequestMapping(value = "/getoutherdata", method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> getOutherData( String url){
-        System.out.println(url);
         if(url.indexOf("http") == -1){
             return null;
         }
         Map<String,Object> res = HttpPub.getData(url);
-        System.out.println(JSON.toJSONString(res));
         return res;
     }
 

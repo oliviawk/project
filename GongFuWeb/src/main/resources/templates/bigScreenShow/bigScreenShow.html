@@ -224,12 +224,11 @@
     setTimeout(function () {
         console.info("开始执行。。")
         lineCharScript("#flume_data1", "1");
-
+        lineCharScript("#flume_data", "2");
     },1000);
     setTimeout(function () {
-        $("#grad_circle_2").attr("class","click_circle");
-        showLeiDa(2);
-        lineCharScript("#flume_data", "2");
+        $("#grad_circle_1").attr("class","click_circle");
+        showLeiDa(1);
     },2000);
 
 </script>

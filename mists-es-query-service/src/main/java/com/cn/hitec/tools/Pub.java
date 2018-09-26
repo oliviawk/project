@@ -14,6 +14,8 @@ public class Pub {
     public static  String Index_Head = "";
     public static  String Index_Food_Simpledataformat = "yyyyMMdd";
 
+    public static Map<String,Object>  dataMachiningMap = new HashMap<>();
+
 
     public static String transform_DateToString(Date date , String simpleDataFormat) throws Exception{
         if(date == null){

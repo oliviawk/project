@@ -116,7 +116,7 @@ d3.json("../js/bigscreenshow/china.geojson", function (error, root) {
     grad_g.append("circle")
         .attr("class", "no_click_circle")
         .attr("id", function (d, i) {
-            return "grad_circle_" + i;
+            return "grad_circle_" + (i+1);
         })
         .attr("fill", "#2757D7")
         .attr("cx", function (d, i) {
@@ -282,7 +282,7 @@ function showLeiDa(num) {
                 tbodyArry.push("<tr> " +
                     "<td>" + a.name + "(" + a.province + ")" + "</td>" +
                     "<td>" + a.nameZ + "</td>" +
-                    "<td>" + a.state + "</td>" +
+                    "<td style='max-width: 500px;'>" + a.state + "</td>" +
                     "</tr>");
 
             } else {
@@ -292,7 +292,7 @@ function showLeiDa(num) {
                         tbodyArry.push("<tr>" +
                             "<td>" + dd.name + "(" + a.province + ")" + "</td>" +
                             "<td>" + dd.number + "</td>" +
-                            "<td>" + dd.state + "</td>" +
+                            "<td style='max-width: 500px;'>" + dd.state + "</td>" +
                             "</tr>");
                     }
                 });

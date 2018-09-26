@@ -2,7 +2,7 @@ function lineChartConfig(){
     return {
         width:720,
         height:350,
-        margin:{top:45,right:30,bottom:25,left:50},
+        margin:{top:45,right:30,bottom:25,left:55},
         lineColor:{"发布管理平台":"green","监控系统":"#178BCA"},    //图例的 文字和颜色
         lineType:"linear",    //折线的类型  cardinal:圆弧型  linear：线型
         lineWidth:2,
@@ -118,7 +118,11 @@ function lineChartMain(elementId , data , config ){
         .attr("fill", "#fff")
         .attr("font-weight", "bold")
         .attr("text-anchor", "start")
-        .text(config.desc_y);
+        .text(config.desc_y)
+        .append("tspan")
+        .attr("x",0)
+        .attr("y",0)
+        .text("M");
 
     //画线
     var path = svg.selectAll(".pathg")

@@ -95,11 +95,15 @@ function data_jishuju() {
         .attr("xlink:href", function (d, i) {
             return "../img/bigscreenshow/watch.png";
         })
+        .attr("width","210")
+        .attr("height","200");
 
     svg1.append("image")
         .attr("xlink:href", function (d, i) {
             return "../img/bigscreenshow/zhen.png";
         })
+        .attr("width","144.65")
+        .attr("height","68.73")
         .attr("x", function (d, i) {
             return 49
         })
@@ -241,7 +245,6 @@ function lineCharScript(e, dataType) {
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
             },
-            async: false,
             success: function (d) {
                 if (d == null || d.length < 1){
                     console.info("返回参数为空")
@@ -261,7 +264,7 @@ function lineCharScript(e, dataType) {
         });
 
         n++;
-    }, 60 * 1000)
+    }, 10 * 60 * 1000)
 
     // var element = e;
     // var config1 = new lineChartConfig();

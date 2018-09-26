@@ -392,38 +392,4 @@ public class QueryApi extends BaseController {
 		}
 	}
 
-
-
-	@RequestMapping(value = "/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
-	public List<Object>  getFileSizeCount(@RequestBody String str){
-		List<Object>  resultList= new ArrayList<>();
-		try {
-			JSONObject params = JSON.parseObject(str);
-			Date dt = new Date();
-			String unit = DiskUnit.getUnit(params.getString("unit"));
-			int timeGranularity = params.getInteger("timeGranularity");
-			int t =  params.getInteger("t");
-			int scale = params.getInteger("scale");
-			String callBack_dateFormat = params.getString("callBackDateFormat");
-			String dataType = params.getString("dataType");
-
-			String strDate = params.getString("dateStr");
-			String strFormat = params.getString("dateFormat");
-			SimpleDateFormat sd = new SimpleDateFormat(strFormat);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(sd.parse(strDate));
-			int minute = calendar.get(Calendar.MINUTE);
-			int n = minute / Math.abs(timeGranularity);
-			calendar.set(Calendar.MINUTE,n*Math.abs(timeGranularity));
-			dt = calendar.getTime();
-
-//			System.out.println("1:"+ Pub.transform_DateToString(dt,callBack_dateFormat));
-			resultList  = esWebService.getFileSize(dt,timeGranularity,t, unit,scale,callBack_dateFormat,dataType);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return resultList ;
-	}
-
 }
