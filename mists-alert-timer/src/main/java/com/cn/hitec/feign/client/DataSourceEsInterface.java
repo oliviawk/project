@@ -19,6 +19,14 @@ public interface DataSourceEsInterface {
     @RequestMapping(value = "/datasource/insertDataSource_DI", method = RequestMethod.POST, consumes = "application/json")
     public Map<String, Object> insertDataSource_DI(@RequestBody String json);
 
+
+    /**
+     * 生成节目表 数据源单独使用
+     * @param json
+     * @return
+     */
+    @RequestMapping(value = "/datasource/insertDataSource_DIDataSource", method = RequestMethod.POST, consumes = "application/json")
+    public Map<String, Object> insertDataSource_DIDataSource(@RequestBody String json);
     /**
      * 数据入库
      * @param json

@@ -178,7 +178,6 @@ public class ConfigService {
 						continue;
 					}
 				}
-
 				for (int i = 0; i< timeList.size();i++) {
 					Date dt = timeList.get(i);
 					if (runDate.getTime() > dt.getTime()){
@@ -301,8 +300,13 @@ public class ConfigService {
 		for (String key : DIMap.keySet()) {
 			try {
 				map = (Map<String, Object>) DIMap.get(key); // 获取单条配置信息
-
+				if(map.get("time_interval")==null){
+					continue;
+				}
 				String cron = map.get("time_interval").toString();
+				if(cron==null||cron==""){
+					continue;
+				}
 				String subType = map.get("DI_name").toString();
 				String name = map.get("sub_name").toString();;
 				String IP = map.get("IP").toString();
@@ -359,17 +363,21 @@ public class ConfigService {
 					//添加文件大小范围和文件名
 					fields.put("file_size_define",map.get("size_define").toString());
 					String nameDefine = map.get("name_define").toString();
-					System.out.println(nameDefine+"生成的字符串有：");
+					System.out.println(nameDefine+"生成的字符串有："+name);
 					nameDefine=nameDefine.replace("((","[");
 					nameDefine=nameDefine.replace("))","]");
 					nameDefine=nameDefine.replace(")|(",",");
 					List<String> fileNameregx = changeFileNameregx(nameDefine,dt);
 					for (String str:fileNameregx){
+						logger.info("changeFileNameregx方法返回："+str);
 						fields.put("file_name",path+str);
 						data.put("fields", fields);
+
 						outData.add(data);
+						Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DIDataSource(JSON.toJSONString(outData));
+						logger.info("DS -> 数据源 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
 					}
-					saveoutData.add(outData);
+//					saveoutData.add(outData);
 
 				}
 			} catch (Exception e) {
@@ -377,11 +385,11 @@ public class ConfigService {
 				logger.warn(e.getMessage());
 			}
 		}
-    for (Object Objlist:saveoutData){
-			List<Object>  list=(List<Object>) Objlist;
-		Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(outData));
-		logger.info("DS -> 数据源 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
-	}
+//    for (Object Objlist:saveoutData){
+//			List<Object>  list=(List<Object>) Objlist;
+//		Map<String, Object> backData = dataSourceEsInterface.insertDataSource_DI(JSON.toJSONString(list));
+//		logger.info("DS -> 数据源 ->录入数据记录：" + backData+"----生成:"+outData.size()+"条");
+//	}
 
 
 	}
@@ -619,11 +627,13 @@ public class ConfigService {
 
 
 	public List<String> changeFileNameregx(String nameDefine,Date date){
-
 		List<String> listfilename=null;
-
 		try {
+			logger.info("准备调用算法！！");
 			listfilename=regToStr(nameDefine,date);
+			for(String str:listfilename){
+				System.out.println("正则表达式执行放回结果："+str);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -631,6 +641,7 @@ public class ConfigService {
 	}
 
 	private List<String> regToStr(String str, Date date){
+		logger.info("预生成数据算法执行！！"+str+"时间："+date);
 		Pattern p = Pattern.compile("\\{(.+?)(\\[[\\+\\-]?\\d\\])?\\}");
 		Pattern p2 = Pattern.compile("(\\[.+?\\])");
 		Matcher m = p.matcher(str);
