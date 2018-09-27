@@ -101,9 +101,18 @@ $(document).ready(function() {
             var markup = "<option value='"+dt.id+"'>" + dt.fileName + "</option>";
             return markup;
         },
-        templateSelection: function (repo) {  //选中某一个选时执行
+        templateSelection: function (repo) {
+            //选中某一个选时执行
+            var str=repo.fileName;
+            var strfile;
+            var strarray;
+            if(str!=null||str!=""){
+                strfile=""+str;
+                strarray=strfile.split("/");
+                strfile=strarray[strarray.length-1];
+            }
             $("#directory").val(repo.Usercatalog);
-            $("#fileName").val(repo.fileName);
+            $("#fileName").val(strfile);
             $("#fileNameHidden").val(repo.fileName);
             return repo.fileName;
         }
