@@ -1316,15 +1316,22 @@ function alertStrategy_Search() {
             s = "<tr><td style='border-left: #e1dfe3 solid 1px' class='shade1'>业务名/IP</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>资料名</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>环节配置</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>操作</td></tr>";
 
             $.each(t, function(k, o) {
+                console.log(o)
                 var modules = '';
+                var sub_name = '';
                 $.each(o, function(i, o2) {
                     modules += o2.module + '<br>';
+                    sub_name += o2.sub_name + '<br>';
                 });
+
+
+
+
 
                 s += "<tr><td height='20px'>"
                     + o[0].service_type
                     + "</td><td>"
-                    + o[0].sub_name
+                    + sub_name
                     + "</td><td>"
                     + modules
                     + "</td>"
