@@ -12,15 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({ "prod" })
+@ActiveProfiles({ "dev" })
 public class ESWebServiceTest {
 
     @Autowired
@@ -45,13 +42,24 @@ public class ESWebServiceTest {
     @Test
     public void test2(){
         try {
-            String strDate = "2018-08-22 12:20:00";
+            String strDate = "2018-09-14 15:20:00";
             SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(sd.parse(strDate));
-            esWebService.aggAll_fileSizeCount(calendar.getTime(),-10, DiskUnit.UNIT_MB,1,"DS","采集");
-        } catch (ParseException e) {
+            int min = calendar.get(Calendar.MINUTE);          //获取当前分钟
+            System.out.println(min);
+            int n = min/Math.abs(-10);
+            calendar.set(Calendar.MINUTE, n*10);
+
+            String unit = "m";
+            unit = DiskUnit.getUnit(unit);
+            System.out.println(unit);
+            List<Object> result  = esWebService.getFileSize(calendar.getTime(),-10,12, unit,1,"yyyy-MM-dd HH:mm","1");
+            System.out.println(JSON.toJSONString(result));
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            esRepository.closeClient();
         }
     }
 }

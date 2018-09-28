@@ -1,0 +1,311 @@
+#bodyDiv{
+    width: 3840px;
+    height: 1080px;
+    margin: 0px;
+    padding: 0px;
+    background: #fbfff8 no-repeat url("../../img/bigscreenshow/showNew1.jpg");
+}
+/*.tooltip{
+    position: absolute;
+    width: 120px;
+    height: auto;
+    font-family: simsun;
+    font-size: 14px;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    background-color: white;
+    border-radius: 5px;
+}*/
+
+.test{
+    height: 100%;
+}
+
+.table > tbody > tr > td {
+    color: #ffffff;
+    border-top : 0px;
+    text-align: center;
+    /*background-color: #1c89ce;*/
+}
+.table > thead > tr > th {
+    color: #ffffff;
+    background-color: #1c89ce;
+    border-bottom:0px;
+    text-align: center;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #0e5c95;
+}
+.table-hover > tbody > tr:hover {
+    background-color: #35649D;
+}
+
+.tda {
+    border-left: 1px #ffffff dotted;
+}
+
+
+.panel{
+    background-color: transparent;
+}
+.panel-default{
+    border: 0px;
+}
+
+.panel-default > .panel-heading-1{
+    color: #ffffff !important;
+    background-color: #ff9d48 !important;
+    border: 0px;
+}
+
+.panel-default > .panel-heading-2{
+    color: #ffffff !important;
+    background-color: #23cd62 !important;
+    border: 0px;
+}
+
+.panel-body2{
+    color: #ffffff;
+    background: -webkit-linear-gradient(top, rgba(14,92,149,1), rgba(14,92,149,0)); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(bottom, rgba(14,92,149,1), rgba(14,92,149,0)); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(bottom, rgba(14,92,149,1), rgba(14,92,149,0)); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to bottom, rgba(14,92,149,1), rgba(14,92,149,0)); /* 标准的语法（必须放在最后） */
+}
+
+.e_circle {
+    fill: none;
+    stroke-width: 2.5px;
+}
+h1{
+    text-align: center;
+    margin: 1px 1px;
+    color: #ffffff;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+.panel{
+    margin-bottom: 5px;
+    margin-top: 0px;
+}
+.panel-body{
+    padding: 5px;
+}
+.panel-title > p{
+    font-size: 12px;
+    margin: 3px 5px;
+}
+
+.col-md-4,.col-md-6,.col-md-12{
+    padding-left: 0px;
+    padding-right: 11px;
+}
+
+.dash-border{
+    border: #9bbeff dashed 1px;
+}
+.img-text1{
+    font-size: 18px;
+    fill: #ffffff;
+}
+.img-text2{
+    font-size: 18px;
+    fill: #00ff05;
+}
+.img-text3{
+    font-size: 24px;
+    fill: #ff0029;
+}
+.no_click_circle{
+    r:7;
+    stroke-width: 5;
+}
+.click_circle{
+    r:11;
+    stroke-width: 2;
+}
+
+
+.tooltip-inner{
+    max-width: 500px;
+
+}
+.tooltip.top .tooltip-arrow {
+    margin-left: 0px;
+}
+
+#centerDataTable > span {
+    top: -5px;
+    left: 5px;
+}
+#centerDataTable > thead > tr > th {
+    background-color: transparent;
+    font-size: 20px;
+    border-bottom: #ffffff solid 1px;
+}
+
+#centerDataTable > tbody > tr {
+    background-color: transparent;
+}
+#centerDataTable > tbody > tr:nth-of-type(odd){
+    background-color: rgba(10,20,40,0.4);
+}
+
+
+#centerDataTable > tbody > tr > td{
+    /*padding: 1px;*/
+    padding-top: 18px;
+}
+#centerDataTable > thead > tr >.th1{
+    width: 245px;
+    color: #77B6F7;
+}
+#centerDataTable > thead > tr > .th2{
+    width: 215px;
+    color: #F1A059;
+}
+#centerDataTable > thead > tr > .th3{
+    width: 185px;
+    color: #ffffff;
+}
+#centerDataTable > thead > tr > .th4{
+    width: 150px;
+    color: #77B6F7;
+}
+#centerDataTable > thead > tr > .th5{
+    width: 280px;
+    color: #9EED7C;
+}
+#centerDataTable > thead > tr > .th6{
+    width: 150px;
+    color: #F1A059;
+}
+
+#centerDataTable > tbody > tr > .td1{
+    color: #77B6F7;
+}
+#centerDataTable > tbody > tr > .td2{
+    color: #F1A059;
+}
+#centerDataTable > tbody > tr > .td3{
+    color: #ffffff;
+}
+#centerDataTable > tbody > tr > .td4{
+    color: #77B6F7;
+}
+#centerDataTable > tbody > tr > .td5{
+    color: #9EED7C;
+}
+#centerDataTable > tbody > tr > .td6{
+    color: #F1A059;
+}
+
+.rect_td1{
+    background-color: rgb(57, 132, 247) !important;
+}
+.rect_td2{
+    background-color:  #9EED7C !important;
+}
+.rect_td3{
+    background-color:  #F1A059 !important;
+}
+
+.rect_td > div {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 10px 7px;
+    border: 1px solid rgba(26, 93, 153, .7);
+    background-color: rgba(26, 93, 153, .7);
+    transform: skew(-20deg);
+}
+
+
+.rect_ok1  {
+    animation: myfirst1 2s;
+    animation-iteration-count: infinite;
+    -webkit-animation: myfirst1 2s; /* Safari 与 Chrome */
+    -webkit-animation-iteration-count: infinite;
+}
+
+.rect_ok2  {
+    animation: myfirst2 2s;
+    animation-iteration-count: infinite;
+    -webkit-animation: myfirst2 2s; /* Safari 与 Chrome */
+    -webkit-animation-iteration-count: infinite;
+}
+
+.rect_ok3  {
+    animation: myfirst3 2s;
+    animation-iteration-count: infinite;
+    -webkit-animation: myfirst3 2s; /* Safari 与 Chrome */
+    -webkit-animation-iteration-count: infinite;
+}
+
+.rect_error  {
+    animation: myfirst_error 2s;
+    animation-iteration-count: infinite;
+    -webkit-animation: myfirst_error 2s; /* Safari 与 Chrome */
+    -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes myfirst1
+{
+    0%   {background-color: #00f1f7; }
+    50% {background-color: #3984f7; }
+    100% {background-color: #00f1f7; }
+}
+
+@-webkit-keyframes myfirst1 /* Safari 与 Chrome */
+{
+    0%   {background-color: #00f1f7; }
+    50% {background-color: #3984f7; }
+    100% {background-color: #00f1f7; }
+}
+
+@keyframes myfirst2
+{
+    0%   {background-color: #18ED08; }
+    50% {background-color: #9EED7C; }
+    100% {background-color: #18ED08; }
+}
+
+@-webkit-keyframes myfirst2 /* Safari 与 Chrome */
+{
+    0%   {background-color: #18ED08; }
+    50% {background-color: #9EED7C; }
+    100% {background-color: #18ED08; }
+}
+
+@keyframes myfirst3
+{
+    0%   {background-color: #F1E400; }
+    50% {background-color: #F1A059; }
+    100% {background-color: #F1E400; }
+}
+
+@-webkit-keyframes myfirst3 /* Safari 与 Chrome */
+{
+    0%   {background-color: #F1E400; }
+    50% {background-color: #F1A059; }
+    100% {background-color: #F1E400; }
+}
+
+@keyframes myfirst_error
+{
+    0%   {background-color: #FF0800; }
+    50% {background-color: #ff5348; }
+    100% {background-color: #FF0800; }
+}
+
+@-webkit-keyframes myfirst_error /* Safari 与 Chrome */
+{
+    0%   {background-color: #FF0800; }
+    50% {background-color: #F1A059; }
+    100% {background-color: #FF0800; }
+}

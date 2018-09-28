@@ -39,9 +39,9 @@ public interface SendTemplateRepository extends JpaRepository<SendTemplate,Long>
             "AND " +
             "IF(?2 = '' , 1=1 , `type`= ?2)"+
             "AND  " +
-            "IF(?3 = '' , 1=1 , wechart_content_template = ?3) " +
+            "IF(?3 = '' , 1=1 , wechart_send_enable = ?3) " +
             "AND  " +
-            "IF(?4 = '' , 1=1 , sms_content_template = ?4) " , nativeQuery = true)
+            "IF(?4 = '' , 1=1 , sms_send_enable = ?4) " , nativeQuery = true)
     List<SendTemplate> findTemp(String name,String type,String wechartContentTemplate,String sms_content_template);
 
 }

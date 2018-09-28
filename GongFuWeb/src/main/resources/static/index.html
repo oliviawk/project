@@ -6,9 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>公共气象服务中心业务全流程监控系统</title>
 
-    <link rel="stylesheet" href="frame/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../frame/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css_option/main.css" />
+    <link rel="stylesheet" href="../css/bootstrap_3.3.7.css" />
+    <link rel="stylesheet" href="../css/bootstrap-select.css" />
+    <style>
+        .content .row_box .item-box .links-box a {
+            font-family: Segoe UI Semibold,San Francisco,Helvetica Neue,Arial,Microsoft Yahei,HanHei SC,PingFang SC,SimHe;
+            font-size: 17px;
+            color: #00a3d9;
+            font-weight: 400;
+            line-height: 20px;
+        }
+        @media (min-width: 768px){
+            .navbar-nav > li > a {
+                padding-top: 5px;
+                padding-bottom: 0px;
+            }
+        }
+        .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+            background-color: #323a45;
+            border-color: #337ab7;
+        }
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+            background-color: #323a45;
+            border-color: #337ab7;
+        }
+    </style>
 <body>
+
 <!--页眉-->
 <header class="header">
     <div class="container">
@@ -30,30 +56,43 @@
         </div>
         <!--门户logo end-->
         <!--导航菜单-->
-        <nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="height: auto;">
-            <ul class="accordian-menu" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
-                <li class="nav-index current"><a id="nav_homepage" href="http://datalist.cma.cn/" title="首页"><span>首页</span></a></li>
-                <!--<li>
-                    <a href="http://datalist.cma.cn/preview.html" title="清单"><span>清单</span></a>
+        <nav class="nav auto-scroll" data-fullscreen="true" data-top="header" style="margin-left: 100px">
+            <ul class="nav navbar-nav" data-accordiandisabled="desktop" data-accordianinteraction="exclusive">
+                <li class="nav-index current"><a id="nav_homepage" href="http://10.30.17.171:8090" title="首页"><span>首页</span></a></li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>数据源</span><b class="caret"></b></a>
+                    <ul class="dropdown-menu" >
+                        <li><a class="link-1" href="http://10.30.17.171:9091/dataSourceSetting/"><span>配置</span></a></li>
+                        <li><a class="link-2" href="http://10.30.17.171:9091/dataSource/"><span>告警列表</span></a></li>
+                        <li><a class="link-3" href="http://test.tvhf.com:8080/"><span>雷达基数据</span></a></li>
+                        <li><a class="link-4" href="http://10.14.83.52:8082/SURF_GLB_MUL_HOR"><span>CIMISS</span></a></li>
+                    </ul>
                 </li>
-                <li>
-                    <a href="http://10.14.83.52:8888/qc/radar/chart" title="质量"><span>质量</span></a>
+                <li><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span>重点业务</span><b class="caret"></b></a>
+                    <ul class="dropdown-menu" >
+                        <li class="nav-index current"><a class="link-1" href="/fzjc/lct"><span>气象信息决策支持系统</span></a></li>
+                        <li class="nav-index current"><a class="link-2" href="/laps/lct"><span>LAPS</span></a></li>
+                        <li class="nav-index current"><a class="link-3" href="/MQPF/"><span>MQPF</span></a></li>
+                        <li class="nav-index current"><a class="link-4" href="/RGF/"><span>RGF</span></a></li>
+                        <li class="nav-index current"><a class="link-5" href="/OCF/"><span>OCF</span></a></li>
+                    </ul>
                 </li>
-                <li>
-                    <a href="https://10.30.16.210/jsp/Login.jsp" title="监控"><span>监控</span></a>
-                </li>-->
+                <li><a class="dropdown-toggle nav-index current" data-toggle="dropdown" href="#"><span>告警中心</span><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-index current"><a class="link-1" href="http://10.30.17.171:9090/pjpz/"><span>配置</span></a></li>
+                        <li class="nav-index current"><a class="link-2" href="http://10.30.17.171:9091/alarmBrowse/"><span>查看</span></a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
-        <!--导航菜单 end-->
     </div>
 </header>
 <!--页眉 end-->
 <!--内容-->
 <div class="content">
-    <div class="row_box container" id="row_sulotion">
-        <div class="_top">
-            <h1>公共气象服务中心业务全流程监控系统</h1>
-        </div>
+    <div class="row_box container" id="row_sulotion" style="width: 1500px;">
+        <!--<div class="_top">-->
+            <!--<h1>公共气象服务中心业务全流程监控系统</h1>-->
+        <!--</div>-->
         <div class="_bottom">
             <div class="col-md-4 col-xs-6 item-box">
                 <a href="#" id="homepage_services_virtual-machines">
@@ -61,7 +100,7 @@
                     <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 96" width="140px" height="96px"><defs><style>.cls-2-1{fill:#3e3e3e;}.cls-2-1,.cls-2-2{fill-rule:evenodd;}.cls-2-2{fill:#a5bf09;}.cls-2-3{fill:#fff;}</style></defs><title>homepage-icons</title><path class="cls-2-1" d="M106.24,32A24,24,0,1,0,59.69,20.27a16,16,0,0,0-27,16.93,20.5,20.5,0,1,0,7.34,40.28,18,18,0,0,0,35,4.2A16.58,16.58,0,0,0,85,85,17.14,17.14,0,0,0,101.7,70.62,19.49,19.49,0,1,0,106.24,32Z"></path><path class="cls-2-2" d="M51.5,51A3.5,3.5,0,1,1,48,54.5,3.5,3.5,0,0,1,51.5,51Z"></path><path class="cls-2-2" d="M83.5,33A3.5,3.5,0,1,1,80,36.5,3.5,3.5,0,0,1,83.5,33Z"></path><path class="cls-2-3" d="M64,51.27c.07.27.11.55.16.83a12.8,12.8,0,0,0-1.86-4.63c.11.16.23.31.32.48l1.21-3h0l-1.37-1.37L61.1,42.16l-3,1.21c.16.1.31.22.47.32a12.81,12.81,0,0,0-4.61-1.86c.27.05.54.09.81.16l-1.29-3H49.56l-1.29,3c.27-.07.54-.11.81-.16a23.55,23.55,0,0,0-4.14,1.54l-3-1.21L39.16,44.9l1.21,3c.1-.17.22-.31.32-.47a12.8,12.8,0,0,0-1.86,4.62c.05-.28.09-.56.16-.83l-3,1.29v3.88l3,1.29c-.07-.27-.11-.56-.16-.83a12.81,12.81,0,0,0,1.87,4.64c-.11-.16-.23-.31-.33-.48l-1.21,3,2.74,2.74,3-1.21c-.17-.1-.32-.22-.48-.33a12.79,12.79,0,0,0,4.64,1.87c-.28-.05-.56-.09-.83-.16l1.29,3h3.88l1.29-3c-.27.07-.55.11-.83.16a12.79,12.79,0,0,0,4.63-1.87c-.16.11-.31.23-.48.33l3,1.21,2.74-2.74-1.21-3c-.1.17-.22.32-.33.48a12.82,12.82,0,0,0,1.87-4.64c-.05.28-.09.56-.16.83l3-1.29V52.56ZM51.5,63A8.5,8.5,0,1,1,60,54.5,8.5,8.5,0,0,1,51.5,63Z"></path><path class="cls-2-3" d="M96,33.27c.07.27.11.55.16.83a12.79,12.79,0,0,0-1.86-4.62c.11.16.23.31.32.48l1.21-3h0l-1.37-1.37-1.37-1.37-3,1.21c.16.1.31.22.47.32a12.78,12.78,0,0,0-4.6-1.86c.27.05.54.09.81.16l-1.29-3H81.57l-1.29,3c.26-.07.54-.11.81-.16A23.32,23.32,0,0,0,77,25.38l-3-1.21-2.74,2.74,1.21,3c.1-.16.22-.31.32-.47a12.8,12.8,0,0,0-1.86,4.62c.05-.28.09-.56.16-.83l-3,1.29v3.87l3,1.29c-.07-.27-.11-.56-.16-.83a12.8,12.8,0,0,0,1.87,4.64c-.11-.16-.23-.31-.33-.48l-1.21,3,2.74,2.74,3-1.21c-.17-.1-.32-.22-.48-.33a12.76,12.76,0,0,0,4.63,1.87c-.28-.05-.56-.09-.83-.16l1.29,3h3.87l1.29-3c-.27.07-.55.11-.83.16a12.76,12.76,0,0,0,4.63-1.87c-.16.11-.31.23-.48.33l3,1.21,2.74-2.74-1.21-3c-.1.17-.22.32-.33.48a12.81,12.81,0,0,0,1.87-4.64c-.05.28-.09.56-.16.83l3-1.29V34.56ZM83.5,45A8.5,8.5,0,1,1,92,36.5,8.5,8.5,0,0,1,83.5,45Z"></path></svg>
                     <!--<div class="home-p">查看</div>-->
                 </a>
-                <div class="links-box">
+                <div class="links-box" style="font-size: 18px">
                     <a class="link-1" href="http://10.30.17.182/bmc/main">锐捷</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
                     <a class="link-2" href="http://10.14.83.18/nagios">nagios</a>
@@ -98,16 +137,16 @@
                     <!--<div class="home-p">查看</div>-->
                 </a>
                 <div class="links-box">
-                    <a class="link-1" href="/fzjc/lct">决策辅助</a>
+                    <a class="link-1" href="/fzjc/lct">气象信息决策支持系统</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
-                    <a class="link-2" href="/laps/lct">格点实况</a>
+                    <a class="link-2" href="/laps/lct">LAPS</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
-                    <a class="link-3" href="/MQPF/">分钟降水</a>
+                    <a class="link-3" href="/MQPF/">MQPF</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
                     <a class="link-4" href="/RGF/">RGF</a>
                     <i class="icon glyphicon glyphicon-chevron-right"></i>
                     <a class="link-5" href="/OCF/">OCF</a>
-                    <i class="icon glyphicon glyphicon-chevron-right"></i>
+                    <!--<i class="icon glyphicon glyphicon-chevron-right"></i>-->
                 </div>
             </div>
             <div class="col-md-4  col-xs-6 item-box">
@@ -172,7 +211,7 @@
                 <h3 class="menu-title footer-title expand">关注我们<i class="icon icon-arrow-top"></i></h3>
                 <div class="footer-qrcode clearfix hidden-xs hidden-sm">
                     <div class="qrcode-wrapper">
-                        <img src="qrcode.jpg" alt="qrcode">
+                        <img src="imsg/qrcode.jpg" alt="qrcode">
                         <span>欢迎关注质控报告微信公众号</span>
                     </div>
                 </div>
@@ -231,5 +270,9 @@
     </div>
 </footer>
 <!--页脚 end-->
+<script src="js/jquery2.1.1.js"></script>
+<script src="js/bootstrap-select.js"></script>
+<script src="js/bootstrap_3.3.7.js"></script>
+</body>
 
-</body></html>
+</html>

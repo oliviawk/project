@@ -96,7 +96,7 @@ public class MQPF_AC_ConsumerTest {
                 }
                 file.put("event_status",line[5].replace(".",""));
                 file.put("totalTime",line[7].replace("time:",""));
-                file.put("file_Size",line[10].replace("size:","")+" bytes");
+                file.put("file_Size",line[10].replace("size:",""));
                 file.put("mtime",line[13].replace("mtime:","").replace(".",""));
                 file.put("module","分发");
                 file.put("ip_addr",ip_addr);

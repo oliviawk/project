@@ -14,6 +14,18 @@ $(document)
                     var m = "";
                     for (var i = 0; i < r.length; i++) {
                         var sendT = r[i];
+                        var a = null;
+                        var b = null;
+                        if(sendT.wechartSendEnable == "1"){
+                            a = '是';
+                        }else {
+                            a = '否'
+                        }
+                        if(sendT.smsSendEnable == "1"){
+                            b = '是';
+                        }else {
+                            b = '否'
+                        }
                         s += "<tr><td>"
                             + sendT.id
                             + "</td><td>"
@@ -23,12 +35,12 @@ $(document)
                             + "</td><td>"
                             + sendT.wechartContentTemplate
                             + "</td><td>"
-                            + sendT.wechartSendEnable
+                            + a
                             + "</td><td>"
                             + sendT.smsContentTemplate
                             + "</td><td>"
-                            + sendT.smsSendEnable
-                            + "</td><td><button style='border-radius: 5px;' class='shade' onclick='temptodelet("
+                            + b
+                            + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='temptodelet("
                             + sendT.id
                             + ")'>删除</button></br><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_m' onclick='upd("
                             + sendT.id
@@ -231,7 +243,7 @@ function usertodelet(id) {
                         + userT[4]
                         + "</td><td>"
                         + userT[5]
-                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='updUser("
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_d' onclick='updUser("
                         + userT[0]
                         + ")'>修改</button>&nbsp;&nbsp;<button style='border-radius: 5px;' class='shade' onclick='usertodelet("
                         + userT[0] + ")'>删除</button></td></tr>"
@@ -259,6 +271,18 @@ function temptodelet(id) {
                 var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
                 for (var i = 0; i < r.length; i++) {
                     var sendT = r[i];
+                    var a = null;
+                    var b = null;
+                    if(sendT.wechartSendEnable == "1"){
+                        a = '是';
+                    }else {
+                        a = '否'
+                    }
+                    if(sendT.smsSendEnable == "1"){
+                        b = '是';
+                    }else {
+                        b = '否'
+                    }
                     s += "<tr><td>"
                         + sendT.id
                         + "</td><td>"
@@ -268,14 +292,14 @@ function temptodelet(id) {
                         + "</td><td>"
                         + sendT.wechartContentTemplate
                         + "</td><td>"
-                        + sendT.wechartSendEnable
+                        + a
                         + "</td><td>"
                         + sendT.smsContentTemplate
                         + "</td><td>"
-                        + sendT.smsSendEnable
-                        + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                        + b
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='temptodelet("
                         + sendT.id
-                        + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                        + ")'>删除</button></br><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_m' onclick='upd("
                         + sendT.id + ")'>修改</button></td></tr>"
                 }
                 $("#table_send").html(s);
@@ -347,8 +371,8 @@ function searchTemp() {
     var tempType = $("#tempType").val();
     var tempWechart = $("#tempWechart").val();
     var tempSms = $("#tempSms").val();
-    $
-        .ajax({
+    alert(tempWechart)
+    $.ajax({
             type : "POST",
             url : "/pjpz/search",
             datatype : "json",
@@ -363,9 +387,21 @@ function searchTemp() {
             },
             success : function(list) {
                 console.log(list)
-                var s = "<tr><td width='50px;'>id</td><td width='120px;'>模板名称</td><td width='80px;'>数据类型</td><td width='200px;'>微信模板</td><td width='50px;'>是否发送微信</td><td width='200px;'>短信模板</td><td width='50px;'>是否发送短信</td><td width='100px;'>操作</td></tr>"
-                for (var i = 0; i < list.length; i++) {
+                    var s = "<tr><td class='shade1'>id</td><td class='shade1'>模板名称</td><td class='shade1'>数据类型</td><td width='250px' class='shade1'>微信模板</td><td class='shade1'>是否发微信</td><td width='250px' class='shade1'>短信模板</td><td class='shade1'>是否发短信</td><td class='shade1'>操作</td></tr>"
+                    for (var i = 0; i < list.length; i++) {
                     var sendT = list[i];
+                    var a = null;
+                    var b = null;
+                    if(sendT.wechartSendEnable == "1"){
+                        a = '是';
+                    }else {
+                        a = '否'
+                    }
+                    if(sendT.smsSendEnable == "1"){
+                        b = '是';
+                    }else {
+                        b = '否'
+                    }
                     s += "<tr><td>"
                         + sendT.id
                         + "</td><td>"
@@ -375,14 +411,14 @@ function searchTemp() {
                         + "</td><td>"
                         + sendT.wechartContentTemplate
                         + "</td><td>"
-                        + sendT.wechartSendEnable
+                        + a
                         + "</td><td>"
                         + sendT.smsContentTemplate
                         + "</td><td>"
-                        + sendT.smsSendEnable
-                        + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                        + b
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='temptodelet("
                         + sendT.id
-                        + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                        + ")'>删除</button></br><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_m' onclick='upd("
                         + sendT.id + ")'>修改</button></td></tr>"
                 }
                 $("#table_send").html(s);
@@ -427,7 +463,7 @@ function searchUser() {
                         + userT[4]
                         + "</td><td>"
                         + userT[5]
-                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='updUser("
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_d' onclick='updUser("
                         + userT[0]
                         + ")'>修改</button>&nbsp;&nbsp;<button style='border-radius: 5px;' class='shade' onclick='usertodelet("
                         + userT[0] + ")'>删除</button></td></tr>"
@@ -442,7 +478,17 @@ function searchUser() {
         });
 
 }
-
+function clearcontent(){
+    //alert(1)
+    $("#name").val("");
+    $("#type").val("");
+    $("#wechart_content").val("");
+    $("input[id='wechart_send_c']").prop("checked", false);
+    $("#wechart_send").val(0);
+    $("#sns_content").val("");
+    $("input[id='sms_send_c']").prop("checked", false);
+    $("#sms_send").val(0);
+}
 function addTemple() {
     $('#tempAdd').modal('hide');
     var name = $("#name").val();
@@ -477,9 +523,21 @@ function addTemple() {
                 "Content-Type" : "application/json; charset=utf-8"
             },
             success : function(list) {
-                var s = "<tr><td>id</td><td>name</td><td>type</td><td>wechart_content</td><td>wechart_send</td><td>sms_content</td><td>sms_send</td><td>操作</td></tr>"
-                for (var i = 0; i < list.length; i++) {
+                    var s = "<tr><td class='shade1'>id</td><td class='shade1'>模板名称</td><td class='shade1'>数据类型</td><td width='250px' class='shade1'>微信模板</td><td class='shade1'>是否发微信</td><td width='250px' class='shade1'>短信模板</td><td class='shade1'>是否发短信</td><td class='shade1'>操作</td></tr>"
+                    for (var i = 0; i < list.length; i++) {
                     var sendT = list[i];
+                    var a = null;
+                    var b = null;
+                    if(sendT.wechartSendEnable == "1"){
+                        a = '是';
+                    }else {
+                        a = '否'
+                    }
+                    if(sendT.smsSendEnable == "1"){
+                        b = '是';
+                    }else {
+                        b = '否'
+                    }
                     s += "<tr><td>"
                         + sendT.id
                         + "</td><td>"
@@ -489,14 +547,14 @@ function addTemple() {
                         + "</td><td>"
                         + sendT.wechartContentTemplate
                         + "</td><td>"
-                        + sendT.wechartSendEnable
+                        + a
                         + "</td><td>"
                         + sendT.smsContentTemplate
                         + "</td><td>"
-                        + sendT.smsSendEnable
-                        + "</td><td><button class='btn btn-primary' onclick='temptodelet("
+                        + b
+                        + "</td><td><button type='button' style='border-radius: 5px;' class='shade' onclick='temptodelet("
                         + sendT.id
-                        + ")'>删除</button>&nbsp;<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#sm_m' onclick='upd("
+                        + ")'>删除</button></br><button type='button' style='border-radius: 5px;' class='shade' data-toggle='modal' data-target='#sm_m' onclick='upd("
                         + sendT.id + ")'>修改</button></td></tr>"
                 }
                 $("#table_send").html(s);
@@ -548,7 +606,7 @@ function addUser() {
                         + userT[4]
                         + "</td><td>"
                         + userT[5]
-                        + "</td><td><button type='button' class='btn btn-info' onclick='updUser("
+                        + "</td><td><button type='button' class='btn btn-info' data-toggle='modal' data-target='#sm_d' onclick='updUser("
                         + userT[0]
                         + ")'>修改</button>&nbsp;&nbsp;<button class='btn btn-primary' onclick='usertodelet("
                         + userT[0] + ")'>删除</button></td></tr>"
@@ -562,6 +620,36 @@ function addUser() {
             }
         });
     window.location.reload();
+}
+function updUser(id) {
+    $.ajax({
+        type : "POST",
+        url : "/pjpz/sen_c",
+        datatype : "json",
+        data : JSON.stringify({
+            "id" : id
+        }),
+        headers : {
+            "Content-Type" : "application/json; charset=utf-8"
+        },
+        success : function(r) {
+            $("#id_vu").val(r.id);
+            $("#name_updu").val(r.name);
+            $("#wechat_updu").val(r.wechart);
+            $("#phone_updu").val(r.phone);
+            $("#email_updu").val(r.email);
+            if(r.descs != undefined || r.descs != ""){
+                $("#descs_updu").val(r.descs);
+            }else {
+                $("#descs_updu").val(无);
+            }
+
+        },
+        error : function(err) {
+            alert(err);
+            console.log(err.message)
+        }
+    });
 }
 
 /* 保存告警配置 */
@@ -1247,18 +1335,25 @@ function alertStrategy_Search() {
             }); // 数据预处理 by Edward
 
             var s = '';
-            s = "<tr><td class='shade1'>业务名/IP</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>资料名</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>环节配置</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>操作</td></tr>";
+            s = "<tr><td style='border-left: #e1dfe3 solid 1px' class='shade1'>业务名/IP</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>资料名</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>环节配置</td><td style='border-left: #e1dfe3 solid 1px' class='shade1'>操作</td></tr>";
 
             $.each(t, function(k, o) {
+                console.log(o)
                 var modules = '';
+                var sub_name = '';
                 $.each(o, function(i, o2) {
                     modules += o2.module + '<br>';
+                    sub_name += o2.sub_name + '<br>';
                 });
+
+
+
+
 
                 s += "<tr><td height='20px'>"
                     + o[0].service_type
                     + "</td><td>"
-                    + o[0].sub_name
+                    + sub_name
                     + "</td><td>"
                     + modules
                     + "</td>"

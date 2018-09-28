@@ -7,18 +7,18 @@ $(function () {
         //var a = $button.attr('id').split(/_(?![A-Za-z])/);
         //console.log(a);
         var arr = $button.attr('id').split(/_(?![A-Za-z])/); // [0]为type, [1]为module
-        //console.log(arr);
-
+        console.log(arr);
+        var arr2 = arr[2].replace("_receive","");
         $('#subTypeHidden').val(arr[0]);
         $('#moduleHidden').val(arr[1]);
-        arr[2] = arr[2].replace(new RegExp("-", "gm"), ".");
-        $('#ipHidden').val(arr[2]);
+        arr2 = arr2.replace(new RegExp("-", "gm"), ".");
+        $('#ipHidden').val(arr2);
         //var pageSize = $('pageSizeHidden').val();
         var pageSize = 10;  // 默认分页数10
         $('#pageSizeHidden').val(pageSize);
         $("#pageSizeNumber").html('展示数量：' + pageSize + ' <span class="caret"></span>');
 
-        getHistory(arr[0], arr[1], pageSize, arr[2]);
+        getHistory(arr[0], arr[1], pageSize, arr2);
 
 
     });
@@ -144,11 +144,15 @@ function getDataAggQuery() {
                         //list-red
                         $("#" + key).attr("class", "list-red");
                         $("#" + key).attr("title", dmap.fields.data_time);
+                        $("#" + key+"_receive").attr("class", "list-red");
+                        $("#" + key+"_receive").attr("title", dmap.fields.data_time);
                         return;
                     }
 
                     $("#" + key).attr("class", "list-green");
                     $("#" + key).attr("title", dmap.fields.data_time);
+                    $("#" + key+"_receive").attr("class", "list-green");
+                    $("#" + key+"_receive").attr("title", dmap.fields.data_time);
 
                 })
 

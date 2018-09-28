@@ -207,6 +207,11 @@ function lct_status_agg() {
                 $("#"+strIdHtml).attr({
                     "class":liStatus
                 });
+                if( strIdHtml == "distribute_FY4A_10-30-16-220" && liStatus == "list-green"){
+                    $("#distribute_FY4A_10-0-74-226").attr({
+                        "class":liStatus
+                    });
+                }
                 $("#" + strIdHtml).attr("title", values.fields.data_time);
 
             });
@@ -452,6 +457,7 @@ function initHistory(subType,module,ip,size) {
         "module":module,
         "size":size
     }
+    console.log(subType,module,ip,size)
     if(ip != "*"){
         esQeuryBean_web.strIp = ip;
     }

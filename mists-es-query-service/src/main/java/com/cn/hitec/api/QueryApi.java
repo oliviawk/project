@@ -1,17 +1,17 @@
 package com.cn.hitec.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cn.hitec.tools.DiskUnit;
+import com.cn.hitec.tools.Pub;
 import org.elasticsearch.script.mustache.SearchTemplateRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cn.hitec.bean.EsQueryBean;
 import com.cn.hitec.bean.EsQueryBean_Exsit;
@@ -391,7 +391,5 @@ public class QueryApi extends BaseController {
 			return outMap;
 		}
 	}
-
-
 
 }
