@@ -2,10 +2,7 @@ package com.cn.hitec.service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.cn.hitec.bean.AlertBeanNew;
@@ -28,6 +25,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -208,7 +206,83 @@ public class ESService {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * 添加无规律数据 指定id
+	 *
+	 * @param index
+	 * @param type
+	 *
+	 *
+	 */
+	public int addIrregularservicedata(String index, String type,List<String> Irregulartime) throws  Exception {
+		int i=0;
+		List<AlertBeanNew> alertlist=new ArrayList<AlertBeanNew>() ;
+		List<JSONArray> objlist=new ArrayList<JSONArray>();
+		log.error("service:中for循环开始");
 
+		for(String str : Irregulartime){
+			AlertBeanNew alertBean = null;
+			Map<String,Object> irregularmap=(Map<String,Object>) JSON.parseObject(str);
+			Map<String,Object> fields=(Map<String,Object>)irregularmap.get("fields");
+
+			Date dataIrregular = Pub.transform_StringToDate(fields.get("data_time").toString(),"yyyy-MM-dd HH:mm:ss.SSSZ");
+			index = Pub.Index_Head + Pub.transform_DateToString(dataIrregular, Pub.Index_Food_Simpledataformat);
+			String name=irregularmap.get("name").toString();
+			String sub_type=fields.get("file_name").toString();
+			String module= fields.get("module").toString();
+			String ipAddr=fields.get("ip_addr").toString();
+			String dataTime=fields.get("data_time").toString();
+			String subType = irregularmap.get("type").toString(); // 数据名称
+
+			String md5id=Pub.MD5("DATASOURCE"+","+sub_type+","+module+","+ipAddr+","+dataTime);
+
+			try {
+				String alertTitle =name + "--" + fields.get("module") + "--"
+						+ fields.get("data_time") + " 时次产品到达";
+				es.bulkProcessor.add(new IndexRequest(index, type, md5id).source(str, XContentType.JSON));
+				List<Object> curmodules = dataInfoRepository.findAlertRules(type,module,subType,ipAddr);
+				JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+				if(rulesArray.size() > 0){
+					rulesArray = (JSONArray)rulesArray.get(0);
+				}
+				irregularmap.put("aging_status", "正常");
+				alertBean=alertService.getAlertBean(AlertType.NOTE.getValue(), alertTitle, type,irregularmap);
+				//考虑到无规律数据中同一种数据可能存在多个文件名所以采用文件名作为md5的加密参数
+				// ，这样同一个种文件不同文件名的告警才能区分开来;
+                alertlist.add(alertBean);
+                objlist.add(rulesArray);
+				i++;
+
+			} catch (Exception e) {
+				log.error("无规律数据es写入ESservice addIrregularservicedata 错误");
+				i=-2;
+				e.printStackTrace();
+
+			}
+			if (alertlist.size()>10){
+                  for (int li=0;li<alertlist.size();li++){
+                  	AlertBeanNew alertBeanNew=alertlist.get(li);
+					  JSONArray rulesArraylist=objlist.get(li);
+					  log.error("for循环内告警发送失败！");
+					  alertService.Irregularalert(es,index, type, alertBeanNew,rulesArraylist);
+				  }
+				  alertlist.clear();
+				objlist.clear();
+			}
+
+		}
+		for (int li=0;li<alertlist.size();li++){
+			AlertBeanNew alertBeanNew=alertlist.get(li);
+			JSONArray rulesArraylist=objlist.get(li);
+			log.error("for循环外告警发送失败！");
+			alertService.Irregularalert(es,index, type, alertBeanNew,rulesArraylist);
+		}
+		alertlist.clear();
+		objlist.clear();
+		log.error("执行返回！！"+i);
+         return i;
+
+	}
 	/**
 	 * 添加数据 返回IndexResponse
 	 * 
@@ -710,6 +784,305 @@ public class ESService {
 			return resultMap;
 		}
 	}//结束查询
+
+
+	/**
+	 * 过滤重复数据（相同类型和时次的数据） 目前的主要数据录入类
+     *
+     * 因为md5加密的问题，避免影响其他业务
+     *
+	 * @desc 2018.3.20 修改
+	 * @param index
+	 * @param type
+	 */
+	public int updateDataSource(String index, String type, List<String> listJson) {
+		int error_num = 0;
+		int listSize = 0;
+		try {
+			if (listJson == null || listJson.size() < 1) {
+				log.error("参数为空");
+				return 0;
+			}
+			listSize = listJson.size();
+			Map<String, Object> map = null;
+			Map<String, Object> fields = null;
+//			Map<String, Object> DIMap = null;
+
+			for (String json : listJson) {
+				try {
+					if (StringUtils.isEmpty(json)) {
+						log.error("数据为空");
+						error_num++;
+						continue;
+
+					}
+//					if ("DATASOURCE".equals(type)){
+//						log.info("数据源数据：{}",json);
+//					}
+					//给关键变量赋值
+					map = JSON.parseObject(json);
+					fields = (Map<String, Object>) map.get("fields");
+					String mdfile=fields.get("file_name").toString();
+					String subType = map.get("type").toString(); // 数据名称
+					String subModule = fields.get("module").toString();
+					String subIp = fields.get("ip_addr").toString();
+					String subKey = type+","+mdfile+","+subModule+","+subIp;
+					String str_id = Pub.MD5(subKey + "," + fields.get("data_time"));
+
+					Date dataTimeIndex = Pub.transform_StringToDate(fields.get("data_time").toString(),
+							"yyyy-MM-dd HH:mm:ss.SSSZ");
+					index = Pub.Index_Head + Pub.transform_DateToString(dataTimeIndex, Pub.Index_Food_Simpledataformat);
+
+					List<Object> curmodules = dataInfoRepository.findAlertRules(type,subModule,subType,subIp);
+					JSONArray rulesArray = JSON.parseArray(JSON.toJSONString(curmodules));
+					if(rulesArray.size() > 0){
+						rulesArray = (JSONArray)rulesArray.get(0);
+					}
+
+					// 如果是定时 有规律的数据， 需要查询后入库
+					Map<String, Object> resultMap = new HashMap<>();
+					if (Pub.alert_time_map.containsKey(subKey)) {
+						String[] indices = null;
+						if ("T639".equals(subType) || "风流场".equals(subType)) { // 风流场数据，不需要判断时效性
+							Date tempDate = Pub.transform_StringToDate(fields.get("data_time").toString(),
+									"yyyy-MM-dd HH:mm:ss.SSSZ");
+							indices = new String[] { Pub.Index_Head + Pub.transform_DateToString(tempDate, Pub.Index_Food_Simpledataformat) };
+						} else {
+							indices = Pub.getIndices(dataTimeIndex, 1); // 获取今天和昨天的
+							// index
+						}
+						resultMap = getDocumentById(indices, type, str_id) ;
+
+					} else {
+						map.put("aging_status", "正常");
+						if(fields.containsKey("event_status")){
+							// 判断数据状态
+							if (!fields.get("event_status").toString().toUpperCase().equals("OK")
+									&& !fields.get("event_status").toString().equals("0")) {
+								map.put("aging_status", "异常");
+							}
+						}
+
+						if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
+							if("异常".equals(map.get("aging_status"))){
+								dataInfoRepository.addAlertCnt(rulesArray.getLongValue(0));
+							}
+							else if(rulesArray.getLongValue(3) != 0){
+								dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
+							}
+
+						}
+
+
+//						log.info("这是一条非定时数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+						es.bulkProcessor.add(new IndexRequest(index, type,str_id).source(json, XContentType.JSON));
+						continue;
+					}
+					if (resultMap.containsKey("_id")) { // 如果查询到id
+//						log.info("这是预生成数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+						AlertBeanNew alertBean = null;
+						String alertType = "alert";
+						index = resultMap.get("_index").toString();
+						type = resultMap.get("_type").toString();
+						Map<String, Object> hitsSource_fields = (Map<String, Object>) resultMap.get("fields");
+						map.put("name", resultMap.containsKey("name") ? resultMap.get("name") : "");
+
+						// 过滤掉不应该有的数据
+						if ("21".equals(fields.get("event_status"))) {
+							continue;
+						}
+
+						if ("T639".equals(subType) || "风流场".equals(subType)) { // 如果是风场数据  要与其他定时数据分开分析
+							// 确定是否进行 数据状态 告警
+							if (fields.get("event_status").toString().toUpperCase().equals("OK")
+									|| fields.get("event_status").toString().equals("0")) {
+								map.put("aging_status", "正常");
+								// fields.put("event_info","正常");
+							} else {
+								// 判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
+								if (hitsSource_fields.containsKey("event_status")
+										&& (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK")
+										|| hitsSource_fields.get("event_status").toString().equals("0"))) {
+									log.warn("--舍弃掉 预修改错误的数据：" + json);
+									continue;
+								}
+								map.put("aging_status", "异常");
+								String alertTitle = subType + "--" + fields.get("module") + "--"
+										+ fields.get("data_time") + " 时次产品 ，发生错误："
+										+ fields.get("event_info").toString();
+
+								// 初始化告警实体类
+								alertBean = alertService.getIrregularAlertBean(AlertType.ABNORMAL.getValue(), alertTitle,type, map);
+							}
+						}
+						// 当 数据库里的数据 和 当前数据 一样时（目前是按照数据状态来判断），放弃掉该条数据
+						else if (hitsSource_fields.containsKey("event_status") && fields.get("event_status").toString()
+								.equals(hitsSource_fields.get("event_status"))) {
+							log.warn("--舍弃掉 相同的数据：" + json);
+							continue;
+						} else {
+							// 将 应到时间 和 最晚到达时间，添到的数据中
+							map.put("should_time",
+									resultMap.containsKey("should_time") ? resultMap.get("should_time") : "");
+							map.put("last_time", resultMap.containsKey("last_time") ? resultMap.get("last_time") : "");
+
+							/*-------2018.8.1 设置文件名新代码*/
+							if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))) {
+								if (fields.containsKey("file_name") && !StringUtils.isEmpty(fields.get("file_name"))) {
+//                                if (fields.get("file_name").toString().lastIndexOf("/") <= 0) {
+									String[] strs = fields.get("file_name").toString().split("/");
+									String old_fileName = hitsSource_fields.get("file_name").toString();
+									old_fileName = old_fileName.substring(0, old_fileName.lastIndexOf("/") + 1);
+									fields.put("file_name", old_fileName + strs[strs.length - 1]);
+//                                }
+								} else {
+									fields.put("file_name", hitsSource_fields.get("file_name"));
+								}
+							}
+
+							// 确定是否进行 数据状态 告警
+							if (fields.get("event_status").toString().toUpperCase().equals("OK")
+									|| fields.get("event_status").toString().equals("0")) {
+								map.put("aging_status", "正常");
+
+								//判断文件大小是否正常
+								String strSizeDefine = hitsSource_fields.containsKey("file_size_define") ? hitsSource_fields.get("file_size_define").toString():"";
+								if (!StringUtils.isEmpty(strSizeDefine)){
+									long lFileSize = fields.containsKey("file_size") ? Long.parseLong(fields.get("file_size").toString()): 0L;
+									String[] strSizeDefines = strSizeDefine.split(",");
+									long mix = 0L;
+									long max = 0L;
+									if (strSizeDefines.length == 1){
+										mix = Long.parseLong(strSizeDefines[0]);
+										if (mix > lFileSize){
+											map.put("aging_status", "异常");
+											String alertTitle = subType + "--" + fields.get("module") + "--"
+													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
+											fields.put("event_info", "文件大小异常: "+ "阈值为 大于"+mix+" byte ,实际值为 "+lFileSize+" byte");
+											// 初始化告警实体类
+											alertBean = alertService.getIrregularAlertBean(AlertType.FILEEX.getValue(), alertTitle, type,map);
+										}
+
+									}else if(strSizeDefines.length == 2){
+										mix = Long.parseLong(strSizeDefines[0]);
+										max = Long.parseLong(strSizeDefines[1]);
+										if (mix > lFileSize || lFileSize > max){
+											map.put("aging_status", "异常");
+											String alertTitle = subType + "--" + fields.get("module") + "--"
+													+ fields.get("data_time") + " 时次产品 ,文件大小 不在正常范围内。";
+											fields.put("event_info", "文件大小异常: "+ "阈值范围为 "+mix+"--"+max+" byte ,实际值为 "+lFileSize+" byte");
+											// 初始化告警实体类
+											alertBean = alertService.getIrregularAlertBean(AlertType.FILEEX.getValue(), alertTitle, type,map);
+										}
+									}
+
+								}
+								//用文件本身的到达时间和最晚到达时间做比较，判断是否超时到达
+								long occurTime = Long.valueOf(map.get("occur_time").toString());
+								Date lastDate = Pub.transform_StringToDate(resultMap.get("last_time").toString(),
+										"yyyy-MM-dd HH:mm:ss.SSSZ");
+								// 确定是否 时效告警 ,修改时效状态
+								if (occurTime - lastDate.getTime() >= 1000 && "正常".equals(map.get("aging_status"))) {
+									Date shuldDate = Pub.transform_StringToDate(resultMap.get("should_time").toString(),
+											"yyyy-MM-dd HH:mm:ss.SSSZ");
+									map.put("aging_status", "迟到");
+									String temp = Pub.transform_time((int) (occurTime - shuldDate.getTime()));
+									String alertTitle = subType + "--" + fields.get("module") + "--"
+											+ fields.get("data_time") + " 时次产品,延迟" + temp + "到达";
+
+									fields.put("event_info", "延迟" + temp + "到达");
+									// 初始化告警实体类
+									alertBean = alertService.getIrregularAlertBean(AlertType.DELAY.getValue(), alertTitle, type, map);
+
+//									if (alertBean != null) {
+//										alertService.alert(es,index, alertType, alertBean); // 生成告警
+//										alertBean = null;
+//									}
+
+								}
+							} else {
+								// 判断如果原数据是正确的， 新数据是错误的， 舍弃新数据
+								if (hitsSource_fields.containsKey("event_status")
+										&& (hitsSource_fields.get("event_status").toString().toUpperCase().equals("OK")
+										|| hitsSource_fields.get("event_status").toString().equals("0"))) {
+									log.warn("--舍弃掉 预修改错误的数据：" + json);
+									continue;
+								}
+								map.put("aging_status", "异常");
+								String alertTitle = subType + "--" + fields.get("module") + "--"
+										+ fields.get("data_time") + " 时次产品 ，发生错误："
+										+ fields.get("event_info").toString();
+								fields.put("event_info", "数据状态码错误："+ fields.get("event_status"));
+								// 初始化告警实体类
+								alertBean = alertService.getIrregularAlertBean(AlertType.ABNORMAL.getValue(), alertTitle, type,map);
+							}
+
+						}
+						/*-------5.29 新代码*/
+//						if (hitsSource_fields.containsKey("file_name") && !StringUtils.isEmpty(hitsSource_fields.get("file_name"))){
+//							fields.put("file_name", hitsSource_fields.get("file_name"));
+//						}
+
+						if (alertBean != null) {
+							/*   需要修改该方法  2018.3.20没有修改   */
+							alertService.alert(es,index, alertType, alertBean,rulesArray); // 生成告警
+							alertBean = null;
+						}
+						else{
+							if(rulesArray.size() > 0 && rulesArray.getString(0) != null){
+								//告警状态正常置零告警次数
+								if(rulesArray.getInteger(3) != 0){
+									dataInfoRepository.resetAlertCnt(rulesArray.getLongValue(0));
+								}
+								//无告警时提前到达是否提示
+								if(rulesArray.getInteger(4) == 1){
+									String alertTitle = subType + "--" + fields.get("module") + "--"
+											+ fields.get("data_time") + " 时次产品到达";
+									fields.put("event_info", "数据按时正常到达");
+									alertBean = alertService.getIrregularAlertBean(AlertType.NOTE.getValue(), alertTitle, type,map);
+									alertService.alert(es,index, alertType, alertBean,rulesArray);
+								}
+							}
+						}
+
+						// 数据入库
+						es.bulkProcessor.add(new IndexRequest(index, type, str_id).source(map));
+//						DIMap = null;
+					} else {
+						if(fields.containsKey("event_status")){
+							// 判断数据状态
+							if (fields.get("event_status").toString().toUpperCase().equals("OK")
+									|| fields.get("event_status").toString().equals("0")) {
+								map.put("aging_status", "正常");
+								// fields.put("event_info","正常");
+							} else {
+								map.put("aging_status", "异常");
+							}
+						}
+
+						log.info("这是一条未查询到的数据,类型为：{}, 时次为：{}", subType, fields.get("data_time"));
+						es.bulkProcessor.add(new IndexRequest(index, type,str_id).source(map));
+					}
+
+				} catch (Exception e) {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					e.printStackTrace(pw);
+					String strError = sw.toString();
+					log.error(strError.length() > 1000 ? strError.substring(0,999):strError);
+
+					log.error("错误数据："+json);
+					error_num++;
+				}
+			}
+			System.out.println("---------------------------------------------------------------------------------------------------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return listSize - error_num;
+		}
+
+	}
 
 
 }

@@ -3,6 +3,7 @@ package com.cn.hitec.api;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +63,46 @@ public class EsWriteApi extends BaseController {
 		outMap.put(KEY_SPEND, spend + "mm");
 		return outMap;
 	}
+
+	//无规律数据写入
+	@RequestMapping(value = "/insertIrregulardata", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> insertIrregulardata(@RequestBody EsBean esBean) {
+		if (esBean == null || esBean.getData() == null || StringUtils.isEmpty(esBean.getType())) {
+			outMap.put(KEY_RESULT, VAL_ERROR);
+			outMap.put(KEY_RESULTDATA, null);
+			outMap.put(KEY_MESSAGE, "ES写入数据失败！数据为 null");
+			return outMap;
+		}
+		System.out.println("ESbean传入！！"+esBean.getData());
+		List<String> Irregulartime=esBean.getData();
+		System.out.println("write中："+Irregulartime.size());
+		Map<String, Object> map = new HashMap<>();
+		String  str_type=esBean.getType();
+		String index=esBean.getIndex();
+
+		System.out.println("写入：index:"+index+"type:"+str_type);
+		int num=0;
+		try {
+			num=esService.addIrregularservicedata(index,str_type,Irregulartime);
+		}catch (Exception e){
+			System.out.println("esService中addIrregularservicedata异常");
+		}
+
+		if (num == 0 || esBean.getData().size() > num) {
+			outMap.put(KEY_MESSAGE, "数据修改失败");
+		} else {
+			outMap.put(KEY_MESSAGE, "数据修改成功");
+		}
+		long start = System.currentTimeMillis();
+		long spend = System.currentTimeMillis() - start;
+		map.put("insert_number", num);
+		outMap.put(KEY_RESULT, VAL_SUCCESS);
+		outMap.put(KEY_RESULTDATA, map);
+
+		outMap.put(KEY_SPEND, spend + "mm");
+		return outMap;
+	}
+
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> insert(@RequestBody EsBean esBean) {
@@ -186,5 +227,31 @@ public class EsWriteApi extends BaseController {
 		esService.add(esbean.getIndex(),esbean.getType(), esbean.getId(),esbean.getJson());
 		return outMap;
 	}
+	//因数据源md5加密更改，为了避免影响其他业务，代码上唯一不同在于MD5的加密参数不同
+	@RequestMapping(value = "/updateDataSource", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> updateDataSource(@RequestBody EsBean esBean) {
+		if (esBean == null || esBean.getData() == null || esBean.getData().size() <= 0) {
+			outMap.put(KEY_RESULT, VAL_ERROR);
+			outMap.put(KEY_RESULTDATA, null);
+			outMap.put(KEY_MESSAGE, "ES修改数据失败！数据为 null");
+			return outMap;
+		}
+		long start = System.currentTimeMillis();
+		Map<String, Object> map = new HashMap<>();
+		// System.out.printf("Json数据 %s",esBean.getData().toString() +"\n");
 
+		int num = esService.updateDataSource(esBean.getIndex(), esBean.getType(), esBean.getData());
+		if (num == 0 || esBean.getData().size() > num) {
+			outMap.put(KEY_MESSAGE, "数据修改失败");
+		} else {
+			outMap.put(KEY_MESSAGE, "数据修改成功");
+		}
+		map.put("update_number", num);
+		long spend = System.currentTimeMillis() - start;
+		outMap.put(KEY_RESULT, VAL_SUCCESS);
+		outMap.put(KEY_RESULTDATA, map);
+
+		outMap.put(KEY_SPEND, spend + "mm");
+		return outMap;
+	}
 }
