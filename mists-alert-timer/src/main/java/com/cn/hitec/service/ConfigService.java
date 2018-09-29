@@ -156,6 +156,10 @@ public class ConfigService {
 			String module = map.get("module").toString();
 			try {
 				String cron = map.get("time_interval").toString();
+				//对于空的cron跳过循环
+				if(cron == null || cron == "" || cron.equals("") || cron.length() <= 0){
+					continue;
+				}
 				List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
 				List<String> listDataBean = new ArrayList<>();
 				List<String> listDataBeanYesterday = new ArrayList<>();
@@ -166,6 +170,7 @@ public class ConfigService {
 				// if(!"炎热指数".equals(subType)){
 				// continue;
 				// }
+
 				String name = map.get("sub_name").toString();
 				System.out.println(name);
 				String IP = map.get("IP").toString();
@@ -304,9 +309,11 @@ public class ConfigService {
 					continue;
 				}
 				String cron = map.get("time_interval").toString();
+
 				if(cron==null||cron==""){
 					continue;
 				}
+
 				String subType = map.get("DI_name").toString();
 				String name = map.get("sub_name").toString();;
 				String IP = map.get("IP").toString();
@@ -314,8 +321,13 @@ public class ConfigService {
 				String[] shuld_time = map.get("should_time").toString().split(",");
 				String[] last_time = map.get("last_time").toString().split(",");
 
+				//对于空的cron跳过循环
+				if(cron == null || cron == "" || cron.equals("") || cron.length() <= 0){
+					continue;
+				}
 				List<String> timerList = CronPub.getTimeBycron_String(cron, "yyyy-MM-dd HH:mm:ss.SSSZ", startDate, endDate);
 				int regular = Integer.parseInt(map.get("regular").toString());
+
 				if(regular == 2){
 					if (shuld_time.length < 1 || shuld_time.length != timerList.size() || shuld_time.length != last_time.length){
 						logger.warn("------> 应到时间、最晚到达时间 和 数据时次 个数不匹配!!! 数据名称："+subType);
@@ -429,6 +441,10 @@ public class ConfigService {
 				map = (Map<String, Object>) DIMapObj.get(key); // 获取单条配置信息
 
 				String cron = map.get("time_interval").toString();
+				//对于空的cron跳过循环
+				if(cron == null || cron == "" || cron.equals("") || cron.length() <= 0){
+					continue;
+				}
 				List<Date> timeList = CronPub.getTimeBycron_Date(cron, startDate, endDate);
 				String subType = map.get("DI_name").toString();
 				String serviceType = map.get("serviceType").toString();
@@ -437,6 +453,7 @@ public class ConfigService {
 				String path = map.get("path").toString();
 
 				Map<String, Object> indexMap = new HashMap<>();
+
 				for (Date dt : timeList) {
                     String indexKey = Pub.Index_Head + Pub.transform_DateToString(dt, Pub.Index_Food_Simpledataformat);
     //					// 判断是否预生成过，没有的话生成
@@ -606,7 +623,7 @@ public class ConfigService {
 		String fileName = "";
 		try {
 			if (StringUtils.isNotEmpty(nameDefine)){
-
+				System.out.println(nameDefine+"5164");
                 String timeFormat = nameDefine.substring(nameDefine.indexOf("{")+1,nameDefine.indexOf("}"));
                 String timeZoneFormat = "0";
                 if (nameDefine.indexOf("[") > -1 && nameDefine.indexOf("]") > -1){
