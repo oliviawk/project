@@ -181,6 +181,7 @@ $(document)
                    var s = "<tr style='height: 40px;'><th style='display: none;vertical-align:middle;text-align: center' class='shade1' >id</th><th  class='shade1' style='vertical-align:middle;text-align: center'>用户名</th><th class='shade1' style='vertical-align:middle;text-align: center'>用户电话</th><th class='shade1' style='vertical-align:middle;text-align: center'>是否发送生效</th></th>"
                    var m = "";
                    for (var i = 0; i < listone.length; i++) {
+                       debugger
                        s += "<tr style='height: 40px;'><td style='display: none ; vertical-align:middle;text-align: center'>"
                            + list[i][0]
                            + "</td><td style='vertical-align:middle;text-align: center;height: 40px'>"
@@ -195,6 +196,7 @@ $(document)
                               s=s+"<td style='vertical-align:middle;text-align: center;height: 40px'><input class='zhuantai' checked='checked' type='checkbox' style='margin:0 auto;margin-left: 10px; height: 20px;width: 20px ' ></td></tr>"
                           }
                    }
+
                    $("#hxuser").html(s);
                }, error : function(err) {
                     alert(err);
@@ -1140,6 +1142,8 @@ function onchangeSelect2(m) {
                         }
                         console.info(dio)
                         // document.getElementById("baseSourceIp").style="visibility:hidden";
+                        var sty="";
+
                         m = "<tr><td >";
                         var spanHtml = dio[1]+" "+dio[2];
                         if (spanHtml == "DS") {
@@ -1150,11 +1154,12 @@ function onchangeSelect2(m) {
                         m += "  <span class='little-title'>"+spanHtml+"&nbsp;&nbsp;"+ips[2]+"."+ips[3]+"</span>";
                         m += "  <input type='hidden' name='moduleSpan' value='"+dio[0]+"'>";
                         m += "  <div id=\"tr_div"+i+"\" class=\"area\" >";
+
                         if (dio[3] == 1){
                             m += "      <div class=\"row\">";
-                            m += "          <div class=\"form-control form-attribute\">时次表达式</div>";
+                            m += "          <div class=\"form-control form-attribute\" >时次表达式</div>";
                             m += "          <div class='form-group'>";
-                            m += "              <input type='text' class='form-control'  placeholder='' id='dataTimeCron_"+i+"'/>";
+                            m += "              <input type='text'   class='form-control'  placeholder='' id='dataTimeCron_"+i+"'/>";
                             m += "          </div>";
                             m += "          <div class=\"form-control form-attribute\">间隔规律</div>";
                             m += "          <div class=\"radio\">";
@@ -1218,18 +1223,35 @@ function onchangeSelect2(m) {
                         m += "  </div>";
 
                         $("#table_cjf").append(m);
+                        if (dio[8]==null||dio[8]==""){
+                            $("#dataTimeCron_" + i).attr("readonly",true);
+                            $("#before_alert_" + i).attr("checked",dio[12]==1);
+                            $("#after_alert_" + i).prop("checked",false);
+                            $("#after_alert_" + i).attr("disabled",true);
+                            $("#pzAddtimeyz"+i).attr("readonly",true);
+                            $("#pzShouleTimeyz"+i).attr("readonly",true);
+                            $(":radio[name='regular_" + i + "'][value='2']").prop("checked",
+                                "checked");
+                            $(":radio[name='regular_" + i + "']").attr("disabled",true);
+
+
+                        }
+                        else {
+                            $("#before_alert_" + i).prop("checked",dio[12]==1);
+                            $("#after_alert_" + i).prop("checked",dio[13]==1);
+                            $(":radio[name='regular_" + i + "'][value='"
+                                + dio[7] + "']").prop("checked",
+                                "checked");
+                        }
                         $("#pzAddtimeyz" + i + "").val(dio[4]);
                         $("#pzShouleTimeyz" + i + "").val(dio[6]);
                         $("#dataTimeCron_" + i).val(dio[8]);
-                        $(":radio[name='regular_" + i + "'][value='"
-                            + dio[7] + "']").prop("checked",
-                            "checked");
+
 
                         $("#fileSizeDefine_" + i + "").val(dio[9]);
                         $("#fileNameDefine_" + i + "").val(dio[10]);
 
-                        $("#before_alert_" + i).prop("checked",dio[12]==1);
-                        $("#after_alert_" + i).prop("checked",dio[13]==1);
+
                         $("#alertTimeRange_" + i + "").val(dio[14]?dio[14]:"00:00:00-23:59:59");
                         $("#maxAlerts_" + i + "").val(dio[15]);
 

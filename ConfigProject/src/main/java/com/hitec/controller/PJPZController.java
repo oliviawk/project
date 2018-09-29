@@ -5,6 +5,8 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -462,7 +464,7 @@ public class PJPZController {
 				String monitorTimes = diObj.getString("monitorTimes");
 				String fileSizeDefine = diObj.getString("fileSizeDefine");
 				String fileNameDefine = diObj.getString("fileNameDefine");
-
+				
                 DataInfo dataInfoprepare=dataInfoRepository.findqueryalldata(id);
                 String  name= dataInfoprepare.getName();
                 list.add(dataInfoprepare);
@@ -476,6 +478,7 @@ public class PJPZController {
 						logger.info("表数据不一致！！");
 						throw  new  RuntimeException("表数据不一致！！");
 					}
+					logger.info("文件名:"+fileNameDefine+"cron表达式："+monitorTimes);
 					dataSourceSetting=handletimeformat(dataSourceSetting,fileNameDefine,monitorTimes);
 					if (dataSourceSetting==null){
 						logger.info("日期格式不正确！！");
@@ -602,25 +605,31 @@ public class PJPZController {
 	}
   public DataSourceSetting handletimeformat(DataSourceSetting dataSourceSetting,String filenameone,String monitor) throws Exception{
 
-	     String filename=filenameone;
-	     if (filename.indexOf("{")!=filename.lastIndexOf("{")||filename.indexOf("}")!=filename.lastIndexOf("}")){
-	     	return null;
-		 }
-	     int start=filename.indexOf("{");
-	     int end=filename.indexOf("}");
-	     String format=null;
-	     if (start!=-1&&end!=-1){
-	       format=filename.substring(start+1,end);
-		 }
-		 else {
-	     	return  null;
-		 }
-		 String regx="\\d{"+format.length()+"}";
-		 String filenametwo=filename.replace("{"+format+"}",regx);
-		 dataSourceSetting.setFileName(filenametwo);
-		 dataSourceSetting.setTimeFormat(format);
-		 dataSourceSetting.setMoniterTimer(monitor);
-		 return  dataSourceSetting;
+	  String filename=filenameone;
+	  String regxt="\\{[a-zA-Z]+\\}";
+	  Pattern pat=Pattern.compile(regxt);
+	  Matcher matcher=pat.matcher(filename);
+	  String format=null;
+	  if (matcher.find()){
+           format=matcher.group();
+           format=format.replace("{","");
+           format=format.replace("}","");
+           logger.info("format:"+format);
+		  String regx="\\d{"+(format.length()-2)+"}";
+		  String filenametwo=filename.replace("{"+format+"}",regx);
+		  dataSourceSetting.setFileName(filenametwo);
+		  dataSourceSetting.setTimeFormat(format);
+		  dataSourceSetting.setMoniterTimer(monitor);
+		  return  dataSourceSetting;
+	  }
+	  else {
+	  	logger.info("else");
+		  dataSourceSetting.setFileName(filename);
+		  dataSourceSetting.setTimeFormat(format);
+		  dataSourceSetting.setMoniterTimer(monitor);
+		  return  dataSourceSetting;
+	  }
+
   }
 	@RequestMapping(value = "/SelectUserPhone", method = RequestMethod.POST)
 	@ResponseBody

@@ -21,8 +21,11 @@ public interface DataSourceEsInterface {
 	@RequestMapping(value = "/datasource/insertList", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> insertList(@RequestBody String json);
 
-	@RequestMapping(value = "/write/update", method = RequestMethod.POST, consumes = "application/json")
-	public Map<String, Object> update(@RequestBody EsBean esBean);
+	@RequestMapping(value = "/write/updateDataSource", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> updateDataSource(@RequestBody EsBean esBean);
+
+	@RequestMapping(value = "/write/insertIrregulardata", method = RequestMethod.POST, consumes = "application/json")
+	public Map<String, Object> insertIrregulardata(@RequestBody EsBean esBean);
 
 	@RequestMapping(value = "/mqpfsource/insert", method = RequestMethod.POST, consumes = "application/json")
 	public Map<String, Object> insertMQPFData(@RequestBody EsBean esBean);

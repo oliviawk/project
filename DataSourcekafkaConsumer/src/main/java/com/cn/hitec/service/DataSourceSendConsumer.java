@@ -276,39 +276,71 @@ public class DataSourceSendConsumer extends MsgConsumer{
 			data.put("occur_time", occur_time);
 
 			String timeFormat = dataSourceSetting.getTimeFormat();
-			String dataTimeStr = timeStr.substring(0, timeFormat.length());
-			sdf.applyPattern(timeFormat);
-			Date dataTime = sdf.parse(dataTimeStr);
-			sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
-			String data_time = sdf.format(dataTime);
+			String moniter_timer=dataSourceSetting.getMoniterTimer();
+			if(timeFormat==null|| moniter_timer==null||timeFormat==""||moniter_timer==""){
+				timeFormat="yyyyMMddHH";
+				sdf.applyPattern(timeFormat);
+				String dataTimeStr = sdf.format(new Date());
+				Date dataTime = sdf.parse(dataTimeStr);
+				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+				String data_time = sdf.format(dataTime);
+				long file_size_long = Long.parseLong(file_sizeStr);
 
-			long file_size_long = Long.parseLong(file_sizeStr);
+				// 采集数据中不包含的数据，后期从配置库中获取
+				data.put("should_time", 0);
+				data.put("last_time", 0);
+				data.put("name", dataSourceSetting.getName());
+				data.put("type",dataSourceSetting.getName() );
 
-			// 采集数据中不包含的数据，后期从配置库中获取
-			data.put("should_time", 0);
-			data.put("last_time", 0);
-			data.put("name", dataSourceSetting.getName());
-			data.put("type", dataSourceSetting.getName());
+				field.put("file_name", file_name_log);
+				field.put("file_size", file_size_long);
+				field.put("data_time", data_time);
+				field.put("event_status", event_status);
+				field.put("data_type", dataSourceSetting.getDataType());
+				field.put("moniter_timer", moniter_timer);
+				field.put("department_name", dataSourceSetting.getDepartmentName());
+				field.put("phone", dataSourceSetting.getPhone());
+				field.put("ip_addr", ipAddr);
+				field.put("use_department", dataSourceSetting.getUseDepartment());
+				field.put("system_name", "");
+				field.put("module", "DS");
+				data.put("fields", field);
+				outData.put("type", "Irregular");
+				outData.put("data", data);
+			}
+			else {
+				String dataTimeStr = timeStr.substring(0, timeFormat.length());
+				sdf.applyPattern(timeFormat);
+				Date dataTime = sdf.parse(dataTimeStr);
+				sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSSZ");
+				String data_time = sdf.format(dataTime);
 
-			field.put("file_name", file_name_log);
-			field.put("file_size", file_size_long);
-			field.put("data_time", data_time);
-			field.put("event_status", event_status);
-			field.put("data_type", dataSourceSetting.getDataType());
-			field.put("moniter_timer", dataSourceSetting.getMoniterTimer());
-			field.put("department_name", dataSourceSetting.getDepartmentName());
-			field.put("phone", dataSourceSetting.getPhone());
-			field.put("ip_addr", ipAddr);
-			field.put("use_department", dataSourceSetting.getUseDepartment());
-			field.put("system_name", "");
-			field.put("module", "DS");
+				long file_size_long = Long.parseLong(file_sizeStr);
 
-			data.put("fields", field);
+				// 采集数据中不包含的数据，后期从配置库中获取
+				data.put("should_time", 0);
+				data.put("last_time", 0);
+				data.put("name", dataSourceSetting.getName());
+				data.put("type", dataSourceSetting.getName());
 
-			outData.put("type", "dataSource");
-			outData.put("data", data);
+				field.put("file_name", file_name_log);
+				field.put("file_size", file_size_long);
+				field.put("data_time", data_time);
+				field.put("event_status", event_status);
+				field.put("data_type", dataSourceSetting.getDataType());
+				field.put("moniter_timer", moniter_timer);
+				field.put("department_name", dataSourceSetting.getDepartmentName());
+				field.put("phone", dataSourceSetting.getPhone());
+				field.put("ip_addr", ipAddr);
+				field.put("use_department", dataSourceSetting.getUseDepartment());
+				field.put("system_name", "");
+				field.put("module", "DS");
+				data.put("fields", field);
+				outData.put("type", "dataSource");
+				outData.put("data", data);
 
-			logger.info("成功匹配入库：{}",JSON.toJSONString(outData));
+				logger.info("成功匹配入库：{}",JSON.toJSONString(outData));
+			}
 		} catch (ParseException e) {
 			logger.error("解析日志并组装入库数据出错:"+e.getMessage());
 			logger.warn(msg);

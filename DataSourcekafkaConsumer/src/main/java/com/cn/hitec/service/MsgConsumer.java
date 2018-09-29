@@ -87,10 +87,13 @@ public class MsgConsumer {
         long startTime2 = System.currentTimeMillis();
         long startTime3 = System.currentTimeMillis();
         long startTime_fzjc = System.currentTimeMillis();
+        long startTime4=System.currentTimeMillis();
         long useaTime1 = 0;
         long useaTime2 = 0;
         long useaTime3 = 0;
+        long useaTime4 = 0;
         long useaTime_fzjc = 0;
+        List<String> Irregulartime=new ArrayList<String>();
         List<String> msgs = new ArrayList<String>();
         List<Object> possibleNeedDataList = new ArrayList<Object>();
         List<String> mqpfList = new ArrayList<String>();
@@ -109,13 +112,12 @@ public class MsgConsumer {
                     if (data == null){
                         continue;
                     }
-                    if ("dataSource".equals(data.get("type"))){
-                        Map<String,Object> mapdata=(Map<String, Object>) data.get("data");
-                        Map<String,Object> fieldmap=(Map<String, Object>) mapdata.get("fields");
-                        String filename=(String)fieldmap.get("file_name");
-                        logger.info("文件名："+filename);
-                        mapdata.put("type",filename);
-                        msgs.add(JSON.toJSONString(mapdata));
+                    if("Irregular".equals(data.get("type"))){
+                        logger.info("无规律数据准备录入！");
+                        Irregulartime.add(JSON.toJSONString(data.get("data")));
+                    }
+                   else if ("dataSource".equals(data.get("type"))){
+                        msgs.add(JSON.toJSONString(data));
                     }else if ("noDataSource".equals(data.get("type"))){
                         possibleNeedDataList.add(data.get("data"));
                     }else if ("MQPF_DataSource".equals(data.get("type"))){
@@ -127,15 +129,30 @@ public class MsgConsumer {
                 useaTime1 = System.currentTimeMillis() - startTime1;
                 useaTime2 = System.currentTimeMillis() - startTime2;
                 useaTime3 = System.currentTimeMillis() - startTime3;
+                useaTime4 = System.currentTimeMillis() - startTime4;
                 useaTime_fzjc = System.currentTimeMillis() - startTime_fzjc;
                 //当list数据量，大于100 ， 或者存储时间超过5秒 ， 调用入ES接口一次
+
+                if(Irregulartime.size()>10||(Irregulartime.size()>0&&useaTime4>5000)){
+                    //时间格式无规律数据录入
+                    EsBean esBean = new EsBean();
+                    esBean.setType("DATASOURCE");
+                    esBean.setIndex("");
+                    esBean.setData(Irregulartime);
+                    logger.info("Irregulartime长度："+Irregulartime.size());
+
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.insertIrregulardata(esBean);
+                    logger.info("无规律数据入库返回结果："+ JSON.toJSONString(insertDataSource));
+                    Irregulartime.clear();
+                    startTime4=System.currentTimeMillis();
+                }
                 if (msgs.size() > 3000 || (msgs.size() > 0 && useaTime1 > 5000)) {
                     EsBean esBean = new EsBean();
                     esBean.setType("DATASOURCE");
                     esBean.setIndex("");
                     esBean.setData(msgs);
 //                    logger.info("入库数据："+ JSON.toJSONString(msgs));
-                    Map<String, Object> insertDataSource = dataSourceEsInterface.update(esBean);
+                    Map<String, Object> insertDataSource = dataSourceEsInterface.updateDataSource(esBean);
 //                	System.out.println(JSON.toJSONString(insertDataSource));
                     logger.info("入库数据返回结果："+ JSON.toJSONString(insertDataSource));
                     msgs.clear();
