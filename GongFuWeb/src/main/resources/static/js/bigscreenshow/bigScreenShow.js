@@ -1,6 +1,7 @@
 //声明 雷达、精细化预报、常规预报、实况  雷达基站数据
 var radar_dataSource,sevpscon_dataSource, sevpsnwfd_dataSource, shikuang_dataSource = [];
 $(function () {
+
     console.info("加载雷达数据")
     $.ajax({
         type: "GET",
@@ -55,13 +56,99 @@ $(function () {
 
 });
 
+function data_zhongxinjiagong(){
+    $.ajax({
+        type: "get",
+        url: "../show/lctdata",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        async: false,
+        success: function (d) {
+            var tableHtml = new Array();
+            $("#centerDataTbody").html("");
+            tableHtml.push("<tr><td colspan='6' style='padding: 0px;'></td></tr>");
+            for (var key in d){
+                console.info(key)
+                tableHtml.push("<tr>");
+                tableHtml.push("<td class='td1'>"+d[key].resolution+"</td>")
+                tableHtml.push("<td class='td2'>"+d[key].basic+"</td>");
+                tableHtml.push("<td class='td3'>"+d[key].serverName+"</td>");
+
+                if (key == "SCW"){
+                    tableHtml.push("<td colspan='3'></td>");
+                    console.info(11);
+                }else{
+                    //采集环节数据拼接
+                    tableHtml.push("<td class='rect_td td4'>");
+                    var caiji = d[key]["caiji"];
+                    if(!$.isEmptyObject(caiji)){
+                        var tempNumCaiji_error = [0];
+                        for (var caijiKey in caiji ){
+                            tableHtml.push("<div class='rect_td1 "+rectIsOK(caiji[caijiKey],1,tempNumCaiji_error) +"'></div>");
+                        }
+                        var tempLengthCaiji = Object.keys(caiji).length;
+                        tableHtml.push("<span>"+(100 - ((tempNumCaiji_error[0]/tempLengthCaiji).toFixed(2) * 100))+"%</span></td>");
+                    }else{
+                        tableHtml.push("<div class=''></div></td>");
+                    }
+
+                    //处理环节数据拼接
+                    tableHtml.push("<td class='rect_td td5'>");
+                    var chuli = d[key]["chuli"];
+                    if(!$.isEmptyObject(chuli)){
+                        var tempNumChuli_error = [0];
+                        for(var chuliKey in chuli){
+                            tableHtml.push("<div class='rect_td2 "+rectIsOK(chuli[chuliKey],2,tempNumChuli_error) +"'></div>");
+                        }
+                        var tempLengthChuli = Object.keys(chuli).length;
+                        tableHtml.push("<span>"+(100 - ((tempNumChuli_error[0]/tempLengthChuli).toFixed(2) * 100))+"%</span></td>");
+                    }else{
+                        tableHtml.push("<div class=''></div><div class=''></div></td>");
+                    }
+
+                    //分发环节数据拼接
+                    tableHtml.push("<td class='rect_td td6'>");
+                    var fenfa = d[key]["fenfa"];
+                    if(!$.isEmptyObject(fenfa)){
+                        var tempNumFenfa_error = [0];
+                        for(var fenfaKey in fenfa){
+                            tableHtml.push("<div class='rect_td3 "+rectIsOK(fenfa[fenfaKey],3,tempNumFenfa_error) +"'></div>");
+                        }
+                        var tempLengthFenfa = Object.keys(fenfa).length;
+                        tableHtml.push("<span>"+(100 -((tempNumFenfa_error[0]/tempLengthFenfa).toFixed(2) * 100))+"%</span></td>");
+                    }else{
+                        tableHtml.push("<div class=''></div><div class=''></div></td>");
+                    }
+                }
+                //收尾
+                tableHtml.push("</tr>");
+            }
+
+            $("#centerDataTbody").html(tableHtml.join(""));
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function rectIsOK(bean,tempNum,tempNum_error) {
+    if(bean.hasOwnProperty("aging_status")){
+        if(bean.aging_status == "正常"){
+            return "";
+        }else{
+            tempNum_error[0] = tempNum_error[0]+1;
+            return "rect_error";
+        }
+    }else{
+        return '';
+    }
+
+}
 
 function data_jishuju() {
     var data = [];
-    // data.push("办公业务,8,0");
-    // data.push("预警业务,44,0");
-    // data.push("数据资源池,20,0");
-    // data.push("核心加工系统,66,0");
 
     $.ajax({
         type: "GET",
@@ -69,6 +156,7 @@ function data_jishuju() {
         dataType: "json",
         async: false,
         success: function (d) {
+            console.info("基础设施数据----:")
             console.info(d)
             for (var key in d) {
                 data.push(key+","+d[key]);
@@ -164,9 +252,6 @@ function data_jishuju() {
 
 
 }
-
-data_jishuju();
-
 
 /**
  * 折线图---数据量监控

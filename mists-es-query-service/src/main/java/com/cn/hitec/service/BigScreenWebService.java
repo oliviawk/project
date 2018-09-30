@@ -56,17 +56,21 @@ public class BigScreenWebService {
         }
 
         try {
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            //控制返回的字段
+            String [] fetchSource  = new String[]{"aging_status","fields.data_time"};
 
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();  //查询条件类
+            //添加查询条件
             queryBuilder.must(QueryBuilders.termsQuery("aging_status","正常","异常","超时"));
-
-        queryBuilder.mustNot(QueryBuilders.termsQuery("fields.module","采集","分发"));
-
+            queryBuilder.mustNot(QueryBuilders.termsQuery("fields.module","采集","分发"));
+            //添加聚合条件类
             TermsAggregationBuilder aggregationBuilder = AggregationBuilders.terms("groupByType").field("type").size(100)
                     .subAggregation(
                             AggregationBuilders.terms("byModel").field("fields.module").size(100)
                                     .subAggregation(
-                                            AggregationBuilders.topHits("byDataTime").sort("fields.data_time",SortOrder.DESC).size(1)
+                                            AggregationBuilders.topHits("byDataTime")
+                                                    .sort("fields.data_time",SortOrder.DESC).size(1)    //倒序排序,获取一条 --- 即最新数据
+                                                    .fetchSource(fetchSource,null)  //控制返回的字段
                                     )
                     );
 
@@ -125,16 +129,22 @@ public class BigScreenWebService {
         }
 
         try {
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            //控制返回的字段
+            String [] fetchSource  = new String[]{"aging_status","fields.data_time"};
 
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();  //查询条件类
+
+            //拼接查询条件
             queryBuilder.must(QueryBuilders.termQuery("fields.module",module));
             queryBuilder.must(QueryBuilders.termsQuery("aging_status","正常","异常","超时"));
 
-//        queryBuilder.mustNot(QueryBuilders.termQuery("aging_status","未处理"));
-
+            queryBuilder.mustNot(QueryBuilders.wildcardQuery("type","Z_RADR_I_*")); //过滤掉雷达数据
+            //聚合查询类
             TermsAggregationBuilder aggregationBuilder = AggregationBuilders.terms("groupByType").field("type").size(100)
                     .subAggregation(
-                        AggregationBuilders.topHits("byDataTime").sort("fields.data_time",SortOrder.DESC).size(1)
+                        AggregationBuilders.topHits("byDataTime")
+                                .sort("fields.data_time",SortOrder.DESC).size(1)        //倒序排序,获取一条 --- 即最新数据
+                                .fetchSource(fetchSource,null)   //决定返回哪些字段
                     );
 
             //返回查询结果

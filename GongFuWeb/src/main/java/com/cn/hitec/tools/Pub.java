@@ -129,4 +129,25 @@ public class Pub {
         }
         return dates;
     }
+
+    /**
+     * map对象copy
+     * @param paramsMap     被copy对象
+     * @param resultMap     返回对象
+     */
+    public static void mapCopy(Map paramsMap , Map resultMap){
+        if(resultMap == null){
+            resultMap = new HashMap();
+        }
+        if(paramsMap == null){
+            return ;
+        }
+        Iterator iterator = paramsMap.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry entry = (Map.Entry)iterator.next();
+            Object key = entry.getKey();
+            resultMap.put(key,paramsMap.get(key));
+        }
+    }
+
 }

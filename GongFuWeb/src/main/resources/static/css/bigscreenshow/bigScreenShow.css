@@ -140,9 +140,10 @@ h1{
     margin-left: 0px;
 }
 
-#centerDataTable > span {
-    top: -5px;
-    left: 5px;
+#centerDataTable  span {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 4px;
 }
 #centerDataTable > thead > tr > th {
     background-color: transparent;
@@ -171,7 +172,7 @@ h1{
     color: #F1A059;
 }
 #centerDataTable > thead > tr > .th3{
-    width: 185px;
+    width: 190px;
     color: #ffffff;
 }
 #centerDataTable > thead > tr > .th4{
@@ -179,11 +180,11 @@ h1{
     color: #77B6F7;
 }
 #centerDataTable > thead > tr > .th5{
-    width: 280px;
+    width: 200px;
     color: #9EED7C;
 }
 #centerDataTable > thead > tr > .th6{
-    width: 150px;
+    width: 180px;
     color: #F1A059;
 }
 
@@ -298,14 +299,23 @@ h1{
 
 @keyframes myfirst_error
 {
-    0%   {background-color: #FF0800; }
-    50% {background-color: #ff5348; }
-    100% {background-color: #FF0800; }
+    0%   {background-color: rgba(255,8,0,1); border: 1px solid rgba(26, 93, 153, 1);}
+    25%   {background-color: rgba(255,9,0,1); border: 1px solid rgba(26, 93, 153, .7);}
+    50% {background-color: rgba(255,9,0,1); border: 1px solid rgba(255,244,244,1);}
+    25%   {background-color: rgba(255,9,0,1); border: 1px solid rgba(26, 93, 153, .7);}
+    100% {background-color: rgba(255,8,0,1); border: 1px solid rgba(26, 93, 153, 1);}
+/*0%   {background-color: rgba(255,8,0,1); }*/
+    /*25%   {background-color: rgba(255,9,0,1); }*/
+    /*50% {background-color: rgba(255,244,244,1); }*/
+    /*25%   {background-color: rgba(255,9,0,1); }*/
+    /*100% {background-color: rgba(255,8,0,1); }*/
 }
 
 @-webkit-keyframes myfirst_error /* Safari 与 Chrome */
 {
-    0%   {background-color: #FF0800; }
-    50% {background-color: #F1A059; }
-    100% {background-color: #FF0800; }
+    0%   {background-color: rgba(255,8,0,1); border: 1px solid rgba(26, 93, 153, 1);}
+    25%   {background-color: rgba(255,9,0,1); border: 1px solid rgba(26, 93, 153, .7);}
+    50% {background-color: rgba(255,9,0,1); border: 1px solid rgba(255,244,244,1);}
+    25%   {background-color: rgba(255,9,0,1); border: 1px solid rgba(26, 93, 153, .7);}
+    100% {background-color: rgba(255,8,0,1); border: 1px solid rgba(26, 93, 153, 1);}
 }

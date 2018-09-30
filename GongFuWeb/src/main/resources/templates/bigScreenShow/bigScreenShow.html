@@ -64,140 +64,140 @@
                         <th class="th6">分发</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td colspan="6" style="padding: 0px;"></td>
-                    </tr>
-                    <tr>
-                        <td class="td1">1公里,15天时长/逐1小时</td>
-                        <td class="td2">风、温、湿、水、云、天</td>
-                        <td class="td3">精细化预报(OCF)</td>
-                        <td class="rect_td td4">
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1 rect_ok1"></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td5">
-                            <span>订正</span>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td3 rect_ok2"></div>
-                            <div></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td6">
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3 rect_ok3"></div>
-                            <span>80%</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="td1">1公里,30分钟时长/逐10分钟</td>
-                        <td class="td2">风、温、湿、压、水、能</td>
-                        <td class="td3">快速地面融合(RGF)</td>
-                        <td class="rect_td td4">
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1 rect_ok1"></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td5">
-                            <span>订正</span>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td3 rect_error"></div>
-                            <div></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td6">
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3 rect_ok3"></div>
-                            <span>80%</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="td1">1公里,2小时时长/逐5小时</td>
-                        <td class="td2">风、水</td>
-                        <td class="td3">分钟降水预报(MQPF)</td>
-                        <td class="rect_td td4">
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1 rect_ok1"></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td5">
-                            <span>订正</span>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td3 rect_ok2"></div>
-                            <div></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td6">
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3 rect_ok3"></div>
-                            <span>80%</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="td1">1公里,0小时时长/逐1小时</td>
-                        <td class="td2">风、温、湿、水</td>
-                        <td class="td3">格点实况(LAPS)</td>
-                        <td class="rect_td td4">
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1 rect_ok1"></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td5">
-                            <span>订正</span>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td3 rect_ok2"></div>
-                            <div></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td6">
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3 rect_ok3"></div>
-                            <span>80%</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="td1">1公里,30分钟时长/逐10分钟</td>
-                        <td class="td2">风、水</td>
-                        <td class="td3">强对流(SCW)</td>
-                        <td class="rect_td td4">
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1"></div>
-                            <div class="rect_td1 rect_ok1"></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td5">
-                            <span>订正</span>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td2"></div>
-                            <div class="rect_td3 rect_ok2"></div>
-                            <div></div>
-                            <span>80%</span>
-                        </td>
-                        <td class="rect_td td6">
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3"></div>
-                            <div class="rect_td3 rect_ok3"></div>
-                            <span>80%</span>
-                        </td>
-                    </tr>
+                    <tbody id="centerDataTbody">
+                    <!--<tr>-->
+                        <!--<td colspan="6" style="padding: 0px;"></td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="td1">1公里,15天时长/逐1小时</td>-->
+                        <!--<td class="td2">风、温、湿、水、云、天</td>-->
+                        <!--<td class="td3">精细化预报(OCF)</td>-->
+                        <!--<td class="rect_td td4">-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1 rect_ok1"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td5">-->
+                            <!--<span>订正</span>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td3 rect_ok2"></div>-->
+                            <!--<div></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td6">-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3 rect_ok3"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="td1">1公里,30分钟时长/逐10分钟</td>-->
+                        <!--<td class="td2">风、温、湿、压、水、能</td>-->
+                        <!--<td class="td3">快速地面融合(RGF)</td>-->
+                        <!--<td class="rect_td td4">-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1 rect_ok1"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td5">-->
+                            <!--<span>订正</span>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td3 rect_error"></div>-->
+                            <!--<div></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td6">-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3 rect_ok3"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="td1">1公里,2小时时长/逐5小时</td>-->
+                        <!--<td class="td2">风、水</td>-->
+                        <!--<td class="td3">分钟降水预报(MQPF)</td>-->
+                        <!--<td class="rect_td td4">-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1 rect_ok1"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td5">-->
+                            <!--<span>订正</span>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td3 rect_ok2"></div>-->
+                            <!--<div></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td6">-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3 rect_ok3"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="td1">1公里,0小时时长/逐1小时</td>-->
+                        <!--<td class="td2">风、温、湿、水</td>-->
+                        <!--<td class="td3">格点实况(LAPS)</td>-->
+                        <!--<td class="rect_td td4">-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1 rect_ok1"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td5">-->
+                            <!--<span>订正</span>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td3 rect_ok2"></div>-->
+                            <!--<div></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td6">-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3 rect_ok3"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="td1">1公里,30分钟时长/逐10分钟</td>-->
+                        <!--<td class="td2">风、水</td>-->
+                        <!--<td class="td3">强对流(SCW)</td>-->
+                        <!--<td class="rect_td td4">-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1"></div>-->
+                            <!--<div class="rect_td1 rect_ok1"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td5">-->
+                            <!--<span>订正</span>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td2"></div>-->
+                            <!--<div class="rect_td3 rect_ok2"></div>-->
+                            <!--<div></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                        <!--<td class="rect_td td6">-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3"></div>-->
+                            <!--<div class="rect_td3 rect_ok3"></div>-->
+                            <!--<span>80%</span>-->
+                        <!--</td>-->
+                    <!--</tr>-->
                     </tbody>
                 </table>
             </div>
@@ -220,6 +220,9 @@
 <script src="../js/bigscreenshow/bigScreenShow.js"></script>
 <script src="../js/bigscreenshow/Map.js"></script>
 <script>
+
+    data_zhongxinjiagong();
+    data_jishuju();
 
     setTimeout(function () {
         console.info("开始执行。。")

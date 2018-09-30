@@ -82,4 +82,6 @@ public interface EsQueryService {
     @RequestMapping(value = "/bigscreen/getFileSizeCount", method = RequestMethod.POST, consumes = "application/json")
     public List<Object> getFileSizeCount(@RequestBody  String str);
 
+    @RequestMapping(value = "/bigscreen/lctdata" , method = RequestMethod.GET)
+    public Map<String, Object> getLCTData();
 }

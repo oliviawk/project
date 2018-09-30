@@ -6,6 +6,8 @@ import com.cn.hitec.service.BigScreenWebService;
 import com.cn.hitec.service.ESWebService;
 import com.cn.hitec.tools.DiskUnit;
 import com.cn.hitec.tools.Pub;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/bigscreen")
 public class BigScreenShowApi {
+    private static final Logger logger = LoggerFactory.getLogger(BigScreenShowApi.class);
 
     @Autowired
     private BigScreenWebService webService;
@@ -61,16 +64,40 @@ public class BigScreenShowApi {
     }
 
     @RequestMapping(value = "/lctdata" , method = RequestMethod.GET)
-    public List<Object> getLCTData( String serverName){
+    public Map<String, Object> getLCTData(){
         SimpleDateFormat sd = new SimpleDateFormat(Pub.Index_Food_Simpledataformat);
         String strDt = Pub.Index_Head+sd.format(new Date());
-        Map<String,Object> lctMap_caiji = webService.queryData_lct(new String[]{strDt} , serverName , "采集");
 
-        Map<String,Object> lctMap_chuli = webService.queryData_lct_handle(new String[]{strDt} , serverName);
+        Map<String,Object> resultMap = new HashMap<>();
+        for (String strKey : Pub.dataMachiningMap.keySet()){
 
-        Map<String,Object> lctMap_fenfa = webService.queryData_lct(new String[]{strDt} , serverName , "分发");
+            Map<String,Object> tempMap_server = new HashMap<>();
+            Pub.mapCopy(Pub.dataMachiningMap.get(strKey),tempMap_server);
 
-        return null;
+//            logger.info("key:{} , 业务名称:{}",strKey, Pub.dataMachiningMap.get(strKey).get("serverName"));
+            Map<String,Object> lctMap_caiji = webService.queryData_lct(new String[]{strDt} , strKey , "采集");
+
+            Map<String,Object> lctMap_chuli = webService.queryData_lct_handle(new String[]{strDt} , strKey);
+
+            Map<String,Object> lctMap_fenfa = webService.queryData_lct(new String[]{strDt} , strKey , "分发");
+
+            if(strKey.equals("OCF")){
+                lctMap_caiji.put("AGLB_OBS",lctMap_fenfa.get("AGLB_OBS"));
+                lctMap_caiji.put("CH_OBS",lctMap_fenfa.get("CH_OBS"));
+                lctMap_fenfa.remove("AGLB_OBS");
+                lctMap_fenfa.remove("CH_OBS");
+            }
+
+            tempMap_server.put("caiji",lctMap_caiji);
+            tempMap_server.put("chuli",lctMap_chuli);
+            tempMap_server.put("fenfa",lctMap_fenfa);
+
+            resultMap.put(strKey,tempMap_server);
+        }
+        logger.info("resultMap:"+JSON.toJSONString(resultMap));
+        logger.info("\t->:"+JSON.toJSONString(Pub.dataMachiningMap));
+
+        return resultMap;
     }
 
 
