@@ -65,6 +65,7 @@ function data_zhongxinjiagong(){
         },
         async: false,
         success: function (d) {
+            console.info(d)
             var tableHtml = new Array();
             $("#centerDataTbody").html("");
             tableHtml.push("<tr><td colspan='6' style='padding: 0px;'></td></tr>");
@@ -75,51 +76,46 @@ function data_zhongxinjiagong(){
                 tableHtml.push("<td class='td2'>"+d[key].basic+"</td>");
                 tableHtml.push("<td class='td3'>"+d[key].serverName+"</td>");
 
-                if (key == "SCW"){
-                    tableHtml.push("<td colspan='3'></td>");
-                    console.info(11);
+                //采集环节数据拼接
+                tableHtml.push("<td class='rect_td td4'>");
+                var caiji = d[key]["caiji"];
+                if(!$.isEmptyObject(caiji)){
+                    var tempNumCaiji_error = [0];
+                    for (var caijiKey in caiji ){
+                        tableHtml.push("<div class='rect_td1 "+rectIsOK(caiji[caijiKey],1,tempNumCaiji_error) +"'></div>");
+                    }
+                    var tempLengthCaiji = Object.keys(caiji).length;
+                    tableHtml.push("<span>"+(100 - ((tempNumCaiji_error[0]/tempLengthCaiji).toFixed(2) * 100))+"%</span></td>");
                 }else{
-                    //采集环节数据拼接
-                    tableHtml.push("<td class='rect_td td4'>");
-                    var caiji = d[key]["caiji"];
-                    if(!$.isEmptyObject(caiji)){
-                        var tempNumCaiji_error = [0];
-                        for (var caijiKey in caiji ){
-                            tableHtml.push("<div class='rect_td1 "+rectIsOK(caiji[caijiKey],1,tempNumCaiji_error) +"'></div>");
-                        }
-                        var tempLengthCaiji = Object.keys(caiji).length;
-                        tableHtml.push("<span>"+(100 - ((tempNumCaiji_error[0]/tempLengthCaiji).toFixed(2) * 100))+"%</span></td>");
-                    }else{
-                        tableHtml.push("<div class=''></div></td>");
-                    }
+                    tableHtml.push("<div class=''></div></td>");
+                }
 
-                    //处理环节数据拼接
-                    tableHtml.push("<td class='rect_td td5'>");
-                    var chuli = d[key]["chuli"];
-                    if(!$.isEmptyObject(chuli)){
-                        var tempNumChuli_error = [0];
-                        for(var chuliKey in chuli){
-                            tableHtml.push("<div class='rect_td2 "+rectIsOK(chuli[chuliKey],2,tempNumChuli_error) +"'></div>");
-                        }
-                        var tempLengthChuli = Object.keys(chuli).length;
-                        tableHtml.push("<span>"+(100 - ((tempNumChuli_error[0]/tempLengthChuli).toFixed(2) * 100))+"%</span></td>");
-                    }else{
-                        tableHtml.push("<div class=''></div><div class=''></div></td>");
+                //处理环节数据拼接
+                tableHtml.push("<td class='rect_td td5'>");
+                var chuli = d[key]["chuli"];
+                if(!$.isEmptyObject(chuli)){
+                    var tempNumChuli_error = [0];
+                    for(var chuliKey in chuli){
+                        tableHtml.push("<div class='rect_td2 "+rectIsOK(chuli[chuliKey],2,tempNumChuli_error) +"'></div>");
                     }
+                    var tempLengthChuli = Object.keys(chuli).length;
+                    tableHtml.push("<span>"+(100 - ((tempNumChuli_error[0]/tempLengthChuli).toFixed(2) * 100))+"%</span></td>");
+                }else{
+                    tableHtml.push("<div class=''></div><div class=''></div></td>");
+                }
 
-                    //分发环节数据拼接
-                    tableHtml.push("<td class='rect_td td6'>");
-                    var fenfa = d[key]["fenfa"];
-                    if(!$.isEmptyObject(fenfa)){
-                        var tempNumFenfa_error = [0];
-                        for(var fenfaKey in fenfa){
-                            tableHtml.push("<div class='rect_td3 "+rectIsOK(fenfa[fenfaKey],3,tempNumFenfa_error) +"'></div>");
-                        }
-                        var tempLengthFenfa = Object.keys(fenfa).length;
-                        tableHtml.push("<span>"+(100 -((tempNumFenfa_error[0]/tempLengthFenfa).toFixed(2) * 100))+"%</span></td>");
-                    }else{
-                        tableHtml.push("<div class=''></div><div class=''></div></td>");
+                //分发环节数据拼接
+                tableHtml.push("<td class='rect_td td6'>");
+                var fenfa = d[key]["fenfa"];
+                if(!$.isEmptyObject(fenfa)){
+                    var tempNumFenfa_error = [0];
+                    for(var fenfaKey in fenfa){
+                        tableHtml.push("<div class='rect_td3 "+rectIsOK(fenfa[fenfaKey],3,tempNumFenfa_error) +"'></div>");
                     }
+                    var tempLengthFenfa = Object.keys(fenfa).length;
+                    tableHtml.push("<span>"+(100 -((tempNumFenfa_error[0]/tempLengthFenfa).toFixed(2) * 100))+"%</span></td>");
+                }else{
+                    tableHtml.push("<div class=''></div><div class=''></div></td>");
                 }
                 //收尾
                 tableHtml.push("</tr>");
@@ -134,7 +130,7 @@ function data_zhongxinjiagong(){
 }
 
 function rectIsOK(bean,tempNum,tempNum_error) {
-    if(bean.hasOwnProperty("aging_status")){
+    if(bean != null && bean.hasOwnProperty("aging_status")){
         if(bean.aging_status == "正常"){
             return "";
         }else{
@@ -149,7 +145,6 @@ function rectIsOK(bean,tempNum,tempNum_error) {
 
 function data_jishuju() {
     var data = [];
-
     $.ajax({
         type: "GET",
         url: "/show/getoutherdata?url=http://10.30.17.171:8786/basesource/bigscreen",
@@ -280,6 +275,8 @@ function lineCharScript(e, dataType) {
         },
         async: false,
         success: function (d) {
+            console.info("折现图数据----:")
+            console.info(d)
             lineData_1 = d;
         },
         error: function (err) {
