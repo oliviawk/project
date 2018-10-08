@@ -54,6 +54,38 @@ public class CreateDIDataTask {
 				logger.info("---------------------------------开始执行定时任务，生成后5天的数据--------------------------------");
 				configService.createT639DI("FZJC",Pub.DIMap_t639,5);
 
+
+				//微信测试
+				EsWriteBean esWriteBean = new EsWriteBean();
+				esWriteBean.setIndex(Pub.Index_Head+Pub.transform_DateToString(new Date(),Pub.Index_Food_Simpledataformat));
+				esWriteBean.setType("sendWeichart");
+				Map<String,Object> alertMap = new HashMap<>();
+				alertMap.put("sendUser", "@all");
+				alertMap.put("alertTitle","这里是测试数据");
+				alertMap.put("isSend","true");
+				alertMap.put("send_time",System.currentTimeMillis());
+				alertMap.put("create_time",System.currentTimeMillis());
+
+				List<String> paramWeichart = new ArrayList<>();
+				paramWeichart.add(JSON.toJSONString(alertMap));
+				esWriteBean.setData(paramWeichart);
+				esWriteService.add(esWriteBean); // 存入微信待发送消息
+
+				//短信测试
+				EsWriteBean esWriteBean_sms = new EsWriteBean();
+				esWriteBean_sms.setIndex(Pub.Index_Head+Pub.transform_DateToString(new Date(),Pub.Index_Food_Simpledataformat));
+				esWriteBean_sms.setType("sendSMS");
+				Map<String,Object> smsMap = new HashMap<>();
+				smsMap.put("sendUser", "@all");
+				smsMap.put("alertTitle","这里是测试数据");
+				smsMap.put("isSend","true");
+				smsMap.put("send_time",System.currentTimeMillis());
+				smsMap.put("create_time",System.currentTimeMillis());
+
+				List<String> paramSMS = new ArrayList<>();
+				paramSMS.add(JSON.toJSONString(smsMap));
+				esWriteBean_sms.setData(paramSMS);
+				esWriteService.add(esWriteBean_sms); // 存入微信待发送消息
 			} catch (Exception e) {
 				e.printStackTrace();
 				isError = true;
