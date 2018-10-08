@@ -185,18 +185,18 @@ function data_jishuju() {
         .attr("xlink:href", function (d, i) {
             return "../img/bigscreenshow/zhen.png";
         })
-        .attr("width","144.65")
-        .attr("height","68.73")
+        .attr("width","200")
+        .attr("height","200")
         .attr("x", function (d, i) {
-            return 49
+            return 0
         })
         .attr("y", function (d, i) {
-            return 92
+            return 0
         })
         .attr("transform", function (d, i) {
             var BG = d.split(",");
             var BG_arg = BG[1] / (parseInt(BG[1]) + parseInt(BG[2]));
-            return "rotate(" + (127 + (244 * BG_arg)) + " 100,100)";
+            return "rotate(" + (118 + (244 * BG_arg)) + " 105,100)";
         })
     svg1.append("text")
         .text(function (d, i) {
