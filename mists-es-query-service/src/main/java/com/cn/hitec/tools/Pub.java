@@ -42,14 +42,14 @@ public class Pub {
         map_laps.put("serverName","格点实况(LAPS)");
         map_laps.put("basic","风、温、湿、水");
         map_laps.put("resolution","1公里,0小时时长/逐1小时");
-        map_laps.put("url","/LAPS/");
+        map_laps.put("url","/laps/lct");
         dataMachiningMap.put("LAPS",map_laps);
 
         Map<String,Object> map_fzjc = new HashMap<>();
         map_fzjc.put("serverName","气象信息决策支持系统(FZJC)");
         map_fzjc.put("basic","温、风、水、云");
         map_fzjc.put("resolution","一公里/实时");
-        map_fzjc.put("url","/FZJC/");
+        map_fzjc.put("url","/fzjc/lct");
         dataMachiningMap.put("FZJC",map_fzjc);
     }
 
