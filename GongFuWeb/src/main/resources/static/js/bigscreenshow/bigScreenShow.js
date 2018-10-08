@@ -269,25 +269,7 @@ function lineCharScript(e, dataType) {
     };
 
     var lineData_1 = [];
-    $.ajax({
-        type: "POST",
-        url: "../show/getfilesize",
-        data: JSON.stringify(params_1),
-        dataType: "json",
-        headers: {
-            "Content-Type": "application/json; charset=utf-8"
-        },
-        async: false,
-        success: function (d) {
-            console.info("折现图数据----:")
-            console.info(d)
-            lineData_1 = d;
-        },
-        error: function (err) {
-            lineData_1 = [];
-        }
-    });
-
+    var obj1 = null;
     var config1 = new lineChartConfig();
     config1.width = $(e).width();
     config1.height = 280;
@@ -315,9 +297,25 @@ function lineCharScript(e, dataType) {
             "子公司": "#8961f0"
         };
     }
-
-
-    var obj1 = new lineChartMain(e, lineData_1, config1);;
+    $.ajax({
+        type: "POST",
+        url: "../show/getfilesize",
+        data: JSON.stringify(params_1),
+        dataType: "json",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        // async: false,
+        success: function (d) {
+            console.info("折现图数据----:")
+            console.info(d)
+            lineData_1 = d;
+            obj1 = new lineChartMain(e, lineData_1, config1);;
+        },
+        error: function (err) {
+            lineData_1 = [];
+        }
+    });
 
     var n = 1;
     setInterval(function () {

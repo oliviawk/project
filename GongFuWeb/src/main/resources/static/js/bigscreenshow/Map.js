@@ -272,11 +272,12 @@ function showLeiDa(num) {
         $("#tbody_map").html("");
         var tbodyHtml = "";
         var tbodyArry = [];
-        arre.forEach(function (a) {
+        arre.forEach(function (a,i) {
             //这个if 放在前面，因为forEach无法退出循环
             if (tbodyArry.length > 3) {
-                return false;
+                return true;
             }
+            // console.info("执行了"+i+"次")
             if (num == 1) {
 
                 tbodyArry.push("<tr> " +
@@ -288,6 +289,9 @@ function showLeiDa(num) {
             } else {
                 var station_arr = a.station;
                 station_arr.forEach(function (dd) {
+                    if (tbodyArry.length > 3) {
+                        return true;
+                    }
                     if (dd.state != "OK") {
                         tbodyArry.push("<tr>" +
                             "<td>" + dd.name + "(" + a.province + ")" + "</td>" +
