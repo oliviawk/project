@@ -71,7 +71,7 @@ function data_zhongxinjiagong(){
             tableHtml.push("<tr><td colspan='6' style='padding: 0px;'></td></tr>");
             for (var key in d){
                 console.info(key)
-                tableHtml.push("<tr>");
+                tableHtml.push("<tr onclick='goUrl(\""+d[key].url+"\")'>");
                 tableHtml.push("<td class='td1'>"+d[key].resolution+"</td>")
                 tableHtml.push("<td class='td2'>"+d[key].basic+"</td>");
                 tableHtml.push("<td class='td3'>"+d[key].serverName+"</td>");
@@ -141,6 +141,10 @@ function rectIsOK(bean,tempNum,tempNum_error) {
         return '';
     }
 
+}
+
+function goUrl(url){
+    window.location.href = url;
 }
 
 function data_jishuju() {
