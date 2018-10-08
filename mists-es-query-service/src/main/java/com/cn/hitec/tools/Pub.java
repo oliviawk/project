@@ -21,30 +21,35 @@ public class Pub {
         map_ocf.put("serverName","精细化预报(OCF)");
         map_ocf.put("basic","风、温、湿、水、云、天");
         map_ocf.put("resolution","1公里,15天时长/逐1小时");
+        map_ocf.put("url","/OCF/");
         dataMachiningMap.put("OCF",map_ocf);
 
         Map<String,Object> map_rgf = new HashMap<>();
         map_rgf.put("serverName","快速地面融合(RGF)");
         map_rgf.put("basic","风、温、湿、压、水、能");
         map_rgf.put("resolution","1公里,30分钟时长/逐10分钟");
+        map_rgf.put("url","/RGF/");
         dataMachiningMap.put("RGF",map_rgf);
 
         Map<String,Object> map_mqpf = new HashMap<>();
         map_mqpf.put("serverName","分钟降水预报(MQPF)");
         map_mqpf.put("basic","风、水");
         map_mqpf.put("resolution","1公里,2小时时长/逐5小时");
+        map_mqpf.put("url","/MQPF/");
         dataMachiningMap.put("MQPF",map_mqpf);
 
         Map<String,Object> map_laps = new HashMap<>();
         map_laps.put("serverName","格点实况(LAPS)");
         map_laps.put("basic","风、温、湿、水");
         map_laps.put("resolution","1公里,0小时时长/逐1小时");
+        map_laps.put("url","/LAPS/");
         dataMachiningMap.put("LAPS",map_laps);
 
         Map<String,Object> map_fzjc = new HashMap<>();
         map_fzjc.put("serverName","气象信息决策支持系统(FZJC)");
         map_fzjc.put("basic","温、风、水、云");
         map_fzjc.put("resolution","一公里/实时");
+        map_fzjc.put("url","/FZJC/");
         dataMachiningMap.put("FZJC",map_fzjc);
     }
 
