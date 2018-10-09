@@ -288,7 +288,7 @@ function setHistoryTable(data){
             // 信息
             //tds += "<td>"+ v.fields.event_info + "</td>";
             if (v.aging_status == "超时") {
-                tds += "<td>日志未采集到</td>";
+                tds += "<td>业务数据未采集到</td>";
             } else {
                 tds += "<td>" + (/分发/.test(module) ? v.aging_status : v.fields.event_info) + "</td>";
             }

@@ -166,8 +166,10 @@ public class MQPFService extends BaseController {
                     String status = esQueryBean.getStatus();
                     if ("正常".equals(status)){
                         mustMap.put("aging_status","正常");
-                    }else {
+                    }else if("异常".equals(status)){
                         mustMap.put("aging_status", new String[]{"异常","超时"});
+                    }else if("全部".equals(status)){
+                        mustMap.put("aging_status", new String[]{"正常","异常","超时"});
                     }
                 }else {
                     Map<String, Object> mustNotMap = new HashMap<>();

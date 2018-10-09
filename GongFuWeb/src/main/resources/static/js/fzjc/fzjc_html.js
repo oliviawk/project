@@ -564,7 +564,7 @@ function initHistory(subType,module,ip,size) {
                         trStatus = "danger";
                         tds += "<td>异常</td>";
                          if(this.aging_status == "超时"){
-                            tds += "<td>日志未采集到</td>";
+                            tds += "<td>业务数据未采集到</td>";
                         }else{
                             tds += "<td>"+this.fields.event_info+"</td>";
                         }
