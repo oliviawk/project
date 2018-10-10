@@ -481,7 +481,7 @@ public class DataSourceSettingService {
 
 		    	  DataInfo dataInfo=dataInfoRepository.findDatainfo(dataSourceSetting.getName(),dataSourceSetting.getIpAddr(),filename,dataSourceSetting.getDirectory());
 
-		    	  if(pk_id!=-1){
+		    	  if(dataInfo!=null){
 		    	  	  dataInfoList.add(dataInfo);
 //				         try {
 					          shu=alert_strategy_repository.delectAlert_strategy(pk_id);

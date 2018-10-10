@@ -248,12 +248,14 @@ $(document).ready(function() {
                 type: "post",
                 success: function(result){
                     if (result.type == 'fail'){
-                        alert("添加失败！  "+ result.message);
+                        alert("添加失败！  ");
                         $("#submitBtn").attr("disabled",false);
                     }else{
-                        alert("添加成功!!"+ result.message);
+                        alert("添加成功!!");
                         $("#submitBtn").attr("disabled",false);
                         //关闭模态框
+                        $("#fileNameSelect").val(null).trigger("change");
+                        $("#SendUserNameSelect").html("");
                         $('#insertDataSource').modal('hide');
                         $("#dataSourceTable").bootstrapTable('refresh');
                     }
